@@ -72,7 +72,59 @@ nav[hidden]{display:none}
 .pane{background:var(--card);color:var(--ink);border-radius:20px;padding:22px;margin:auto 0;box-shadow:0 10px 30px rgba(0,0,0,.18)}
 .pane label{display:block;font-size:14px;font-weight:600;margin:14px 0 6px}
 .pane .row{font-weight:400}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.ring{position:relative}.ring span{position:absolute;z-index:1;font-size:14px;font-weight:700}
+.flame{display:inline-flex;gap:4px;align-items:center;padding:6px 12px;border-radius:999px;background:var(--gl);color:var(--g);font-weight:700;font-size:15px;white-space:nowrap}.flame.off{background:var(--line);color:var(--mute)}
+.fb{margin-top:12px;padding:12px 14px;border-radius:12px;font-weight:600;animation:pop .3s}.fb.ok{background:var(--gl);color:var(--g)}.fb.no{background:var(--badl);color:var(--bad)}
+.hearts{letter-spacing:2px;font-size:15px;white-space:nowrap}
+.opt.ok{animation:pop .35s}.opt.no{animation:shake .35s}
+@keyframes pop{0%{transform:scale(.92)}60%{transform:scale(1.04)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+.bg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.bdg{text-align:center;padding:14px 8px}.bdg .ic{font-size:34px;display:block;margin-bottom:4px}.bdg b{display:block;font-size:15px}.bdg small{display:block;color:var(--mute);font-size:12px;margin-top:2px}.bdg.lock{opacity:.45;filter:grayscale(1)}
+.pg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.pg button{padding:12px 8px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);min-height:60px;font-size:16px}.pg button.ar{font-size:26px}.pg .sel{border-color:var(--g);background:var(--gl)}.pg .done{opacity:.35;border-color:var(--g)}.pg .bad{border-color:var(--bad);background:var(--badl);animation:shake .3s}
+#toasts{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:60;pointer-events:none}
+.toast{background:var(--g);color:var(--on);padding:10px 18px;border-radius:999px;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.25);animation:pop .3s}
+.conf{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}.conf i{position:absolute;top:-14px;width:9px;height:14px;border-radius:2px;animation:fall linear forwards}
+@keyframes fall{to{transform:translate(var(--dx),105vh) rotate(var(--r))}}
+.i{display:block;flex:none}
+.item .ic{display:grid;place-items:center}.item .ch{display:grid;place-items:center}
+.x{display:grid;place-items:center}
+.mark{text-align:center;font-size:34px;color:var(--g);margin-top:4px}
+.bar i{transition:width .5s cubic-bezier(.3,.7,.2,1)}.bar.low i{background:var(--bad)}
+@property --p{syntax:"<number>";inherits:false;initial-value:0}
+.ring{animation:ringin .9s cubic-bezier(.3,.7,.2,1)}@keyframes ringin{from{--p:0}}
+.enter{animation:enter .22s ease-out}@keyframes enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.flame svg{transform-origin:50% 90%}.flame.on svg{animation:flick 1.8s ease-in-out infinite}
+@keyframes flick{0%,100%{transform:scale(1) rotate(0)}30%{transform:scale(1.12,1.18) rotate(-4deg)}60%{transform:scale(.96,1.05) rotate(3deg)}}
+.flash{perspective:800px}.flash.flipped{animation:flipin .4s ease-out}.flash.slide{animation:slidein .3s ease-out}
+@keyframes flipin{from{transform:perspective(800px) rotateY(80deg);opacity:.3}to{transform:perspective(800px) rotateY(0);opacity:1}}
+@keyframes slidein{from{transform:translateX(24px);opacity:0}to{transform:none;opacity:1}}
+.qmeta{display:flex;justify-content:space-between;align-items:center;min-height:26px}
+.hearts{display:flex;gap:4px}.hrt{display:grid;color:var(--bad)}.hrt.off{color:var(--line)}.hrt.lost{animation:heartlost .7s ease-out}
+@keyframes heartlost{0%{transform:scale(1.5);color:var(--bad)}40%{transform:scale(.8) rotate(-12deg)}70%{transform:scale(1.1) rotate(8deg)}100%{transform:scale(1)}}
+.combo{display:inline-flex;gap:4px;align-items:center;padding:3px 10px;border-radius:999px;background:var(--gl);color:var(--g);font-weight:700;font-size:13px;animation:pop .35s}
+.fb{display:flex;justify-content:space-between;align-items:center;gap:10px;position:relative;overflow:hidden}
+.xpf{font-weight:700;animation:floatup 1s ease-out both}@keyframes floatup{0%{transform:translateY(10px) scale(.8);opacity:0}25%{opacity:1;transform:translateY(0) scale(1.1)}100%{transform:translateY(-3px) scale(1);opacity:1}}
+.opt.ok{animation:okpulse .55s ease-out}@keyframes okpulse{0%{transform:scale(.96);box-shadow:0 0 0 0 rgba(47,143,111,.55)}50%{transform:scale(1.025)}100%{transform:scale(1);box-shadow:0 0 0 14px rgba(47,143,111,0)}}
+.stars{display:flex;justify-content:center;gap:6px;color:var(--mute)}.star{display:grid}.star.on{color:#e0a82e;animation:starin .5s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(var(--k)*.2s + .15s)}
+@keyframes starin{from{transform:scale(0) rotate(-40deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+.lp{margin-top:6px;position:relative}
+.gt{font-size:13px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.06em;margin:22px 0 4px}
+.les{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:none;border:0;padding:8px 0;animation:enter .35s both;animation-delay:calc(var(--k)*35ms)}
+.les .nd{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;flex:none;border:2px solid var(--line);background:var(--card);font-weight:700;font-size:16px;color:var(--mute)}
+.les .lt{flex:1;display:block}.les b{display:block}.les small{display:block;color:var(--mute);font-size:13px;margin:1px 0 6px}
+.les.cur .nd{border-color:var(--g);background:var(--g);color:var(--on);animation:pulse 2s ease-in-out infinite}
+.les.done .nd{border-color:var(--g);color:var(--g);background:var(--gl)}
+.les.lock{opacity:.5}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(47,143,111,.5)}50%{box-shadow:0 0 0 9px rgba(47,143,111,0)}}
+.med{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;margin:0 auto 6px;border:2px solid var(--g);background:var(--gl);color:var(--g);font-size:22px;line-height:1;overflow:hidden}
+.med .ar{font-size:22px;line-height:1.3}.med.big{width:104px;height:104px;font-size:46px}.med.big .ar{font-size:46px}
+.bdg .med{margin-bottom:8px}.bdg.lock{opacity:.45;filter:grayscale(1)}
+.lvlup{position:fixed;inset:0;display:grid;place-items:center;background:rgba(10,20,15,.55);z-index:70;animation:fadein .25s}
+.lvlup>div{background:var(--card);border-radius:24px;padding:30px 44px;text-align:center;animation:pop .55s cubic-bezier(.3,1.5,.5,1)}.lvlup b{font-size:24px}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.pg .just{animation:pop .4s}.pg button.done{border-color:var(--g);background:var(--gl)}
+.pg button{transition:background .15s,border-color .15s}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
@@ -80,13 +132,24 @@ nav[hidden]{display:none}
 <nav id="nav"></nav>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const W=[["kitab","كِتَاب","kitāb","Buch","Alltag"],["madrasah","مَدْرَسَة","madrasah","Schule","Alltag"],["bayt","بَيْت","bayt","Haus","Alltag"],["qalam","قَلَم","qalam","Stift","Alltag"],["bab","بَاب","bāb","Tür","Alltag"],["shams","شَمْس","shams","Sonne","Alltag"],["ma","مَاء","māʼ","Wasser","Essen & Trinken"],["taam","طَعَام","ṭaʿām","Essen","Essen & Trinken"],["khubz","خُبْز","khubz","Brot","Essen & Trinken"],["halib","حَلِيب","ḥalīb","Milch","Essen & Trinken"],["qahwah","قَهْوَة","qahwah","Kaffee","Essen & Trinken"],["sayyarah","سَيَّارَة","sayyārah","Auto","Reisen"],["matar","مَطَار","maṭār","Flughafen","Reisen"],["funduq","فُنْدُق","funduq","Hotel","Reisen"],["tariq","طَرِيق","ṭarīq","Straße","Reisen"],["tadhkarah","تَذْكَرَة","tadhkarah","Fahrkarte","Reisen"],["walad","وَلَد","walad","Junge","Alltag"],["bint","بِنْت","bint","Mädchen","Alltag"],["sadiq","صَدِيق","ṣadīq","Freund","Alltag"],["ailah","عَائِلَة","ʿāʼilah","Familie","Alltag"],["yawm","يَوْم","yawm","Tag","Alltag"],["layl","لَيْل","layl","Nacht","Alltag"],["tuffah","تُفَّاح","tuffāḥ","Apfel","Essen & Trinken"],["aruzz","أَرُزّ","aruzz","Reis","Essen & Trinken"],["shay","شَاي","shāy","Tee","Essen & Trinken"],["lahm","لَحْم","laḥm","Fleisch","Essen & Trinken"],["madinah","مَدِينَة","madīnah","Stadt","Reisen"],["qitar","قِطَار","qiṭār","Zug","Reisen"],["haqibah","حَقِيبَة","ḥaqībah","Koffer","Reisen"],["kharitah","خَرِيطَة","kharīṭah","Landkarte","Reisen"],["wahid","واحد","wāḥid","eins","Zahlen"],["ithnan","اثنان","ithnān","zwei","Zahlen"],["thalathah","ثلاثة","thalāthah","drei","Zahlen"],["arbaah","أربعة","arbaʿah","vier","Zahlen"],["khamsah","خمسة","khamsah","fünf","Zahlen"],["sittah","ستة","sittah","sechs","Zahlen"],["sabah","سبعة","sabʿah","sieben","Zahlen"],["thamaniyah","ثمانية","thamāniyah","acht","Zahlen"],["tisah","تسعة","tisʿah","neun","Zahlen"],["asharah","عشرة","ʿasharah","zehn","Zahlen"],["ahmar","أحمر","aḥmar","rot","Farben"],["azraq","أزرق","azraq","blau","Farben"],["akhdar","أخضر","akhḍar","grün","Farben"],["asfar","أصفر","aṣfar","gelb","Farben"],["abyad","أبيض","abyaḍ","weiß","Farben"],["aswad","أسود","aswad","schwarz","Farben"],["burtuqali","برتقالي","burtuqālī","orange","Farben"],["bunni","بني","bunnī","braun","Farben"],["ras","رأس","raʾs","Kopf","Körper"],["ayn","عين","ʿayn","Auge","Körper"],["yad","يد","yad","Hand","Körper"],["qalb","قلب","qalb","Herz","Körper"],["udhun","أذن","udhun","Ohr","Körper"],["fam","فم","fam","Mund","Körper"],["rijl","رجل","rijl","Fuß","Körper"],["wajh","وجه","wajh","Gesicht","Körper"],["qamar","قمر","qamar","Mond","Natur & Tiere"],["bahr","بحر","baḥr","Meer","Natur & Tiere"],["jabal","جبل","jabal","Berg","Natur & Tiere"],["shajarah","شجرة","shajarah","Baum","Natur & Tiere"],["nahr","نهر","nahr","Fluss","Natur & Tiere"],["kalb","كلب","kalb","Hund","Natur & Tiere"],["qittah","قطة","qiṭṭah","Katze","Natur & Tiere"],["hisan","حصان","ḥiṣān","Pferd","Natur & Tiere"],["tair","طائر","ṭāʾir","Vogel","Natur & Tiere"],["samak","سمك","samak","Fisch","Natur & Tiere"],["dhahaba","ذهب","dhahaba","gehen","Verben"],["akala","أكل","akala","essen","Verben"],["shariba","شرب","shariba","trinken","Verben"],["kataba","كتب","kataba","schreiben","Verben"],["qaraa","قرأ","qaraʾa","lesen","Verben"],["nama","نام","nāma","schlafen","Verben"],["fataha","فتح","fataḥa","öffnen","Verben"],["ahabba","أحب","aḥabba","lieben","Verben"],["amila","عمل","ʿamila","arbeiten","Verben"],["jaa","جاء","jāʾa","kommen","Verben"],["samia","سمع","samiʿa","hören","Verben"],["takallama","تكلم","takallama","sprechen","Verben"],["marhaban","مرحبا","marḥaban","Hallo","Begrüßung"],["shukran","شكرا","shukran","Danke","Begrüßung"],["min-fadlik","من فضلك","min faḍlik","Bitte","Begrüßung"],["naam","نعم","naʿam","Ja","Begrüßung"],["la","لا","lā","Nein","Begrüßung"],["sabah-al-khayr","صباح الخير","ṣabāḥ al-khayr","Guten Morgen","Begrüßung"],["maa-s-salamah","مع السلامة","maʿa s-salāmah","Auf Wiedersehen","Begrüßung"],["asif","آسف","āsif","Entschuldigung","Begrüßung"],["kayfa-haluk","كيف حالك","kayfa ḥāluk","Wie geht es dir?","Begrüßung"],["ismi","اسمي","ismī","Mein Name ist","Begrüßung"],["kabir","كبير","kabīr","groß","Eigenschaften"],["saghir","صغير","ṣaghīr","klein","Eigenschaften"],["jamil","جميل","jamīl","schön","Eigenschaften"],["jadid","جديد","jadīd","neu","Eigenschaften"],["qadim","قديم","qadīm","alt","Eigenschaften"],["sari","سريع","sarīʿ","schnell","Eigenschaften"],["barid","بارد","bārid","kalt","Eigenschaften"],["harr","حار","ḥārr","heiß","Eigenschaften"],["jayyid","جيد","jayyid","gut","Eigenschaften"],["sayyi","سيء","sayyiʾ","schlecht","Eigenschaften"],["said","سعيد","saʿīd","glücklich","Eigenschaften"],["tawil","طويل","ṭawīl","lang","Eigenschaften"]].map(a=>({i:a[0],ar:a[1],tr:a[2],de:a[3],cat:a[4]}));
-// Feste IDs: nie ändern! LEGACY = alte Reihenfolge (nur für die Migration alter Speicherstände)
+// ===== Daten: Wörter und Lektionen =====
+const W_RAW=[["kitab","كِتَاب","kitāb","Buch"],["madrasah","مَدْرَسَة","madrasah","Schule"],["bayt","بَيْت","bayt","Haus"],["qalam","قَلَم","qalam","Stift"],["bab","بَاب","bāb","Tür"],["shams","شَمْس","shams","Sonne"],["ma","مَاء","māʾ","Wasser"],["taam","طَعَام","ṭaʿām","Essen"],["khubz","خُبْز","khubz","Brot"],["halib","حَلِيب","ḥalīb","Milch"],["qahwah","قَهْوَة","qahwah","Kaffee"],["sayyarah","سَيَّارَة","sayyārah","Auto"],["matar","مَطَار","maṭār","Flughafen"],["funduq","فُنْدُق","funduq","Hotel"],["tariq","طَرِيق","ṭarīq","Weg"],["tadhkarah","تَذْكَرَة","tadhkarah","Fahrkarte"],["walad","وَلَد","walad","Junge"],["bint","بِنْت","bint","Mädchen"],["sadiq","صَدِيق","ṣadīq","Freund"],["ailah","عَائِلَة","ʿāʾilah","Familie"],["yawm","يَوْم","yawm","Tag"],["layl","لَيْل","layl","Nacht"],["tuffah","تُفَّاح","tuffāḥ","Apfel"],["aruzz","أَرُزّ","aruzz","Reis"],["shay","شَاي","shāy","Tee"],["lahm","لَحْم","laḥm","Fleisch"],["madinah","مَدِينَة","madīnah","Stadt"],["qitar","قِطَار","qiṭār","Zug"],["haqibah","حَقِيبَة","ḥaqībah","Koffer"],["kharitah","خَرِيطَة","kharīṭah","Landkarte"],["wahid","وَاحِد","wāḥid","eins"],["ithnan","اِثْنَان","ithnān","zwei"],["thalathah","ثَلَاثَة","thalāthah","drei"],["arbaah","أَرْبَعَة","arbaʿah","vier"],["khamsah","خَمْسَة","khamsah","fünf"],["sittah","سِتَّة","sittah","sechs"],["sabah","سَبْعَة","sabʿah","sieben"],["thamaniyah","ثَمَانِيَة","thamāniyah","acht"],["tisah","تِسْعَة","tisʿah","neun"],["asharah","عَشَرَة","ʿasharah","zehn"],["ahmar","أَحْمَر","aḥmar","rot"],["azraq","أَزْرَق","azraq","blau"],["akhdar","أَخْضَر","akhḍar","grün"],["asfar","أَصْفَر","aṣfar","gelb"],["abyad","أَبْيَض","abyaḍ","weiß"],["aswad","أَسْوَد","aswad","schwarz"],["burtuqali","بُرْتُقَالِيّ","burtuqālī","orange"],["bunni","بُنِّيّ","bunnī","braun"],["ras","رَأْس","raʾs","Kopf"],["ayn","عَيْن","ʿayn","Auge"],["yad","يَد","yad","Hand"],["qalb","قَلْب","qalb","Herz"],["udhun","أُذُن","udhun","Ohr"],["fam","فَم","fam","Mund"],["rijl","رِجْل","rijl","Bein","Umgangssprachlich auch „Fuß“"],["wajh","وَجْه","wajh","Gesicht"],["qamar","قَمَر","qamar","Mond"],["bahr","بَحْر","baḥr","Meer"],["jabal","جَبَل","jabal","Berg"],["shajarah","شَجَرَة","shajarah","Baum"],["nahr","نَهْر","nahr","Fluss"],["kalb","كَلْب","kalb","Hund"],["qittah","قِطَّة","qiṭṭah","Katze"],["hisan","حِصَان","ḥiṣān","Pferd"],["tair","طَائِر","ṭāʾir","Vogel"],["samak","سَمَك","samak","Fisch"],["dhahaba","ذَهَبَ","dhahaba","gehen","er ging"],["akala","أَكَلَ","akala","essen","er aß"],["shariba","شَرِبَ","shariba","trinken","er trank"],["kataba","كَتَبَ","kataba","schreiben","er schrieb"],["qaraa","قَرَأَ","qaraʾa","lesen","er las"],["nama","نَامَ","nāma","schlafen","er schlief"],["fataha","فَتَحَ","fataḥa","öffnen","er öffnete"],["ahabba","أَحَبَّ","aḥabba","lieben","er liebte"],["amila","عَمِلَ","ʿamila","arbeiten","er arbeitete"],["jaa","جَاءَ","jāʾa","kommen","er kam"],["samia","سَمِعَ","samiʿa","hören","er hörte"],["takallama","تَكَلَّمَ","takallama","sprechen","er sprach"],["marhaban","مَرْحَبًا","marḥaban","Hallo"],["shukran","شُكْرًا","shukran","Danke"],["min-fadlik","مِنْ فَضْلِكَ","min faḍlik","Bitte","Zu einer Frau: مِنْ فَضْلِكِ"],["naam","نَعَمْ","naʿam","Ja"],["la","لَا","lā","Nein"],["sabah-al-khayr","صَبَاحُ الْخَيْر","ṣabāḥ al-khayr","Guten Morgen"],["maa-s-salamah","مَعَ السَّلَامَة","maʿa s-salāmah","Auf Wiedersehen"],["asif","آسِف","āsif","Es tut mir leid","Weiblich: آسِفَة"],["kayfa-haluk","كَيْفَ حَالُكَ","kayfa ḥāluk","Wie geht es dir?","Zu einer Frau: كَيْفَ حَالُكِ"],["ismi","اِسْمِي","ismī","Mein Name ist"],["kabir","كَبِير","kabīr","groß"],["saghir","صَغِير","ṣaghīr","klein"],["jamil","جَمِيل","jamīl","schön"],["jadid","جَدِيد","jadīd","neu"],["qadim","قَدِيم","qadīm","alt"],["sari","سَرِيع","sarīʿ","schnell"],["barid","بَارِد","bārid","kalt"],["harr","حَارّ","ḥārr","heiß"],["jayyid","جَيِّد","jayyid","gut"],["sayyi","سَيِّئ","sayyiʾ","schlecht"],["said","سَعِيد","saʿīd","glücklich"],["tawil","طَوِيل","ṭawīl","lang"],["ahlan","أَهْلًا","ahlan","Willkommen"],["masa-al-khayr","مَسَاءُ الْخَيْر","masāʾ al-khayr","Guten Abend"],["ana-bikhayr","أَنَا بِخَيْر","anā bi-khayr","Mir geht es gut"],["afwan","عَفْوًا","ʿafwan","Gern geschehen","Auch: „Verzeihung“"],["alhamdulillah","الْحَمْدُ لِلَّه","al-ḥamdu li-llāh","Gott sei Dank","Typische Antwort auf „Wie geht es dir?“"],["inshaallah","إِنْ شَاءَ اللَّه","in shāʾa llāh","So Gott will"],["sifr","صِفْر","ṣifr","null"],["ahada-ashar","أَحَدَ عَشَر","aḥada ʿashar","elf"],["ithna-ashar","اِثْنَا عَشَر","ithnā ʿashar","zwölf"],["ishrun","عِشْرُون","ʿishrūn","zwanzig"],["thalathun","ثَلَاثُون","thalāthūn","dreißig"],["arbaun","أَرْبَعُون","arbaʿūn","vierzig"],["khamsun","خَمْسُون","khamsūn","fünfzig"],["miah","مِئَة","miʾah","hundert"],["alf","أَلْف","alf","tausend"],["wardi","وَرْدِيّ","wardī","rosa"],["ramadi","رَمَادِيّ","ramādī","grau"],["banafsaji","بَنَفْسَجِيّ","banafsajī","violett"],["fiddi","فِضِّيّ","fiḍḍī","silbern"],["ab","أَب","ab","Vater"],["umm","أُمّ","umm","Mutter"],["akh","أَخ","akh","Bruder"],["ukht","أُخْت","ukht","Schwester"],["ibn","اِبْن","ibn","Sohn"],["ibnah","اِبْنَة","ibnah","Tochter"],["tifl","طِفْل","ṭifl","Kind"],["jadd","جَدّ","jadd","Großvater"],["jaddah","جَدَّة","jaddah","Großmutter"],["amm","عَمّ","ʿamm","Onkel (Vaterseite)"],["khal","خَال","khāl","Onkel (Mutterseite)"],["zawj","زَوْج","zawj","Ehemann"],["zawjah","زَوْجَة","zawjah","Ehefrau"],["rajul","رَجُل","rajul","Mann","Nicht verwechseln mit رِجْل (Bein)"],["imraah","اِمْرَأَة","imraʾah","Frau"],["bayd","بَيْض","bayḍ","Ei"],["mawz","مَوْز","mawz","Banane"],["burtuqal","بُرْتُقَال","burtuqāl","Orange (Frucht)"],["fakihah","فَاكِهَة","fākihah","Obst"],["khudar","خُضَار","khuḍār","Gemüse"],["batatis","بَطَاطِس","baṭāṭis","Kartoffeln"],["tamatim","طَمَاطِم","ṭamāṭim","Tomaten"],["jubn","جُبْن","jubn","Käse"],["dajaj","دَجَاج","dajāj","Hähnchen"],["asir","عَصِير","ʿaṣīr","Saft"],["sukkar","سُكَّر","sukkar","Zucker"],["milh","مِلْح","milḥ","Salz"],["asal","عَسَل","ʿasal","Honig"],["zayt","زَيْت","zayt","Öl"],["anf","أَنْف","anf","Nase"],["sinn","سِنّ","sinn","Zahn"],["lisan","لِسَان","lisān","Zunge"],["shaar","شَعْر","shaʿr","Haare"],["isba","إِصْبَع","iṣbaʿ","Finger"],["dhira","ذِرَاع","dhirāʿ","Arm"],["katif","كَتِف","katif","Schulter"],["raqabah","رَقَبَة","raqabah","Hals"],["zahr","ظَهْر","ẓahr","Rücken"],["batn","بَطْن","baṭn","Bauch"],["qadam","قَدَم","qadam","Fuß"],["ghurfah","غُرْفَة","ghurfah","Zimmer"],["matbakh","مَطْبَخ","maṭbakh","Küche"],["nafidhah","نَافِذَة","nāfidhah","Fenster"],["hammam","حَمَّام","ḥammām","Badezimmer"],["hadiqah","حَدِيقَة","ḥadīqah","Garten"],["tawilah","طَاوِلَة","ṭāwilah","Tisch"],["kursi","كُرْسِيّ","kursī","Stuhl"],["sarir","سَرِير","sarīr","Bett"],["miftah","مِفْتَاح","miftāḥ","Schlüssel"],["misbah","مِصْبَاح","miṣbāḥ","Lampe"],["jidar","جِدَار","jidār","Wand"],["hatif","هَاتِف","hātif","Telefon"],["daftar","دَفْتَر","daftar","Heft"],["waraqah","وَرَقَة","waraqah","Blatt Papier"],["muallim","مُعَلِّم","muʿallim","Lehrer"],["talib","طَالِب","ṭālib","Schüler"],["dars","دَرْس","dars","Lektion"],["suaal","سُؤَال","suʾāl","Frage"],["jawab","جَوَاب","jawāb","Antwort"],["kalimah","كَلِمَة","kalimah","Wort"],["lughah","لُغَة","lughah","Sprache"],["arabi","عَرَبِيّ","ʿarabī","arabisch"],["almani","أَلْمَانِيّ","almānī","deutsch"],["jamiah","جَامِعَة","jāmiʿah","Universität"],["hasub","حَاسُوب","ḥāsūb","Computer"],["sabah-morning","صَبَاح","ṣabāḥ","Morgen (Tageszeit)"],["masa","مَسَاء","masāʾ","Abend"],["zuhr","ظُهْر","ẓuhr","Mittag"],["alyawm","الْيَوْم","al-yawm","heute"],["ghadan","غَدًا","ghadan","morgen (Tag)"],["ams","أَمْس","ams","gestern"],["alan","الْآن","al-ān","jetzt"],["saah","سَاعَة","sāʿah","Stunde"],["daqiqah","دَقِيقَة","daqīqah","Minute"],["usbuu","أُسْبُوع","usbūʿ","Woche"],["shahr","شَهْر","shahr","Monat"],["sanah","سَنَة","sanah","Jahr"],["ithnayn","الِاثْنَيْن","al-ithnayn","Montag"],["thulatha","الثُّلَاثَاء","ath-thulāthāʾ","Dienstag"],["arbia","الْأَرْبِعَاء","al-arbiʿāʾ","Mittwoch"],["khamis","الْخَمِيس","al-khamīs","Donnerstag"],["jumuah","الْجُمُعَة","al-jumuʿah","Freitag"],["sabt","السَّبْت","as-sabt","Samstag"],["ahad","الْأَحَد","al-aḥad","Sonntag"],["tairah","طَائِرَة","ṭāʾirah","Flugzeug"],["hafilah","حَافِلَة","ḥāfilah","Bus"],["mahattah","مَحَطَّة","maḥaṭṭah","Bahnhof / Haltestelle"],["safar","سَفَر","safar","Reise"],["jawaz","جَوَاز سَفَر","jawāz safar","Reisepass"],["shari","شَارِع","shāriʿ","Straße"],["suq","سُوق","sūq","Markt"],["matam","مَطْعَم","maṭʿam","Restaurant"],["mustashfa","مُسْتَشْفَى","mustashfā","Krankenhaus"],["saydaliyyah","صَيْدَلِيَّة","ṣaydaliyyah","Apotheke"],["bank","بَنْك","bank","Bank"],["masjid","مَسْجِد","masjid","Moschee"],["shati","شَاطِئ","shāṭiʾ","Strand"],["balad","بَلَد","balad","Land"],["yamin","يَمِين","yamīn","rechts"],["yasar","يَسَار","yasār","links"],["qarib","قَرِيب","qarīb","nah"],["baid","بَعِيد","baʿīd","weit"],["huna","هُنَا","hunā","hier"],["hunaka","هُنَاكَ","hunāka","dort"],["najmah","نَجْمَة","najmah","Stern"],["samaa","سَمَاء","samāʾ","Himmel"],["matar-rain","مَطَر","maṭar","Regen"],["thalj","ثَلْج","thalj","Schnee"],["rih","رِيح","rīḥ","Wind"],["sahab","سَحَاب","saḥāb","Wolken"],["sahraa","صَحْرَاء","ṣaḥrāʾ","Wüste"],["zahrah","زَهْرَة","zahrah","Blume"],["ard","أَرْض","arḍ","Erde"],["asad","أَسَد","asad","Löwe"],["jamal","جَمَل","jamal","Kamel"],["baqarah","بَقَرَة","baqarah","Kuh"],["kharuf","خَرُوف","kharūf","Schaf"],["himar","حِمَار","ḥimār","Esel"],["fil","فِيل","fīl","Elefant"],["qird","قِرْد","qird","Affe"],["arnab","أَرْنَب","arnab","Hase"],["farashah","فَرَاشَة","farāshah","Schmetterling"],["dajajah","دَجَاجَة","dajājah","Huhn"],["ana","أَنَا","anā","ich"],["anta","أَنْتَ","anta","du (männlich)"],["anti","أَنْتِ","anti","du (weiblich)"],["huwa","هُوَ","huwa","er"],["hiya","هِيَ","hiya","sie (Singular)"],["nahnu","نَحْنُ","naḥnu","wir"],["hum","هُمْ","hum","sie (Plural, männlich)"],["ma-was","مَا","mā","was"],["man","مَنْ","man","wer"],["ayna","أَيْنَ","ayna","wo"],["mata","مَتَى","matā","wann"],["limadha","لِمَاذَا","limādhā","warum"],["kayfa","كَيْفَ","kayfa","wie"],["kam","كَمْ","kam","wie viele"],["hal","هَلْ","hal","ob (Ja/Nein-Frage)"],["jalasa","جَلَسَ","jalasa","sitzen","er setzte sich"],["waqafa","وَقَفَ","waqafa","stehen","er stand"],["mashaa","مَشَى","mashā","zu Fuß gehen","er ging zu Fuß"],["rakada","رَكَضَ","rakaḍa","rennen","er rannte"],["darasa","دَرَسَ","darasa","lernen","er lernte"],["fahima","فَهِمَ","fahima","verstehen","er verstand"],["arafa","عَرَفَ","ʿarafa","wissen","er wusste"],["raa","رَأَى","raʾā","sehen","er sah"],["akhadha","أَخَذَ","akhadha","nehmen","er nahm"],["aata","أَعْطَى","aʿṭā","geben","er gab"],["saala","سَأَلَ","saʾala","fragen","er fragte"],["ajaba","أَجَابَ","ajāba","antworten","er antwortete"],["ishtara","اِشْتَرَى","ishtarā","kaufen","er kaufte"],["baa","بَاعَ","bāʿa","verkaufen","er verkaufte"],["laiba","لَعِبَ","laʿiba","spielen","er spielte"],["safara","سَافَرَ","sāfara","reisen","er reiste"],["sakana","سَكَنَ","sakana","wohnen","er wohnte"],["tabakha","طَبَخَ","ṭabakha","kochen","er kochte"],["ghasala","غَسَلَ","ghasala","waschen","er wusch"],["dakhala","دَخَلَ","dakhala","hineingehen","er trat ein"],["kharaja","خَرَجَ","kharaja","hinausgehen","er ging hinaus"],["dahika","ضَحِكَ","ḍaḥika","lachen","er lachte"],["baka","بَكَى","bakā","weinen","er weinte"],["qasir","قَصِير","qaṣīr","kurz"],["dafi","دَافِئ","dāfiʾ","warm"],["sahl","سَهْل","sahl","leicht"],["saab","صَعْب","ṣaʿb","schwierig"],["rakhis","رَخِيص","rakhīṣ","billig"],["ghali","غَالٍ","ghālin","teuer"],["muhimm","مُهِمّ","muhimm","wichtig"],["nazif","نَظِيف","naẓīf","sauber"],["hazin","حَزِين","ḥazīn","traurig"],["mutab","مُتْعَب","mutʿab","müde"],["jai","جَائِع","jāʾiʿ","hungrig"],["atshan","عَطْشَان","ʿaṭshān","durstig"],["marid","مَرِيض","marīḍ","krank"],["ghani","غَنِيّ","ghanī","reich"],["faqir","فَقِير","faqīr","arm"],["qamis","قَمِيص","qamīṣ","Hemd"],["buntal","بِنْطَال","binṭāl","Hose"],["hidhaa","حِذَاء","ḥidhāʾ","Schuh"],["qubbaah","قُبَّعَة","qubbaʿah","Hut"],["fustan","فُسْتَان","fustān","Kleid"],["miataf","مِعْطَف","miʿṭaf","Mantel"],["jawrab","جَوْرَب","jawrab","Socke"],["nazzarah","نَظَّارَة","naẓẓārah","Brille"],["khatam","خَاتَم","khātam","Ring"],["thawb","ثَوْب","thawb","Gewand"],["tabib","طَبِيب","ṭabīb","Arzt"],["muhandis","مُهَنْدِس","muhandis","Ingenieur"],["shurti","شُرْطِيّ","shurṭī","Polizist"],["tabbakh","طَبَّاخ","ṭabbākh","Koch"],["saiq","سَائِق","sāʾiq","Fahrer"],["mumarrid","مُمَرِّض","mumarriḍ","Krankenpfleger"],["tajir","تَاجِر","tājir","Händler"],["khabbaz","خَبَّاز","khabbāz","Bäcker"],["katib","كَاتِب","kātib","Schriftsteller"],["amil","عَامِل","ʿāmil","Arbeiter"],["wa","وَ","wa","und"],["aw","أَوْ","aw","oder"],["lakin","لَكِنْ","lākin","aber"],["maa-with","مَعَ","maʿa","mit"],["fi","فِي","fī","in"],["ala","عَلَى","ʿalā","auf"],["min","مِنْ","min","von / aus"],["ila","إِلَى","ilā","zu / nach"],["hadha","هَذَا","hādhā","dies (männlich)"],["hadhihi","هَذِهِ","hādhihi","dies (weiblich)"],["kull","كُلّ","kull","alle / jeder"],["kathir","كَثِير","kathīr","viel"],["qalil","قَلِيل","qalīl","wenig"],["jiddan","جِدًّا","jiddan","sehr"],["aydan","أَيْضًا","ayḍan","auch"]];
+const LES_RAW=[["Hallo sagen","Begrüßung",["marhaban","ahlan","sabah-al-khayr","masa-al-khayr","kayfa-haluk","ana-bikhayr","maa-s-salamah","ismi"]],["Höflichkeit","Begrüßung",["shukran","afwan","min-fadlik","asif","naam","la","alhamdulillah","inshaallah"]],["Zahlen 1–10","Zahlen",["wahid","ithnan","thalathah","arbaah","khamsah","sittah","sabah","thamaniyah","tisah","asharah"]],["Größere Zahlen","Zahlen",["sifr","ahada-ashar","ithna-ashar","ishrun","thalathun","arbaun","khamsun","miah","alf"]],["Farben","Farben",["ahmar","azraq","akhdar","asfar","abyad","aswad","burtuqali","bunni","wardi","ramadi","banafsaji","fiddi"]],["Familie","Familie",["ab","umm","akh","ukht","ibn","ibnah","tifl","ailah"]],["Verwandte & Menschen","Familie",["jadd","jaddah","amm","khal","zawj","zawjah","rajul","imraah","walad","bint","sadiq"]],["Essen","Essen & Trinken",["taam","khubz","ma","halib","qahwah","shay","aruzz","lahm","bayd"]],["Obst & Gemüse","Essen & Trinken",["tuffah","mawz","burtuqal","fakihah","khudar","batatis","tamatim"]],["Zutaten & Getränke","Essen & Trinken",["jubn","dajaj","asir","sukkar","milh","asal","zayt"]],["Kopf","Körper",["ras","wajh","ayn","udhun","anf","fam","sinn","lisan","shaar"]],["Körper","Körper",["yad","isba","dhira","katif","raqabah","zahr","batn","rijl","qadam","qalb"]],["Im Haus","Haus",["bayt","bab","nafidhah","ghurfah","matbakh","hammam","hadiqah"]],["Möbel & Dinge","Haus",["tawilah","kursi","sarir","miftah","misbah","jidar","hatif"]],["Schule","Schule",["madrasah","kitab","qalam","daftar","waraqah","muallim","talib"]],["Lernen","Schule",["dars","suaal","jawab","kalimah","lughah","arabi","almani","jamiah","hasub"]],["Tageszeiten","Zeit",["yawm","layl","sabah-morning","masa","zuhr","alyawm","ghadan","ams","alan","saah","daqiqah"]],["Wochentage","Zeit",["ithnayn","thulatha","arbia","khamis","jumuah","sabt","ahad","usbuu","shahr","sanah"]],["Unterwegs","Unterwegs",["sayyarah","qitar","hafilah","tairah","matar","mahattah","tadhkarah","haqibah","safar","jawaz"]],["In der Stadt","Unterwegs",["madinah","shari","suq","matam","funduq","mustashfa","saydaliyyah","bank","masjid","shati","balad"]],["Orientierung","Unterwegs",["tariq","kharitah","yamin","yasar","qarib","baid","huna","hunaka"]],["Wetter & Himmel","Natur & Tiere",["shams","qamar","najmah","samaa","matar-rain","thalj","rih","sahab"]],["Landschaft","Natur & Tiere",["bahr","jabal","nahr","shajarah","sahraa","zahrah","ard"]],["Tiere 1","Natur & Tiere",["kalb","qittah","hisan","tair","samak","asad","jamal"]],["Tiere 2","Natur & Tiere",["baqarah","kharuf","himar","fil","qird","arnab","farashah","dajajah"]],["Pronomen","Fragen & Pronomen",["ana","anta","anti","huwa","hiya","nahnu","hum"]],["Fragewörter","Fragen & Pronomen",["ma-was","man","ayna","mata","limadha","kayfa","kam","hal"]],["Verben 1","Verben",["dhahaba","jaa","dakhala","kharaja","jalasa","waqafa","mashaa","rakada","nama"]],["Verben 2","Verben",["akala","shariba","tabakha","ghasala","kataba","qaraa","darasa","fataha"]],["Verben 3","Verben",["samia","takallama","raa","fahima","arafa","saala","ajaba","ahabba","amila"]],["Verben 4","Verben",["akhadha","aata","ishtara","baa","laiba","safara","sakana","dahika","baka"]],["Eigenschaften 1","Eigenschaften",["kabir","saghir","tawil","qasir","jadid","qadim","jamil","jayyid","sayyi"]],["Eigenschaften 2","Eigenschaften",["sari","barid","harr","dafi","sahl","saab","rakhis","ghali","muhimm","nazif"]],["Gefühle & Zustand","Eigenschaften",["said","hazin","mutab","jai","atshan","marid","ghani","faqir"]],["Kleidung","Kleidung",["qamis","buntal","hidhaa","qubbaah","fustan","miataf","jawrab","nazzarah","khatam","thawb"]],["Berufe","Berufe",["tabib","muhandis","shurti","tabbakh","saiq","mumarrid","tajir","khabbaz","katib","amil"]],["Kleine Wörter","Kleine Wörter",["wa","aw","lakin","maa-with","fi","ala","min","ila","hadha","hadhihi"]],["Mengen","Kleine Wörter",["kull","kathir","qalil","jiddan","aydan"]]];
+// Alte Reihenfolge, nur für die Migration alter Speicherstände. Nie ändern!
 const LEGACY="kitab madrasah bayt qalam bab shams ma taam khubz halib qahwah sayyarah matar funduq tariq tadhkarah walad bint sadiq ailah yawm layl tuffah aruzz shay lahm madinah qitar haqibah kharitah wahid ithnan thalathah arbaah khamsah sittah sabah thamaniyah tisah asharah ahmar azraq akhdar asfar abyad aswad burtuqali bunni ras ayn yad qalb udhun fam rijl wajh qamar bahr jabal shajarah nahr kalb qittah hisan tair samak dhahaba akala shariba kataba qaraa nama fataha ahabba amila jaa samia takallama marhaban shukran min-fadlik naam la sabah-al-khayr maa-s-salamah asif kayfa-haluk ismi kabir saghir jamil jadid qadim sari barid harr jayyid sayyi said tawil".split(" ");
+const BYRAW=Object.fromEntries(W_RAW.map(a=>[a[0],a]));
+const LES=LES_RAW.map((l,k)=>({k,t:l[0],g:l[1],w:l[2]}));
+const CATOF={};LES.forEach(l=>l.w.forEach(id=>CATOF[id]=l.g));
+const W=LES.flatMap(l=>l.w.map(id=>{const a=BYRAW[id];return{i:id,ar:a[1],tr:a[2],de:a[3],n:a[4]||"",cat:l.g}}));
 const BY=Object.fromEntries(W.map(w=>[w.i,w]));
-const ICON={Alltag:"📖","Essen & Trinken":"🍽️",Reisen:"✈️"};
-let S={v:2,days:{},fav:[],dir:"ad",rem:true,time:"19:00",theme:"system",streak:0,last:"",box:{},due:{},seen:[],seenDay:"",notified:""};
-const DEF=JSON.stringify(S);let U=null;const SK=()=>"mfr:"+(UID||U);function migrate(st){
+const GROUPS=[...new Set(LES.map(l=>l.g))];
+const GA={"Begrüßung":"تحية",Zahlen:"أرقام",Farben:"ألوان",Familie:"عائلة","Essen & Trinken":"طعام","Körper":"جسم",Haus:"بيت",Schule:"مدرسة",Zeit:"وقت",Unterwegs:"سفر","Natur & Tiere":"طبيعة",Verben:"أفعال",Eigenschaften:"صفات","Fragen & Pronomen":"أسئلة",Kleidung:"ملابس",Berufe:"مهن","Kleine Wörter":"كلمات"};
+const noteOf=w=>w.n||(w.cat==="Farben"||w.cat==="Eigenschaften"?"männliche Form":"");
+
+// ===== Zustand =====
+let S={v:2,days:{},fav:[],dir:"ad",rem:true,time:"19:00",theme:"system",streak:0,last:"",box:{},due:{},seen:[],seenDay:"",notified:"",xp:0,xpDays:{},badges:[],goal:50,sound:true,vib:true,st:{perfect:0,rounds:0,goals:0,pairs:0,blitz:0}};
+const DEF=JSON.stringify(S);let U=null;const SK=()=>"mfr:"+(UID||U);
+function migrate(st){
   if((st.v||1)<2){ // v1: Fortschritt hing am Array-Index -> auf feste IDs umstellen
     const m=i=>LEGACY[+i],mapObj=o=>{const r={};for(const i in o||{}){const id=m(i);if(id)r[id]=o[i]}return r};
     st.fav=(st.fav||[]).map(m).filter(Boolean);st.box=mapObj(st.box);st.due=mapObj(st.due);delete st.known;
@@ -97,140 +160,422 @@ function loadS(){S=JSON.parse(DEF);try{Object.assign(S,migrate(JSON.parse(localS
 const save=()=>{try{if(U)localStorage.setItem(SK(),JSON.stringify(S))}catch(e){}sched()};
 const $=s=>document.querySelector(s),app=$("#app");
 const ymd=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"),ago=n=>{const d=new Date();d.setDate(d.getDate()-n);return d},today=()=>ymd(new Date());
-const norm=s=>s.replace(/ة/g,"ه").replace(/ى/g,"ي").replace(/[\u064B-\u065F\u0670]/g,"").replace(/[أإآ]/g,"ا").replace(/ئ/g,"ي").replace(/ؤ/g,"و").trim();
-const shuffle=a=>[...a].sort(()=>Math.random()-.5);
+const norm=s=>s.replace(/ة/g,"ه").replace(/ى/g,"ي").replace(/[ً-ٰٟ]/g,"").replace(/[أإآ]/g,"ا").replace(/ئ/g,"ي").replace(/ؤ/g,"و").trim();
+const shuffle=a=>{const r=[...a];for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]]}return r};
+const pick=a=>a[Math.floor(Math.random()*a.length)];
 const speak=t=>{try{const u=new SpeechSynthesisUtterance(t);u.lang="ar-SA";speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}};
+const speakLater=t=>setTimeout(()=>speak(t),420);
+const toAr=n=>String(n).replace(/\d/g,d=>"٠١٢٣٤٥٦٧٨٩"[d]);
 function applyTheme(){S.theme==="system"?document.documentElement.removeAttribute("data-theme"):document.documentElement.setAttribute("data-theme",S.theme)}
+function touch(){const d=today();if(S.last!==d){S.streak=S.last===ymd(ago(1))?S.streak+1:1;S.last=d}}
 function learned(id){ // richtige Antwort: Serie + Tageszähler (jedes Wort nur 1x pro Tag)
   const d=today();if(S.seenDay!==d){S.seenDay=d;S.seen=[]}
   if(!S.seen.includes(id)){S.seen.push(id);S.days[d]=(S.days[d]||0)+1}
-  if(S.last!==d){S.streak=S.last===ymd(ago(1))?S.streak+1:1;S.last=d}
-  save();
+  touch();save();
 }
 function grade(id,ok){const b=ok?Math.min(4,(S.box[id]||0)+1):0;S.box[id]=b;S.due[id]=Date.now()+[0,1,3,7,14][b]*864e5;if(ok)learned(id);else save()}
 const dueN=()=>W.filter(w=>S.box[w.i]!==undefined&&S.due[w.i]<=Date.now()).length;
 const isLearned=id=>(S.box[id]||0)>=2,knownN=()=>W.filter(w=>isLearned(w.i)).length,pct=()=>Math.round(knownN()/W.length*100),streak=()=>S.last===today()||S.last===ymd(ago(1))?S.streak:0; // „gelernt“ = ab Box 2
-let view="home",ui={cat:"Alle",q:""};
-const TABS=[["home","🏠","Start"],["learn","📖","Lernen"],["cards","🗂️","Karteikarten"],["more","⋯","Mehr"]];
+
+// ===== Lernpfad =====
+const lessonStat=l=>({t:l.w.length,k:l.w.filter(isLearned).length,s:l.w.filter(id=>S.box[id]!==undefined).length});
+const need=l=>Math.ceil(l.w.length*.6);
+const isLocked=k=>k>0&&lessonStat(LES[k-1]).k<need(LES[k-1]);
+const unlockedWords=()=>LES.filter(l=>!isLocked(l.k)).flatMap(l=>l.w.map(id=>BY[id]));
+const currentLesson=()=>{const u=LES.filter(l=>!isLocked(l.k));return u.find(l=>lessonStat(l).k<l.w.length)||u[u.length-1]};
+function gamePool(n){const u=unlockedWords(),s=u.filter(w=>S.box[w.i]!==undefined);return s.length>=n?s:u}
+function options(w){ // Antwortmöglichkeiten: bevorzugt aus demselben Thema
+  const u=unlockedWords().filter(x=>x.i!==w.i&&x.de!==w.de),same=shuffle(u.filter(x=>x.cat===w.cat)),rest=shuffle(u.filter(x=>x.cat!==w.cat));
+  return shuffle([w,...[...same,...rest].slice(0,3)]);
+}
+
+// ===== Symbole =====
+const ICO={
+home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
+path:'<circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h6a4 4 0 0 0 0-8h-4a4 4 0 0 1 0-8h6"/>',
+bolt:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
+cards:'<rect x="3" y="7" width="14" height="13" rx="2"/><path d="M7 7V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/>',
+more:'<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>',
+list:'<path d="M9 6h12M9 12h12M9 18h12"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/>',
+chart:'<path d="M4 20V10M10 20V4M16 20v-7M2 20h20"/>',
+star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
+medal:'<circle cx="12" cy="15" r="6"/><path d="M8.5 3.5L12 10l3.5-6.5"/>',
+gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/>',
+flame:'<path d="M12 2c.6 3.4 5 5.6 5 10.2A5 5 0 0 1 7 12.2c0-1.9.9-3.1 1.9-4.4.4 1.2 1.1 1.9 2 2.2C10.6 7.2 11 4.6 12 2z"/>',
+heart:'<path d="M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11z"/>',
+lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+check:'<path d="M5 12.5l4.5 4.5L19 7"/>',
+speaker:'<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/>',
+back:'<path d="M19 12H5M11 6l-6 6 6 6"/>',
+close:'<path d="M6 6l12 12M18 6L6 18"/>',
+pairs:'<rect x="3" y="4" width="8" height="8" rx="2"/><rect x="13" y="12" width="8" height="8" rx="2"/>',
+repeat:'<path d="M4 12a8 8 0 0 1 14-5l2 2M20 4v5h-5M20 12a8 8 0 0 1-14 5l-2-2M4 20v-5h5"/>',
+chev:'<path d="M9 6l6 6-6 6"/>'
+};
+const ic=(n,s=22,f=false)=>`<svg class="i" viewBox="0 0 24 24" width="${s}" height="${s}" ${f?'fill="currentColor" stroke="none"':'fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"'} aria-hidden="true">${ICO[n]}</svg>`;
+const xbtn=(go,label="Beenden")=>`<button class="x" data-go="${go}" aria-label="${label}">${ic("close")}</button>`;
+
+// ===== Klang (synthetisch erzeugt, ohne Audiodateien) =====
+let AC,MG;
+function actx(){
+  if(!AC){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;AC=new C();MG=AC.createGain();MG.gain.value=.8;const cp=AC.createDynamicsCompressor();MG.connect(cp);cp.connect(AC.destination)}
+  if(AC.state==="suspended")AC.resume();return AC;
+}
+function tone(f,t0,d,o={}){
+  const c=actx();if(!c)return;const{type="sine",g=.2,a=.008,to=null}=o,n=c.currentTime+t0,s=c.createOscillator(),v=c.createGain();
+  s.type=type;s.frequency.setValueAtTime(f,n);if(to)s.frequency.exponentialRampToValueAtTime(to,n+d);
+  v.gain.setValueAtTime(.0001,n);v.gain.exponentialRampToValueAtTime(g,n+a);v.gain.exponentialRampToValueAtTime(.0001,n+d);
+  s.connect(v);v.connect(MG);s.start(n);s.stop(n+d+.03);
+}
+function hiss(t0,d,o={}){
+  const c=actx();if(!c)return;const{f=2000,q=1,g=.1,type="bandpass",to=null}=o,n=c.currentTime+t0,len=Math.floor(c.sampleRate*d),b=c.createBuffer(1,len,c.sampleRate),da=b.getChannelData(0);
+  for(let i=0;i<len;i++)da[i]=Math.random()*2-1;
+  const s=c.createBufferSource(),fl=c.createBiquadFilter(),v=c.createGain();s.buffer=b;fl.type=type;fl.frequency.setValueAtTime(f,n);if(to)fl.frequency.exponentialRampToValueAtTime(to,n+d);fl.Q.value=q;
+  v.gain.setValueAtTime(g,n);v.gain.exponentialRampToValueAtTime(.0001,n+d);s.connect(fl);fl.connect(v);v.connect(MG);s.start(n);
+}
+const LADDER=[523.25,587.33,659.25,783.99,880,1046.5];
+function sfx(k,n=1){
+  if(S.sound===false)return;
+  try{
+    if(k==="tap"){hiss(0,.035,{f:3200,q:.7,g:.05});tone(480,0,.05,{g:.05,type:"triangle"})}
+    else if(k==="good"){const f=LADDER[Math.min(n-1,5)];tone(f,0,.45,{g:.2});tone(f*2,0,.25,{g:.05});tone(f*1.26,.09,.5,{g:.18});tone(f*2.52,.09,.25,{g:.04})} // zwei Glockentöne, mit der Serie höher
+    else if(k==="bad"){tone(200,0,.28,{type:"triangle",g:.22,to:130});hiss(0,.1,{f:320,q:.6,g:.12,type:"lowpass"})}
+    else if(k==="heart"){tone(360,.12,.4,{g:.14,to:170})}
+    else if(k==="flip"){hiss(0,.14,{f:1100,to:4200,q:.8,g:.07})}
+    else if(k==="match"){tone(880,0,.55,{g:.16});tone(1320,0,.4,{g:.06});tone(1760,.02,.3,{g:.03})}
+    else if(k==="tick"){tone(1100,0,.04,{type:"square",g:.035})}
+    else if(k==="goal"){[784,988,1175].forEach((f,i)=>tone(f,i*.1,.5,{g:.15}))}
+    else if(k==="badge"){tone(880,0,.8,{g:.14});tone(1319,.12,.9,{g:.14});tone(1760,.12,.6,{g:.04})}
+    else if(k==="level"){[523.25,659.25,783.99,1046.5,1318.5].forEach((f,i)=>{tone(f,i*.09,.5,{type:"triangle",g:.17});tone(f*2,i*.09,.3,{g:.03})});[523.25,659.25,783.99,1046.5].forEach(f=>tone(f,.5,1,{g:.07}))}
+    else if(k==="win"){[392,494,587,784].forEach((f,i)=>tone(f,i*.13,.5,{type:"triangle",g:.17}));tone(784,.55,.9,{g:.1});tone(988,.55,.9,{g:.08})}
+    else if(k==="lose"){[392,330,262].forEach((f,i)=>tone(f,i*.17,.45,{type:"triangle",g:.16}))}
+  }catch(e){}
+}
+function vib(p){try{if(S.vib!==false&&navigator.vibrate)navigator.vibrate(p)}catch(e){}}
+
+// ===== Rückmeldung: Hinweise, Konfetti, Level-Aufstieg =====
+function toast(m){
+  let c=$("#toasts");if(!c){c=document.createElement("div");c.id="toasts";c.setAttribute("role","status");document.body.appendChild(c)}
+  const t=document.createElement("div");t.className="toast";t.textContent=m;c.appendChild(t);setTimeout(()=>t.remove(),3400);
+}
+function confetti(){
+  if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;
+  const c=document.createElement("div"),cols=["#1f6f55","#e8b64c","#c4513f","#4fbd95","#f2cf9f","#2f6fa8"];c.className="conf";c.setAttribute("aria-hidden","true");
+  for(let i=0;i<46;i++){const p=document.createElement("i");p.style.cssText=`left:${Math.random()*100}%;background:${cols[i%6]};animation-delay:${Math.random()*.4}s;animation-duration:${1.4+Math.random()*1.2}s;--dx:${(Math.random()*160-80)|0}px;--r:${(Math.random()*720-360)|0}deg`;c.appendChild(p)}
+  document.body.appendChild(c);setTimeout(()=>c.remove(),3200);
+}
+function levelUp(L){
+  const o=document.createElement("div");o.className="lvlup";o.setAttribute("role","status");
+  o.innerHTML=`<div><div class="med big"><span class="ar" lang="ar">${toAr(L)}</span></div><b>Level ${L}</b><p class="mute">Weiter so!</p></div>`;
+  o.onclick=()=>o.remove();document.body.appendChild(o);setTimeout(()=>o.remove(),2600);
+  confetti();sfx("level");vib([20,30,20,30,60]);
+}
+const medal=i=>i.startsWith("<svg")?i:`<span class="ar" lang="ar">${i}</span>`;
+
+// ===== XP, Level, Abzeichen =====
+const xpFor=L=>40*(L-1)*(L-1),lvl=()=>1+Math.floor(Math.sqrt((S.xp||0)/40));
+const BADGES=[
+["first","بداية","Erster Schritt","Die erste richtige Antwort",()=>(S.xp||0)>0],
+["w10","١٠","10 Wörter","10 Wörter gelernt",()=>knownN()>=10],
+["w50","٥٠","50 Wörter","50 Wörter gelernt",()=>knownN()>=50],
+["w100","١٠٠","100 Wörter","100 Wörter gelernt",()=>knownN()>=100],
+["w250","٢٥٠","250 Wörter","250 Wörter gelernt",()=>knownN()>=250],
+["wall","الكل","Alle Wörter","Alle Wörter gelernt",()=>knownN()>=W.length],
+["s3",ic("flame",30,true),"3 Tage","3 Tage in Folge gelernt",()=>streak()>=3],
+["s7",ic("flame",30,true),"7 Tage","7 Tage in Folge gelernt",()=>streak()>=7],
+["s30",ic("flame",30,true),"30 Tage","30 Tage in Folge gelernt",()=>streak()>=30],
+["goal","هدف","Tagesziel","Das Tagesziel erreicht",()=>(S.st.goals||0)>0],
+["perfect","كامل","Fehlerfrei","Eine Runde ohne Fehler",()=>(S.st.perfect||0)>0],
+["lvl5",ic("star",30,true),"Level 5","Level 5 erreicht",()=>lvl()>=5],
+["lvl10",ic("star",30,true),"Level 10","Level 10 erreicht",()=>lvl()>=10],
+["pairs","زوج","Paarprofi","Paare zuordnen geschafft",()=>(S.st.pairs||0)>0],
+["blitz","برق","Blitzdenker","10 Treffer im Wort-Blitz",()=>(S.st.blitz||0)>=10],
+...GROUPS.map(g=>["g-"+g,GA[g]||"✓",g+" gemeistert","Alle Wörter im Thema „"+g+"“ gelernt",()=>W.filter(w=>w.cat===g).every(w=>isLearned(w.i))])
+].map(a=>({id:a[0],ic:a[1],n:a[2],d:a[3],t:a[4]}));
+function checkBadges(){
+  S.badges=S.badges||[];let n=0;
+  for(const b of BADGES)if(!S.badges.includes(b.id)&&b.t()){S.badges.push(b.id);toast("Abzeichen: "+b.n);n++}
+  if(n){sfx("badge");vib([15,25,15]);confetti()}
+  return n;
+}
+function addXP(n){
+  const l0=lvl(),d=today(),before=S.xpDays[d]||0;
+  S.xp=(S.xp||0)+n;S.xpDays[d]=before+n;touch();
+  if(before<S.goal&&S.xpDays[d]>=S.goal){S.st.goals=(S.st.goals||0)+1;toast("Tagesziel erreicht");confetti();sfx("goal")}
+  if(lvl()>l0)levelUp(lvl());
+  checkBadges();save();
+}
+
+// ===== Navigation =====
+let view="home",ui={cat:"Alle",q:""},gt=0;
+const TABS=[["home","home","Start"],["path","path","Lernpfad"],["games","bolt","Spiele"],["cards","cards","Karten"],["more","more","Mehr"]];
+const SUB={more:["stats","fav","settings","list","badges"],games:["pairs","blitz"],path:["quiz"]};
 function go(v){view=v;render()}
+const paint=h=>{app.innerHTML=h;fx()};
+function fx(){requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelectorAll("[data-to]").forEach(e=>{e.style.width=e.dataset.to+"%"})))}
 function render(){
-  $("#nav").innerHTML=TABS.map(t=>`<button class="${(view===t[0]||(t[0]==="more"&&["stats","fav","settings","list"].includes(view)))?"on":""}" data-go="${t[0]}"><span>${t[1]}</span>${t[2]}</button>`).join("");
-  $("#nav").hidden=view==="quiz";
-  ({home,cards,more,list,stats,settings,quiz,fav})[view]();
+  clearInterval(gt);
+  $("#nav").innerHTML=TABS.map(t=>`<button class="${(view===t[0]||(SUB[t[0]]||[]).includes(view))?"on":""}" data-go="${t[0]}"><span>${ic(t[1])}</span>${t[2]}</button>`).join("");
+  $("#nav").hidden=["quiz","pairs","blitz"].includes(view);
+  ({home,path,cards,more,list,stats,settings,quiz,fav,games,badges,pairs,blitz})[view]();
+  app.classList.remove("enter");void app.offsetWidth;app.classList.add("enter");
   window.scrollTo(0,0);
 }
-document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g){if(g.dataset.go==="learn")return startQuiz();go(g.dataset.go)}});
-function head(t,back="home"){return `<div class="top"><button class="x" data-go="${back}" aria-label="Zurück">←</button><h2>${t}</h2></div>`}
-
-function home(){
-  const p=pct();
-  app.innerHTML=`<div class="hero"><div class="ar">مفردات</div><h1>Mufradaat</h1><p class="mute">Arabisch lernen. Schritt für Schritt.</p></div>
-  <h2 style="margin-top:22px">Hallo${U&&U!=="gast"?", "+esc(U.split("@")[0]):""}!</h2><p class="mute">${dueN()} Wörter zur Wiederholung und ${W.filter(w=>S.box[w.i]===undefined).length} neue Wörter warten auf dich.</p>
-  <div class="card row" style="margin-top:14px"><div class="ring" style="--p:${p}"></div><div><p class="mute">Lernfortschritt</p><p class="big">${p}%</p><p class="mute">${knownN()} von ${W.length} Wörtern</p></div></div>
-  <div class="menu">
-  ${[["learn","📖","Lernen","Neue Wörter &amp; Wiederholung","main"],["cards","🗂️","Karteikarten","Lernen im eigenen Tempo",""],["list","🔤","Wortliste","Alle Wörter durchsuchen",""],["stats","📊","Statistiken","Dein Fortschritt im Überblick",""],["fav","⭐","Favoriten","Wichtige Wörter gespeichert",""]].map(m=>`<button class="item ${m[4]}" data-go="${m[0]}"><span class="ic">${m[1]}</span><span><b>${m[2]}</b><small>${m[3]}</small></span><span class="ch">›</span></button>`).join("")}
-  </div>`;
-}
-function more(){
-  app.innerHTML=`<h1>Mehr</h1><div class="menu">${[["list","🔤","Wortliste"],["stats","📊","Statistiken"],["fav","⭐","Favoriten"],["settings","⚙️","Einstellungen"]].map(m=>`<button class="item" data-go="${m[0]}"><span class="ic">${m[1]}</span><b>${m[2]}</b><span class="ch">›</span></button>`).join("")}</div>`;
-}
-function wordRow(w){return `<button class="w" data-say="${w.i}"><span class="ar">${w.ar}</span><span style="flex:1"><b>${w.de}</b><span class="tr"><br>(${w.tr})</span></span><span class="mute">${isLearned(w.i)?"✔ ":""}🔊</span></button>`}
-function list(){
-  const cats=["Alle",...new Set(W.map(w=>w.cat))];
-  const q=ui.q.toLowerCase();
-  const ws=W.filter(w=>(ui.cat==="Alle"||w.cat===ui.cat)&&(!q||w.de.toLowerCase().includes(q)||w.tr.toLowerCase().includes(q)||norm(w.ar).includes(norm(q))));
-  app.innerHTML=head("Wortliste")+`<input type="search" id="q" placeholder="Wörter suchen …" value="${esc(ui.q)}" aria-label="Wörter suchen"><div class="chips">${cats.map(c=>`<button class="chip ${ui.cat===c?"on":""}" data-cat="${c}">${c}</button>`).join("")}</div><div id="ws">${ws.map(wordRow).join("")||'<p class="mute">Keine Treffer. Versuch einen anderen Suchbegriff.</p>'}</div>`;
-  $("#q").oninput=e=>{ui.q=e.target.value;const pos=e.target.selectionStart;list();const el=$("#q");el.focus();el.setSelectionRange(pos,pos)};
-}
 document.addEventListener("click",e=>{
-  const c=e.target.closest("[data-cat]");if(c){ui.cat=c.dataset.cat;list()}
+  const g=e.target.closest("[data-go]");
+  if(g){const t=g.dataset.go;sfx("tap");if(t==="review")return startQuiz(null);if(t==="pairs")return startPairs();if(t==="blitz")return startBlitz();return go(t)}
+  const l=e.target.closest("[data-les]");
+  if(l){const k=+l.dataset.les;sfx("tap");
+    if(isLocked(k)){const p=LES[k-1],st=lessonStat(p);toast(`Gesperrt: Lerne erst „${p.t}“ (noch ${need(p)-st.k} Wörter).`);return}
+    return startQuiz(k)}
+  const c=e.target.closest("[data-cat]");if(c){ui.cat=c.dataset.cat;sfx("tap");list()}
   const s=e.target.closest("[data-say]");if(s)speak(BY[s.dataset.say].ar);
 });
-function fav(){app.innerHTML=head("Favoriten")+`<p class="mute">Tippe bei den Karteikarten auf den Stern, um Wörter zu speichern.</p><div id="fv">${(S.fav||[]).map(i=>BY[i]).filter(Boolean).map(wordRow).join("")||'<div class="card" style="margin-top:12px">Noch keine Favoriten. Öffne die Karteikarten und markiere ein Wort mit ⭐.</div>'}</div>`}
+function head(t,back="home"){return `<div class="top"><button class="x" data-go="${back}" aria-label="Zurück">${ic("back")}</button><h2>${t}</h2></div>`}
+const itm=(attr,icon,title,sub,cls="")=>`<button class="item ${cls}" ${attr}><span class="ic">${ic(icon)}</span><span><b>${title}</b>${sub?`<small>${sub}</small>`:""}</span><span class="ch">${ic("chev",18)}</span></button>`;
 
-// Flashcards
-let cd={order:[],n:0,flip:false};
+function home(){
+  const g=S.goal||50,xd=S.xpDays[today()]||0,gp=Math.min(100,Math.round(xd/g*100)),L=lvl(),lo=xpFor(L),hi=xpFor(L+1),xp=S.xp||0,lp=Math.round((xp-lo)/(hi-lo)*100),st=streak(),lit=S.last===today(),cur=currentLesson(),due=dueN();
+  paint(`<div class="ar mark" lang="ar">مفردات</div>
+  <div class="row sp" style="margin-top:8px"><div><h1 style="margin:0">Hallo${U&&U!=="gast"?", "+esc(U.split("@")[0]):""}!</h1><p class="mute">${due?due+" Wörter zur Wiederholung":"Nichts zu wiederholen"}</p></div><span class="flame ${lit?"on":"off"}" role="img" aria-label="Serie: ${st} Tage">${ic("flame",18,true)} ${st}</span></div>
+  <div class="card row" style="margin-top:14px"><div class="ring" style="--p:${gp}" role="img" aria-label="Tagesziel ${gp} Prozent"><span>${gp}%</span></div><div style="flex:1"><p class="mute">Tagesziel</p><p class="big">${Math.min(xd,g)} / ${g} XP</p><p class="mute">${xd>=g?"Geschafft, weiter so":lit?"Noch "+(g-xd)+" XP bis zum Ziel":"Lerne heute, um deine Serie zu halten"}</p></div></div>
+  <div class="card" style="margin-top:10px"><div class="row sp"><b>Level ${L}</b><span class="mute">${xp} XP</span></div><div class="bar" style="margin-top:10px"><i style="width:0" data-to="${lp}"></i></div><p class="mute" style="margin-top:6px">Noch ${hi-xp} XP bis Level ${L+1} · ${knownN()} von ${W.length} Wörtern gelernt</p></div>
+  <div class="menu">
+  ${itm(`data-les="${cur.k}"`,"path","Weiterlernen",`Lektion ${cur.k+1}: ${cur.t}`,"main")}
+  ${due?itm('data-go="review"',"repeat","Wiederholen",due+" Wörter fällig"):""}
+  ${itm('data-go="path"',"list","Lernpfad",LES.length+" Lektionen")}
+  ${itm('data-go="games"',"bolt","Spiele","Paare zuordnen, Wort-Blitz")}
+  ${itm('data-go="cards"',"cards","Karteikarten","Lernen im eigenen Tempo")}
+  ${itm('data-go="badges"',"medal","Abzeichen",(S.badges||[]).length+" von "+BADGES.length+" freigeschaltet")}
+  ${itm('data-go="stats"',"chart","Statistiken","Dein Fortschritt im Überblick")}
+  </div>`);
+}
+function path(){
+  const cur=currentLesson(),due=dueN(),done=LES.filter(l=>lessonStat(l).k>=l.w.length).length;let last="";
+  paint(`<h1>Lernpfad</h1><p class="mute">${knownN()} von ${W.length} Wörtern gelernt · ${done} von ${LES.length} Lektionen abgeschlossen</p>
+  ${due?`<div class="menu">${itm('data-go="review"',"repeat","Wiederholen",due+" Wörter fällig")}</div>`:""}
+  <div class="lp">${LES.map(l=>{
+    const st=lessonStat(l),lock=isLocked(l.k),dn=st.k>=l.w.length,p=Math.round(st.k/st.t*100),h=l.g!==last?`<p class="gt">${l.g}</p>`:"";last=l.g;
+    return `${h}<button class="les ${lock?"lock":dn?"done":""} ${l===cur?"cur":""}" data-les="${l.k}" style="--k:${Math.min(l.k,14)}"><span class="nd">${lock?ic("lock",18):dn?ic("check",20):`<span>${l.k+1}</span>`}</span><span class="lt"><b>${l.t}</b><small>${lock?"Gesperrt":st.k+" von "+st.t+" gelernt"}</small><span class="bar"><i style="width:${p}%"></i></span></span></button>`}).join("")}</div>`);
+  const c=$(".les.cur");if(c)requestAnimationFrame(()=>c.scrollIntoView({block:"center"}));
+}
+function more(){
+  paint(`<h1>Mehr</h1><div class="menu">${[["badges","medal","Abzeichen"],["list","list","Wortliste"],["stats","chart","Statistiken"],["fav","star","Favoriten"],["settings","gear","Einstellungen"]].map(m=>itm(`data-go="${m[0]}"`,m[1],m[2],"")).join("")}</div>`);
+}
+function badges(){
+  const have=S.badges||[];
+  paint(head("Abzeichen","more")+`<p class="mute">${have.length} von ${BADGES.length} freigeschaltet</p><div class="bg">${BADGES.map(b=>`<div class="card bdg ${have.includes(b.id)?"":"lock"}"><span class="med">${medal(b.ic)}</span><b>${b.n}</b><small>${b.d}</small></div>`).join("")}</div>`);
+}
+function games(){
+  paint(`<h1>Spiele</h1><p class="mute">Üben mit Tempo. Jedes Spiel bringt XP.</p><div class="menu">${itm('data-go="pairs"',"pairs","Paare zuordnen","6 Wortpaare, so schnell du kannst")}${itm('data-go="blitz"',"bolt","Wort-Blitz","60 Sekunden · Rekord: "+(S.st.blitz||0)+" Treffer")}</div>`);
+}
+function wordRow(w){const nt=noteOf(w);return `<button class="w" data-say="${w.i}"><span class="ar" lang="ar">${w.ar}</span><span style="flex:1"><b>${w.de}</b><span class="tr"><br>(${w.tr})${nt?" · "+esc(nt):""}</span></span><span class="mute">${isLearned(w.i)?ic("check",16)+" ":""}${ic("speaker",18)}</span></button>`}
+function list(){
+  const cats=["Alle",...GROUPS];
+  const q=ui.q.toLowerCase();
+  const ws=W.filter(w=>(ui.cat==="Alle"||w.cat===ui.cat)&&(!q||w.de.toLowerCase().includes(q)||w.tr.toLowerCase().includes(q)||norm(w.ar).includes(norm(q))));
+  paint(head("Wortliste")+`<input type="search" id="q" placeholder="Wörter suchen …" value="${esc(ui.q)}" aria-label="Wörter suchen"><div class="chips">${cats.map(c=>`<button class="chip ${ui.cat===c?"on":""}" data-cat="${c}">${c}</button>`).join("")}</div><div id="ws">${ws.map(wordRow).join("")||'<p class="mute">Keine Treffer. Versuch einen anderen Suchbegriff.</p>'}</div>`);
+  $("#q").oninput=e=>{ui.q=e.target.value;const pos=e.target.selectionStart;list();const el=$("#q");el.focus();el.setSelectionRange(pos,pos)};
+}
+function fav(){paint(head("Favoriten","more")+`<p class="mute">Tippe bei den Karteikarten auf den Stern, um Wörter zu speichern.</p><div id="fv">${(S.fav||[]).map(i=>BY[i]).filter(Boolean).map(wordRow).join("")||'<div class="card" style="margin-top:12px">Noch keine Favoriten. Öffne die Karteikarten und markiere ein Wort mit dem Stern.</div>'}</div>`)}
+
+// ===== Karteikarten =====
+let cd={order:[],n:0,flip:false,sig:0,anim:false};
 function cards(){
-  if(!cd.order.length)cd.order=shuffle(W.map(w=>w.i));
-  const w=BY[cd.order[cd.n%W.length]],isF=(S.fav||[]).includes(w.i);
-  const front=S.dir==="ad"?`<div class="ar">${w.ar}</div><p class="mute">(${w.tr})</p>`:`<h1>${w.de}</h1>`;
-  const back=S.dir==="ad"?`<h1>${w.de}</h1>`:`<div class="ar">${w.ar}</div><p class="mute">(${w.tr})</p>`;
-  app.innerHTML=`<div class="row sp"><h1>Karteikarten</h1><span class="mute">${cd.n%W.length+1} / ${W.length}</span></div>
-  <button class="card flash" id="fl" aria-label="Karte umdrehen">${front}${cd.flip?`<hr style="width:60%;border:0;border-top:1px solid var(--line)">${back}`:'<p class="mute">Tippen zum Umdrehen</p>'}</button>
-  <div class="row" style="margin-top:12px"><button class="btn alt" id="sp" style="margin:0">🔊 Anhören</button><button class="btn alt" id="fv" style="margin:0" aria-label="Favorit">${isF?"★":"☆"} Favorit</button></div>
-  <div class="row" style="margin-top:0"><button class="btn alt" id="again">Nochmal</button><button class="btn" id="got">Gewusst</button></div>`;
-  $("#fl").onclick=()=>{cd.flip=!cd.flip;cards()};
+  const pool=unlockedWords();
+  if(!cd.order.length||cd.sig!==pool.length){cd.order=shuffle(pool.map(w=>w.i));cd.n=0;cd.sig=pool.length;cd.flip=false}
+  const w=BY[cd.order[cd.n%cd.order.length]],isF=(S.fav||[]).includes(w.i),nt=noteOf(w);
+  const front=S.dir==="ad"?`<div class="ar" lang="ar">${w.ar}</div><p class="mute">(${w.tr})</p>`:`<h1>${w.de}</h1>`;
+  const back=S.dir==="ad"?`<h1>${w.de}</h1>`:`<div class="ar" lang="ar">${w.ar}</div><p class="mute">(${w.tr})</p>`;
+  paint(`<div class="row sp"><h1>Karteikarten</h1><span class="mute">${cd.n%cd.order.length+1} / ${cd.order.length}</span></div>
+  <button class="card flash ${cd.anim?"flipped":""}" id="fl" aria-label="Karte umdrehen" aria-pressed="${cd.flip}">${front}${cd.flip?`<hr style="width:60%;border:0;border-top:1px solid var(--line)">${back}${nt?`<p class="mute">${esc(nt)}</p>`:""}`:'<p class="mute">Tippen zum Umdrehen</p>'}</button>
+  <div class="row" style="margin-top:12px"><button class="btn alt" id="sp" style="margin:0">${ic("speaker",18)} Anhören</button><button class="btn alt" id="fv" style="margin:0" aria-label="Favorit">${ic("star",18,isF)} Favorit</button></div>
+  <div class="row" style="margin-top:0"><button class="btn alt" id="again">Nochmal</button><button class="btn" id="got">Gewusst</button></div>`);
+  cd.anim=false;
+  $("#fl").onclick=()=>{cd.flip=!cd.flip;cd.anim=true;sfx("flip");cards()};
   $("#sp").onclick=()=>speak(w.ar);
-  $("#fv").onclick=()=>{S.fav=S.fav||[];S.fav=isF?S.fav.filter(x=>x!==w.i):[...S.fav,w.i];save();cards()};
-  $("#again").onclick=()=>{grade(w.i,false);cd.n++;cd.flip=false;cards()};
-  $("#got").onclick=()=>{grade(w.i,true);cd.n++;cd.flip=false;cards()};
+  $("#fv").onclick=()=>{S.fav=S.fav||[];S.fav=isF?S.fav.filter(x=>x!==w.i):[...S.fav,w.i];save();sfx("tap");cards()};
+  $("#again").onclick=()=>{grade(w.i,false);cd.n++;cd.flip=false;cd.anim=true;cards()};
+  $("#got").onclick=()=>{grade(w.i,true);cd.n++;cd.flip=false;cd.anim=true;sfx("good",1);cards()};
 }
 
-// Quiz
-let Q={};
-function startQuiz(){
-  const N=10,NEWMAX=5,seen=w=>S.box[w.i]!==undefined;
-  const due=shuffle(W.filter(w=>seen(w)&&S.due[w.i]<=Date.now())),nw=shuffle(W.filter(w=>!seen(w))),rest=shuffle(W.filter(w=>seen(w)&&S.due[w.i]>Date.now()));
-  const take=due.slice(0,N);take.push(...nw.slice(0,Math.min(NEWMAX,N-take.length)));take.push(...rest.slice(0,N-take.length));
-  const ws=shuffle(take),intro=ws.filter(w=>!seen(w));
-  Q={ws,intro,ii:0,ph:intro.length?"intro":"quiz",n:0,right:0,picked:null,res:null};view="quiz";render();
+// ===== Lernrunde =====
+let Q={},G={},B={};
+function startQuiz(k){
+  const L=k==null?null:LES[k],seen=w=>S.box[w.i]!==undefined,now=Date.now();let base;
+  if(L){
+    const pool=L.w.map(id=>BY[id]),due=shuffle(pool.filter(w=>seen(w)&&S.due[w.i]<=now)),nw=pool.filter(w=>!seen(w)).slice(0,5),rest=shuffle(pool.filter(w=>seen(w)&&S.due[w.i]>now));
+    base=[...due.slice(0,8),...nw];base.push(...rest.slice(0,Math.max(0,8-base.length)));
+  }else{
+    const pool=unlockedWords().filter(seen),due=shuffle(pool.filter(w=>S.due[w.i]<=now)),rest=shuffle(pool.filter(w=>S.due[w.i]>now));
+    base=[...due.slice(0,10)];base.push(...rest.slice(0,Math.max(0,8-base.length)));
+  }
+  if(!base.length){toast("Hier gibt es gerade nichts zu üben.");return go("path")}
+  const news=base.filter(w=>!seen(w)),items=shuffle(base).map(w=>({w,rep:false}));
+  news.forEach(w=>{const p=items.findIndex(x=>x.w===w&&!x.rep);items.splice(Math.min(items.length,p+3+Math.floor(Math.random()*3)),0,{w,rep:true})}); // neue Wörter kommen später noch einmal
+  Q={k,ws:items,intro:news,ii:0,ph:news.length?"intro":"quiz",n:0,right:0,done:0,hearts:3,combo:0,xp:0,wrong:[],fb:null,picked:null,res:null,out:false,fin:false,pct:0,nextLocked:L&&k+1<LES.length?isLocked(k+1):false};
+  view="quiz";render();
 }
 function intro(){ // neue Wörter erst zeigen, dann abfragen
-  const w=Q.intro[Q.ii],k=Q.intro.length;
-  app.innerHTML=`<div class="top"><button class="x" data-go="home" aria-label="Beenden">✕</button><div class="bar"><i style="width:${Q.ii/k*100}%"></i></div><span class="mute">Neu ${Q.ii+1} / ${k}</span></div>
+  const w=Q.intro[Q.ii],k=Q.intro.length,nt=noteOf(w);
+  paint(`<div class="top">${xbtn("path")}<div class="bar"><i style="width:${Q.ii/k*100}%"></i></div><span class="mute">Neu ${Q.ii+1} / ${k}</span></div>
   <p style="text-align:center;font-weight:600;margin-top:20px">Neues Wort</p>
-  <div class="card flash"><div class="ar" lang="ar">${w.ar}</div><p class="mute">(${w.tr})</p><h1>${w.de}</h1><button class="btn alt" id="sp" style="width:auto;padding:10px 22px">🔊 Anhören</button></div>
-  <button class="btn" id="nx">${Q.ii+1<k?"Weiter":"Abfrage starten"}</button>`;
+  <div class="card flash slide"><div class="ar" lang="ar">${w.ar}</div><p class="mute">(${w.tr})</p><h1>${w.de}</h1>${nt?`<p class="mute">${esc(nt)}</p>`:""}<button class="btn alt" id="sp" style="width:auto;padding:10px 22px">${ic("speaker",18)} Anhören</button></div>
+  <button class="btn" id="nx">${Q.ii+1<k?"Weiter":"Abfrage starten"}</button>`);
   $("#sp").onclick=()=>speak(w.ar);speak(w.ar);
-  $("#nx").onclick=()=>{Q.ii++;if(Q.ii>=k)Q.ph="quiz";quiz()};
+  $("#nx").onclick=()=>{Q.ii++;sfx("tap");if(Q.ii>=k)Q.ph="quiz";quiz()};
+}
+function answer(it,ok){ // Bewertung, XP, Herzen, Rückmeldung
+  const w=it.w;Q.done++;
+  if(ok){
+    Q.right++;Q.combo++;const x=it.rep?5:10+(Q.combo>=3?Math.min(5,Q.combo-2):0);Q.xp+=x;
+    if(!it.rep)grade(w.i,true);
+    Q.fb={ok:true,x,msg:Q.combo>=3?Q.combo+" in Folge":pick(GOOD)};sfx("good",Q.combo);vib(12);addXP(x);
+  }else{
+    grade(w.i,false);Q.combo=0;Q.hearts--;if(!Q.wrong.includes(w))Q.wrong.push(w);
+    Q.fb={ok:false,msg:pick(BAD)};sfx("bad");vib([50,40,50]);setTimeout(()=>sfx("heart"),0);
+  }
+}
+const GOOD=["Mashallah!","Ausgezeichnet!","Sehr gut!","Stark!","Genau!"],BAD=["Fast!","Nicht ganz.","Kein Problem, weiter!","Das merkst du dir gleich."];
+function roundEnd(){
+  const L=Q.k!=null?LES[Q.k]:null;
+  if(!Q.fin){
+    Q.fin=true;const full=!Q.out,perfect=full&&Q.done>0&&Q.wrong.length===0;
+    Q.bonus=(full?15:0)+(perfect?10:0);S.st.rounds=(S.st.rounds||0)+1;if(perfect)S.st.perfect=(S.st.perfect||0)+1;
+    if(Q.bonus){Q.xp+=Q.bonus;addXP(Q.bonus)}else{save();checkBadges()}
+    const acc=Q.done?Q.right/Q.done:0;
+    if(full&&acc>=.7){confetti();sfx("win")}else if(Q.out)sfx("lose");
+    Q.unlocked=Q.nextLocked&&!isLocked(Q.k+1);
+    if(Q.unlocked){setTimeout(()=>{toast("Neue Lektion: „"+LES[Q.k+1].t+"“");sfx("badge")},900)}
+  }
+  const acc=Q.done?Q.right/Q.done:0,stars=acc>=.9?3:acc>=.6?2:1,st=L?lessonStat(L):null;
+  paint(`<div style="text-align:center;margin-top:20px"><h1>${Q.out?"Keine Herzen mehr":"Geschafft"}</h1><p class="stars" role="img" aria-label="${stars} von 3 Sternen">${[0,1,2].map(i=>`<span class="star ${i<stars?"on":""}" style="--k:${i}">${ic("star",34,i<stars)}</span>`).join("")}</p></div>
+  <div class="tiles"><div class="card"><p class="mute">Richtig</p><b>${Q.right} / ${Q.done}</b></div><div class="card"><p class="mute">XP verdient</p><b>+${Q.xp}</b>${Q.bonus?`<span class="mute">davon ${Q.bonus} Bonus</span>`:""}</div></div>
+  ${L?`<div class="card" style="margin-top:10px"><div class="row sp"><b>${L.t}</b><span class="mute">${st.k} von ${st.t} gelernt</span></div><div class="bar" style="margin-top:10px"><i style="width:0" data-to="${Math.round(st.k/st.t*100)}"></i></div>${Q.unlocked?`<p style="margin-top:8px;color:var(--g);font-weight:600">Nächste Lektion freigeschaltet: ${LES[Q.k+1].t}</p>`:""}</div>`:""}
+  ${Q.wrong.length?`<p style="margin-top:18px"><b>Das üben wir nochmal</b></p>${Q.wrong.map(wordRow).join("")}`:""}
+  <button class="btn" id="again">${Q.out?"Nochmal versuchen":"Noch eine Runde"}</button><button class="btn alt" data-go="path">Zum Lernpfad</button>`);
+  $("#again").onclick=()=>startQuiz(Q.k);
 }
 function quiz(){
   if(Q.ph==="intro")return intro();
-  if(Q.n>=Q.ws.length){
-    app.innerHTML=head("Geschafft!","home")+`<div class="card" style="text-align:center;margin-top:10px"><div class="big">${Q.right} / ${Q.ws.length}</div><p class="mute">richtig beantwortet</p></div><button class="btn" id="again">Noch eine Runde</button><button class="btn alt" data-go="home">Zur Startseite</button>`;
-    $("#again").onclick=startQuiz;return;
-  }
-  const w=Q.ws[Q.n],bar=`<div class="top"><button class="x" data-go="home" aria-label="Beenden">✕</button><div class="bar"><i style="width:${Q.n/Q.ws.length*100}%"></i></div><span class="mute">${Q.n+1} / ${Q.ws.length}</span></div>`;
+  if(Q.n>=Q.ws.length)return roundEnd();
+  const h=Math.max(0,Q.hearts),it=Q.ws[Q.n],w=it.w,last=h<=0?"Ergebnis ansehen":"Weiter",lost=Q.fb&&!Q.fb.ok,from=Q.pct,to=Math.round(Q.n/Q.ws.length*100);Q.pct=to;
+  const bar=`<div class="top">${xbtn("path")}<div class="bar"><i style="width:${from}%" data-to="${to}"></i></div><span class="hearts" role="img" aria-label="${h} Herzen übrig">${[0,1,2].map(i=>`<span class="hrt ${i<h?"":"off"} ${lost&&i===h?"lost":""}">${ic("heart",20,i<h)}</span>`).join("")}</span></div>
+  <div class="qmeta"><span class="mute">${Q.n+1} / ${Q.ws.length}${it.rep?" · Wiederholung":""}</span>${Q.combo>=3?`<span class="combo">${ic("flame",14,true)} ${Q.combo}</span>`:""}</div>`;
+  const fbHtml=Q.fb?`<div class="fb ${Q.fb.ok?"ok":"no"}" role="status"><span>${Q.fb.msg}${S.dir==="da"&&Q.res===false?` · richtig: <span class="ar" lang="ar" style="font-size:22px">${w.ar}</span>`:""}</span>${Q.fb.ok?`<span class="xpf">+${Q.fb.x} XP</span>`:""}</div>`:"";
   if(S.dir==="ad"){
-    if(!Q.opts)Q.opts=shuffle([w,...shuffle(W.filter(x=>x.i!==w.i)).slice(0,3)]);
-    app.innerHTML=bar+`<p style="text-align:center;font-weight:600;margin-top:20px">Was bedeutet das Wort?</p><div style="text-align:center;margin:20px 0"><div class="ar" style="font-size:64px">${w.ar}</div><p class="mute">(${w.tr}) <button class="x" id="sp" aria-label="Anhören">🔊</button></p></div>
+    if(!Q.opts)Q.opts=options(w);
+    paint(bar+`<p style="text-align:center;font-weight:600;margin-top:12px">Was bedeutet das Wort?</p><div style="text-align:center;margin:18px 0"><div class="ar" lang="ar" style="font-size:64px">${w.ar}</div><p class="mute">(${w.tr}) <button class="x" id="sp" aria-label="Anhören">${ic("speaker",20)}</button></p></div>
     ${Q.opts.map(o=>`<button class="opt ${Q.picked!==null?(o.i===w.i?"ok":o.i===Q.picked?"no":""):""}" data-o="${o.i}" ${Q.picked!==null?"disabled":""}>${o.de}</button>`).join("")}
-    <button class="btn" id="nx" ${Q.picked===null?"disabled":""}>Weiter</button>`;
+    ${fbHtml}<button class="btn" id="nx" ${Q.picked===null?"disabled":""}>${last}</button>`);
     $("#sp").onclick=()=>speak(w.ar);
-    document.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{Q.picked=b.dataset.o;const ok=Q.picked===w.i;if(ok)Q.right++;grade(w.i,ok);speak(w.ar);quiz()});
+    document.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{Q.picked=b.dataset.o;answer(it,Q.picked===w.i);speakLater(w.ar);quiz()});
   }else{
-    app.innerHTML=bar+`<p style="text-align:center;font-weight:600;margin-top:20px">Schreibe das arabische Wort.</p><div style="text-align:center;margin:16px 0"><span class="chip on" style="font-size:20px;padding:10px 24px">${w.de}</span></div>
-    <input class="t ar" id="tx" placeholder="Arabisch schreiben …" autocomplete="off" inputmode="none" style="font-size:24px" ${Q.res!==null?"disabled":""} value="${esc(Q.val||"")}"><div class="kb" id="kb">${[..."ابتثجحخدذرزسشصضطظعغفقكلمنهويءأإآؤئةى"].map(c=>`<button data-k="${c}" ${Q.res!==null?"disabled":""}>${c}</button>`).join("")}<button data-k=" " style="grid-column:span 4;font-family:var(--sans);font-size:14px" ${Q.res!==null?"disabled":""}>Leerzeichen</button><button data-k="⌫" aria-label="Löschen" style="grid-column:span 2;font-family:var(--sans)">⌫</button></div>
-    ${Q.res!==null?`<div class="card" style="margin-top:12px;border-width:2px;border-color:${Q.res?"var(--g)":"var(--bad)"}">${Q.res?"Richtig!":"Richtig wäre:"} <span class="ar" style="font-size:24px">${w.ar}</span></div>`:""}
-    <button class="btn" id="nx">${Q.res===null?"Überprüfen":"Weiter"}</button>`;
+    paint(bar+`<p style="text-align:center;font-weight:600;margin-top:12px">Schreibe das arabische Wort.</p><div style="text-align:center;margin:16px 0"><span class="chip on" style="font-size:20px;padding:10px 24px">${w.de}</span></div>
+    <input class="t ar" id="tx" lang="ar" placeholder="Arabisch schreiben …" autocomplete="off" inputmode="none" style="font-size:24px" ${Q.res!==null?"disabled":""} value="${esc(Q.val||"")}"><div class="kb" id="kb">${[..."ابتثجحخدذرزسشصضطظعغفقكلمنهويءأإآؤئةى"].map(c=>`<button data-k="${c}" ${Q.res!==null?"disabled":""}>${c}</button>`).join("")}<button data-k=" " style="grid-column:span 4;font-family:var(--sans);font-size:14px" ${Q.res!==null?"disabled":""}>Leerzeichen</button><button data-k="⌫" aria-label="Löschen" style="grid-column:span 2;font-family:var(--sans)">⌫</button></div>
+    ${fbHtml}<button class="btn" id="nx">${Q.res===null?"Überprüfen":last}</button>`);
     const tx=$("#tx");tx.oninput=()=>Q.val=tx.value;tx.onkeydown=e=>{if(e.key==="Enter")$("#nx").click()};
-    $("#kb").onclick=e=>{const k=e.target.dataset.k;if(!k)return;Q.val=k==="⌫"?(Q.val||"").slice(0,-1):(Q.val||"")+k;tx.value=Q.val;tx.focus()};
+    $("#kb").onclick=e=>{const k=e.target.closest("[data-k]");if(!k)return;const c=k.dataset.k;sfx("tap");Q.val=c==="⌫"?(Q.val||"").slice(0,-1):(Q.val||"")+c;tx.value=Q.val;tx.focus()};
   }
   $("#nx").onclick=()=>{
-    if(S.dir==="da"&&Q.res===null){Q.res=norm(Q.val||"")===norm(w.ar);if(Q.res)Q.right++;grade(w.i,Q.res);return quiz()}
-    Q.n++;Q.opts=null;Q.picked=null;Q.res=null;Q.val="";quiz();
+    if(S.dir==="da"&&Q.res===null){Q.res=norm(Q.val||"")===norm(w.ar);answer(it,Q.res);speakLater(w.ar);return quiz()}
+    Q.out=Q.hearts<=0;Q.n=Q.out?Q.ws.length:Q.n+1;Q.opts=null;Q.picked=null;Q.res=null;Q.val="";Q.fb=null;sfx("tap");quiz();
   };
 }
 
+// ===== Spiel 1: Paare zuordnen =====
+function startPairs(){
+  const pool=gamePool(6),ws=[];for(const w of shuffle(pool)){if(ws.length<6&&!ws.some(x=>x.de===w.de))ws.push(w)}
+  G={L:shuffle(ws),R:shuffle(ws),sel:null,done:[],miss:0,t0:Date.now(),end:false,bad:null,last:null,xp:0,sec:0};
+  view="pairs";render();
+  gt=setInterval(()=>{const e=$("#pt");if(e)e.textContent=Math.floor((Date.now()-G.t0)/1000)+" s";else clearInterval(gt)},500);
+}
+function finishPairs(){
+  clearInterval(gt);G.end=true;G.sec=Math.round((Date.now()-G.t0)/1000);
+  G.xp=Math.max(10,30+(G.sec<=20?15:G.sec<=40?8:0)-2*G.miss);
+  S.st.pairs=(S.st.pairs||0)+1;addXP(G.xp);if(G.miss<=1)confetti();sfx("win");
+}
+function pairs(){
+  if(G.end){
+    paint(`<div style="text-align:center;margin-top:30px"><h1>Geschafft</h1></div>
+    <div class="tiles"><div class="card"><p class="mute">Zeit</p><b>${G.sec} s</b></div><div class="card"><p class="mute">Fehler</p><b>${G.miss}</b></div><div class="card" style="grid-column:span 2"><p class="mute">XP verdient</p><b>+${G.xp}</b></div></div>
+    <button class="btn" id="again">Nochmal</button><button class="btn alt" data-go="games">Zu den Spielen</button>`);
+    $("#again").onclick=startPairs;return;
+  }
+  const cell=(w,side)=>{const d=G.done.includes(w.i),s=G.sel&&G.sel.id===w.i&&G.sel.side===side,b=G.bad&&G.bad.includes(side+w.i);
+    return `<button class="${side==="L"?"ar":""} ${d?"done":s?"sel":""} ${b?"bad":""} ${G.last===w.i?"just":""}" ${side==="L"?'lang="ar"':""} data-p="${side}${w.i}" ${d?"disabled":""}>${side==="L"?w.ar:w.de}</button>`};
+  paint(`<div class="top">${xbtn("games")}<h2 style="flex:1">Paare zuordnen</h2><span class="mute" id="pt">${Math.floor((Date.now()-G.t0)/1000)} s</span></div>
+  <p class="mute">Tippe ein arabisches Wort und dann die passende Bedeutung. ${G.done.length} / ${G.L.length}</p>
+  <div class="pg">${G.L.map((w,k)=>cell(w,"L")+cell(G.R[k],"R")).join("")}</div>`);
+  document.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{
+    const side=b.dataset.p[0],id=b.dataset.p.slice(1);
+    if(!G.sel||G.sel.side===side){G.sel={side,id};G.bad=null;G.last=null;sfx("tap");return pairs()}
+    if(G.sel.id===id){G.done.push(id);G.last=id;G.sel=null;G.bad=null;sfx("match");vib(12);speakLater(BY[id].ar);if(G.done.length===G.L.length)finishPairs();return pairs()}
+    G.miss++;G.bad=[G.sel.side+G.sel.id,side+id];G.sel=null;G.last=null;sfx("bad");vib([40,30,40]);pairs();
+  });
+}
+
+// ===== Spiel 2: Wort-Blitz (60 Sekunden) =====
+function nextB(){const pool=gamePool(8);B.w=pool[Math.floor(Math.random()*pool.length)];B.opts=options(B.w);B.pick=null;B.locked=false}
+const leftB=()=>Math.max(0,60-(Date.now()-B.t0)/1000);
+function startBlitz(){
+  B={right:0,wrong:0,combo:0,t0:Date.now(),end:false,xp:0,tick:0};nextB();view="blitz";render();
+  gt=setInterval(()=>{
+    if(view!=="blitz")return clearInterval(gt);const l=leftB();if(l<=0)return endBlitz();
+    const bb=$("#bb"),bt=$("#bt"),s=Math.ceil(l);
+    if(bb){bb.style.width=l/60*100+"%";bb.parentNode.classList.toggle("low",l<10)}if(bt)bt.textContent=s+" s";
+    if(s<=5&&s!==B.tick){B.tick=s;sfx("tick")}
+  },250);
+}
+function endBlitz(){
+  clearInterval(gt);B.end=true;S.st.blitz=Math.max(S.st.blitz||0,B.right);B.xp=B.right*3;
+  if(B.xp)addXP(B.xp);else{save();checkBadges()}
+  if(B.right>=10){confetti();sfx("win")}else sfx("lose");
+  if(view==="blitz")blitz();
+}
+function blitz(){
+  if(B.end){
+    paint(`<div style="text-align:center;margin-top:30px"><h1>Zeit abgelaufen</h1></div>
+    <div class="tiles"><div class="card"><p class="mute">Treffer</p><b>${B.right}</b></div><div class="card"><p class="mute">Fehler</p><b>${B.wrong}</b></div><div class="card"><p class="mute">Rekord</p><b>${S.st.blitz||0}</b></div><div class="card"><p class="mute">XP verdient</p><b>+${B.xp}</b></div></div>
+    <button class="btn" id="again">Nochmal</button><button class="btn alt" data-go="games">Zu den Spielen</button>`);
+    $("#again").onclick=startBlitz;return;
+  }
+  const w=B.w,l=leftB();
+  paint(`<div class="top">${xbtn("games")}<div class="bar ${l<10?"low":""}"><i id="bb" style="width:${l/60*100}%"></i></div><span class="mute" id="bt">${Math.ceil(l)} s</span></div>
+  <div class="qmeta"><span class="mute">Treffer: ${B.right}</span>${B.combo>=3?`<span class="combo">${ic("flame",14,true)} ${B.combo}</span>`:""}</div><div style="text-align:center;margin:14px 0"><div class="ar" lang="ar" style="font-size:60px">${w.ar}</div></div>
+  ${B.opts.map(o=>`<button class="opt ${B.pick!==null?(o.i===w.i?"ok":o.i===B.pick?"no":""):""}" data-o="${o.i}" ${B.pick!==null?"disabled":""}>${o.de}</button>`).join("")}`);
+  document.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{
+    if(B.locked)return;B.locked=true;B.pick=b.dataset.o;const ok=B.pick===w.i;
+    if(ok){B.right++;B.combo++;sfx("good",B.combo);vib(10)}else{B.wrong++;B.combo=0;sfx("bad");vib([40,30,40])}
+    blitz();setTimeout(()=>{if(B.end||view!=="blitz")return;nextB();blitz()},ok?260:700);
+  });
+}
+
+// ===== Statistik und Einstellungen =====
 function stats(){
   const days=[...Array(7)].map((_,k)=>{const d=ago(6-k);return[["So","Mo","Di","Mi","Do","Fr","Sa"][d.getDay()],S.days[ymd(d)]||0]});
   const mx=Math.max(1,...days.map(d=>d[1]));
-  app.innerHTML=head("Statistiken")+`<div class="card row"><div><p class="mute">Lernfortschritt</p><p class="big">${pct()}%</p><p class="mute">${knownN()} von ${W.length} Wörtern</p></div><div class="ring" style="--p:${pct()};margin-left:auto"></div></div>
-  <div class="tiles"><div class="card"><p class="mute">Heute geübt</p><b>${S.days[today()]||0}</b><span class="mute">Wörter</span></div><div class="card"><p class="mute">Aktuelle Serie</p><b>${streak()}</b><span class="mute">Tage</span></div><div class="card"><p class="mute">Gefestigt</p><b>${Object.values(S.box).filter(b=>b>=3).length}</b><span class="mute">von ${W.length}</span></div><div class="card"><p class="mute">Gelernt gesamt</p><b>${knownN()}</b></div></div>
-  <div class="card" style="margin-top:10px"><p><b>Lernverlauf</b></p><div class="chart">${days.map(d=>`<div><i style="height:${d[1]/mx*80}px"></i>${d[0]}</div>`).join("")}</div></div><div class="card" style="margin-top:10px"><p><b>Nach Thema</b></p>${[...new Set(W.map(w=>w.cat))].map(c=>{const t=W.filter(w=>w.cat===c),k=t.filter(w=>isLearned(w.i)).length;return `<div class="row sp" style="margin-top:10px"><span style="width:120px;font-size:14px">${c}</span><div class="bar"><i style="width:${k/t.length*100}%"></i></div><span class="mute">${k}/${t.length}</span></div>`}).join("")}</div>`;
+  paint(head("Statistiken","more")+`<div class="card row"><div><p class="mute">Lernfortschritt</p><p class="big">${pct()}%</p><p class="mute">${knownN()} von ${W.length} Wörtern</p></div><div class="ring" style="--p:${pct()};margin-left:auto"><span>${pct()}%</span></div></div>
+  <div class="tiles"><div class="card"><p class="mute">Heute geübt</p><b>${S.days[today()]||0}</b><span class="mute">Wörter</span></div><div class="card"><p class="mute">Aktuelle Serie</p><b>${streak()}</b><span class="mute">Tage</span></div><div class="card"><p class="mute">Gefestigt</p><b>${Object.values(S.box).filter(b=>b>=3).length}</b><span class="mute">von ${W.length}</span></div><div class="card"><p class="mute">Gelernt gesamt</p><b>${knownN()}</b></div><div class="card"><p class="mute">Level</p><b>${lvl()}</b></div><div class="card"><p class="mute">XP gesamt</p><b>${S.xp||0}</b></div></div>
+  <div class="card" style="margin-top:10px"><p><b>Lernverlauf</b></p><div class="chart">${days.map(d=>`<div><i style="height:${d[1]/mx*80}px"></i>${d[0]}</div>`).join("")}</div></div><div class="card" style="margin-top:10px"><p><b>Nach Thema</b></p>${GROUPS.map(c=>{const t=W.filter(w=>w.cat===c),k=t.filter(w=>isLearned(w.i)).length;return `<div class="row sp" style="margin-top:10px"><span style="width:130px;font-size:14px">${c}</span><div class="bar"><i style="width:${k/t.length*100}%"></i></div><span class="mute">${k}/${t.length}</span></div>`}).join("")}</div>`);
 }
 function settings(){
-  const row=(id,l,v)=>`<button class="set" id="${id}"><span>${l}</span>${v}</button>`;
-  app.innerHTML=head("Einstellungen","more")+`<p><b>Lernsprache</b></p><div class="grp">${row("d1","Arabisch → Deutsch",S.dir==="ad"?"✔":"○")}${row("d2","Deutsch → Arabisch",S.dir==="da"?"✔":"○")}</div>
-  <p><b>Benachrichtigungen</b></p><div class="grp">${row("rm","Tägliche Lern-Erinnerung",`<span class="sw ${S.rem?"on":""}"></span>`)}<label class="set"><span>Uhrzeit</span><input type="time" id="tm" value="${S.time}" style="border:0;background:none;color:var(--mute);font:inherit"></label></div>
-  <p class="mute" style="margin:-10px 0 18px">Die Erinnerung erscheint, solange die Seite geöffnet ist.</p><p><b>Weitere Einstellungen</b></p><div class="grp">${row("th","App-Design",`<span class="mute">${{system:"System",light:"Hell",dark:"Dunkel"}[S.theme]}</span>`)}${U!=="gast"?row("sy","Synchronisierung",`<span class="mute">${SY||"–"}</span>`):""}${row("lo",U==="gast"?"Anmelden oder registrieren":"Abmelden",`<span class="mute" style="max-width:50%;overflow:hidden;text-overflow:ellipsis">${U==="gast"?"Gast":esc(U)}</span>`)}${row("rs","Fortschritt zurücksetzen",'<span class="mute">Löschen</span>')}</div>`;
+  const row=(id,l,v)=>`<button class="set" id="${id}"><span>${l}</span>${v}</button>`,sw=on=>`<span class="sw ${on?"on":""}"></span>`;
+  paint(head("Einstellungen","more")+`<p><b>Lernrichtung</b></p><div class="grp">${row("d1","Arabisch → Deutsch",S.dir==="ad"?ic("check",18):"")}${row("d2","Deutsch → Arabisch (Schreiben)",S.dir==="da"?ic("check",18):"")}</div>
+  <p><b>Spiel</b></p><div class="grp">${row("sd","Töne",sw(S.sound!==false))}${row("vb","Vibration",sw(S.vib!==false))}${row("gl","Tagesziel",`<span class="mute">${S.goal||50} XP</span>`)}</div>
+  <p><b>Benachrichtigungen</b></p><div class="grp">${row("rm","Tägliche Lern-Erinnerung",sw(S.rem))}<label class="set"><span>Uhrzeit</span><input type="time" id="tm" value="${S.time}" style="border:0;background:none;color:var(--mute);font:inherit"></label></div>
+  <p class="mute" style="margin:-10px 0 18px">Die Erinnerung erscheint, solange die Seite geöffnet ist.</p><p><b>Weitere Einstellungen</b></p><div class="grp">${row("th","App-Design",`<span class="mute">${{system:"System",light:"Hell",dark:"Dunkel"}[S.theme]}</span>`)}${U!=="gast"?row("sy","Synchronisierung",`<span class="mute">${SY||"–"}</span>`):""}${row("lo",U==="gast"?"Anmelden oder registrieren":"Abmelden",`<span class="mute" style="max-width:50%;overflow:hidden;text-overflow:ellipsis">${U==="gast"?"Gast":esc(U)}</span>`)}${row("rs","Fortschritt zurücksetzen",'<span class="mute">Löschen</span>')}</div>`);
+  $("#sd").onclick=()=>{S.sound=S.sound===false;save();if(S.sound)sfx("good",1);settings()};
+  $("#vb").onclick=()=>{S.vib=S.vib===false;save();if(S.vib)vib(30);settings()};
+  $("#gl").onclick=()=>{const o=[30,50,100,200];S.goal=o[(o.indexOf(S.goal)+1)%o.length];save();settings()};
   $("#d1").onclick=()=>{S.dir="ad";save();settings()};$("#d2").onclick=()=>{S.dir="da";save();settings()};
   $("#rm").onclick=()=>{S.rem=!S.rem;save();if(S.rem)try{Notification.requestPermission()}catch(e){}settings()};$("#tm").onchange=e=>{S.time=e.target.value;save()};
   $("#th").onclick=()=>{S.theme={system:"light",light:"dark",dark:"system"}[S.theme];save();applyTheme();settings()};
-  $("#lo").onclick=logout;if($("#sy"))$("#sy").onclick=()=>pull();let arm=false;$("#rs").onclick=()=>{if(!arm){arm=true;$("#rs").lastChild.textContent="Nochmal tippen zum Löschen";return}S.seen=[];S.seenDay="";S.days={};S.fav=[];S.box={};S.due={};S.streak=0;S.last="";save();settings()};
+  $("#lo").onclick=logout;if($("#sy"))$("#sy").onclick=()=>pull();let arm=false;$("#rs").onclick=()=>{if(!arm){arm=true;$("#rs").lastChild.textContent="Nochmal tippen zum Löschen";return}S.seen=[];S.seenDay="";S.xp=0;S.xpDays={};S.badges=[];S.st={perfect:0,rounds:0,goals:0,pairs:0,blitz:0};S.days={};S.fav=[];S.box={};S.due={};S.streak=0;S.last="";save();settings()};
 }
 setInterval(()=>{try{const hm=new Date().toTimeString().slice(0,5);if(S.rem&&hm===S.time&&S.notified!==today()&&Notification.permission==="granted"){S.notified=today();save();new Notification("Mufradaat",{body:"Zeit für deine arabischen Vokabeln!"})}}catch(e){}},20000);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
 // ---- Supabase: Konto + Fortschritts-Sync (der Publishable Key ist öffentlich gedacht; Schutz = Row Level Security)
 const SB_URL="https://yvhfnatslxrkmqpivvxg.supabase.co",SB_KEY="sb_publishable_DVnUpObsQ2uIeqIk-12dcA_1AKPsWpu";
 const sb=window.supabase?window.supabase.createClient(SB_URL,SB_KEY):null;
@@ -249,6 +594,8 @@ function mergeS(a,b){ // pro Wort der bessere Stand, Favoriten vereinigen, pro T
     r.box[id]=src.box[id];r.due[id]=src.due[id];
   }
   r.fav=[...new Set([...(a.fav||[]),...(b.fav||[])])];
+  const mx=(x,y)=>{const o={};for(const k of new Set([...Object.keys(x||{}),...Object.keys(y||{})]))o[k]=Math.max((x||{})[k]||0,(y||{})[k]||0);return o};
+  r.xp=Math.max(a.xp||0,b.xp||0);r.xpDays=mx(a.xpDays,b.xpDays);r.st=mx(a.st,b.st);r.badges=[...new Set([...(a.badges||[]),...(b.badges||[])])];
   r.days={};for(const k of new Set([...Object.keys(a.days||{}),...Object.keys(b.days||{})]))r.days[k]=Math.max(a.days[k]||0,(b.days||{})[k]||0);
   const al=a.last||"",bl=b.last||"";if(bl>al||(bl===al&&(b.streak||0)>a.streak)){r.streak=b.streak||0;r.last=bl}
   const as=a.seenDay||"",bs=b.seenDay||"";if(bs>as){r.seenDay=bs;r.seen=b.seen||[]}else if(bs===as)r.seen=[...new Set([...(a.seen||[]),...(b.seen||[])])];
