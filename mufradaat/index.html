@@ -4,8 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mufradaat – Arabisch lernen</title>
+<meta name="description" content="Arabisch lernen für Deutschsprachige: Vokabeln, Karteikarten, Spiele.">
+<meta name="theme-color" content="#1f6f55">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <style>
-:root{--bg:#f6f3ec;--card:#fffdf9;--ink:#1c2a24;--mute:#6b7771;--line:#e6e1d5;--g:#1f6f55;--g2:#2f8f6f;--gl:#dcefe5;--on:#fff;--bad:#c4513f;--badl:#f7dfd9;
+:root{--bg:#f6f3ec;--card:#fffdf9;--ink:#1c2a24;--mute:#5a6760;--line:#e6e1d5;--g:#1f6f55;--g2:#2f8f6f;--gl:#dcefe5;--on:#fff;--bad:#b0402e;--badl:#f7dfd9;
 --ar:"Noto Naskh Arabic","Geeza Pro","Segoe UI","Traditional Arabic",Arial,serif;--sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111a16;--card:#18241f;--ink:#e8efe9;--mute:#93a39a;--line:#26352e;--g:#3aa57f;--g2:#4fbd95;--gl:#1d3a2f;--on:#0b1511;--bad:#e27a68;--badl:#3a1f1a}}
 :root[data-theme="dark"]{--bg:#111a16;--card:#18241f;--ink:#e8efe9;--mute:#93a39a;--line:#26352e;--g:#3aa57f;--g2:#4fbd95;--gl:#1d3a2f;--on:#0b1511;--bad:#e27a68;--badl:#3a1f1a}
@@ -14,7 +21,7 @@ html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)
 body{min-height:100vh}
 .ar{font-family:var(--ar);direction:rtl}
 main{max-width:560px;margin:0 auto;padding:20px 18px 110px}
-h1{font-size:26px;margin:6px 0 4px}h2{font-size:20px;margin:0}
+h1,.h1{font-size:26px;font-weight:700;margin:6px 0 4px}h2{font-size:20px;margin:0}
 p{margin:0}.mute{color:var(--mute);font-size:14px}
 button{font:inherit;color:inherit;cursor:pointer}
 button:focus-visible,input:focus-visible{outline:3px solid var(--g2);outline-offset:2px}
@@ -261,8 +268,13 @@ function hiss(t0,d,o={}){
   v.gain.setValueAtTime(g,n);v.gain.exponentialRampToValueAtTime(.0001,n+d);s.connect(fl);fl.connect(v);v.connect(MG);s.start(n);
 }
 const LADDER=[523.25,587.33,659.25,783.99,880,1046.5];
+const PRI={tick:0,tap:0,flip:0,heart:1,good:1,bad:1,match:1,goal:2,lose:2,win:3,badge:3,level:4},DUR={goal:.8,lose:.8,win:1.5,badge:1.2,level:2};
+let sfxPri=0,sfxEnd=0;
 function sfx(k,n=1){
   if(S.sound===false)return;
+  const now=Date.now(),p=PRI[k]||0;
+  if(now<sfxEnd&&p<sfxPri)return; // laufender wichtigerer Klang wird nicht übertönt
+  if(DUR[k]){sfxPri=p;sfxEnd=now+DUR[k]*1000}else if(now>=sfxEnd){sfxPri=0}
   try{
     if(k==="tap"){hiss(0,.035,{f:3200,q:.7,g:.05});tone(480,0,.05,{g:.05,type:"triangle"})}
     else if(k==="good"){const f=LADDER[Math.min(n-1,5)];tone(f,0,.45,{g:.2});tone(f*2,0,.25,{g:.05});tone(f*1.26,.09,.5,{g:.18});tone(f*2.52,.09,.25,{g:.04})} // zwei Glockentöne, mit der Serie höher
@@ -412,10 +424,10 @@ function cards(){
   const pool=unlockedWords();
   if(!cd.order.length||cd.sig!==pool.length){cd.order=shuffle(pool.map(w=>w.i));cd.n=0;cd.sig=pool.length;cd.flip=false}
   const w=BY[cd.order[cd.n%cd.order.length]],isF=(S.fav||[]).includes(w.i),nt=noteOf(w);
-  const front=S.dir==="ad"?`<div class="ar" lang="ar">${w.ar}</div><p class="mute">(${w.tr})</p>`:`<h1>${w.de}</h1>`;
-  const back=S.dir==="ad"?`<h1>${w.de}</h1>`:`<div class="ar" lang="ar">${w.ar}</div><p class="mute">(${w.tr})</p>`;
+  const front=S.dir==="ad"?`<div class="ar" lang="ar">${w.ar}</div><p class="mute">(${w.tr})</p>`:`<div class="h1">${w.de}</div>`;
+  const back=S.dir==="ad"?`<div class="h1">${w.de}</div>`:`<div class="ar" lang="ar">${w.ar}</div><p class="mute">(${w.tr})</p>`;
   paint(`<div class="row sp"><h1>Karteikarten</h1><span class="mute">${cd.n%cd.order.length+1} / ${cd.order.length}</span></div>
-  <button class="card flash ${cd.anim?"flipped":""}" id="fl" aria-label="Karte umdrehen" aria-pressed="${cd.flip}">${front}${cd.flip?`<hr style="width:60%;border:0;border-top:1px solid var(--line)">${back}${nt?`<p class="mute">${esc(nt)}</p>`:""}`:'<p class="mute">Tippen zum Umdrehen</p>'}</button>
+  <button class="card flash ${cd.anim?"flipped":""}" id="fl">${front}${cd.flip?`<hr style="width:60%;border:0;border-top:1px solid var(--line)">${back}${nt?`<p class="mute">${esc(nt)}</p>`:""}`:'<p class="mute">Tippen zum Umdrehen</p>'}</button>
   <div class="row" style="margin-top:12px"><button class="btn alt" id="sp" style="margin:0">${ic("speaker",18)} Anhören</button><button class="btn alt" id="fv" style="margin:0" aria-label="Favorit">${ic("star",18,isF)} Favorit</button></div>
   <div class="row" style="margin-top:0"><button class="btn alt" id="again">Nochmal</button><button class="btn" id="got">Gewusst</button></div>`);
   cd.anim=false;
@@ -563,7 +575,7 @@ function endBlitz(){
 function blitz(){
   if(B.end){
     paint(`<div style="text-align:center;margin-top:30px"><h1>Zeit abgelaufen</h1></div>
-    <div class="tiles"><div class="card"><p class="mute">Treffer</p><b>${B.right}</b></div><div class="card"><p class="mute">Fehler</p><b>${B.wrong}</b></div><div class="card"><p class="mute">Rekord</p><b>${S.st.blitz||0}</b></div><div class="card"><p class="mute">XP verdient</p><b>+${B.xp}</b></div></div>
+    <div class="tiles"><div class="card"><p class="mute">Treffer</p><b>${B.right}</b></div><div class="card"><p class="mute">Fehler (−3 s je Fehler)</p><b>${B.wrong}</b></div><div class="card"><p class="mute">Rekord</p><b>${S.st.blitz||0}</b></div><div class="card"><p class="mute">XP verdient</p><b>+${B.xp}</b></div></div>
     <button class="btn" id="again">Nochmal</button><button class="btn alt" data-go="games">Zu den Spielen</button>`);
     $("#again").onclick=startBlitz;return;
   }
@@ -573,7 +585,7 @@ function blitz(){
   ${B.opts.map(o=>`<button class="opt ${B.pick!==null?(o.i===w.i?"ok":o.i===B.pick?"no":""):""}" data-o="${o.i}" ${B.pick!==null?"disabled":""}>${o.de}</button>`).join("")}`);
   document.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{
     if(B.locked)return;B.locked=true;B.pick=b.dataset.o;const ok=B.pick===w.i;
-    if(ok){B.right++;B.combo++;sfx("good",B.combo);vib(10)}else{B.wrong++;B.combo=0;sfx("bad");vib([40,30,40])}
+    if(ok){B.right++;B.combo++;sfx("good",B.combo);vib(10)}else{B.wrong++;B.combo=0;B.t0-=3000;B.lost=(B.lost||0)+3;sfx("bad");vib([40,30,40])}
     blitz();setTimeout(()=>{if(B.end||view!=="blitz")return;nextB();blitz()},ok?260:700);
   });
 }
@@ -789,6 +801,7 @@ async function boot(){
   if(g==='gast'){U='gast';UID=null;loadS();render()}else showAuth('start');
 }
 loadSb().then(()=>{initSb();boot()});
+if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.register('sw.js').catch(()=>{})}catch(e){}});
 </script>
 </body>
 </html>
