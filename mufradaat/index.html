@@ -5,9 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mufradaat – Arabisch lernen</title>
 <meta name="description" content="Arabisch lernen für Deutschsprachige: Vokabeln, Karteikarten, Spiele.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://yvhfnatslxrkmqpivvxg.supabase.co wss://yvhfnatslxrkmqpivvxg.supabase.co; manifest-src 'self'; worker-src 'self'; media-src 'self' blob: data:; object-src 'none'; base-uri 'none'; form-action 'self'">
 <meta name="theme-color" content="#1f6f55">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/favicon-64.png" type="image/png">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -24,9 +25,10 @@ main{max-width:560px;margin:0 auto;padding:20px 18px 110px}
 h1,.h1{font-size:26px;font-weight:700;margin:6px 0 4px}h2{font-size:20px;margin:0}
 p{margin:0}.mute{color:var(--mute);font-size:14px}
 button{font:inherit;color:inherit;cursor:pointer}
-button:focus-visible,input:focus-visible{outline:3px solid var(--g2);outline-offset:2px}
+#app:focus{outline:none}a:focus-visible,summary:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--g2);outline-offset:2px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
 .btn{width:100%;border:0;border-radius:999px;background:var(--g);color:var(--on);padding:15px;font-weight:600;font-size:16px;margin-top:16px}
+.btn .i{display:inline-block;vertical-align:-5px;margin-right:8px}
 .btn:disabled{opacity:.4;cursor:default}
 .btn.alt{background:var(--gl);color:var(--g)}
 .row{display:flex;align-items:center;gap:12px}.sp{justify-content:space-between}
@@ -39,7 +41,7 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--g2);outline-off
 .ring::after{content:"";width:54px;height:54px;border-radius:50%;background:var(--card)}
 .big{font-size:30px;font-weight:700}
 .chips{display:flex;gap:8px;overflow-x:auto;margin:12px 0}
-.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 14px;white-space:nowrap;font-size:14px}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:11px 16px;min-height:44px;white-space:nowrap;font-size:14px}
 .chip.on{background:var(--g);color:var(--on);border-color:var(--g)}
 input[type=search],input.t{width:100%;padding:13px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit}
 .w{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:8px}
@@ -64,9 +66,9 @@ input[type=search],input.t{width:100%;padding:13px 14px;border-radius:12px;borde
 .sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:left .15s}
 .sw.on{background:var(--g)}.sw.on::after{left:21px}
 .top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.x{border:0;background:none;font-size:22px;padding:4px 8px}
+.x{border:0;background:none;font-size:22px;padding:4px 8px;min-width:44px;min-height:44px}
 nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:center;padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px))}
-nav button{flex:1;max-width:120px;border:0;background:none;color:var(--mute);font-size:12px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px}
+nav button{flex:1;max-width:120px;border:0;background:none;color:var(--mute);font-size:12px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px;min-height:48px;justify-content:center}
 nav button span{font-size:20px}nav button.on{color:var(--g);font-weight:700}
 .hero{text-align:center;padding:40px 10px 10px}.hero .ar{font-size:72px;color:var(--g);line-height:1.3}
 nav[hidden]{display:none}
@@ -117,6 +119,8 @@ nav[hidden]{display:none}
 .opt.ok{animation:okpulse .55s ease-out}@keyframes okpulse{0%{transform:scale(.96);box-shadow:0 0 0 0 rgba(47,143,111,.55)}50%{transform:scale(1.025)}100%{transform:scale(1);box-shadow:0 0 0 14px rgba(47,143,111,0)}}
 .stars{display:flex;justify-content:center;gap:6px;color:var(--mute)}.star{display:grid}.star.on{color:#e0a82e;animation:starin .5s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(var(--k)*.2s + .15s)}
 @keyframes starin{from{transform:scale(0) rotate(-40deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+.agrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}.at{display:grid;gap:2px;justify-items:center;padding:10px 4px;text-align:center}.at .ar{font-size:36px;line-height:1.35}.at b{font-size:12px}.dots{display:flex;gap:3px;margin-top:2px}.dots i{width:6px;height:6px;border-radius:50%;background:var(--line)}.dots i.on{background:var(--g)}
+.forms{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.forms .card{display:grid;justify-items:center;gap:2px;padding:10px 4px}.forms .ar{font-size:38px;line-height:1.4}.forms small{font-size:12px;color:var(--mute)}.og{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .rule{display:grid;gap:10px;margin:14px 0 6px}.rule ol{margin:0;padding:0;list-style:none;display:grid;gap:8px}.rule li{display:flex;gap:12px;align-items:flex-start;font-size:14px;line-height:1.4}.rule li i{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:700;font-size:13px;background:var(--gl);color:var(--g)}
 .pth{position:relative;margin-top:10px}.pth>svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}.pth>svg path{fill:none;stroke:var(--line);stroke-width:4;stroke-linecap:round;vector-effect:non-scaling-stroke}.pth>svg path.dn{stroke:var(--g)}.pth>svg path.lk{stroke-dasharray:2 9}
 .pgr{position:absolute;left:0;right:0;display:flex;align-items:center;justify-content:center;height:30px}.pgr span{background:var(--bg);padding:0 12px;font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--mute)}
@@ -133,8 +137,14 @@ nav[hidden]{display:none}
 .med{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;margin:0 auto 6px;border:2px solid var(--g);background:var(--gl);color:var(--g);font-size:22px;line-height:1;overflow:hidden}
 .med .ar{font-size:22px;line-height:1.3}.med.big{width:104px;height:104px;font-size:46px}.med.big .ar{font-size:46px}
 .bdg .med{margin-bottom:8px}.bdg.lock{opacity:.45;filter:grayscale(1)}
-.lvlup{position:fixed;inset:0;display:grid;place-items:center;background:rgba(10,20,15,.55);z-index:70;animation:fadein .25s}
-.lvlup>div{background:var(--card);border-radius:24px;padding:30px 44px;text-align:center;animation:pop .55s cubic-bezier(.3,1.5,.5,1)}.lvlup b{font-size:24px}
+.lvfx{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 10px);transform:translateX(-50%);z-index:70;pointer-events:none;animation:lvin .45s cubic-bezier(.3,1.4,.5,1) both,lvout .4s ease-in 2.35s forwards}
+.lvc{position:relative;display:flex;align-items:center;gap:10px;background:var(--g);color:var(--on);border-radius:999px;padding:6px 18px 6px 8px;box-shadow:0 6px 18px rgba(0,0,0,.2)}.lvc .ar{width:34px;height:34px;border-radius:50%;background:var(--on);color:var(--g);display:grid;place-items:center;font-size:18px;line-height:1}.lvc b{font-size:16px}
+.lvr{position:absolute;left:50%;top:50%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:3px solid var(--g2);animation:lvring 1s ease-out .15s both}
+.lvfx i{position:absolute;left:50%;top:50%;width:7px;height:7px;margin:-3px;border-radius:50%;background:#e8b64c;animation:lvspark .9s ease-out .15s both;transform:rotate(var(--a)) translateY(0)}
+.cheer{animation:cheer .8s ease-out}
+@keyframes lvin{from{transform:translate(-50%,-70px);opacity:0}to{transform:translate(-50%,0);opacity:1}}@keyframes lvout{to{opacity:0;transform:translate(-50%,-30px)}}
+@keyframes lvring{from{transform:scale(.6);opacity:.9}to{transform:scale(3);opacity:0}}@keyframes lvspark{from{transform:rotate(var(--a)) translateY(0);opacity:1}to{transform:rotate(var(--a)) translateY(-70px);opacity:0}}
+@keyframes cheer{0%,100%{transform:scale(1)}30%{transform:scale(1.18)}60%{transform:scale(.97)}}
 @keyframes fadein{from{opacity:0}to{opacity:1}}
 .pg .just{animation:pop .4s}.pg button.done{border-color:var(--g);background:var(--gl)}
 .pg button{transition:background .15s,border-color .15s}
@@ -157,16 +167,22 @@ const W=LES.flatMap(l=>l.w.map(id=>{const a=BYRAW[id];return{i:id,ar:a[1],tr:a[2
 const BY=Object.fromEntries(W.map(w=>[w.i,w]));
 const GROUPS=[...new Set(LES.map(l=>l.g))];
 const GA={"Begrüßung":"تحية",Zahlen:"أرقام",Farben:"ألوان",Familie:"عائلة","Essen & Trinken":"طعام","Körper":"جسم",Haus:"بيت",Schule:"مدرسة",Zeit:"وقت",Unterwegs:"سفر","Natur & Tiere":"طبيعة",Verben:"أفعال",Eigenschaften:"صفات","Fragen & Pronomen":"أسئلة",Kleidung:"ملابس",Berufe:"مهن","Kleine Wörter":"كلمات"};
-const noteOf=w=>w.n||(w.cat==="Farben"||w.cat==="Eigenschaften"?"männliche Form":"");
+// Genus (nur wo sicher) und häufige Plurale; fehlt ein Eintrag, wird nichts angezeigt
+const GEN_F=new Set("umm ukht ibnah ailah jaddah zawjah imraah bint qahwah fakihah ayn udhun yad rijl qadam sinn raqabah nafidhah ghurfah hadiqah tawilah madrasah waraqah kalimah lughah jamiah saah daqiqah jumuah sanah sayyarah hafilah tairah mahattah tadhkarah haqibah madinah saydaliyyah kharitah shams najmah samaa rih shajarah sahraa zahrah ard qittah baqarah farashah dajajah qubbaah nazzarah".split(" "));
+const GEN_M=new Set("ab akh ibn tifl jadd amm khal zawj rajul walad sadiq khubz ma halib shay aruzz lahm jubn sukkar milh asal zayt ras wajh anf fam shaar zahr batn qalb bayt bab matbakh hammam kursi sarir miftah jidar hatif kitab qalam daftar muallim talib dars suaal jawab yawm layl sabah-morning usbuu shahr qitar matar shari suq matam funduq mustashfa bank masjid balad qamar thalj bahr jabal nahr kalb hisan tair samak asad jamal kharuf himar fil qird arnab qamis buntal hidhaa fustan miataf jawrab khatam thawb".split(" "));
+const PL={kitab:["كُتُب","kutub"],bayt:["بُيُوت","buyūt"],madrasah:["مَدَارِس","madāris"],walad:["أَوْلَاد","awlād"],rajul:["رِجَال","rijāl"],imraah:["نِسَاء","nisāʾ"],talib:["طُلَّاب","ṭullāb"],qalam:["أَقْلَام","aqlām"],bab:["أَبْوَاب","abwāb"],yawm:["أَيَّام","ayyām"],kalb:["كِلَاب","kilāb"],shajarah:["أَشْجَار","ashjār"],sayyarah:["سَيَّارَات","sayyārāt"],madinah:["مُدُن","mudun"],ayn:["عُيُون","ʿuyūn"],ab:["آبَاء","ābāʾ"],akh:["إِخْوَة","ikhwa"],ukht:["أَخَوَات","akhawāt"],umm:["أُمَّهَات","ummahāt"],sadiq:["أَصْدِقَاء","aṣdiqāʾ"],jabal:["جِبَال","jibāl"],bahr:["بِحَار","biḥār"],nahr:["أَنْهَار","anhār"],suq:["أَسْوَاق","aswāq"],shari:["شَوَارِع","shawāriʿ"],kursi:["كَرَاسِي","karāsī"],sarir:["أَسِرَّة","asirra"],miftah:["مَفَاتِيح","mafātīḥ"],nafidhah:["نَوَافِذ","nawāfidh"],ghurfah:["غُرَف","ghuraf"],kalimah:["كَلِمَات","kalimāt"],suaal:["أَسْئِلَة","asʾila"],shahr:["أَشْهُر","ashhur"],sanah:["سَنَوَات","sanawāt"],usbuu:["أَسَابِيع","asābīʿ"],saah:["سَاعَات","sāʿāt"],jamal:["جِمَال","jimāl"],tifl:["أَطْفَال","aṭfāl"],fustan:["فَسَاتِين","fasātīn"],qamis:["قُمْصَان","qumṣān"],qalb:["قُلُوب","qulūb"],ras:["رُؤُوس","ruʾūs"],wajh:["وُجُوه","wujūh"],zawjah:["زَوْجَات","zawjāt"],ibn:["أَبْنَاء","abnāʾ"],bint:["بَنَات","banāt"],jadd:["أَجْدَاد","ajdād"],funduq:["فَنَادِق","fanādiq"],matam:["مَطَاعِم","maṭāʿim"],masjid:["مَسَاجِد","masājid"],balad:["بُلْدَان","buldān"],hadiqah:["حَدَائِق","ḥadāʾiq"],tawilah:["طَاوِلَات","ṭāwilāt"],daftar:["دَفَاتِر","dafātir"],dars:["دُرُوس","durūs"],jawab:["أَجْوِبَة","ajwiba"],lughah:["لُغَات","lughāt"],jamiah:["جَامِعَات","jāmiʿāt"],qitar:["قِطَارَات","qiṭārāt"],hafilah:["حَافِلَات","ḥāfilāt"],tairah:["طَائِرَات","ṭāʾirāt"],haqibah:["حَقَائِب","ḥaqāʾib"],tadhkarah:["تَذَاكِر","tadhākir"],najmah:["نُجُوم","nujūm"],zahrah:["زُهُور","zuhūr"],himar:["حَمِير","ḥamīr"],fil:["فِيَلَة","fiyala"],qird:["قُرُود","qurūd"],arnab:["أَرَانِب","arānib"],kharuf:["خِرَاف","khirāf"],asad:["أُسُود","usūd"],tair:["طُيُور","ṭuyūr"],qittah:["قِطَط","qiṭaṭ"],baqarah:["بَقَرَات","baqarāt"]};
+const genOf=id=>GEN_F.has(id)?"weiblich":GEN_M.has(id)?"männlich":"";
+const noteOf=w=>[w.n||(w.cat==="Farben"||w.cat==="Eigenschaften"?"männliche Form":""),genOf(w.i),PL[w.i]?"Plural: "+PL[w.i][0]+" ("+PL[w.i][1]+")":""].filter(Boolean).join(" · ");
 
 // ===== Zustand =====
-let S={v:2,days:{},fav:[],dir:"ad",rem:true,time:"19:00",theme:"system",streak:0,last:"",box:{},due:{},seen:[],seenDay:"",notified:"",xp:0,xpDays:{},badges:[],goal:50,sound:true,vib:true,auto:true,epoch:0,st:{perfect:0,rounds:0,goals:0,pairs:0,blitz:0}};
+let S={v:2,days:{},fav:[],dir:"ad",rem:true,time:"19:00",theme:"system",streak:0,last:"",box:{},due:{},seen:[],seenDay:"",notified:"",xp:0,xpDays:{},badges:[],alpha:{},goal:100,goalv:1,sound:true,vib:true,auto:true,epoch:0,st:{perfect:0,rounds:0,goals:0,pairs:0,blitz:0}};
 const DEF=JSON.stringify(S);let U=null;const SK=()=>"mfr:"+(UID||U);
 function migrate(st){
   if((st.v||1)<2){ // v1: Fortschritt hing am Array-Index -> auf feste IDs umstellen
     const m=i=>LEGACY[+i],mapObj=o=>{const r={};for(const i in o||{}){const id=m(i);if(id)r[id]=o[i]}return r};
     st.fav=(st.fav||[]).map(m).filter(Boolean);st.box=mapObj(st.box);st.due=mapObj(st.due);delete st.known;
   }
+  if(!st.goalv){if(st.goal===50||st.goal===undefined)st.goal=100;st.goalv=1} // Standardziel von 50 auf 100 XP angehoben
   st.v=2;return st;
 }
 function loadS(){S=JSON.parse(DEF);try{Object.assign(S,migrate(JSON.parse(localStorage.getItem(SK())||"{}")))}catch(e){}save();applyTheme()}
@@ -320,11 +336,13 @@ function confetti(){
   for(let i=0;i<46;i++){const p=document.createElement("i");p.style.cssText=`left:${Math.random()*100}%;background:${cols[i%6]};animation-delay:${Math.random()*.4}s;animation-duration:${1.4+Math.random()*1.2}s;--dx:${(Math.random()*160-80)|0}px;--r:${(Math.random()*720-360)|0}deg`;c.appendChild(p)}
   document.body.appendChild(c);setTimeout(()=>c.remove(),3200);
 }
-function levelUp(L){
-  const o=document.createElement("div");o.className="lvlup";o.setAttribute("role","status");
-  o.innerHTML=`<div><div class="med big"><span class="ar" lang="ar">${toAr(L)}</span></div><b>Level ${L}</b><p class="mute">Weiter so!</p></div>`;
-  o.onclick=()=>o.remove();document.body.appendChild(o);setTimeout(()=>o.remove(),2600);
-  confetti();sfx("level");vib([20,30,20,30,60]);
+function levelUp(L){ // Effekt oben bei den Herzen, nichts zum Wegklicken
+  document.querySelectorAll(".lvfx").forEach(e=>e.remove());
+  const o=document.createElement("div");o.className="lvfx";o.setAttribute("role","status");
+  o.innerHTML=`<span class="lvr" aria-hidden="true"></span>${[0,1,2,3,4,5,6,7].map(k=>`<i style="--a:${k*45}deg" aria-hidden="true"></i>`).join("")}<span class="lvc"><span class="ar" lang="ar">${toAr(L)}</span><b>Level ${L}</b></span>`;
+  document.body.appendChild(o);setTimeout(()=>o.remove(),2800);
+  document.querySelectorAll(".hearts,.flame").forEach(h=>{h.classList.remove("cheer");void h.offsetWidth;h.classList.add("cheer")});
+  sfx("level");vib([20,30,20,30,60]);
 }
 const medal=i=>i.startsWith("<svg")?i:`<span class="ar" lang="ar">${i}</span>`;
 
@@ -345,6 +363,7 @@ const BADGES=[
 ["lvl5",ic("star",30,true),"Level 5","Level 5 erreicht",()=>lvl()>=5],
 ["lvl10",ic("star",30,true),"Level 10","Level 10 erreicht",()=>lvl()>=10],
 ["pairs","زوج","Paarprofi","Paare zuordnen geschafft",()=>(S.st.pairs||0)>0],
+["alpha","ألف","Buchstabenkenner","Alle 29 Buchstaben sicher erkannt",()=>alphaSure()>=ALPHA.length],
 ["blitz","برق","Blitzdenker","10 Treffer im Wort-Blitz",()=>(S.st.blitz||0)>=10],
 ...GROUPS.map(g=>["g-"+g,GA[g]||"✓",g+" gemeistert","Alle Wörter im Thema „"+g+"“ gelernt",()=>W.filter(w=>w.cat===g).every(w=>isLearned(w.i))])
 ].map(a=>({id:a[0],ic:a[1],n:a[2],d:a[3],t:a[4]}));
@@ -362,28 +381,144 @@ function addXP(n){
   checkBadges();save();
 }
 
+// ===== Spiel 3: Hörübung (Wort hören, Bedeutung wählen) =====
+let LN=null;
+function startListen(){
+  if(ARV===false){toast("Dafür brauchst du eine arabische Stimme auf dem Gerät.");return}
+  const pool=gamePool(10),ws=[];for(const w of shuffle(pool)){if(ws.length<10)ws.push(w)}
+  LN={ws,n:0,right:0,picked:null,xp:0,fin:false,opts:null};view="listen";render();
+}
+function listen(){
+  if(LN.n>=LN.ws.length){
+    if(!LN.fin){LN.fin=true;LN.xp=LN.right*4+(LN.right>=8?10:0);S.st.listen=(S.st.listen||0)+1;if(LN.xp)addXP(LN.xp);else{save();checkBadges()}if(LN.right>=8){confetti();sfx("win")}}
+    paint(`<div style="text-align:center;margin-top:30px"><h1>Geschafft</h1></div><div class="tiles"><div class="card"><p class="mute">Richtig</p><b>${LN.right} / ${LN.ws.length}</b></div><div class="card"><p class="mute">XP verdient</p><b>+${LN.xp}</b></div></div><button class="btn" id="again">Nochmal</button><button class="btn alt" data-go="games">Zu den Spielen</button>`);
+    $("#again").onclick=startListen;return;
+  }
+  const w=LN.ws[LN.n],p=LN.picked,done=p!==null;if(!LN.opts)LN.opts=options(w);
+  paint(`<div class="top">${xbtn("games")}<div class="bar"><i style="width:${LN.n/LN.ws.length*100}%"></i></div><span class="mute">${LN.n+1} / ${LN.ws.length}</span></div>
+  <p style="text-align:center;font-weight:600;margin-top:12px">Was bedeutet das Wort, das du hörst?</p>
+  <div style="text-align:center;margin:18px 0">${done?`<div class="ar" lang="ar" style="font-size:56px">${w.ar}</div><p class="mute">(${w.tr})</p>`:""}<button class="btn alt" id="rp" style="width:auto;padding:14px 26px">${ic("speaker",22)} ${done?"Nochmal hören":"Anhören"}</button></div>
+  ${LN.opts.map(o=>`<button class="opt ${done?(o.i===w.i?"ok":o.i===p?"no":""):""}" data-o="${o.i}" ${done?"disabled":""}>${o.de}</button>`).join("")}
+  ${done?`<div class="fb ${p===w.i?"ok":"no"}" role="status"><span>${p===w.i?"Richtig":"Das war: "+w.de}</span></div>`:""}
+  <button class="btn" id="nx" ${done?"":"disabled"}>${LN.n+1>=LN.ws.length?"Ergebnis ansehen":"Weiter"}</button>`);
+  $("#rp").onclick=()=>speak(w.ar);if(!done)speak(w.ar);
+  document.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{LN.picked=b.dataset.o;const ok=LN.picked===w.i;
+    if(ok){LN.right++;sfx("good",Math.min(6,LN.right));vib(10)}else{sfx("bad");vib([40,30,40])}
+    listen()});
+  $("#nx").onclick=()=>{LN.n++;LN.picked=null;LN.opts=null;sfx("tap");listen()};
+}
+
+// ===== Alphabet =====
+const ALPHA=[
+["alif","ا","Alif","ā","أَلِف","langer a-Laut (ā), trägt oft das Hamza",1,"أُمّ","umm","Mutter"],
+["ba","ب","Bāʾ","b","بَاء","b wie in Ball",0,"بَيْت","bayt","Haus"],
+["ta","ت","Tāʾ","t","تَاء","t wie in Tag",0,"تُفّاح","tuffāḥ","Apfel"],
+["tha","ث","Thāʾ","th","ثَاء","stimmloses th wie im englischen „think“",0,"ثَلاثَة","thalātha","drei"],
+["jim","ج","Jīm","dsch","جِيم","dsch wie in Dschungel (in Ägypten wie g in Garten)",0,"جَمَل","jamal","Kamel"],
+["hha","ح","Ḥāʾ","ḥ","حَاء","kräftiges h aus der Kehle, wie beim Anhauchen einer Brille",0,"حَلِيب","ḥalīb","Milch"],
+["kha","خ","Khāʾ","ch","خَاء","ch wie in Bach",0,"خُبْز","khubz","Brot"],
+["dal","د","Dāl","d","دَال","d wie in Dach",1,"دَرْس","dars","Lektion"],
+["dhal","ذ","Dhāl","dh","ذَال","stimmhaftes th wie im englischen „this“",1,"ذَهَب","dhahab","Gold"],
+["ra","ر","Rāʾ","r","رَاء","gerolltes r mit der Zungenspitze",1,"رَجُل","rajul","Mann"],
+["zay","ز","Zāy","z","زَاي","stimmhaftes s wie in Sonne",1,"زَيْت","zayt","Öl"],
+["sin","س","Sīn","s","سِين","stimmloses s wie in Wasser",0,"سَمَك","samak","Fisch"],
+["shin","ش","Shīn","sch","شِين","sch wie in Schule",0,"شَمْس","shams","Sonne"],
+["sad","ص","Ṣād","ṣ","صَاد","dunkles, kräftiges s (emphatisch)",0,"صَبَاح","ṣabāḥ","Morgen"],
+["dad","ض","Ḍād","ḍ","ضَاد","dunkles, kräftiges d (emphatisch)",0,"ضَوْء","ḍaw’","Licht"],
+["tah","ط","Ṭāʾ","ṭ","طَاء","dunkles, kräftiges t (emphatisch)",0,"طَالِب","ṭālib","Student"],
+["zah","ظ","Ẓāʾ","ẓ","ظَاء","dunkles, stimmhaftes th (emphatisch)",0,"ظُهْر","ẓuhr","Mittag"],
+["ayn","ع","ʿAyn","ʿ","عَيْن","gepresster Laut aus dem Rachen, im Deutschen ohne Entsprechung",0,"عَيْن","ʿayn","Auge"],
+["ghayn","غ","Ghayn","gh","غَيْن","Gaumen-r, hinten im Rachen gesprochen",0,"غَيْمَة","ghayma","Wolke"],
+["fa","ف","Fāʾ","f","فَاء","f wie in Fisch",0,"فِيل","fīl","Elefant"],
+["qaf","ق","Qāf","q","قَاف","k, tief hinten im Hals gesprochen",0,"قَمَر","qamar","Mond"],
+["kaf","ك","Kāf","k","كَاف","k wie in Katze",0,"كِتَاب","kitāb","Buch"],
+["lam","ل","Lām","l","لَام","l wie in Land",0,"لَيْمُون","laymūn","Zitrone"],
+["mim","م","Mīm","m","مِيم","m wie in Mutter",0,"مَاء","māʾ","Wasser"],
+["nun","ن","Nūn","n","نُون","n wie in Nase",0,"نَهْر","nahr","Fluss"],
+["he","ه","Hāʾ","h","هَاء","h wie in Haus, deutlich gehaucht",0,"هِلَال","hilāl","Halbmond"],
+["waw","و","Wāw","w","وَاو","w wie im englischen „water“, oder langes u (ū)",1,"وَرْدَة","warda","Rose"],
+["ya","ي","Yāʾ","y","يَاء","j wie in Jahr, oder langes i (ī)",0,"يَد","yad","Hand"],
+["hamza","ء","Hamza","ʾ","هَمْزَة","kurzer Stimmabsatz, wie vor dem zweiten a in „beachten“",1,"سَمَاء","samāʾ","Himmel"]
+].map(a=>({i:a[0],c:a[1],n:a[2],s:a[3],sp:a[4],h:a[5],nj:!!a[6],ea:a[7],et:a[8],ed:a[9]}));
+const ALBY=Object.fromEntries(ALPHA.map(a=>[a.i,a]));
+const AFAM=[["ba","ta","tha","nun","ya"],["jim","hha","kha"],["dal","dhal"],["ra","zay"],["sin","shin"],["sad","dad"],["tah","zah"],["ayn","ghayn"],["fa","qaf"],["kaf","lam","alif"],["waw","mim","he"]]; // ähnlich aussehende Buchstaben
+const ZWJ="‍";
+const aform=(a,k)=>k==="i"?a.c:a.i==="hamza"?"–":k==="b"?(a.nj?"–":a.c+ZWJ):k==="m"?(a.nj?"–":ZWJ+a.c+ZWJ):ZWJ+a.c;
+const aCnt=id=>(S.alpha||{})[id]||0,alphaSure=()=>ALPHA.filter(a=>aCnt(a.i)>=3).length;
+const dots=n=>`<span class="dots" aria-hidden="true">${[0,1,2].map(i=>`<i class="${i<n?"on":""}"></i>`).join("")}</span>`;
+function alphabet(){
+  paint(head("Alphabet","home")+`<p class="mute">${alphaSure()} von ${ALPHA.length} Buchstaben sicher. Ein Buchstabe gilt als sicher, wenn du ihn dreimal in Folge richtig erkannt hast (die Punkte zeigen den Stand).</p>
+  <button class="btn" data-go="aquiz" style="margin-top:12px">Buchstaben üben</button>
+  <div class="agrid">${ALPHA.map(a=>`<button class="card at" data-al="${a.i}" aria-label="${a.n}, ${aCnt(a.i)>=3?"sicher":"noch nicht sicher"}"><span class="ar" lang="ar">${a.c}</span><b>${a.n}</b>${dots(Math.min(3,aCnt(a.i)))}</button>`).join("")}</div>`);
+}
+function letter(){
+  const k=ALPHA.findIndex(a=>a.i===ui.al),a=ALPHA[k],pv=ALPHA[(k+ALPHA.length-1)%ALPHA.length],nx=ALPHA[(k+1)%ALPHA.length];
+  const f=[["i","Allein"],["b","Anfang"],["m","Mitte"],["f","Ende"]];
+  paint(head(a.n,"alphabet")+`<div class="card flash slide"><div class="ar" lang="ar" style="font-size:110px;line-height:1.4">${a.c}</div><p><b>${a.n}</b> · ${a.s}</p><p class="mute">${a.h}</p><button class="btn alt" id="sp" style="width:auto;padding:10px 22px">${ic("speaker",18)} Name anhören</button></div>
+  <p class="gt">Die vier Formen</p><div class="forms">${f.map(x=>`<div class="card"><span class="ar" lang="ar">${aform(a,x[0])}</span><small>${x[1]}</small></div>`).join("")}</div>
+  ${a.nj?`<p class="mute" style="margin-top:8px">${a.i==="hamza"?"Das Hamza verbindet sich nicht und hat nur diese eine Form.":"Dieser Buchstabe verbindet sich nicht mit dem folgenden. Er steht allein oder am Wortende nach einem verbindenden Buchstaben."}</p>`:""}
+  <p class="gt">Beispielwort</p><button class="w" id="ex"><span class="ar" lang="ar" style="min-width:110px">${a.ea}</span><span style="flex:1"><b>${a.ed}</b><span class="tr"><br>(${a.et})</span></span><span class="mute">${ic("speaker",18)}</span></button>
+  <div class="row sp" style="margin-top:16px"><button class="btn alt" data-al="${pv.i}" style="margin:0;width:auto;padding:10px 18px">← ${pv.n}</button><button class="btn alt" data-al="${nx.i}" style="margin:0;width:auto;padding:10px 18px">${nx.n} →</button></div>`);
+  $("#sp").onclick=()=>speak(a.sp);$("#ex").onclick=()=>speak(a.ea);
+}
+// Übung: Buchstaben erkennen, Formen, Namen hören, Anfangsbuchstabe
+let AQ=null;
+function adistr(a,n,noHamza){const same=shuffle((AFAM.find(f=>f.includes(a.i))||[]).filter(i=>i!==a.i).map(i=>ALBY[i])),rest=shuffle(ALPHA.filter(x=>x.i!==a.i&&!same.includes(x)));return [...same,...rest].filter(x=>!(noHamza&&x.i==="hamza")).slice(0,n)}
+function startAQ(){
+  const ws=shuffle(ALPHA).sort((x,y)=>aCnt(x.i)-aCnt(y.i)).slice(0,10),canHear=ARV!==false;
+  const qs=shuffle(ws).map(a=>{
+    const ts=["name","form","start","hear"].filter(t=>!(t==="form"&&a.i==="hamza")&&!(t==="start"&&a.i==="hamza")&&!(t==="hear"&&!canHear));
+    const t=ts[Math.floor(Math.random()*ts.length)],byLetter=t==="start"||t==="hear";
+    const fm=a.nj?"f":["b","m","f"][Math.floor(Math.random()*3)];
+    return{a,t,fm,opts:shuffle([a,...adistr(a,3,t!=="name"&&t!=="form"&&a.i!=="hamza")]),byLetter}});
+  AQ={qs,n:0,right:0,picked:null,xp:0,fin:false,wrong:[]};view="aquiz";render();
+}
+function aquiz(){
+  if(AQ.n>=AQ.qs.length)return aEnd();
+  const q=AQ.qs[AQ.n],a=q.a,p=AQ.picked,done=p!==null,top=`<div class="top">${xbtn("alphabet")}<div class="bar"><i style="width:${AQ.n/AQ.qs.length*100}%"></i></div><span class="mute">${AQ.n+1} / ${AQ.qs.length}</span></div>`;
+  const prompt={name:"Wie heißt dieser Buchstabe?",form:"Wie heißt dieser Buchstabe in dieser Form?",start:"Mit welchem Buchstaben beginnt dieses Wort?",hear:"Welcher Buchstabe wird genannt?"}[q.t];
+  const stage=q.t==="name"?`<div class="ar" lang="ar" style="font-size:96px;line-height:1.4">${a.c}</div>`:q.t==="form"?`<div class="ar" lang="ar" style="font-size:96px;line-height:1.4">${aform(a,q.fm)}</div>`:q.t==="start"?`<div class="ar" lang="ar" style="font-size:64px">${a.ea}</div>`:`<button class="btn alt" id="rp" style="width:auto;padding:14px 26px">${ic("speaker",22)} Nochmal hören</button>`;
+  const opt=o=>`<button class="opt ${q.byLetter?"ar":""} ${done?(o===a?"ok":o.i===p?"no":""):""}" ${q.byLetter?'lang="ar"':""} data-o="${o.i}" ${done?"disabled":""} ${q.byLetter?'style="font-size:34px;line-height:1.4"':""}>${q.byLetter?o.c:o.n}</button>`;
+  const fb=done?`<div class="fb ${p===a.i?"ok":"no"}" role="status"><span>${p===a.i?"Richtig":"Das war "+a.n}: ${a.n} (${a.s}), ${a.h}</span></div>`:"";
+  paint(top+`<p style="text-align:center;font-weight:600;margin-top:12px">${prompt}</p><div style="text-align:center;margin:14px 0">${stage}</div><div class="${q.byLetter?"og":""}">${q.opts.map(opt).join("")}</div>${fb}<button class="btn" id="nx" ${done?"":"disabled"}>${AQ.n+1>=AQ.qs.length?"Ergebnis ansehen":"Weiter"}</button>`);
+  if(q.t==="hear"){const rp=$("#rp");rp.onclick=()=>speak(a.sp);if(!done)speak(a.sp)}
+  document.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{
+    AQ.picked=b.dataset.o;const ok=AQ.picked===a.i;S.alpha=S.alpha||{};
+    if(ok){AQ.right++;S.alpha[a.i]=Math.min(5,aCnt(a.i)+1);sfx("good",Math.min(6,AQ.right));vib(10)}else{S.alpha[a.i]=Math.max(0,aCnt(a.i)-1);AQ.wrong.push(a);sfx("bad");vib([40,30,40])}
+    save();if(!ok)speak(a.sp);aquiz()});
+  $("#nx").onclick=()=>{AQ.n++;AQ.picked=null;sfx("tap");aquiz()};
+}
+function aEnd(){
+  if(!AQ.fin){AQ.fin=true;AQ.xp=AQ.right*4+(AQ.right>=8?10:0);S.st.alpha=(S.st.alpha||0)+1;if(AQ.xp)addXP(AQ.xp);else{save();checkBadges()}if(AQ.right>=8){confetti();sfx("win")}else sfx("tap")}
+  paint(`<div style="text-align:center;margin-top:20px"><h1>Geschafft</h1></div><div class="tiles"><div class="card"><p class="mute">Richtig</p><b>${AQ.right} / ${AQ.qs.length}</b></div><div class="card"><p class="mute">XP verdient</p><b>+${AQ.xp}</b></div><div class="card" style="grid-column:span 2"><p class="mute">Sichere Buchstaben</p><b>${alphaSure()} / ${ALPHA.length}</b></div></div>
+  ${AQ.wrong.length?`<p style="margin-top:18px"><b>Das üben wir nochmal</b></p><div class="agrid">${AQ.wrong.map(a=>`<button class="card at" data-al="${a.i}"><span class="ar" lang="ar">${a.c}</span><b>${a.n}</b></button>`).join("")}</div>`:""}
+  <button class="btn" id="again">Noch eine Runde</button><button class="btn alt" data-go="alphabet">Zum Alphabet</button>`);
+  $("#again").onclick=startAQ;
+}
+
 // ===== Navigation =====
 let view="home",ui={cat:"Alle",q:""},gt=0;
 const TABS=[["home","home","Start"],["path","path","Lernpfad"],["games","bolt","Spiele"],["cards","cards","Karten"],["more","more","Mehr"]];
-const SUB={more:["stats","fav","settings","list","badges","legal"],games:["pairs","blitz"],path:["quiz","lesson"]};
-function go(v){view=v;render()}
+const SUB={more:["stats","fav","settings","list","badges","legal"],games:["pairs","blitz","listen"],path:["quiz","lesson","alphabet","letter","aquiz"]};
+function go(v){view=v;render();const m=$("#app");if(m){m.setAttribute("tabindex","-1");try{m.focus({preventScroll:true})}catch(e){}}} // Fokus an den Seitenanfang, damit Screenreader den Wechsel bemerken
 const paint=h=>{app.innerHTML=h;fx()};
 function fx(){requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelectorAll("[data-to]").forEach(e=>{e.style.width=e.dataset.to+"%"})))}
 function render(){
   clearInterval(gt);
-  $("#nav").innerHTML=TABS.map(t=>`<button class="${(view===t[0]||(SUB[t[0]]||[]).includes(view))?"on":""}" data-go="${t[0]}"><span>${ic(t[1])}</span>${t[2]}</button>`).join("");
-  $("#nav").hidden=["quiz","pairs","blitz"].includes(view)||(view==="legal"&&!U);
-  ({home,path,lesson,cards,more,list,stats,settings,quiz,fav,games,badges,pairs,blitz,legal})[view]();
+  $("#nav").innerHTML=TABS.map(t=>`<button class="${(view===t[0]||(SUB[t[0]]||[]).includes(view))?"on":""}" data-go="${t[0]}" ${(view===t[0]||(SUB[t[0]]||[]).includes(view))?'aria-current="page"':""}><span>${ic(t[1])}</span>${t[2]}</button>`).join("");
+  $("#nav").hidden=["quiz","pairs","blitz","aquiz","listen"].includes(view)||(view==="legal"&&!U);
+  ({home,path,lesson,alphabet,letter,aquiz,listen,cards,more,list,stats,settings,quiz,fav,games,badges,pairs,blitz,legal})[view]();
   app.classList.remove("enter");void app.offsetWidth;app.classList.add("enter");
   window.scrollTo(0,0);
 }
 document.addEventListener("click",e=>{
   const g=e.target.closest("[data-go]");
-  if(g){const t=g.dataset.go;sfx("tap");if(t==="review")return startQuiz(null);if(t==="pairs")return startPairs();if(t==="blitz")return startBlitz();return go(t)}
+  if(g){const t=g.dataset.go;sfx("tap");if(t==="review")return startQuiz(null);if(t==="pairs")return startPairs();if(t==="blitz")return startBlitz();if(t==="aquiz")return startAQ();if(t==="listen")return startListen();return go(t)}
   const o=e.target.closest("[data-open]");
   if(o){const k=+o.dataset.open;sfx("tap");
     if(isLocked(k)){const p=LES[k-1],st=lessonStat(p);toast(`Gesperrt: Beginne erst noch ${need(p)-st.s} Wörter aus „${p.t}“.`);return}
     ui.les=k;return go("lesson")}
+  const al=e.target.closest("[data-al]");if(al){ui.al=al.dataset.al;sfx("tap");return go("letter")}
   const l=e.target.closest("[data-les]");
   if(l){const k=+l.dataset.les;sfx("tap");
     if(isLocked(k)){const p=LES[k-1],st=lessonStat(p);toast(`Gesperrt: Lerne erst „${p.t}“ (noch ${need(p)-st.s} Wörter beginnen).`);return}
@@ -395,7 +530,7 @@ function head(t,back="home"){return `<div class="top"><button class="x" data-go=
 const itm=(attr,icon,title,sub,cls="")=>`<button class="item ${cls}" ${attr}><span class="ic">${ic(icon)}</span><span><b>${title}</b>${sub?`<small>${sub}</small>`:""}</span><span class="ch">${ic("chev",18)}</span></button>`;
 
 function home(){
-  const g=S.goal||50,xd=S.xpDays[today()]||0,gp=Math.min(100,Math.round(xd/g*100)),L=lvl(),lo=xpFor(L),hi=xpFor(L+1),xp=S.xp||0,lp=Math.round((xp-lo)/(hi-lo)*100),st=streak(),lit=S.last===today(),cur=currentLesson(),due=dueN();
+  const g=S.goal||100,xd=S.xpDays[today()]||0,gp=Math.min(100,Math.round(xd/g*100)),L=lvl(),lo=xpFor(L),hi=xpFor(L+1),xp=S.xp||0,lp=Math.round((xp-lo)/(hi-lo)*100),st=streak(),lit=S.last===today(),cur=currentLesson(),due=dueN();
   paint(`<div class="ar mark" lang="ar">مفردات</div>
   <div class="row sp" style="margin-top:8px"><div><h1 style="margin:0">Hallo${U&&U!=="gast"?", "+esc(U.split("@")[0]):""}!</h1><p class="mute">${due?due+" Wörter zur Wiederholung":"Nichts zu wiederholen"}</p></div><span class="flame ${lit?"on":"off"}" role="img" aria-label="Serie: ${st} Tage">${ic("flame",18,true)} ${st}</span></div>
   ${ARV===false&&!hintOff?`<div class="card hint" role="note"><p>Auf diesem Gerät ist keine arabische Stimme installiert. Die Aussprache fehlt oder klingt falsch. Du kannst in den Systemeinstellungen (Sprachausgabe) eine arabische Stimme hinzufügen.</p><button class="x" id="hx" aria-label="Hinweis schließen">${ic("close")}</button></div>`:""}<div class="card row" style="margin-top:14px"><div class="ring" style="--p:${gp}" role="img" aria-label="Tagesziel ${gp} Prozent"><span>${gp}%</span></div><div style="flex:1"><p class="mute">Tagesziel</p><p class="big">${Math.min(xd,g)} / ${g} XP</p><p class="mute">${xd>=g?"Geschafft, weiter so":lit?"Noch "+(g-xd)+" XP bis zum Ziel":"Lerne heute, um deine Serie zu halten"}</p></div></div>
@@ -404,6 +539,7 @@ function home(){
   ${itm(`data-les="${cur.k}"`,"path","Weiterlernen",`Lektion ${cur.k+1}: ${cur.t}`,"main")}
   ${due?itm('data-go="review"',"repeat","Wiederholen",due+" Wörter fällig"):""}
   ${itm('data-go="path"',"list","Lernpfad",LES.length+" Lektionen")}
+  ${itm('data-go="alphabet"',"list","Alphabet",alphaSure()+" von "+ALPHA.length+" Buchstaben sicher")}
   ${itm('data-go="games"',"bolt","Spiele","Paare zuordnen, Wort-Blitz")}
   ${itm('data-go="cards"',"cards","Karteikarten","Lernen im eigenen Tempo")}
   ${itm('data-go="badges"',"medal","Abzeichen",(S.badges||[]).length+" von "+BADGES.length+" freigeschaltet")}
@@ -441,7 +577,7 @@ function badges(){
   paint(head("Abzeichen","more")+`<p class="mute">${have.length} von ${BADGES.length} freigeschaltet</p><div class="bg">${BADGES.map(b=>`<div class="card bdg ${have.includes(b.id)?"":"lock"}"><span class="med">${medal(b.ic)}</span><b>${b.n}</b><small>${b.d}</small></div>`).join("")}</div>`);
 }
 function games(){
-  paint(`<h1>Spiele</h1><p class="mute">Üben mit Tempo. Jedes Spiel bringt XP.</p><div class="menu">${itm('data-go="pairs"',"pairs","Paare zuordnen","6 Wortpaare, so schnell du kannst")}${itm('data-go="blitz"',"bolt","Wort-Blitz","60 Sekunden · Rekord: "+(S.st.blitz||0)+" Treffer")}</div>`);
+  paint(`<h1>Spiele</h1><p class="mute">Üben mit Tempo. Jedes Spiel bringt XP.</p><div class="menu">${itm('data-go="pairs"',"pairs","Paare zuordnen","6 Wortpaare, so schnell du kannst")}${itm('data-go="blitz"',"bolt","Wort-Blitz","60 Sekunden · Rekord: "+(S.st.blitz||0)+" Treffer")}${itm('data-go="listen"',"speaker","Hörübung",ARV===false?"Braucht eine arabische Stimme auf dem Gerät":"Wort hören, Bedeutung wählen")}</div>`);
 }
 function wordRow(w){const nt=noteOf(w);return `<button class="w" data-say="${w.i}"><span class="ar" lang="ar">${w.ar}</span><span style="flex:1"><b>${w.de}</b><span class="tr"><br>(${w.tr})${nt?" · "+esc(nt):""}</span></span><span class="mute">${isLearned(w.i)?ic("check",16)+" ":""}${ic("speaker",18)}</span></button>`}
 function list(){
@@ -639,12 +775,12 @@ function stats(){
 function settings(){
   const row=(id,l,v)=>`<button class="set" id="${id}"><span>${l}</span>${v}</button>`,sw=on=>`<span class="sw ${on?"on":""}"></span>`;
   paint(head("Einstellungen","more")+`<p><b>Lernrichtung</b></p><div class="grp">${row("d1","Arabisch → Deutsch",S.dir==="ad"?ic("check",18):"")}${row("d2","Deutsch → Arabisch (Schreiben)",S.dir==="da"?ic("check",18):"")}</div>
-  <p><b>Spiel</b></p><div class="grp">${row("sd","Töne",sw(S.sound!==false))}${row("vb","Vibration",sw(S.vib!==false))}${row("au","Aussprache automatisch",sw(S.auto!==false))}${row("gl","Tagesziel",`<span class="mute">${S.goal||50} XP</span>`)}</div>
+  <p><b>Spiel</b></p><div class="grp">${row("sd","Töne",sw(S.sound!==false))}${row("vb","Vibration",sw(S.vib!==false))}${row("au","Aussprache automatisch",sw(S.auto!==false))}${row("gl","Tagesziel",`<span class="mute">${S.goal||100} XP</span>`)}</div>
   <p><b>Benachrichtigungen</b></p><div class="grp">${row("rm","Tägliche Lern-Erinnerung",sw(S.rem))}<label class="set"><span>Uhrzeit</span><input type="time" id="tm" value="${S.time}" style="border:0;background:none;color:var(--mute);font:inherit"></label></div>
   <p class="mute" style="margin:-10px 0 18px">Die Erinnerung erscheint, solange die Seite geöffnet ist.</p><p><b>Weitere Einstellungen</b></p><div class="grp">${row("th","App-Design",`<span class="mute">${{system:"System",light:"Hell",dark:"Dunkel"}[S.theme]}</span>`)}${U!=="gast"?row("sy","Synchronisierung",`<span class="mute">${SY||"–"}</span>`):""}${row("lo",U==="gast"?"Anmelden oder registrieren":"Abmelden",`<span class="mute" style="max-width:50%;overflow:hidden;text-overflow:ellipsis">${U==="gast"?"Gast":esc(U)}</span>`)}${U!=="gast"?row("ex","Meine Daten exportieren",'<span class="mute">JSON</span>'):""}${row("lg","Datenschutz &amp; Impressum",ic("chev",18))}${row("rs","Fortschritt zurücksetzen",'<span class="mute">Löschen</span>')}${U!=="gast"?row("dl","Konto löschen",'<span class="mute" style="color:var(--bad)">Endgültig</span>'):""}</div>`);
   $("#sd").onclick=()=>{S.sound=S.sound===false;save();if(S.sound)sfx("good",1);settings()};
   $("#vb").onclick=()=>{S.vib=S.vib===false;save();if(S.vib)vib(30);settings()};
-  $("#gl").onclick=()=>{const o=[30,50,100,200];S.goal=o[(o.indexOf(S.goal)+1)%o.length];save();settings()};
+  $("#gl").onclick=()=>{const o=[50,100,150,250];S.goal=o[(o.indexOf(S.goal)+1)%o.length];save();settings()};
   $("#d1").onclick=()=>{S.dir="ad";save();settings()};$("#d2").onclick=()=>{S.dir="da";save();settings()};
   $("#rm").onclick=()=>{S.rem=!S.rem;save();if(S.rem)try{Notification.requestPermission()}catch(e){}settings()};$("#tm").onchange=e=>{S.time=e.target.value;save()};
   $("#th").onclick=()=>{S.theme={system:"light",light:"dark",dark:"system"}[S.theme];save();applyTheme();settings()};
@@ -652,7 +788,7 @@ function settings(){
   $("#lg").onclick=()=>go("legal");$("#au").onclick=()=>{S.auto=S.auto===false;save();settings()};
   if($("#ex"))$("#ex").onclick=exportData;
   if($("#dl")){let a2=false;$("#dl").onclick=()=>{if(!a2){a2=true;$("#dl").lastChild.textContent="Nochmal tippen: alles wird gelöscht";return}deleteAccount()}}
-  let arm=false;$("#rs").onclick=()=>{if(!arm){arm=true;$("#rs").lastChild.textContent="Nochmal tippen zum Löschen";return}S.seen=[];S.seenDay="";S.xp=0;S.xpDays={};S.badges=[];S.st={perfect:0,rounds:0,goals:0,pairs:0,blitz:0};S.days={};S.fav=[];S.box={};S.due={};S.streak=0;S.last="";S.epoch=Date.now();save();settings()};
+  let arm=false;$("#rs").onclick=()=>{if(!arm){arm=true;$("#rs").lastChild.textContent="Nochmal tippen zum Löschen";return}S.seen=[];S.seenDay="";S.xp=0;S.xpDays={};S.badges=[];S.st={perfect:0,rounds:0,goals:0,pairs:0,blitz:0};S.alpha={};S.days={};S.fav=[];S.box={};S.due={};S.streak=0;S.last="";S.epoch=Date.now();save();settings()};
 }
 setInterval(()=>{try{const hm=new Date().toTimeString().slice(0,5);if(S.rem&&hm===S.time&&S.notified!==today()&&Notification.permission==="granted"){S.notified=today();save();new Notification("Mufradaat",{body:"Zeit für deine arabischen Vokabeln!"})}}catch(e){}},20000);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -676,7 +812,7 @@ const clone=o=>JSON.parse(JSON.stringify(o));
 function sched(){if(UID&&sb&&ready){clearTimeout(T);T=setTimeout(sync,2000)}}
 const LOCALKEYS=["dir","rem","time","theme","goal","sound","vib","auto"]; // Geräte-Einstellungen bleiben auf dem Gerät
 function mergeS(a,b){ // pro Wort der bessere Stand, Favoriten vereinigen, pro Tag das Maximum; ein späteres Zurücksetzen gewinnt
-  b=Object.assign({box:{},due:{},days:{},xpDays:{},st:{},fav:[],badges:[],seen:[]},b);
+  b=Object.assign({box:{},due:{},days:{},xpDays:{},st:{},alpha:{},fav:[],badges:[],seen:[]},b);
   const ea=a.epoch||0,eb=b.epoch||0;
   if(ea!==eb){const w=clone(ea>eb?a:b);for(const k of LOCALKEYS)if(a[k]!==undefined)w[k]=a[k];return w}
   const r=Object.assign({},a);r.box={};r.due={};
@@ -686,7 +822,7 @@ function mergeS(a,b){ // pro Wort der bessere Stand, Favoriten vereinigen, pro T
   }
   r.fav=[...new Set([...(a.fav||[]),...(b.fav||[])])];
   const mx=(x,y)=>{const o={};for(const k of new Set([...Object.keys(x||{}),...Object.keys(y||{})]))o[k]=Math.max((x||{})[k]||0,(y||{})[k]||0);return o};
-  r.xp=Math.max(a.xp||0,b.xp||0);r.xpDays=mx(a.xpDays,b.xpDays);r.st=mx(a.st,b.st);r.days=mx(a.days,b.days);
+  r.xp=Math.max(a.xp||0,b.xp||0);r.xpDays=mx(a.xpDays,b.xpDays);r.st=mx(a.st,b.st);r.days=mx(a.days,b.days);r.alpha=mx(a.alpha,b.alpha);
   r.badges=[...new Set([...(a.badges||[]),...(b.badges||[])])];
   const al=a.last||"",bl=b.last||"";if(bl>al||(bl===al&&(b.streak||0)>(a.streak||0))){r.streak=b.streak||0;r.last=bl}
   const as=a.seenDay||"",bs=b.seenDay||"";if(bs>as){r.seenDay=bs;r.seen=b.seen||[]}else if(bs===as)r.seen=[...new Set([...(a.seen||[]),...(b.seen||[])])];
