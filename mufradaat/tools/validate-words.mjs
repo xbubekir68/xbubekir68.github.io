@@ -37,6 +37,35 @@ for(const id of [...GF,...GM])if(!ids.has(id))E(`Genus-Liste: unbekannte ID „$
 for(const id of GF)if(GM.includes(id))E(`„${id}“ steht in beiden Genus-Listen`);
 const plm=html.match(/const PL=(\{[\s\S]*?\});\s*\nconst genOf/);const PLS=plm?vm.runInNewContext("("+plm[1]+")"):{};
 for(const [id,[ar,tr]] of Object.entries(PLS)){if(!ids.has(id))E(`Plural-Tabelle: unbekannte ID „${id}“`);if(!DIAC.test(ar))Wn(`Plural von „${id}“ ohne Vokalzeichen`);if(!TR.test(tr))Wn(`Plural-Umschrift von „${id}“ ungewöhnlich: ${tr}`)}
+
+// Sätze: nur bekannte Wörter, Vokalzeichen, Satzzeichen, Artikel passend zum Anfangsbuchstaben, keine Doppelten
+const SR=pick("SENT_RAW");const SF=setOf("SFREE");
+const SOLAR=new Set("تثدذرزسشصضطظلن"),stripD=t=>t.replace(DIAC,"");
+const sAr=new Map(),sDe=new Map();let sQ=0;
+SR.forEach((r,n)=>{const row=`Satz ${n+1}`;
+  if(!Array.isArray(r)||r.length<3){E(`${row}: weniger als 3 Felder`);return}
+  const [de,tr,toks,q]=r,t=toks.split(" ");
+  if(!de||!/[.?!]$/.test(de))E(`${row}: deutscher Satz fehlt oder endet ohne Satzzeichen`);
+  if(!!q!==/\?$/.test(de))E(`${row}: Frage-Kennzeichen passt nicht zum deutschen Satz („${de}“)`);
+  if(q)sQ++;
+  if(!tr||!TR.test(tr))Wn(`${row}: Umschrift „${tr}“ ungewöhnlich`);
+  if(t.length<2||t.length>7)Wn(`${row}: ${t.length} Wörter (üblich 2 bis 7)`);
+  const ar=[];
+  t.forEach(x=>{const [a,id]=x.split("|");
+    if(!a||!id){E(`${row}: Block „${x}“ braucht Form arabisch|id`);return}
+    if(!ids.has(id))E(`${row}: unbekannte Wort-ID „${id}“`);
+    if(!AR.test(a))E(`${row}: „${a}“ enthält fremde Zeichen`);
+    else if(!DIAC.test(a))Wn(`${row}: „${a}“ ohne Vokalzeichen`);
+    ar.push(a);
+    if(a.startsWith("ال")){const base=stripD(a).slice(2,3),sol=SOLAR.has(base),sukun=a.startsWith("الْ");
+      if(sol&&sukun)Wn(`${row}: „${a}“ – vor Sonnenbuchstabe steht kein Sukun auf dem Lam`);
+      if(!sol&&!sukun)Wn(`${row}: „${a}“ – vor Mondbuchstabe fehlt das Sukun auf dem Lam`)}
+  });
+  const k=stripD(ar.join(" "));if(sAr.has(k))Wn(`${row}: gleicher arabischer Satz wie ${sAr.get(k)}`);else sAr.set(k,n+1);
+  if(sDe.has(de))Wn(`${row}: gleicher deutscher Satz wie ${sDe.get(de)}`);else sDe.set(de,n+1);
+});
+for(const id of SF)if(!ids.has(id))E(`SFREE: unbekannte ID „${id}“`);
+console.log(`${SR.length} Sätze (${sQ} Fragen) geprüft`);
 console.log(`${GF.length} weibliche, ${GM.length} männliche Genus-Einträge, ${Object.keys(PLS).length} Plurale`);
 console.log(`${W.length} Wörter, ${L.length} Lektionen, ${CPP.length} Konfliktpaare geprüft`);
 warn.forEach(m=>console.log("Hinweis:",m));err.forEach(m=>console.log("FEHLER:",m));
