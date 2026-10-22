@@ -93,6 +93,7 @@ nav[hidden]{display:none}
 .bg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.bdg{text-align:center;padding:14px 8px}.bdg .ic{font-size:34px;display:block;margin-bottom:4px}.bdg b{display:block;font-size:15px}.bdg small{display:block;color:var(--mute);font-size:12px;margin-top:2px}.bdg.lock{opacity:.45;filter:grayscale(1)}
 .pg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.pg button{padding:12px 8px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);min-height:60px;font-size:16px}.pg button.ar{font-size:26px}.pg .sel{border-color:var(--g);background:var(--gl)}.pg .done{opacity:.35;border-color:var(--g)}.pg .bad{border-color:var(--bad);background:var(--badl);animation:shake .3s}
 #toasts{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:60;pointer-events:none}
+#upd{position:fixed;left:12px;right:12px;top:calc(10px + env(safe-area-inset-top));z-index:60;display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--g);color:var(--on);padding:10px 12px 10px 18px;border-radius:16px;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.25);animation:pop .3s}#upd .btn{width:auto;margin:0;padding:8px 16px;min-height:0;background:var(--on);color:var(--g)}
 .toast{background:var(--g);color:var(--on);padding:10px 18px;border-radius:999px;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.25);animation:pop .3s}
 .conf{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}.conf i{position:absolute;top:-14px;width:9px;height:14px;border-radius:2px;animation:fall linear forwards}
 @keyframes fall{to{transform:translate(var(--dx),105vh) rotate(var(--r))}}
@@ -1308,7 +1309,10 @@ async function boot(){
   if(g==='gast'){U='gast';UID=null;loadS();render()}else showAuth('start');
 }
 loadSb().then(()=>{initSb();boot()});
-if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.register('sw.js').catch(()=>{})}catch(e){}});
+// Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
+const APPV="mfr-v8"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
+if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>
 </body>
 </html>
