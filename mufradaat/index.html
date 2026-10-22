@@ -697,13 +697,13 @@ function offerResend(em,er){
 const openLegal=e=>{e.preventDefault();view="legal";render()};
 
 // >>> HIER EINTRAGEN: Betreiber, Kontakt und Serverstandort für Datenschutz & Impressum <<<
-const LEGAL={name:"Ebubekir Gedik",kontakt:"ebu.gedik@gmx.at",region:"Salzburg, Österreich"}; // z. B. name:"Vorname Nachname, Straße 1, 12345 Ort", kontakt:"mail@beispiel.de", region:"EU (Frankfurt)"
+const LEGAL={name:"Ebubekir Gedik",kontakt:"ebu.gedik@gmx.at",region:"EU (Irland)"}; // z. B. name:"Vorname Nachname, Straße 1, 12345 Ort", kontakt:"mail@beispiel.de", region:"EU (Frankfurt)"
 function legal(){
   const miss=t=>t?esc(t):'<b style="color:var(--bad)">noch nicht eingetragen</b>';
   const sec=(t,b)=>`<div class="card" style="margin-top:10px"><p><b>${t}</b></p><div style="margin-top:6px;line-height:1.55;font-size:15px">${b}</div></div>`;
   const topb=U?head("Datenschutz &amp; Impressum","more"):`<div class="top"><button class="x" id="lback" aria-label="Zurück">${ic("back")}</button><h2>Datenschutz &amp; Impressum</h2></div>`;
   paint(topb+
-  sec("Wer ist verantwortlich?",`${miss(LEGAL.name)}<br>Kontakt: ${miss(LEGAL.kontakt)}`)+
+  sec("Wer ist verantwortlich?",`${miss(LEGAL.name)}<br>Kontakt: ${miss(LEGAL.kontakt)}<br>Wohnsitz: Österreich (Salzburg)<br>Art und Richtung: private, nicht kommerzielle Lern-App für arabische Vokabeln, ohne Einnahmen.`)+
   sec("Was gespeichert wird",`<b>Ohne Konto (Gast):</b> Lernstand und Einstellungen liegen nur in deinem Browser (lokaler Speicher) und werden nicht übertragen.<br><b>Mit Konto:</b> deine E-Mail-Adresse, dein Passwort (nur als Hash), dein Lernstand (z. B. Wörter, XP, Serie, Abzeichen), deine Einstellungen und der Zeitpunkt der letzten Änderung.`)+
   sec("Dienstleister",`<b>Supabase</b> (Anmeldung und Datenbank), Serverstandort: ${miss(LEGAL.region)}.<br><b>GitHub Pages</b> liefert diese Seite aus. Beim Aufruf verarbeitet GitHub technisch notwendige Verbindungsdaten wie deine IP-Adresse.<br>${EXT?"Die Programmbibliothek für die Anmeldung wird von <b>jsDelivr</b> geladen, dabei wird deine IP-Adresse an diesen Dienst übertragen.":"Schriften und Programmteile werden von dieser Seite selbst ausgeliefert."}`)+
   sec("Sprachausgabe","Die Aussprache nutzt die Sprachausgabe deines Geräts. Manche Browser (z. B. Chrome) greifen dafür auf Online-Dienste des Herstellers zurück, dabei kann das gesprochene Wort übertragen werden.")+
