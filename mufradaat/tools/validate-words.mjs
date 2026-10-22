@@ -66,6 +66,15 @@ SR.forEach((r,n)=>{const row=`Satz ${n+1}`;
   if(sDe.has(de))Wn(`${row}: gleicher deutscher Satz wie ${sDe.get(de)}`);else sDe.set(de,n+1);
 });
 for(const id of SF)if(!ids.has(id))E(`SFREE: unbekannte ID „${id}“`);
+// Kurs: jede Lektion steht genau einmal in einer Einheit; jede Einheit mit Sätzen bekommt mindestens 3
+const um=html.match(/const UNITS=(\[[\s\S]*?\n\]);/);if(!um)throw new Error("UNITS nicht gefunden");
+const UN=vm.runInNewContext(um[1]),titles=L.map(l=>l[0]),inUnit=new Map();
+UN.forEach((u,ui)=>{if(!u.t||!u.d)E(`Einheit ${ui+1}: Titel oder Beschreibung fehlt`);u.l.forEach(t=>{if(!titles.includes(t))E(`Einheit ${ui+1} „${u.t}“: unbekannte Lektion „${t}“`);if(inUnit.has(t))E(`Lektion „${t}“ steht in mehreren Einheiten`);inUnit.set(t,ui)})});
+for(const t of titles)if(!inUnit.has(t))E(`Lektion „${t}“ gehört zu keiner Einheit`);
+const unitOfId=new Map();L.forEach(l=>l[2].forEach(id=>unitOfId.set(id,inUnit.get(l[0]))));
+const su=SR.map(r=>Math.max(0,...r[2].split(" ").map(x=>x.split("|")[1]).filter(id=>!SF.includes(id)).map(id=>unitOfId.get(id)??0)));
+let pend=0;const stat=[];UN.forEach((_,ui)=>{const n=pend+su.filter(u=>u===ui).length;if(n<3&&ui<UN.length-1){pend=n;return}pend=0;if(n)stat.push(`E${ui+1}: ${n}`)});
+console.log(`${UN.length} Einheiten, Satzrunden: ${stat.join(", ")}`);
 console.log(`${SR.length} Sätze (${sQ} Fragen) geprüft`);
 console.log(`${GF.length} weibliche, ${GM.length} männliche Genus-Einträge, ${Object.keys(PLS).length} Plurale`);
 console.log(`${W.length} Wörter, ${L.length} Lektionen, ${CPP.length} Konfliktpaare geprüft`);
