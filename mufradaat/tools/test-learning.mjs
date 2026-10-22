@@ -323,6 +323,11 @@ ok("Buchstabenformen: Reihenfolge Anfang, Mitte, Ende, Allein",labs.join()==="An
 ok("Buchstabenformen laufen von rechts nach links (direction:rtl)",/\.forms\{[^}]*direction:rtl/.test(fileSrc));
 ok("Alphabet-Raster läuft von rechts nach links (Alif oben rechts)",/\.agrid\{[^}]*direction:rtl/.test(fileSrc));
 ok("Weiter-Knopf (nächster Buchstabe) steht links",/class="row sp nav2"/.test(lt)&&/\.nav2\{direction:rtl/.test(fileSrc));
+// Service Worker: Version im Code und im Worker gleich, Seite wird immer revalidiert
+const swSrc=fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)),"..","sw.js"),"utf8");
+ok("APPV in index.html entspricht V in sw.js",(swSrc.match(/const V="([^"]+)"/)||[])[1]===(fileSrc.match(/const APPV="([^"]+)"/)||[])[1],[(swSrc.match(/const V="([^"]+)"/)||[])[1],(fileSrc.match(/const APPV="([^"]+)"/)||[])[1]]);
+ok("Service Worker fragt die Seite immer neu ab (cache:no-cache)",/fetch\(r,\{cache:"no-cache"\}\)/.test(swSrc));
+ok("Service Worker meldet offenen Seiten die neue Version",/postMessage\(\{v:V\}\)/.test(swSrc)&&/updBanner\(\)/.test(fileSrc));
 // Wortliste: Leiste ohne Scrollbar
 ok("Kategorien-Leiste: Scrollbar ausgeblendet (Firefox und WebKit)",/\.chips\{[^}]*scrollbar-width:none/.test(fileSrc)&&/\.chips::-webkit-scrollbar\{display:none\}/.test(fileSrc));
 ok("Kategorien-Leiste: Chips schrumpfen nicht",/\.chip\{flex:none/.test(fileSrc));
