@@ -167,7 +167,12 @@ const W=LES.flatMap(l=>l.w.map(id=>{const a=BYRAW[id];return{i:id,ar:a[1],tr:a[2
 const BY=Object.fromEntries(W.map(w=>[w.i,w]));
 const GROUPS=[...new Set(LES.map(l=>l.g))];
 const GA={"Begrüßung":"تحية",Zahlen:"أرقام",Farben:"ألوان",Familie:"عائلة","Essen & Trinken":"طعام","Körper":"جسم",Haus:"بيت",Schule:"مدرسة",Zeit:"وقت",Unterwegs:"سفر","Natur & Tiere":"طبيعة",Verben:"أفعال",Eigenschaften:"صفات","Fragen & Pronomen":"أسئلة",Kleidung:"ملابس",Berufe:"مهن","Kleine Wörter":"كلمات"};
-const noteOf=w=>w.n||(w.cat==="Farben"||w.cat==="Eigenschaften"?"männliche Form":"");
+// Genus (nur wo sicher) und häufige Plurale; fehlt ein Eintrag, wird nichts angezeigt
+const GEN_F=new Set("umm ukht ibnah ailah jaddah zawjah imraah bint qahwah fakihah ayn udhun yad rijl qadam sinn raqabah nafidhah ghurfah hadiqah tawilah madrasah waraqah kalimah lughah jamiah saah daqiqah jumuah sanah sayyarah hafilah tairah mahattah tadhkarah haqibah madinah saydaliyyah kharitah shams najmah samaa rih shajarah sahraa zahrah ard qittah baqarah farashah dajajah qubbaah nazzarah".split(" "));
+const GEN_M=new Set("ab akh ibn tifl jadd amm khal zawj rajul walad sadiq khubz ma halib shay aruzz lahm jubn sukkar milh asal zayt ras wajh anf fam shaar zahr batn qalb bayt bab matbakh hammam kursi sarir miftah jidar hatif kitab qalam daftar muallim talib dars suaal jawab yawm layl sabah-morning usbuu shahr qitar matar shari suq matam funduq mustashfa bank masjid balad qamar thalj bahr jabal nahr kalb hisan tair samak asad jamal kharuf himar fil qird arnab qamis buntal hidhaa fustan miataf jawrab khatam thawb".split(" "));
+const PL={kitab:["كُتُب","kutub"],bayt:["بُيُوت","buyūt"],madrasah:["مَدَارِس","madāris"],walad:["أَوْلَاد","awlād"],rajul:["رِجَال","rijāl"],imraah:["نِسَاء","nisāʾ"],talib:["طُلَّاب","ṭullāb"],qalam:["أَقْلَام","aqlām"],bab:["أَبْوَاب","abwāb"],yawm:["أَيَّام","ayyām"],kalb:["كِلَاب","kilāb"],shajarah:["أَشْجَار","ashjār"],sayyarah:["سَيَّارَات","sayyārāt"],madinah:["مُدُن","mudun"],ayn:["عُيُون","ʿuyūn"],ab:["آبَاء","ābāʾ"],akh:["إِخْوَة","ikhwa"],ukht:["أَخَوَات","akhawāt"],umm:["أُمَّهَات","ummahāt"],sadiq:["أَصْدِقَاء","aṣdiqāʾ"],jabal:["جِبَال","jibāl"],bahr:["بِحَار","biḥār"],nahr:["أَنْهَار","anhār"],suq:["أَسْوَاق","aswāq"],shari:["شَوَارِع","shawāriʿ"],kursi:["كَرَاسِي","karāsī"],sarir:["أَسِرَّة","asirra"],miftah:["مَفَاتِيح","mafātīḥ"],nafidhah:["نَوَافِذ","nawāfidh"],ghurfah:["غُرَف","ghuraf"],kalimah:["كَلِمَات","kalimāt"],suaal:["أَسْئِلَة","asʾila"],shahr:["أَشْهُر","ashhur"],sanah:["سَنَوَات","sanawāt"],usbuu:["أَسَابِيع","asābīʿ"],saah:["سَاعَات","sāʿāt"],jamal:["جِمَال","jimāl"],tifl:["أَطْفَال","aṭfāl"],fustan:["فَسَاتِين","fasātīn"],qamis:["قُمْصَان","qumṣān"],qalb:["قُلُوب","qulūb"],ras:["رُؤُوس","ruʾūs"],wajh:["وُجُوه","wujūh"],zawjah:["زَوْجَات","zawjāt"],ibn:["أَبْنَاء","abnāʾ"],bint:["بَنَات","banāt"],jadd:["أَجْدَاد","ajdād"],funduq:["فَنَادِق","fanādiq"],matam:["مَطَاعِم","maṭāʿim"],masjid:["مَسَاجِد","masājid"],balad:["بُلْدَان","buldān"],hadiqah:["حَدَائِق","ḥadāʾiq"],tawilah:["طَاوِلَات","ṭāwilāt"],daftar:["دَفَاتِر","dafātir"],dars:["دُرُوس","durūs"],jawab:["أَجْوِبَة","ajwiba"],lughah:["لُغَات","lughāt"],jamiah:["جَامِعَات","jāmiʿāt"],qitar:["قِطَارَات","qiṭārāt"],hafilah:["حَافِلَات","ḥāfilāt"],tairah:["طَائِرَات","ṭāʾirāt"],haqibah:["حَقَائِب","ḥaqāʾib"],tadhkarah:["تَذَاكِر","tadhākir"],najmah:["نُجُوم","nujūm"],zahrah:["زُهُور","zuhūr"],himar:["حَمِير","ḥamīr"],fil:["فِيَلَة","fiyala"],qird:["قُرُود","qurūd"],arnab:["أَرَانِب","arānib"],kharuf:["خِرَاف","khirāf"],asad:["أُسُود","usūd"],tair:["طُيُور","ṭuyūr"],qittah:["قِطَط","qiṭaṭ"],baqarah:["بَقَرَات","baqarāt"]};
+const genOf=id=>GEN_F.has(id)?"weiblich":GEN_M.has(id)?"männlich":"";
+const noteOf=w=>[w.n||(w.cat==="Farben"||w.cat==="Eigenschaften"?"männliche Form":""),genOf(w.i),PL[w.i]?"Plural: "+PL[w.i][0]+" ("+PL[w.i][1]+")":""].filter(Boolean).join(" · ");
 
 // ===== Zustand =====
 let S={v:2,days:{},fav:[],dir:"ad",rem:true,time:"19:00",theme:"system",streak:0,last:"",box:{},due:{},seen:[],seenDay:"",notified:"",xp:0,xpDays:{},badges:[],alpha:{},goal:100,goalv:1,sound:true,vib:true,auto:true,epoch:0,st:{perfect:0,rounds:0,goals:0,pairs:0,blitz:0}};
@@ -376,6 +381,33 @@ function addXP(n){
   checkBadges();save();
 }
 
+// ===== Spiel 3: Hörübung (Wort hören, Bedeutung wählen) =====
+let LN=null;
+function startListen(){
+  if(ARV===false){toast("Dafür brauchst du eine arabische Stimme auf dem Gerät.");return}
+  const pool=gamePool(10),ws=[];for(const w of shuffle(pool)){if(ws.length<10)ws.push(w)}
+  LN={ws,n:0,right:0,picked:null,xp:0,fin:false,opts:null};view="listen";render();
+}
+function listen(){
+  if(LN.n>=LN.ws.length){
+    if(!LN.fin){LN.fin=true;LN.xp=LN.right*4+(LN.right>=8?10:0);S.st.listen=(S.st.listen||0)+1;if(LN.xp)addXP(LN.xp);else{save();checkBadges()}if(LN.right>=8){confetti();sfx("win")}}
+    paint(`<div style="text-align:center;margin-top:30px"><h1>Geschafft</h1></div><div class="tiles"><div class="card"><p class="mute">Richtig</p><b>${LN.right} / ${LN.ws.length}</b></div><div class="card"><p class="mute">XP verdient</p><b>+${LN.xp}</b></div></div><button class="btn" id="again">Nochmal</button><button class="btn alt" data-go="games">Zu den Spielen</button>`);
+    $("#again").onclick=startListen;return;
+  }
+  const w=LN.ws[LN.n],p=LN.picked,done=p!==null;if(!LN.opts)LN.opts=options(w);
+  paint(`<div class="top">${xbtn("games")}<div class="bar"><i style="width:${LN.n/LN.ws.length*100}%"></i></div><span class="mute">${LN.n+1} / ${LN.ws.length}</span></div>
+  <p style="text-align:center;font-weight:600;margin-top:12px">Was bedeutet das Wort, das du hörst?</p>
+  <div style="text-align:center;margin:18px 0">${done?`<div class="ar" lang="ar" style="font-size:56px">${w.ar}</div><p class="mute">(${w.tr})</p>`:""}<button class="btn alt" id="rp" style="width:auto;padding:14px 26px">${ic("speaker",22)} ${done?"Nochmal hören":"Anhören"}</button></div>
+  ${LN.opts.map(o=>`<button class="opt ${done?(o.i===w.i?"ok":o.i===p?"no":""):""}" data-o="${o.i}" ${done?"disabled":""}>${o.de}</button>`).join("")}
+  ${done?`<div class="fb ${p===w.i?"ok":"no"}" role="status"><span>${p===w.i?"Richtig":"Das war: "+w.de}</span></div>`:""}
+  <button class="btn" id="nx" ${done?"":"disabled"}>${LN.n+1>=LN.ws.length?"Ergebnis ansehen":"Weiter"}</button>`);
+  $("#rp").onclick=()=>speak(w.ar);if(!done)speak(w.ar);
+  document.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{LN.picked=b.dataset.o;const ok=LN.picked===w.i;
+    if(ok){LN.right++;sfx("good",Math.min(6,LN.right));vib(10)}else{sfx("bad");vib([40,30,40])}
+    listen()});
+  $("#nx").onclick=()=>{LN.n++;LN.picked=null;LN.opts=null;sfx("tap");listen()};
+}
+
 // ===== Alphabet =====
 const ALPHA=[
 ["alif","ا","Alif","ā","أَلِف","langer a-Laut (ā), trägt oft das Hamza",1,"أُمّ","umm","Mutter"],
@@ -467,21 +499,21 @@ function aEnd(){
 // ===== Navigation =====
 let view="home",ui={cat:"Alle",q:""},gt=0;
 const TABS=[["home","home","Start"],["path","path","Lernpfad"],["games","bolt","Spiele"],["cards","cards","Karten"],["more","more","Mehr"]];
-const SUB={more:["stats","fav","settings","list","badges","legal"],games:["pairs","blitz"],path:["quiz","lesson","alphabet","letter","aquiz"]};
+const SUB={more:["stats","fav","settings","list","badges","legal"],games:["pairs","blitz","listen"],path:["quiz","lesson","alphabet","letter","aquiz"]};
 function go(v){view=v;render();const m=$("#app");if(m){m.setAttribute("tabindex","-1");try{m.focus({preventScroll:true})}catch(e){}}} // Fokus an den Seitenanfang, damit Screenreader den Wechsel bemerken
 const paint=h=>{app.innerHTML=h;fx()};
 function fx(){requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelectorAll("[data-to]").forEach(e=>{e.style.width=e.dataset.to+"%"})))}
 function render(){
   clearInterval(gt);
   $("#nav").innerHTML=TABS.map(t=>`<button class="${(view===t[0]||(SUB[t[0]]||[]).includes(view))?"on":""}" data-go="${t[0]}" ${(view===t[0]||(SUB[t[0]]||[]).includes(view))?'aria-current="page"':""}><span>${ic(t[1])}</span>${t[2]}</button>`).join("");
-  $("#nav").hidden=["quiz","pairs","blitz","aquiz"].includes(view)||(view==="legal"&&!U);
-  ({home,path,lesson,alphabet,letter,aquiz,cards,more,list,stats,settings,quiz,fav,games,badges,pairs,blitz,legal})[view]();
+  $("#nav").hidden=["quiz","pairs","blitz","aquiz","listen"].includes(view)||(view==="legal"&&!U);
+  ({home,path,lesson,alphabet,letter,aquiz,listen,cards,more,list,stats,settings,quiz,fav,games,badges,pairs,blitz,legal})[view]();
   app.classList.remove("enter");void app.offsetWidth;app.classList.add("enter");
   window.scrollTo(0,0);
 }
 document.addEventListener("click",e=>{
   const g=e.target.closest("[data-go]");
-  if(g){const t=g.dataset.go;sfx("tap");if(t==="review")return startQuiz(null);if(t==="pairs")return startPairs();if(t==="blitz")return startBlitz();if(t==="aquiz")return startAQ();return go(t)}
+  if(g){const t=g.dataset.go;sfx("tap");if(t==="review")return startQuiz(null);if(t==="pairs")return startPairs();if(t==="blitz")return startBlitz();if(t==="aquiz")return startAQ();if(t==="listen")return startListen();return go(t)}
   const o=e.target.closest("[data-open]");
   if(o){const k=+o.dataset.open;sfx("tap");
     if(isLocked(k)){const p=LES[k-1],st=lessonStat(p);toast(`Gesperrt: Beginne erst noch ${need(p)-st.s} Wörter aus „${p.t}“.`);return}
@@ -545,7 +577,7 @@ function badges(){
   paint(head("Abzeichen","more")+`<p class="mute">${have.length} von ${BADGES.length} freigeschaltet</p><div class="bg">${BADGES.map(b=>`<div class="card bdg ${have.includes(b.id)?"":"lock"}"><span class="med">${medal(b.ic)}</span><b>${b.n}</b><small>${b.d}</small></div>`).join("")}</div>`);
 }
 function games(){
-  paint(`<h1>Spiele</h1><p class="mute">Üben mit Tempo. Jedes Spiel bringt XP.</p><div class="menu">${itm('data-go="pairs"',"pairs","Paare zuordnen","6 Wortpaare, so schnell du kannst")}${itm('data-go="blitz"',"bolt","Wort-Blitz","60 Sekunden · Rekord: "+(S.st.blitz||0)+" Treffer")}</div>`);
+  paint(`<h1>Spiele</h1><p class="mute">Üben mit Tempo. Jedes Spiel bringt XP.</p><div class="menu">${itm('data-go="pairs"',"pairs","Paare zuordnen","6 Wortpaare, so schnell du kannst")}${itm('data-go="blitz"',"bolt","Wort-Blitz","60 Sekunden · Rekord: "+(S.st.blitz||0)+" Treffer")}${itm('data-go="listen"',"speaker","Hörübung",ARV===false?"Braucht eine arabische Stimme auf dem Gerät":"Wort hören, Bedeutung wählen")}</div>`);
 }
 function wordRow(w){const nt=noteOf(w);return `<button class="w" data-say="${w.i}"><span class="ar" lang="ar">${w.ar}</span><span style="flex:1"><b>${w.de}</b><span class="tr"><br>(${w.tr})${nt?" · "+esc(nt):""}</span></span><span class="mute">${isLearned(w.i)?ic("check",16)+" ":""}${ic("speaker",18)}</span></button>`}
 function list(){
