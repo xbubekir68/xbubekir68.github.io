@@ -697,7 +697,7 @@ function offerResend(em,er){
 const openLegal=e=>{e.preventDefault();view="legal";render()};
 
 // >>> HIER EINTRAGEN: Betreiber, Kontakt und Serverstandort für Datenschutz & Impressum <<<
-const LEGAL={name:"",kontakt:"",region:""}; // z. B. name:"Vorname Nachname, Straße 1, 12345 Ort", kontakt:"mail@beispiel.de", region:"EU (Frankfurt)"
+const LEGAL={name:"Ebubekir Gedik",kontakt:"ebu.gedik@gmx.at",region:"Salzburg, Österreich"}; // z. B. name:"Vorname Nachname, Straße 1, 12345 Ort", kontakt:"mail@beispiel.de", region:"EU (Frankfurt)"
 function legal(){
   const miss=t=>t?esc(t):'<b style="color:var(--bad)">noch nicht eingetragen</b>';
   const sec=(t,b)=>`<div class="card" style="margin-top:10px"><p><b>${t}</b></p><div style="margin-top:6px;line-height:1.55;font-size:15px">${b}</div></div>`;
