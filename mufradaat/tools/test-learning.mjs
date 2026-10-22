@@ -140,9 +140,21 @@ ok("Lektionsansicht rendert mit Pegel",run(`app.innerHTML.includes("pg3")||app.i
 run(`ui.cat="Alle";ui.q="";list()`);
 ok("Wortliste rendert",run(`app.innerHTML.length>500`));
 run(`cards()`);ok("Karteikarten rendern",run(`app.innerHTML.length>200`));
-run(`S.box.kitab=5;S.due.kitab=Date.now()+99*864e5;cd.order=["kitab"];cd.n=0;cd.flip=true;cards()`);
-ok("Karteikarte ohne Vokalzeichen nennt das auf der Vorderseite",/ohne Vokalzeichen/.test(run(`app.innerHTML`)));
-ok("Karteikarte zeigt die volle Fassung auf der Rückseite",run(`app.innerHTML.includes(BY.kitab.ar)`));
+// Karteikarten: eine Seite nur Arabisch, die andere nur Deutsch
+run(`S.dir="ad";S.box.kitab=5;S.due.kitab=Date.now()+99*864e5;cd.order=["kitab"];cd.n=0;cd.flip=false;cards()`);
+let f=run(`app.innerHTML`);
+ok("Karte (ad) vorne: Arabisch mit Umschrift, kein Deutsch",f.includes("كِتَاب")&&/kitāb/.test(f)&&!/>Buch</.test(f),f.slice(0,200));
+run(`cd.flip=true;cards()`);f=run(`app.innerHTML`);
+ok("Karte (ad) hinten: nur Deutsch, kein Arabisch",/>Buch</.test(f)&&!f.includes("كِتَاب"),f.slice(0,200));
+run(`S.dir="da";cd.flip=false;cards()`);f=run(`app.innerHTML`);
+ok("Karte (da) vorne: nur Deutsch",/>Buch</.test(f)&&!f.includes("كِتَاب"));
+run(`cd.flip=true;cards()`);f=run(`app.innerHTML`);
+ok("Karte (da) hinten: nur Arabisch",f.includes("كِتَاب")&&!/>Buch</.test(f));
+run(`S.dir="ad";cd.flip=true;cards()`);
+ok("Hinweis zum Genus steht auf der deutschen Seite",/männlich/.test(run(`app.innerHTML`)));
+run(`cd.flip=false;cards()`);
+ok("Plural (arabisch) steht auf der arabischen Seite, nicht auf der deutschen",/Plural: كُتُب/.test(run(`app.innerHTML`))&&!/Plural/.test((run(`cd.flip=true;cards();app.innerHTML`),run(`app.innerHTML`))));
+run(`cd.flip=false`);
 
 // ---------- 7. Gleich geschriebene Wörter ----------
 run(`S.hk=2;S.box.zuhr=6;S.box.zahr=6;S.box.min=6;S.box.man=6;S.box.kitab=6`);
@@ -152,6 +164,70 @@ ok("eindeutige Wörter bleiben ohne",run(`hkLvl("kitab")`)===2);
 ok("gleich geschriebene Wörter gelten als Kollision",run(`clash(BY.zuhr,BY.zahr)`)===true&&run(`clash(BY.min,BY.man)`)===true);
 ok("Antwortoptionen enthalten kein gleich geschriebenes Wort",run(`[...Array(20)].every(()=>{const o=options(BY.zuhr);return !o.some(x=>x.i==="zahr")})`));
 run(`S.hk=1`);
+
+// ---------- 8. Startseite: Statistik-Einblick ----------
+run(`S.box={};S.due={};S.ef={};S.days={};S.hk=1;LES[0].w.forEach((id,i)=>{S.box[id]=i<3?2:1;S.due[id]=Date.now()-1000});S.days[today()]=7;home()`);
+f=run(`app.innerHTML`);
+ok("Startseite zeigt die Statistik-Karte",/class="card mini"/.test(f)&&/Diese Woche/.test(f)&&/data-go="stats"/.test(f));
+ok("Karte nennt gelernt/begonnen/fällig richtig",/<b>3<\/b><span>gelernt<\/span>/.test(f)&&new RegExp("<b>"+(run(`LES[0].w.length`)-3)+"</b><span>begonnen").test(f)&&new RegExp("<b>"+run(`dueN()`)+"</b><span>fällig").test(f),f.match(/mnums[\s\S]*?<\/div><\/button>/)?.[0].replace(/<[^>]+>/g," "));
+ok("Wochenbalken: sieben Tage, heute markiert",(f.match(/<div class="(t)?"><i/g)||[]).length===7&&/<div class="t"><i/.test(f));
+ok("Karte nennt die Wochensumme",/7 geübt/.test(f),f.match(/\d+ Wör?ter? geübt/)?.[0]);
+run(`S.days={};home()`);ok("ohne Übung: 0 Wörter, Balken bleiben sichtbar",/0 geübt/.test(run(`app.innerHTML`)));
+
+// ---------- 9. Sätze ----------
+ok("Sätze sind geladen",run(`SENT.length`)>=50,run(`SENT.length`));
+ok("jeder Satz hat Blöcke, deren Text dem Satz entspricht",run(`SENT.every(x=>x.t.length>=2&&x.ar===x.t.map(t=>t.a).join(" "))`));
+ok("alle Wort-IDs der Sätze existieren",run(`SENT.every(x=>x.ids.every(i=>BY[i]))`));
+ok("SFREE enthält nur bekannte Wörter",run(`[...SFREE].every(i=>BY[i])`));
+run(`S.box={};S.due={};S.sent={}`);
+ok("ohne Fortschritt sind kaum Sätze frei",run(`SENT.filter(sentOpen).length`)<run(`SENT.length`)/3,run(`SENT.filter(sentOpen).length`));
+run(`startSatz()`);ok("zu wenige freie Sätze: Runde startet nicht",run(`view`)!=="satz",run(`view`));
+run(`W.forEach(w=>{S.box[w.i]=1;S.due[w.i]=Date.now()+864e5})`);
+ok("mit allen Wörtern sind alle Sätze frei",run(`SENT.filter(sentOpen).length`)===run(`SENT.length`));
+run(`startSatz()`);
+ok("Runde startet mit 6 Sätzen",run(`view`)==="satz"&&run(`Z.items.length`)===6,run(`Z.items.length`));
+ok("Aufgabentypen wechseln sich ab",run(`Z.items.map(i=>i.type).join()`).split(",").every((t,k,a)=>k===0||t!==a[k-1]),run(`Z.items.map(i=>i.type).join()`));
+ok("keine Sätze doppelt in einer Runde",run(`new Set(Z.items.map(i=>i.s.k)).size`)===6);
+// Satzbaukasten
+run(`Z.items[0].type="bau";Z.n=0;Z.fb=null;Z.sel=[];Z.bank=null;Z.opts=null;satz()`);
+const s0=run(`Z.items[0].s.ar`),own=run(`Z.items[0].s.t.length`);
+ok("Satzbaukasten: Bank = Satzwörter + 2 Ablenker",run(`Z.bank.length`)===own+2&&run(`Z.bank.filter(b=>!b.own).length`)===2,[run(`Z.bank.length`),own]);
+ok("Ablenker kommen nicht im Satz vor",run(`Z.bank.filter(b=>!b.own).every(b=>!Z.items[0].s.t.some(t=>t.a===b.a))`));
+ok("Satz steht vor der Antwort nicht auf der Seite",!run(`app.innerHTML`).includes(s0)||run(`Z.bank.length`)>0&&!new RegExp(`<div class="card sans">`).test(run(`app.innerHTML`)));
+ok("Prüfen ist ohne Auswahl gesperrt",/id="chk" disabled/.test(run(`app.innerHTML`)));
+run(`Z.sel=Z.items[0].s.t.map(t=>Z.bank.find(b=>b.own&&b.a===t.a).u);satz()`);
+ok("Prüfen ist mit Auswahl frei",/id="chk" >/.test(run(`app.innerHTML`))||/id="chk"\s*>/.test(run(`app.innerHTML`)));
+const xpS=run(`S.xp`);run(`zFinish(Z.sel.map(u=>Z.bank.find(b=>b.u===u).a).join(" ")===Z.items[0].s.ar,10);satz()`);
+ok("richtige Reihenfolge: Antwort richtig, +10 XP",run(`Z.fb.ok`)&&run(`S.xp`)-xpS===10&&run(`Z.right`)===1,[run(`Z.fb.ok`),run(`S.xp`)-xpS]);
+ok("Fortschritt pro Satz wird gezählt",run(`S.sent[Z.items[0].s.k]`)===1);
+ok("nach der Antwort steht die Umschrift da",new RegExp(run(`Z.items[0].s.tr`)).test(run(`app.innerHTML`)));
+// falsche Reihenfolge
+run(`Z.n=1;Z.fb=null;Z.items[1].type="bau";Z.sel=[];Z.bank=null;satz();Z.sel=Z.items[1].s.t.map(t=>Z.bank.find(b=>b.own&&b.a===t.a).u).reverse();`);
+const same=run(`Z.items[1].s.t.length<2`);
+const xp2=run(`S.xp`);run(`zFinish(Z.sel.map(u=>Z.bank.find(b=>b.u===u).a).join(" ")===Z.items[1].s.ar,10)`);
+ok("falsche Reihenfolge: keine XP, kein Zähler",(run(`Z.fb.ok`)===false)&&run(`S.xp`)===xp2&&!(run(`S.sent[Z.items[1].s.k]`)>0),[run(`Z.fb.ok`),run(`S.xp`)-xp2]);
+run(`satz()`);ok("bei Fehler wird der richtige Satz gezeigt",run(`app.innerHTML`).includes(run(`Z.items[1].s.ar`)));
+// Satzverständnis
+run(`Z.n=2;Z.fb=null;Z.items[2].type="versteh";Z.opts=null;Z.picked=null;satz()`);
+ok("Verständnis: 4 Übersetzungen, genau eine richtig",run(`Z.opts.length`)===4&&run(`Z.opts.filter(o=>o===Z.items[2].s).length`)===1&&run(`new Set(Z.opts.map(o=>o.de)).size`)===4);
+ok("Verständnis zeigt den arabischen Satz",run(`app.innerHTML`).includes(run(`Z.items[2].s.ar`)));
+ok("Verständnis zeigt die deutsche Lösung nicht vorab als markiert",!/class="opt ok"/.test(run(`app.innerHTML`)));
+run(`Z.picked=Z.opts.indexOf(Z.items[2].s);zFinish(true,6);satz()`);
+ok("Verständnis richtig: grün markiert",/class="opt ok"/.test(run(`app.innerHTML`)));
+// Rundenende
+run(`Z.n=Z.items.length;Z.fin=false;Z.right=6;Z.xp=40;const r0=S.st.sent||0;satz()`);
+ok("Rundenende: Bonus bei fehlerfreier Runde",run(`Z.bonus`)===10);
+ok("Rundenende zählt die Runde",run(`S.st.sent`)>=1);
+ok("Rundenende nennt Fortschritt",/von \d+ Sätzen/.test(run(`app.innerHTML`)));
+// Abzeichen und Zusammenführen
+run(`S.sent={};SENT.slice(0,9).forEach(x=>S.sent[x.k]=1);S.badges=[];checkBadges()`);
+ok("Abzeichen „Satzbauer“ noch nicht bei 9 Sätzen",!run(`S.badges.includes("sent10")`));
+run(`S.sent[SENT[9].k]=1;checkBadges()`);
+ok("Abzeichen „Satzbauer“ bei 10 Sätzen",run(`S.badges.includes("sent10")`));
+r=JSON.parse(run(`JSON.stringify(mergeS({epoch:0,box:{},due:{},sent:{0:2,1:1}},{epoch:0,box:{},due:{},sent:{0:1,2:3}}))`));
+ok("Merge: Satzfortschritt pro Satz das Maximum",r.sent[0]===2&&r.sent[1]===1&&r.sent[2]===3,r.sent);
+run(`S.sent={0:1};S.epoch=0;home()`);
+ok("Startseite bietet Sätze an",/Sätze/.test(run(`app.innerHTML`)));
 
 console.log("\n"+pass+" OK, "+fail+" FAIL");
 process.exit(fail?1:0);

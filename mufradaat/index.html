@@ -50,6 +50,7 @@ input[type=search],input.t{width:100%;padding:13px 14px;border-radius:12px;borde
 .w .tr{color:var(--mute);font-size:13px}
 .flash{min-height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;width:100%;margin-top:16px;padding:24px}
 .flash .ar{font-size:64px;line-height:1.4}
+.flash .side{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--g);background:var(--gl);padding:3px 12px;border-radius:999px}.flash .hintf{margin-top:14px;font-size:13px}
 .bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden;flex:1}.bar i{display:block;height:100%;background:var(--g)}
 .opt{width:100%;text-align:left;margin-top:10px;padding:15px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);font-size:16px}
 .opt.ok{border-color:var(--g);background:var(--gl)}.opt.no{border-color:var(--bad);background:var(--badl)}
@@ -141,6 +142,23 @@ nav[hidden]{display:none}
 .pg3.p3 i{background:var(--g)}
 .arw.off .a2,.arw.off .t2{display:none}.arw:not(.off) .a1,.arw:not(.off) .hkb{display:none}
 .hkb{margin-left:4px}
+.mini{display:block;width:100%;text-align:left;margin-top:10px}
+.mbars{display:flex;align-items:flex-end;gap:6px;height:58px;margin-top:10px}
+.mbars div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:100%}
+.mbars i{display:block;width:100%;max-width:26px;border-radius:5px;background:var(--line)}
+.mbars .t i{background:var(--g)}
+.mbars span{font-size:11px;color:var(--mute)}
+.mnums{display:flex;margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+.mnums div{flex:1;display:flex;flex-direction:column}.mnums b{font-size:20px}.mnums span{font-size:12px;color:var(--mute)}
+.gde{text-align:center;font-size:20px;font-weight:600;margin:10px 0 14px}
+.sb{direction:rtl;display:flex;flex-wrap:wrap;gap:8px;min-height:68px;align-items:center;justify-content:flex-start;border:2px dashed var(--line);border-radius:16px;padding:10px;background:var(--card)}
+.sb.ok{border-style:solid;border-color:var(--g)}.sb.no{border-style:solid;border-color:var(--bad)}
+.sb .sbh{direction:ltr;width:100%;text-align:center;font-size:14px}
+.sbk{direction:rtl;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:16px 0 4px}
+.tk{font-family:var(--ar);font-size:26px;line-height:1.5;padding:6px 16px;min-height:48px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.sb .tk{border-color:var(--g);background:var(--gl)}
+.tk:disabled{opacity:.35;cursor:default}.sb .tk:disabled{opacity:1}
+.sans{margin-top:12px}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(47,143,111,.5)}50%{box-shadow:0 0 0 9px rgba(47,143,111,0)}}
 .med{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;margin:0 auto 6px;border:2px solid var(--g);background:var(--gl);color:var(--g);font-size:22px;line-height:1;overflow:hidden}
 .med .ar{font-size:22px;line-height:1.3}.med.big{width:104px;height:104px;font-size:46px}.med.big .ar{font-size:46px}
@@ -182,8 +200,73 @@ const PL={kitab:["كُتُب","kutub"],bayt:["بُيُوت","buyūt"],madrasah:[
 const genOf=id=>GEN_F.has(id)?"weiblich":GEN_M.has(id)?"männlich":"";
 const noteOf=w=>[w.n||(w.cat==="Farben"||w.cat==="Eigenschaften"?"männliche Form":""),genOf(w.i),PL[w.i]?"Plural: "+PL[w.i][0]+" ("+PL[w.i][1]+")":""].filter(Boolean).join(" · ");
 
+// ===== Sätze =====
+// Einfache Sätze im Hocharabischen (Fusha), nur aus Wörtern der App, ohne Endvokale (Pausalform: „al-kitāb kabīr“ statt „al-kitābu kabīrun“).
+// Format: [Deutsch, Umschrift, "arabisch|wort-id arabisch|wort-id …", Frage?]. Ein Block entspricht einem Wort; das Satzzeichen kommt automatisch.
+const SENT_RAW=[
+["Das ist ein Buch.","hādhā kitāb","هَذَا|hadha كِتَاب|kitab"],
+["Das ist ein Auto.","hādhihi sayyārah","هَذِهِ|hadhihi سَيَّارَة|sayyarah"],
+["Was ist das?","mā hādhā","مَا|ma-was هَذَا|hadha",1],
+["Wer ist er?","man huwa","مَنْ|man هُوَ|huwa",1],
+["Das Buch ist groß.","al-kitāb kabīr","الْكِتَاب|kitab كَبِير|kabir"],
+["Das Haus ist schön.","al-bayt jamīl","الْبَيْت|bayt جَمِيل|jamil"],
+["Die Schule ist groß.","al-madrasah kabīrah","الْمَدْرَسَة|madrasah كَبِيرَة|kabir"],
+["Das Auto ist neu.","as-sayyārah jadīdah","السَّيَّارَة|sayyarah جَدِيدَة|jadid"],
+["Das Wasser ist kalt.","al-māʾ bārid","الْمَاء|ma بَارِد|barid"],
+["Der Tee ist heiß.","ash-shāy ḥārr","الشَّاي|shay حَارّ|harr"],
+["Der Kaffee ist heiß.","al-qahwah ḥārrah","الْقَهْوَة|qahwah حَارَّة|harr"],
+["Ich bin Schüler.","anā ṭālib","أَنَا|ana طَالِب|talib"],
+["Er ist Lehrer.","huwa muʿallim","هُوَ|huwa مُعَلِّم|muallim"],
+["Sie ist Ärztin.","hiya ṭabībah","هِيَ|hiya طَبِيبَة|tabib"],
+["Wir sind Schüler.","naḥnu ṭullāb","نَحْنُ|nahnu طُلَّاب|talib"],
+["Bist du Schüler?","hal anta ṭālib","هَلْ|hal أَنْتَ|anta طَالِب|talib",1],
+["Ist das ein Buch?","hal hādhā kitāb","هَلْ|hal هَذَا|hadha كِتَاب|kitab",1],
+["Wo ist der Flughafen?","ayna l-maṭār","أَيْنَ|ayna الْمَطَار|matar",1],
+["Wo ist das Hotel?","ayna l-funduq","أَيْنَ|ayna الْفُنْدُق|funduq",1],
+["Wo ist der Bahnhof?","ayna l-maḥaṭṭah","أَيْنَ|ayna الْمَحَطَّة|mahattah",1],
+["Wo ist der Schlüssel?","ayna l-miftāḥ","أَيْنَ|ayna الْمِفْتَاح|miftah",1],
+["Das Restaurant ist nah.","al-maṭʿam qarīb","الْمَطْعَم|matam قَرِيب|qarib"],
+["Die Moschee ist dort.","al-masjid hunāka","الْمَسْجِد|masjid هُنَاكَ|hunaka"],
+["Heute ist es kalt.","al-yawm bārid","الْيَوْم|alyawm بَارِد|barid"],
+["Das Kind schlief.","nāma ṭ-ṭifl","نَامَ|nama الطِّفْل|tifl"],
+["Der Junge ging zur Schule.","dhahaba l-walad ilā l-madrasah","ذَهَبَ|dhahaba الْوَلَد|walad إِلَى|ila الْمَدْرَسَة|madrasah"],
+["Der Schüler las das Buch.","qaraʾa ṭ-ṭālib al-kitāb","قَرَأَ|qaraa الطَّالِب|talib الْكِتَاب|kitab"],
+["Der Lehrer schrieb das Wort.","kataba l-muʿallim al-kalimah","كَتَبَ|kataba الْمُعَلِّم|muallim الْكَلِمَة|kalimah"],
+["Der Mann öffnete die Tür.","fataḥa r-rajul al-bāb","فَتَحَ|fataha الرَّجُل|rajul الْبَاب|bab"],
+["Der Junge trank die Milch.","shariba l-walad al-ḥalīb","شَرِبَ|shariba الْوَلَد|walad الْحَلِيب|halib"],
+["Der Mann kaufte das Brot.","ishtarā r-rajul al-khubz","اِشْتَرَى|ishtara الرَّجُل|rajul الْخُبْز|khubz"],
+["Der Schüler nahm den Stift.","akhadha ṭ-ṭālib al-qalam","أَخَذَ|akhadha الطَّالِب|talib الْقَلَم|qalam"],
+["Das Kind setzte sich auf den Stuhl.","jalasa ṭ-ṭifl ʿalā l-kursī","جَلَسَ|jalasa الطِّفْل|tifl عَلَى|ala الْكُرْسِيّ|kursi"],
+["Das Buch ist auf dem Tisch.","al-kitāb ʿalā ṭ-ṭāwilah","الْكِتَاب|kitab عَلَى|ala الطَّاوِلَة|tawilah"],
+["Im Zimmer ist ein Bett.","fī l-ghurfah sarīr","فِي|fi الْغُرْفَة|ghurfah سَرِير|sarir"],
+["Im Garten ist ein Baum.","fī l-ḥadīqah shajarah","فِي|fi الْحَدِيقَة|hadiqah شَجَرَة|shajarah"],
+["Die Mutter ist in der Küche.","al-umm fī l-maṭbakh","الْأُمّ|umm فِي|fi الْمَطْبَخ|matbakh"],
+["Der Bruder ist in der Schule.","al-akh fī l-madrasah","الْأَخ|akh فِي|fi الْمَدْرَسَة|madrasah"],
+["Die Katze ist auf dem Stuhl.","al-qiṭṭah ʿalā l-kursī","الْقِطَّة|qittah عَلَى|ala الْكُرْسِيّ|kursi"],
+["Der Hund ist im Garten.","al-kalb fī l-ḥadīqah","الْكَلْب|kalb فِي|fi الْحَدِيقَة|hadiqah"],
+["Der Elefant ist sehr groß.","al-fīl kabīr jiddan","الْفِيل|fil كَبِير|kabir جِدًّا|jiddan"],
+["Der Vogel ist klein.","aṭ-ṭāʾir ṣaghīr","الطَّائِر|tair صَغِير|saghir"],
+["Das Meer ist blau.","al-baḥr azraq","الْبَحْر|bahr أَزْرَق|azraq"],
+["Der Himmel ist blau.","as-samāʾ zarqāʾ","السَّمَاء|samaa زَرْقَاء|azraq"],
+["Die Sonne ist heiß.","ash-shams ḥārrah","الشَّمْس|shams حَارَّة|harr"],
+["Der Schnee ist kalt.","ath-thalj bārid","الثَّلْج|thalj بَارِد|barid"],
+["Ich bin hungrig.","anā jāʾiʿ","أَنَا|ana جَائِع|jai"],
+["Er ist krank.","huwa marīḍ","هُوَ|huwa مَرِيض|marid"],
+["Sie ist glücklich.","hiya saʿīdah","هِيَ|hiya سَعِيدَة|said"],
+["Das Hotel ist teuer.","al-funduq ghālin","الْفُنْدُق|funduq غَالٍ|ghali"],
+["Das Brot ist billig.","al-khubz rakhīṣ","الْخُبْز|khubz رَخِيص|rakhis"],
+["Der Vater ist Arzt.","al-ab ṭabīb","الْأَب|ab طَبِيب|tabib"],
+["Das Zimmer ist sauber.","al-ghurfah naẓīfah","الْغُرْفَة|ghurfah نَظِيفَة|nazif"]
+];
+// Kleine Wörter, die in Sätzen vorkommen dürfen, ohne dass man sie vorher gelernt haben muss; sie werden dort mitgelernt.
+const SFREE=new Set("hadha hadhihi ma-was man ayna hal huwa hiya ana anta nahnu fi ala ila jiddan wa".split(" "));
+const SENT=SENT_RAW.map((r,k)=>{const t=r[2].split(" ").map(x=>{const[a,i]=x.split("|");return{a,i}});return{k,de:r[0],tr:r[1],t,q:!!r[3],ar:t.map(x=>x.a).join(" "),ids:[...new Set(t.map(x=>x.i))]}});
+const sentOpen=s=>s.ids.every(i=>SFREE.has(i)||S.box[i]!==undefined); // freigeschaltet, sobald alle Inhaltswörter angefangen sind
+const sentAr=s=>s.ar+(s.q?" ؟":" .");
+const sentDone=()=>Object.values(S.sent||{}).filter(n=>n>0).length;
+
 // ===== Zustand =====
-let S={v:2,days:{},fav:[],dir:"ad",rem:true,time:"19:00",theme:"system",streak:0,last:"",box:{},due:{},ef:{},hk:1,seen:[],seenDay:"",notified:"",xp:0,xpDays:{},badges:[],alpha:{},goal:100,goalv:1,sound:true,vib:true,auto:true,epoch:0,st:{perfect:0,rounds:0,goals:0,pairs:0,blitz:0,mix:0}};
+let S={v:2,days:{},fav:[],dir:"ad",rem:true,time:"19:00",theme:"system",streak:0,last:"",box:{},due:{},ef:{},sent:{},hk:1,seen:[],seenDay:"",notified:"",xp:0,xpDays:{},badges:[],alpha:{},goal:100,goalv:1,sound:true,vib:true,auto:true,epoch:0,st:{perfect:0,rounds:0,goals:0,pairs:0,blitz:0,mix:0,sent:0}};
 const DEF=JSON.stringify(S);let U=null;const SK=()=>"mfr:"+(UID||U);
 function migrate(st){
   if((st.v||1)<2){ // v1: Fortschritt hing am Array-Index -> auf feste IDs umstellen
@@ -416,6 +499,7 @@ const BADGES=[
 ["alpha","ألف","Buchstabenkenner","Alle 29 Buchstaben sicher erkannt",()=>alphaSure()>=ALPHA.length],
 ["blitz","برق","Blitzdenker","10 Treffer im Wort-Blitz",()=>(S.st.blitz||0)>=10],
 ["mix7","٧","Sieben Mischungen","7 Tages-Mischungen abgeschlossen",()=>(S.st.mix||0)>=7],
+["sent10","جملة","Satzbauer","10 verschiedene Sätze richtig",()=>sentDone()>=10],
 ...GROUPS.map(g=>["g-"+g,GA[g]||"✓",g+" gemeistert","Alle Wörter im Thema „"+g+"“ gelernt",()=>W.filter(w=>w.cat===g).every(w=>isLearned(w.i))])
 ].map(a=>({id:a[0],ic:a[1],n:a[2],d:a[3],t:a[4]}));
 function checkBadges(){
@@ -457,6 +541,65 @@ function listen(){
     if(ok){LN.right++;sfx("good",Math.min(6,LN.right));vib(10)}else{sfx("bad");vib([40,30,40])}
     listen()});
   $("#nx").onclick=()=>{LN.n++;LN.picked=null;LN.opts=null;sfx("tap");listen()};
+}
+
+// ===== Sätze üben: Satzbaukasten und Satzverständnis =====
+const SMIN=3;let Z=null;
+function startSatz(){
+  const open=SENT.filter(sentOpen);
+  if(open.length<SMIN){toast("Noch zu wenige Sätze frei. Lerne erst ein paar mehr Wörter.");return go("path")}
+  // wenig Geübtes zuerst, bei Gleichstand zufällig
+  const pick=open.map(x=>({x,n:(S.sent||{})[x.k]||0,r:Math.random()})).sort((a,b)=>(a.n-b.n)||(a.r-b.r)).slice(0,6).map(o=>o.x);
+  Z={items:shuffle(pick).map((x,k)=>({s:x,type:k%2?"bau":"versteh"})),n:0,right:0,xp:0,fb:null,sel:[],opts:null,bank:null,fin:false};
+  view="satz";render();
+}
+function zBank(s){ // Wortblöcke des Satzes plus zwei Ablenker aus anderen freien Sätzen
+  const own=new Set(s.t.map(x=>x.a)),extra=shuffle(SENT.filter(sentOpen).filter(o=>o!==s).flatMap(o=>o.t).filter(x=>!own.has(x.a)&&!SFREE.has(x.i)));
+  const dis=[];for(const x of extra){if(dis.length<2&&!dis.some(d=>d.a===x.a))dis.push(x)}
+  return shuffle([...s.t.map(x=>({...x,own:1})),...dis]).map((x,u)=>({...x,u}));
+}
+function zOpts(s){ // vier deutsche Übersetzungen, eine richtig
+  const others=shuffle(SENT.filter(sentOpen).filter(o=>o!==s&&o.de!==s.de)),sh=others.filter(o=>o.ids.some(i=>s.ids.includes(i)));
+  const out=[];for(const o of [...sh,...others]){if(out.length<3&&!out.some(d=>d.de===o.de))out.push(o)}
+  return shuffle([s,...out]);
+}
+function zFinish(ok,x){
+  Z.fb={ok,x};if(ok){Z.right++;Z.xp+=x;S.sent=S.sent||{};const it=Z.items[Z.n];S.sent[it.s.k]=(S.sent[it.s.k]||0)+1;sfx("good",Math.min(6,Z.right));vib(12);addXP(x)}else{sfx("bad");vib([40,30,40])}
+}
+function satz(){
+  if(Z.n>=Z.items.length){
+    if(!Z.fin){Z.fin=true;Z.bonus=Z.right===Z.items.length?10:0;S.st.sent=(S.st.sent||0)+1;if(Z.bonus){Z.xp+=Z.bonus;addXP(Z.bonus)}else{save();checkBadges()}if(Z.right>=Math.ceil(Z.items.length*.7)){confetti();sfx("win")}}
+    paint(`<div style="text-align:center;margin-top:30px"><h1>Geschafft</h1></div><div class="tiles"><div class="card"><p class="mute">Richtig</p><b>${Z.right} / ${Z.items.length}</b></div><div class="card"><p class="mute">XP verdient</p><b>+${Z.xp}</b>${Z.bonus?`<span class="mute">davon ${Z.bonus} Bonus</span>`:""}</div></div>
+    <div class="card" style="margin-top:10px"><b>${sentDone()} von ${SENT.length} Sätzen</b><p class="mute" style="margin-top:4px">schon einmal richtig. Mit jedem neuen Wort werden weitere Sätze frei.</p></div>
+    <button class="btn" id="again">Noch eine Runde</button><button class="btn alt" data-go="home">Zur Startseite</button>`);
+    $("#again").onclick=startSatz;return;
+  }
+  const it=Z.items[Z.n],s=it.s,done=Z.fb!==null,last=Z.n+1>=Z.items.length;
+  const bar=`<div class="top">${xbtn("home")}<div class="bar"><i style="width:${Z.n/Z.items.length*100}%"></i></div><span class="mute">${Z.n+1} / ${Z.items.length}</span></div>`;
+  const fb=done?`<div class="fb ${Z.fb.ok?"ok":"no"}" role="status"><span>${Z.fb.ok?pick(GOOD):"Richtig wäre:"}</span>${Z.fb.ok?`<span class="xpf">+${Z.fb.x} XP</span>`:""}</div>
+    <div class="card sans"><div class="ar" lang="ar" style="font-size:30px;text-align:center">${sentAr(s)}</div><p class="mute" style="text-align:center;margin-top:4px">${esc(s.tr)}</p><p style="text-align:center;margin-top:4px"><b>${esc(s.de)}</b></p><p style="text-align:center"><button class="lnk" id="hear">${ic("speaker",16)} Anhören</button></p></div>`:"";
+  if(it.type==="bau"){
+    if(!Z.bank)Z.bank=zBank(s);
+    const used=new Set(Z.sel);
+    paint(bar+`<p style="text-align:center;font-weight:600;margin-top:12px">Baue den Satz auf Arabisch</p><p class="gde">${esc(s.de)}</p>
+    <div class="sb ${done?(Z.fb.ok?"ok":"no"):""}" id="sb" aria-label="Dein Satz" aria-live="polite">${Z.sel.length?Z.sel.map(u=>{const x=Z.bank.find(b=>b.u===u);return `<button class="tk" lang="ar" data-rm="${u}" ${done?"disabled":""}>${x.a}</button>`}).join(""):'<span class="mute sbh">Tippe die Wörter in der richtigen Reihenfolge</span>'}</div>
+    <div class="sbk" aria-label="Wörter zur Auswahl">${Z.bank.map(x=>`<button class="tk" lang="ar" data-add="${x.u}" ${used.has(x.u)||done?"disabled":""}>${x.a}</button>`).join("")}</div>
+    ${fb}${done?`<button class="btn" id="nx">${last?"Ergebnis ansehen":"Weiter"}</button>`:`<button class="btn" id="chk" ${Z.sel.length?"":"disabled"}>Prüfen</button>`}`);
+    document.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>{Z.sel.push(+b.dataset.add);sfx("tap");satz()});
+    document.querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>{Z.sel=Z.sel.filter(u=>u!==+b.dataset.rm);sfx("tap");satz()});
+    if($("#chk"))$("#chk").onclick=()=>{const got=Z.sel.map(u=>Z.bank.find(b=>b.u===u).a).join(" ");zFinish(got===s.ar,10);speakLater(s.ar);satz()};
+  }else{
+    if(!Z.opts)Z.opts=zOpts(s);
+    paint(bar+`<p style="text-align:center;font-weight:600;margin-top:12px">Was bedeutet der Satz?</p>
+    <div class="card sans" style="margin-top:14px"><div class="ar" lang="ar" style="font-size:34px;text-align:center">${sentAr(s)}</div><p class="mute" style="text-align:center;margin-top:4px">${done?esc(s.tr):"&nbsp;"}</p><p style="text-align:center"><button class="lnk" id="hear">${ic("speaker",16)} Anhören</button></p></div>
+    <div style="margin-top:14px">${Z.opts.map((o,k)=>`<button class="opt ${done?(o===s?"ok":Z.picked===k?"no":""):""}" data-o="${k}" ${done?"disabled":""}>${esc(o.de)}</button>`).join("")}</div>
+    ${done?`<div class="fb ${Z.fb.ok?"ok":"no"}" role="status"><span>${Z.fb.ok?pick(GOOD):"Nicht ganz."}</span>${Z.fb.ok?`<span class="xpf">+${Z.fb.x} XP</span>`:""}</div>`:""}
+    <button class="btn" id="nx" ${done?"":"disabled"}>${last?"Ergebnis ansehen":"Weiter"}</button>`);
+    document.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{Z.picked=+b.dataset.o;zFinish(Z.opts[Z.picked]===s,6);speakLater(s.ar);satz()});
+  }
+  if($("#hear"))$("#hear").onclick=()=>speak(s.ar);
+  if(it.type==="versteh"&&!done&&S.auto!==false)speakLater(s.ar);
+  if($("#nx"))$("#nx").onclick=()=>{Z.n++;Z.fb=null;Z.sel=[];Z.opts=null;Z.bank=null;Z.picked=null;sfx("tap");satz()};
 }
 
 // ===== Alphabet =====
@@ -550,21 +693,21 @@ function aEnd(){
 // ===== Navigation =====
 let view="home",ui={cat:"Alle",q:""},gt=0;
 const TABS=[["home","home","Start"],["path","path","Lernpfad"],["games","bolt","Spiele"],["cards","cards","Karten"],["more","more","Mehr"]];
-const SUB={more:["stats","fav","settings","list","badges","legal"],games:["pairs","blitz","listen"],path:["quiz","lesson","alphabet","letter","aquiz"]};
+const SUB={more:["stats","fav","settings","list","badges","legal"],games:["pairs","blitz","listen"],path:["quiz","lesson","alphabet","letter","aquiz","satz"]};
 function go(v){view=v;render();const m=$("#app");if(m){m.setAttribute("tabindex","-1");try{m.focus({preventScroll:true})}catch(e){}}} // Fokus an den Seitenanfang, damit Screenreader den Wechsel bemerken
 const paint=h=>{app.innerHTML=h;fx()};
 function fx(){requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelectorAll("[data-to]").forEach(e=>{e.style.width=e.dataset.to+"%"})))}
 function render(){
   clearInterval(gt);
   $("#nav").innerHTML=TABS.map(t=>`<button class="${(view===t[0]||(SUB[t[0]]||[]).includes(view))?"on":""}" data-go="${t[0]}" ${(view===t[0]||(SUB[t[0]]||[]).includes(view))?'aria-current="page"':""}><span>${ic(t[1])}</span>${t[2]}</button>`).join("");
-  $("#nav").hidden=["quiz","pairs","blitz","aquiz","listen"].includes(view)||(view==="legal"&&!U);
-  ({home,path,lesson,alphabet,letter,aquiz,listen,cards,more,list,stats,settings,quiz,fav,games,badges,pairs,blitz,legal})[view]();
+  $("#nav").hidden=["quiz","pairs","blitz","aquiz","listen","satz"].includes(view)||(view==="legal"&&!U);
+  ({home,path,lesson,alphabet,letter,aquiz,listen,satz,cards,more,list,stats,settings,quiz,fav,games,badges,pairs,blitz,legal})[view]();
   app.classList.remove("enter");void app.offsetWidth;app.classList.add("enter");
   window.scrollTo(0,0);
 }
 document.addEventListener("click",e=>{
   const g=e.target.closest("[data-go]");
-  if(g){const t=g.dataset.go;sfx("tap");if(t==="review")return startQuiz(null);if(t==="mix")return startMix();if(t==="pairs")return startPairs();if(t==="blitz")return startBlitz();if(t==="aquiz")return startAQ();if(t==="listen")return startListen();return go(t)}
+  if(g){const t=g.dataset.go;sfx("tap");if(t==="review")return startQuiz(null);if(t==="mix")return startMix();if(t==="satz")return startSatz();if(t==="pairs")return startPairs();if(t==="blitz")return startBlitz();if(t==="aquiz")return startAQ();if(t==="listen")return startListen();return go(t)}
   const o=e.target.closest("[data-open]");
   if(o){const k=+o.dataset.open;sfx("tap");
     if(isLocked(k)){const p=LES[k-1],st=lessonStat(p);toast(`Gesperrt: Beginne erst noch ${need(p)-st.s} Wörter aus „${p.t}“.`);return}
@@ -580,18 +723,29 @@ document.addEventListener("click",e=>{
 function head(t,back="home"){return `<div class="top"><button class="x" data-go="${back}" aria-label="Zurück">${ic("back")}</button><h2>${t}</h2></div>`}
 const itm=(attr,icon,title,sub,cls="")=>`<button class="item ${cls}" ${attr}><span class="ic">${ic(icon)}</span><span><b>${title}</b>${sub?`<small>${sub}</small>`:""}</span><span class="ch">${ic("chev",18)}</span></button>`;
 
+// Kleiner Einblick in die Statistik für die Startseite: Wochenbalken plus drei Zahlen, antippen öffnet alles
+function miniStats(){
+  const days=[...Array(7)].map((_,k)=>{const d=ago(6-k);return{l:["So","Mo","Di","Mi","Do","Fr","Sa"][d.getDay()],n:S.days[ymd(d)]||0,t:k===6}}),mx=Math.max(1,...days.map(d=>d.n)),sum=days.reduce((a,d)=>a+d.n,0);
+  const learnt=knownN(),started=W.filter(w=>S.box[w.i]!==undefined).length-learnt; // begonnen = angefangen, aber noch nicht gelernt
+  return `<button class="card mini" data-go="stats" aria-label="Statistiken öffnen: ${sum} Wörter in den letzten 7 Tagen, ${learnt} gelernt, ${started} begonnen, ${dueN()} fällig">
+  <div class="row sp"><b>Diese Woche</b><span class="mute" style="display:inline-flex;align-items:center;gap:2px;white-space:nowrap">${sum} geübt ${ic("chev",16)}</span></div>
+  <div class="mbars" aria-hidden="true">${days.map(d=>`<div class="${d.t?"t":""}"><i style="height:${Math.max(3,Math.round(d.n/mx*38))}px"></i><span>${d.l}</span></div>`).join("")}</div>
+  <div class="mnums"><div><b>${learnt}</b><span>gelernt</span></div><div><b>${started}</b><span>begonnen</span></div><div><b>${dueN()}</b><span>fällig</span></div></div></button>`;
+}
 function home(){
   const g=S.goal||100,xd=S.xpDays[today()]||0,gp=Math.min(100,Math.round(xd/g*100)),L=lvl(),lo=xpFor(L),hi=xpFor(L+1),xp=S.xp||0,lp=Math.round((xp-lo)/(hi-lo)*100),st=streak(),lit=S.last===today(),cur=currentLesson(),due=dueN();
   paint(`<div class="ar mark" lang="ar">مفردات</div>
   <div class="row sp" style="margin-top:8px"><div><h1 style="margin:0">Hallo${U&&U!=="gast"?", "+esc(U.split("@")[0]):""}!</h1><p class="mute">${due?due+" Wörter zur Wiederholung":"Nichts zu wiederholen"}</p></div><span class="flame ${lit?"on":"off"}" role="img" aria-label="Serie: ${st} Tage">${ic("flame",18,true)} ${st}</span></div>
   ${ARV===false&&!hintOff?`<div class="card hint" role="note"><p>Auf diesem Gerät ist keine arabische Stimme installiert. Die Aussprache fehlt oder klingt falsch. Du kannst in den Systemeinstellungen (Sprachausgabe) eine arabische Stimme hinzufügen.</p><button class="x" id="hx" aria-label="Hinweis schließen">${ic("close")}</button></div>`:""}<div class="card row" style="margin-top:14px"><div class="ring" style="--p:${gp}" role="img" aria-label="Tagesziel ${gp} Prozent"><span>${gp}%</span></div><div style="flex:1"><p class="mute">Tagesziel</p><p class="big">${Math.min(xd,g)} / ${g} XP</p><p class="mute">${xd>=g?"Geschafft, weiter so":lit?"Noch "+(g-xd)+" XP bis zum Ziel":"Lerne heute, um deine Serie zu halten"}</p></div></div>
   <div class="card" style="margin-top:10px"><div class="row sp"><b>Level ${L}</b><span class="mute">${xp} XP</span></div><div class="bar" style="margin-top:10px"><i style="width:0" data-to="${lp}"></i></div><p class="mute" style="margin-top:6px">Noch ${hi-xp} XP bis Level ${L+1} · ${knownN()} von ${W.length} Wörtern gelernt</p></div>
+  ${miniStats()}
   <div class="menu">
   ${(()=>{const p=mixPlan(),n=p.due.length+p.nw.length+p.weak.length;
     return n?itm('data-go="mix"',"bolt","Heute dran",n+" Wörter · "+mixText(p),"main"):""})()}
   ${itm(`data-les="${cur.k}"`,"path","Weiterlernen",`Lektion ${cur.k+1}: ${cur.t}`,"main2")}
   ${due?itm('data-go="review"',"repeat","Wiederholen",due+" Wörter fällig"):""}
   ${itm('data-go="path"',"list","Lernpfad",LES.length+" Lektionen")}
+  ${(()=>{const o=SENT.filter(sentOpen).length;return itm('data-go="satz"',"list","Sätze",o>=SMIN?o+" von "+SENT.length+" Sätzen frei · "+sentDone()+" geübt":"Ab "+SMIN+" freien Sätzen · lerne weiter Wörter")})()}
   ${itm('data-go="alphabet"',"list","Alphabet",alphaSure()+" von "+ALPHA.length+" Buchstaben sicher")}
   ${itm('data-go="games"',"bolt","Spiele","Paare zuordnen, Wort-Blitz")}
   ${itm('data-go="cards"',"cards","Karteikarten","Lernen im eigenen Tempo")}
@@ -648,11 +802,14 @@ function cards(){
   const pool=unlockedWords();
   if(!cd.order.length||cd.sig!==pool.length){cd.order=shuffle(pool.map(w=>w.i));cd.n=0;cd.sig=pool.length;cd.flip=false}
   const w=BY[cd.order[cd.n%cd.order.length]],isF=(S.fav||[]).includes(w.i),nt=noteOf(w);
-  const hl=hkLvl(w.i); // sitzt das Wort, steht es wie in echten Texten ohne Vokalzeichen
-  const front=S.dir==="ad"?`<div class="ar" lang="ar">${arOf(w)}</div><p class="mute">${hl?"ohne Vokalzeichen":"("+w.tr+")"}</p>`:`<div class="h1">${w.de}</div>`;
-  const back=S.dir==="ad"?`<div class="h1">${w.de}</div>${hl?`<div class="ar" lang="ar" style="font-size:30px">${w.ar}</div><p class="mute">(${w.tr})</p>`:""}`:`<div class="ar" lang="ar">${w.ar}</div><p class="mute">(${w.tr})</p>`;
+  // Eine Seite ist nur Arabisch (mit Umschrift), die andere nur Deutsch (mit Hinweis). Die Lernrichtung bestimmt, welche vorne liegt.
+  // Hinweise mit arabischem Text (Plural, weibliche Form) stehen auf der arabischen Seite, alle anderen auf der deutschen
+  const hints=[w.n||(w.cat==="Farben"||w.cat==="Eigenschaften"?"männliche Form":""),genOf(w.i),PL[w.i]?"Plural: "+PL[w.i][0]+" ("+PL[w.i][1]+")":""].filter(Boolean),isAr=h=>/[\u0600-\u06FF]/.test(h),hAr=hints.filter(isAr),hDe=hints.filter(h=>!isAr(h));
+  const arSide=`<span class="side">Arabisch</span><div class="ar" lang="ar">${w.ar}</div><p class="mute">(${w.tr})</p>${hAr.length?`<p class="mute">${esc(hAr.join(" · "))}</p>`:""}`;
+  const deSide=`<span class="side">Deutsch</span><div class="h1">${w.de}</div>${hDe.length?`<p class="mute">${esc(hDe.join(" · "))}</p>`:""}`;
+  const front=S.dir==="ad"?arSide:deSide,back=S.dir==="ad"?deSide:arSide;
   paint(`<div class="row sp"><h1>Karteikarten</h1><span class="mute">${cd.n%cd.order.length+1} / ${cd.order.length}</span></div>
-  <button class="card flash ${cd.anim?"flipped":""}" id="fl">${front}${cd.flip?`<hr style="width:60%;border:0;border-top:1px solid var(--line)">${back}${nt?`<p class="mute">${esc(nt)}</p>`:""}`:'<p class="mute">Tippen zum Umdrehen</p>'}</button>
+  <button class="card flash ${cd.anim?"flipped":""}" id="fl">${cd.flip?back:front}<p class="mute hintf">${cd.flip?"Tippen zum Zurückdrehen":"Tippen zum Umdrehen"}</p></button>
   <div class="row" style="margin-top:12px"><button class="btn alt" id="sp" style="margin:0">${ic("speaker",18)} Anhören</button><button class="btn alt" id="fv" style="margin:0" aria-label="Favorit">${ic("star",18,isF)} Favorit</button></div>
   <div class="row" style="margin-top:0"><button class="btn alt" id="again">Nochmal</button><button class="btn" id="got">Gewusst</button></div>`);
   cd.anim=false;
@@ -874,7 +1031,7 @@ function settings(){
   $("#lg").onclick=()=>go("legal");$("#au").onclick=()=>{S.auto=S.auto===false;save();settings()};
   if($("#ex"))$("#ex").onclick=exportData;
   if($("#dl")){let a2=false;$("#dl").onclick=()=>{if(!a2){a2=true;$("#dl").lastChild.textContent="Nochmal tippen: alles wird gelöscht";return}deleteAccount()}}
-  let arm=false;$("#rs").onclick=()=>{if(!arm){arm=true;$("#rs").lastChild.textContent="Nochmal tippen zum Löschen";return}S.seen=[];S.seenDay="";S.xp=0;S.xpDays={};S.badges=[];S.st={perfect:0,rounds:0,goals:0,pairs:0,blitz:0,mix:0};S.alpha={};S.days={};S.fav=[];S.box={};S.due={};S.ef={};S.streak=0;S.last="";S.epoch=Date.now();save();settings()};
+  let arm=false;$("#rs").onclick=()=>{if(!arm){arm=true;$("#rs").lastChild.textContent="Nochmal tippen zum Löschen";return}S.seen=[];S.seenDay="";S.xp=0;S.xpDays={};S.badges=[];S.st={perfect:0,rounds:0,goals:0,pairs:0,blitz:0,mix:0,sent:0};S.alpha={};S.sent={};S.days={};S.fav=[];S.box={};S.due={};S.ef={};S.streak=0;S.last="";S.epoch=Date.now();save();settings()};
 }
 setInterval(()=>{try{const hm=new Date().toTimeString().slice(0,5);if(S.rem&&hm===S.time&&S.notified!==today()&&Notification.permission==="granted"){S.notified=today();save();new Notification("Mufradaat",{body:"Zeit für deine arabischen Vokabeln!"})}}catch(e){}},20000);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -898,7 +1055,7 @@ const clone=o=>JSON.parse(JSON.stringify(o));
 function sched(){if(UID&&sb&&ready){clearTimeout(T);T=setTimeout(sync,2000)}}
 const LOCALKEYS=["dir","rem","time","theme","goal","sound","vib","auto","hk"]; // Geräte-Einstellungen bleiben auf dem Gerät
 function mergeS(a,b){ // pro Wort der bessere Stand, Favoriten vereinigen, pro Tag das Maximum; ein späteres Zurücksetzen gewinnt
-  b=Object.assign({box:{},due:{},ef:{},days:{},xpDays:{},st:{},alpha:{},fav:[],badges:[],seen:[]},b);
+  b=Object.assign({box:{},due:{},ef:{},sent:{},days:{},xpDays:{},st:{},alpha:{},fav:[],badges:[],seen:[]},b);
   const ea=a.epoch||0,eb=b.epoch||0;
   if(ea!==eb){const w=clone(ea>eb?a:b);for(const k of LOCALKEYS)if(a[k]!==undefined)w[k]=a[k];return w}
   const r=Object.assign({},a);r.box={};r.due={};r.ef={};
@@ -909,7 +1066,7 @@ function mergeS(a,b){ // pro Wort der bessere Stand, Favoriten vereinigen, pro T
   }
   r.fav=[...new Set([...(a.fav||[]),...(b.fav||[])])];
   const mx=(x,y)=>{const o={};for(const k of new Set([...Object.keys(x||{}),...Object.keys(y||{})]))o[k]=Math.max((x||{})[k]||0,(y||{})[k]||0);return o};
-  r.xp=Math.max(a.xp||0,b.xp||0);r.xpDays=mx(a.xpDays,b.xpDays);r.st=mx(a.st,b.st);r.days=mx(a.days,b.days);r.alpha=mx(a.alpha,b.alpha);
+  r.xp=Math.max(a.xp||0,b.xp||0);r.xpDays=mx(a.xpDays,b.xpDays);r.st=mx(a.st,b.st);r.days=mx(a.days,b.days);r.alpha=mx(a.alpha,b.alpha);r.sent=mx(a.sent,b.sent);
   r.badges=[...new Set([...(a.badges||[]),...(b.badges||[])])];
   const al=a.last||"",bl=b.last||"";if(bl>al||(bl===al&&(b.streak||0)>(a.streak||0))){r.streak=b.streak||0;r.last=bl}
   const as=a.seenDay||"",bs=b.seenDay||"";if(bs>as){r.seenDay=bs;r.seen=b.seen||[]}else if(bs===as)r.seen=[...new Set([...(a.seen||[]),...(b.seen||[])])];
