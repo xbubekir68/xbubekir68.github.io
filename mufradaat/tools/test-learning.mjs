@@ -6,7 +6,7 @@ const html=fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)
 const m=html.match(/<script>([\s\S]*)<\/script>/);
 let code=m[1].replace(/\nloadSb\(\)\.then[^\n]*\n[^\n]*serviceWorker[^\n]*\s*$/,"\n");
 if(/loadSb\(\)/.test(code.split("\n").slice(-6).join("\n")))code=code.split("\n").filter(l=>!/^loadSb\(\)|serviceWorker/.test(l)).join("\n");
-const store={},mk=()=>({innerHTML:"",style:{},hidden:false,classList:{add(){},remove(){},toggle(){}},offsetWidth:0,parentNode:{classList:{toggle(){}}},dataset:{},set onclick(v){},set oninput(v){},set onkeydown(v){},click(){},focus(){},remove(){},appendChild(){},setAttribute(){},scrollIntoView(){},value:"",textContent:"",lastChild:{}});
+const store={},mk=()=>({innerHTML:"",style:{},querySelector:()=>null,scrollLeft:0,scrollWidth:0,clientWidth:0,offsetLeft:0,scrollIntoView(){},hidden:false,classList:{add(){},remove(){},toggle(){}},offsetWidth:0,parentNode:{classList:{toggle(){}}},dataset:{},set onclick(v){},set oninput(v){},set onkeydown(v){},click(){},focus(){},remove(){},appendChild(){},setAttribute(){},scrollIntoView(){},value:"",textContent:"",lastChild:{}});
 const el=mk(),doc={querySelector:()=>el,querySelectorAll:()=>[],addEventListener(){},createElement:()=>mk(),body:{appendChild(){}},documentElement:{removeAttribute(){},setAttribute(){}}};
 const ctx={document:doc,localStorage:{getItem:k=>store[k]??null,setItem:(k,v)=>store[k]=v,removeItem:k=>delete store[k]},sessionStorage:{getItem(){return null},setItem(){}},
  matchMedia:()=>({matches:true}),setTimeout:(f)=>0,clearTimeout(){},setInterval:()=>1,clearInterval(){},requestAnimationFrame(f){},console,Notification:{permission:"denied"},addEventListener(){},navigator:{},crypto:{},SpeechSynthesisUtterance:function(){},speechSynthesis:{cancel(){},speak(){}},scrollTo(){}};
@@ -104,8 +104,11 @@ ok("abgeschlossene Mischung wird gezählt",run(`S.st.mix`)===1,run(`S.st.mix`));
 ok("Ergebnis nennt die Tages-Mischung",/Tages-Mischung/.test(run(`app.innerHTML`)));
 run(`S.box={};S.due={};S.ef={};LES.forEach(l=>l.w.forEach(id=>{S.box[id]=2;S.due[id]=Date.now()+99*864e5}));view="home";startMix()`);
 ok("ohne Fälliges gibt es eine kurze Festigungsrunde",run(`view`)==="quiz"&&run(`Q.ws.length<=6`),[run(`view`),run(`Q.ws.length`)]);
-run(`S.box={};S.due={};S.ef={};home()`);
-ok("Startseite bietet „Heute dran“",/Heute dran/.test(run(`app.innerHTML`)));
+run(`S.box={};S.due={};S.ef={};S.aok="skip";home()`);
+ok("Startseite bietet „Heute dran“ (Buchstaben übersprungen)",/Heute dran/.test(run(`app.innerHTML`)));
+run(`S.aok="";home()`);
+ok("Startseite blendet „Heute dran“ aus, solange die Buchstaben offen sind",!/Heute dran/.test(run(`app.innerHTML`)));
+ok("Startseite führt dann zu den Buchstaben",/data-ab="0"/.test(run(`app.innerHTML`))&&/Buchstaben 1 von 4/.test(run(`app.innerHTML`)));
 
 // ---------- 5. Zusammenführen und Zurücksetzen ----------
 let r=run(`JSON.stringify(mergeS({epoch:0,box:{kitab:1},due:{kitab:100},ef:{kitab:.8}},{epoch:0,box:{kitab:3},due:{kitab:200},ef:{kitab:1.4}}))`);
@@ -232,6 +235,97 @@ r=JSON.parse(run(`JSON.stringify(mergeS({epoch:0,box:{},due:{},sent:{0:2,1:1}},{
 ok("Merge: Satzfortschritt pro Satz das Maximum",r.sent[0]===2&&r.sent[1]===1&&r.sent[2]===3,r.sent);
 run(`S.sent={0:1};S.epoch=0;home()`);
 ok("Startseite bietet Sätze an",/Sätze/.test(run(`app.innerHTML`)));
+
+
+// ---------- 7. Neuer Lernpfad: Buchstaben, Wörter, Sätze ----------
+console.log("\n-- Lernpfad --");
+const fileSrc=html;
+ok("jede Lektion steht in genau einer Einheit",run(`LES.length===LES_RAW.length&&new Set(LES.map(l=>l.t)).size===LES_RAW.length&&LES.every(l=>l.u>=0&&l.u<UNITS.length)`));
+ok("alle Wörter sind weiter da",run(`W.length===LES_RAW.flatMap(l=>l[2]).length&&W.length===330`),run(`W.length`));
+ok("Reihenfolge: Hallo sagen, Höflichkeit zuerst",run(`LES[0].t+"|"+LES[1].t`)==="Hallo sagen|Höflichkeit");
+ok("Einheiten sind zusammenhängend und aufsteigend",run(`LES.every((l,k)=>!k||l.u>=LES[k-1].u)`));
+ok("Wortliste behält die alte Kategorien-Reihenfolge",run(`GROUPS.slice(0,4).join()`)==="Begrüßung,Zahlen,Farben,Familie",run(`GROUPS.join()`));
+ok("jeder Satz gehört zu einer Satzrunde",run(`SENT.every(x=>x.st!==undefined&&SSTA[x.st].includes(x))`));
+ok("jede Satzrunde hat mindestens 3 Sätze",run(`Object.values(SSTA).every(l=>l.length>=SMIN)`),run(`JSON.stringify(Object.values(SSTA).map(l=>l.length))`));
+ok("kein Satz steht vor seinen Wörtern (Satzrunde nie vor der Einheit des spätesten Wortes)",run(`SENT.every(x=>x.ids.filter(i=>!SFREE.has(i)).every(i=>LES[LESOF[i]].u<=x.st))`));
+ok("erste Satzrunde schon in Einheit 2",run(`Math.min(...Object.keys(SSTA).map(Number))`)===1,run(`Object.keys(SSTA).join()`));
+run(`S.box={};S.due={};LES.filter(l=>l.u<=1).forEach(l=>l.w.forEach(id=>{S.box[id]=1;S.due[id]=Date.now()+864e5}))`);
+ok("nach Einheit 1 und 2 sind mindestens 8 Sätze frei",run(`SENT.filter(sentOpen).length`)>=8,run(`SENT.filter(sentOpen).length`));
+// alter Fortschritt: schon begonnene Lektionen bleiben trotz neuer Reihenfolge offen
+run(`S.box={};S.due={};LES[20].w.slice(0,1).forEach(id=>{S.box[id]=1;S.due[id]=Date.now()+864e5})`);
+ok("begonnene Lektion mitten im Pfad ist offen",run(`isLocked(20)`)===false);
+ok("die nächste bleibt gesperrt, bis 60 % begonnen sind",run(`isLocked(21)`)===true&&run(`isLocked(19)`)===true);
+// Buchstaben-Abschnitt
+run(`S.box={};S.due={};S.alpha={};S.aok="";S.sent={};view="path";ui.ask=false`);
+ok("frischer Stand: Buchstaben zuerst",run(`alphaGate()&&nextStep().t==="a"&&nextStep().b===0`));
+ok("Block 1 offen, Block 2 gesperrt",run(`aLocked(0)`)===false&&run(`aLocked(1)`)===true);
+ok("vier Blöcke decken alle 29 Zeichen genau einmal ab",run(`ABLOCKS.flat().length===ALPHA.length&&new Set(ABLOCKS.flat().map(a=>a.i)).size===ALPHA.length`));
+run(`ABLOCKS[0].slice(0,4).forEach(a=>S.alpha[a.i]=2)`);
+ok("4 von 7 Buchstaben reichen nicht (60 % = 5)",run(`aPass(0)`)===false);
+run(`S.alpha[ABLOCKS[0][4].i]=2`);
+ok("5 von 7 zweimal erkannt → Block geschafft, Block 2 offen",run(`aPass(0)&&!aLocked(1)`));
+ok("einmal richtig zählt noch nicht",(run(`S.alpha[ABLOCKS[0][4].i]=1;aPass(0)`)===false));
+run(`ABLOCKS.forEach(b=>b.forEach(a=>S.alpha[a.i]=2))`);
+ok("alle Blöcke geschafft → kein Gate mehr",run(`alphaPassed()&&!alphaGate()&&nextStep().t==="v"`));
+run(`S.alpha={};S.aok=""`);
+run(`path()`);let ph=run(`app.innerHTML`);
+ok("Pfad zeigt 4 Buchstaben-Blöcke",(ph.match(/data-ab="/g)||[]).length===4);
+ok("Pfad zeigt alle 38 Lektionen",(ph.match(/data-open="/g)||[]).length===38);
+ok("Pfad zeigt eine Satzrunde je Einheit mit Sätzen",(ph.match(/data-sat="/g)||[]).length===run(`Object.keys(SSTA).length`));
+ok("Pfad zeigt 10 Einheiten plus Schrift-Abschnitt",(ph.match(/class="pgr"/g)||[]).length===11);
+ok("erste Lektion ist gesperrt, solange die Buchstaben offen sind",/aria-label="Lektion 1: Hallo sagen, gesperrt"/.test(ph));
+ok("Satzrunden sind am Anfang gesperrt",/noch gesperrt, 0 von/.test(ph));
+ok("Überspringen-Karte ist da",/Ich kann die Buchstaben schon/.test(ph));
+run(`ui.ask=true;path()`);let pa=run(`app.innerHTML`);
+ok("Nach Tippen: Kurztest oder ohne Test überspringen",/data-atest/.test(pa)&&/id="sk2"/.test(pa)&&/id="skx"/.test(pa));
+run(`ui.ask=false;S.aok="skip";path()`);ph=run(`app.innerHTML`);
+ok("Übersprungen: keine Buchstaben-Blöcke mehr im Pfad",!/data-ab="/.test(ph)&&(ph.match(/class="pgr"/g)||[]).length===10);
+ok("Übersprungen: erste Lektion ist offen und aktuell",/pn  cur|pn   cur|class="pn  cur/.test(ph)&&!/aria-label="Lektion 1: Hallo sagen, gesperrt"/.test(ph));
+ok("Übersprungen: nächster Schritt ist die erste Lektion",run(`!alphaGate()&&nextStep().t==="v"&&nextStep().L.k===0`));
+ok("Übersprungen: Karte erlaubt Wiedereinblenden",/id="sk3"/.test(ph)&&/übersprungen/.test(ph));
+run(`S.aok="";S.box.kitab=1;path()`);
+ok("wer schon Wörter übt, wird nie gebremst",run(`!alphaGate()`)&&!/aria-label="Lektion 1: Hallo sagen, gesperrt"/.test(run(`app.innerHTML`)));
+run(`S.box={};S.due={}`);
+// Kurztest
+run(`S.alpha={};S.aok="";startAQ(undefined,true,"path")`);
+ok("Kurztest: 10 verschiedene Buchstaben",run(`AQ.qs.length===10&&new Set(AQ.qs.map(q=>q.a.i)).size===10&&AQ.test&&AQ.back==="path"`));
+run(`AQ.n=10;AQ.right=9;aEnd()`);
+ok("Kurztest ab 8 richtig: Abschnitt wird übersprungen",run(`S.aok`)==="skip"&&/übersprungen/.test(run(`app.innerHTML`)),run(`S.aok`));
+ok("… mit Weg zu den Wörtern",/Zu den Wörtern/.test(run(`app.innerHTML`)));
+run(`S.alpha={};S.aok="";startAQ(undefined,true,"path");AQ.n=10;AQ.right=6;aEnd()`);
+ok("Kurztest unter 8: nicht übersprungen, mit Hinweis",run(`S.aok`)===""&&/Noch nicht ganz sicher/.test(run(`app.innerHTML`)));
+ok("… Rückweg führt zum Lernpfad",/data-go="path">Zurück zum Lernpfad/.test(run(`app.innerHTML`)));
+// Blockübung
+run(`S.alpha={};S.aok="";startAQ(1,false,"path")`);
+ok("Blockübung: nur Buchstaben aus dem Block, jeder genau zweimal",run(`AQ.qs.length===2*ABLOCKS[1].length&&AQ.qs.every(q=>ABLOCKS[1].includes(q.a))&&ABLOCKS[1].every(a=>AQ.qs.filter(q=>q.a===a).length===2)`));
+ok("Blockübung: derselbe Buchstabe kommt in anderer Frageform wieder",run(`ABLOCKS[1].every(a=>{const t=AQ.qs.filter(q=>q.a===a).map(q=>q.t);return t[0]!==t[1]})`));
+ok("Blockübung: Rückweg führt zum Lernpfad",run(`AQ.back`)==="path"&&/data-go="path"/.test(run(`app.innerHTML`)));
+run(`AQ.qs.forEach(q=>{S.alpha[q.a.i]=(S.alpha[q.a.i]||0)+1})`);
+ok("eine fehlerfreie Blockrunde schafft den Block",run(`aPass(1)`)===true);
+run(`S.alpha={};ABLOCKS.forEach((b,i)=>{if(i<3)b.forEach(a=>S.alpha[a.i]=2)});ABLOCKS[3].slice(0,5).forEach(a=>S.alpha[a.i]=2);S.aok="";startAQ(3,false,"path");AQ.n=AQ.qs.length;AQ.right=AQ.qs.length;aEnd()`);
+ok("letzter Block geschafft → „Buchstaben geschafft“ und Abschnitt erledigt",run(`S.aok`)==="done"&&/Buchstaben geschafft/.test(run(`app.innerHTML`)),run(`S.aok`));
+// Zusammenführen und Zurücksetzen
+r=JSON.parse(run(`JSON.stringify(mergeS({epoch:0,box:{},due:{},aok:""},{epoch:0,box:{},due:{},aok:"skip"}))`));
+ok("Merge: übersprungen auf einem Gerät gilt überall",r.aok==="skip",r.aok);
+r=JSON.parse(run(`JSON.stringify(mergeS({epoch:0,box:{},due:{},aok:"done"},{epoch:0,box:{},due:{}}))`));
+ok("Merge: erledigt bleibt erledigt",r.aok==="done",r.aok);
+ok("Zurücksetzen löscht auch den Abschnitt",/S\.aok="";S\.sent=\{\}/.test(fileSrc));
+// Satzrunde aus dem Pfad
+run(`S.box={};S.due={};S.sent={};S.aok="skip";LES.forEach(l=>l.w.forEach(id=>{S.box[id]=1;S.due[id]=Date.now()+864e5}));startSatz(1)`);
+ok("Satzrunde aus dem Pfad: zuerst Sätze dieser Einheit",run(`Z.u===1&&Z.back==="path"&&Z.items.length===6&&Z.items.every(it=>it.s.st===1)`),run(`JSON.stringify(Z.items.map(it=>it.s.st))`));
+ok("… Beenden führt zurück zum Lernpfad",/data-go="path"/.test(run(`app.innerHTML`)));
+run(`S.sent={};startSatz()`);
+ok("Sätze von der Startseite: Rücksprung zur Startseite",run(`Z.u===undefined&&Z.back==="home"`));
+// Rechts nach links
+run(`S.aok="skip";ui.al="ba";letter()`);let lt=run(`app.innerHTML`);
+const labs=[...lt.matchAll(/<small>(Anfang|Mitte|Ende|Allein)<\/small>/g)].map(x=>x[1]);
+ok("Buchstabenformen: Reihenfolge Anfang, Mitte, Ende, Allein",labs.join()==="Anfang,Mitte,Ende,Allein",labs);
+ok("Buchstabenformen laufen von rechts nach links (direction:rtl)",/\.forms\{[^}]*direction:rtl/.test(fileSrc));
+ok("Alphabet-Raster läuft von rechts nach links (Alif oben rechts)",/\.agrid\{[^}]*direction:rtl/.test(fileSrc));
+ok("Weiter-Knopf (nächster Buchstabe) steht links",/class="row sp nav2"/.test(lt)&&/\.nav2\{direction:rtl/.test(fileSrc));
+// Wortliste: Leiste ohne Scrollbar
+ok("Kategorien-Leiste: Scrollbar ausgeblendet (Firefox und WebKit)",/\.chips\{[^}]*scrollbar-width:none/.test(fileSrc)&&/\.chips::-webkit-scrollbar\{display:none\}/.test(fileSrc));
+ok("Kategorien-Leiste: Chips schrumpfen nicht",/\.chip\{flex:none/.test(fileSrc));
 
 console.log("\n"+pass+" OK, "+fail+" FAIL");
 process.exit(fail?1:0);
