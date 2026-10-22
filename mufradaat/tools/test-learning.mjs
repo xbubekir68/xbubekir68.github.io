@@ -140,21 +140,25 @@ ok("Lektionsansicht rendert mit Pegel",run(`app.innerHTML.includes("pg3")||app.i
 run(`ui.cat="Alle";ui.q="";list()`);
 ok("Wortliste rendert",run(`app.innerHTML.length>500`));
 run(`cards()`);ok("Karteikarten rendern",run(`app.innerHTML.length>200`));
-// Karteikarten: eine Seite nur Arabisch, die andere nur Deutsch
+// Karteikarten: eine Seite nur Arabisch (Vokalzeichen + Umschrift), die andere NUR Deutsch, sonst nichts
+const face=h=>(h.match(/id="fl">([\s\S]*?)<\/button>/)||[])[1]||"";
 run(`S.dir="ad";S.box.kitab=5;S.due.kitab=Date.now()+99*864e5;cd.order=["kitab"];cd.n=0;cd.flip=false;cards()`);
-let f=run(`app.innerHTML`);
-ok("Karte (ad) vorne: Arabisch mit Umschrift, kein Deutsch",f.includes("كِتَاب")&&/kitāb/.test(f)&&!/>Buch</.test(f),f.slice(0,200));
-run(`cd.flip=true;cards()`);f=run(`app.innerHTML`);
-ok("Karte (ad) hinten: nur Deutsch, kein Arabisch",/>Buch</.test(f)&&!f.includes("كِتَاب"),f.slice(0,200));
-run(`S.dir="da";cd.flip=false;cards()`);f=run(`app.innerHTML`);
-ok("Karte (da) vorne: nur Deutsch",/>Buch</.test(f)&&!f.includes("كِتَاب"));
-run(`cd.flip=true;cards()`);f=run(`app.innerHTML`);
-ok("Karte (da) hinten: nur Arabisch",f.includes("كِتَاب")&&!/>Buch</.test(f));
-run(`S.dir="ad";cd.flip=true;cards()`);
-ok("Hinweis zum Genus steht auf der deutschen Seite",/männlich/.test(run(`app.innerHTML`)));
-run(`cd.flip=false;cards()`);
-ok("Plural (arabisch) steht auf der arabischen Seite, nicht auf der deutschen",/Plural: كُتُب/.test(run(`app.innerHTML`))&&!/Plural/.test((run(`cd.flip=true;cards();app.innerHTML`),run(`app.innerHTML`))));
-run(`cd.flip=false`);
+run(`cd.order=["kitab"];cd.n=0;cd.flip=false;cards()`);
+let f=face(run(`app.innerHTML`));
+ok("Karte (ad) vorne: Arabisch mit Vokalzeichen und Umschrift",f.includes("كِتَاب")&&/\(kitāb\)/.test(f),f);
+ok("Karte (ad) vorne: nichts sonst (kein Deutsch, kein Plural, keine Beschriftung)",!/Buch|Plural|männlich|Arabisch|Deutsch/.test(f.replace(/lang="ar"/g,"")),f);
+ok("Hinweis „Tippen zum Umdrehen“ steht außerhalb der Karte",/Tippen zum Umdrehen/.test(run(`app.innerHTML`))&&!/Tippen/.test(f));
+run(`cd.flip=true;cards()`);f=face(run(`app.innerHTML`));
+ok("Karte (ad) hinten: NUR das deutsche Wort",f.replace(/<[^>]+>/g,"").trim()==="Buch",f);
+ok("Karte hinten ohne Genus/Plural/Beschriftung",!/männlich|Plural|Deutsch|Arabisch|كُتُب/.test(f));
+ok("Hinweis wechselt zu „Tippen zum Zurückdrehen“",/Tippen zum Zurückdrehen/.test(run(`app.innerHTML`)));
+run(`cd.flip=false;cards()`);ok("Nochmal tippen: wieder Arabisch",face(run(`app.innerHTML`)).includes("كِتَاب"));
+run(`S.dir="da";cd.flip=false;cards()`);f=face(run(`app.innerHTML`));
+ok("Karte (da) vorne: nur Deutsch",f.replace(/<[^>]+>/g,"").trim()==="Buch",f);
+run(`cd.flip=true;cards()`);f=face(run(`app.innerHTML`));
+ok("Karte (da) hinten: nur Arabisch mit Umschrift",f.includes("كِتَاب")&&/\(kitāb\)/.test(f)&&!/Buch/.test(f));
+ok("Karteikarten-Knopf hat kein aria-label (sonst liest der Screenreader das Wort nicht vor)",!/id="fl" aria-label/.test(run(`app.innerHTML`)));
+run(`S.dir="ad";cd.flip=false`);
 
 // ---------- 7. Gleich geschriebene Wörter ----------
 run(`S.hk=2;S.box.zuhr=6;S.box.zahr=6;S.box.min=6;S.box.man=6;S.box.kitab=6`);

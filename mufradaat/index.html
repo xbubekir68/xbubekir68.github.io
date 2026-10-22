@@ -50,7 +50,7 @@ input[type=search],input.t{width:100%;padding:13px 14px;border-radius:12px;borde
 .w .tr{color:var(--mute);font-size:13px}
 .flash{min-height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;width:100%;margin-top:16px;padding:24px}
 .flash .ar{font-size:64px;line-height:1.4}
-.flash .side{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--g);background:var(--gl);padding:3px 12px;border-radius:999px}.flash .hintf{margin-top:14px;font-size:13px}
+.hintf{text-align:center;margin-top:10px;font-size:13px}
 .bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden;flex:1}.bar i{display:block;height:100%;background:var(--g)}
 .opt{width:100%;text-align:left;margin-top:10px;padding:15px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);font-size:16px}
 .opt.ok{border-color:var(--g);background:var(--gl)}.opt.no{border-color:var(--bad);background:var(--badl)}
@@ -97,6 +97,7 @@ nav[hidden]{display:none}
 @keyframes fall{to{transform:translate(var(--dx),105vh) rotate(var(--r))}}
 @font-face{font-family:"Noto Naskh Arabic";font-weight:400 500;font-display:swap;src:local("Noto Naskh Arabic Medium"),local("NotoNaskhArabic-Medium"),url(fonts/noto-naskh-arabic-500.woff2) format("woff2")}
 @font-face{font-family:"Noto Naskh Arabic";font-weight:700;font-display:swap;src:local("Noto Naskh Arabic Bold"),local("NotoNaskhArabic-Bold"),url(fonts/noto-naskh-arabic-700.woff2) format("woff2")}
+.lnk .i{display:inline-block;vertical-align:-3px;margin-right:6px}
 .lnk{background:none;border:0;color:var(--g);font-size:14px;padding:8px 0 2px;text-decoration:underline;text-underline-offset:3px}
 .hint{display:flex;gap:12px;align-items:flex-start;margin-top:12px;border-color:var(--bad)}.hint p{flex:1;font-size:14px;line-height:1.45}
 .i{display:block;flex:none}
@@ -201,62 +202,62 @@ const genOf=id=>GEN_F.has(id)?"weiblich":GEN_M.has(id)?"männlich":"";
 const noteOf=w=>[w.n||(w.cat==="Farben"||w.cat==="Eigenschaften"?"männliche Form":""),genOf(w.i),PL[w.i]?"Plural: "+PL[w.i][0]+" ("+PL[w.i][1]+")":""].filter(Boolean).join(" · ");
 
 // ===== Sätze =====
-// Einfache Sätze im Hocharabischen (Fusha), nur aus Wörtern der App, ohne Endvokale (Pausalform: „al-kitāb kabīr“ statt „al-kitābu kabīrun“).
+// Einfache Sätze im Hocharabischen (Fusha), nur aus Wörtern der App, mit allen Vokalzeichen einschließlich der Endungen („al-kitābu kabīrun“).
 // Format: [Deutsch, Umschrift, "arabisch|wort-id arabisch|wort-id …", Frage?]. Ein Block entspricht einem Wort; das Satzzeichen kommt automatisch.
 const SENT_RAW=[
-["Das ist ein Buch.","hādhā kitāb","هَذَا|hadha كِتَاب|kitab"],
-["Das ist ein Auto.","hādhihi sayyārah","هَذِهِ|hadhihi سَيَّارَة|sayyarah"],
+["Das ist ein Buch.","hādhā kitābun","هَذَا|hadha كِتَابٌ|kitab"],
+["Das ist ein Auto.","hādhihi sayyāratun","هَذِهِ|hadhihi سَيَّارَةٌ|sayyarah"],
 ["Was ist das?","mā hādhā","مَا|ma-was هَذَا|hadha",1],
 ["Wer ist er?","man huwa","مَنْ|man هُوَ|huwa",1],
-["Das Buch ist groß.","al-kitāb kabīr","الْكِتَاب|kitab كَبِير|kabir"],
-["Das Haus ist schön.","al-bayt jamīl","الْبَيْت|bayt جَمِيل|jamil"],
-["Die Schule ist groß.","al-madrasah kabīrah","الْمَدْرَسَة|madrasah كَبِيرَة|kabir"],
-["Das Auto ist neu.","as-sayyārah jadīdah","السَّيَّارَة|sayyarah جَدِيدَة|jadid"],
-["Das Wasser ist kalt.","al-māʾ bārid","الْمَاء|ma بَارِد|barid"],
-["Der Tee ist heiß.","ash-shāy ḥārr","الشَّاي|shay حَارّ|harr"],
-["Der Kaffee ist heiß.","al-qahwah ḥārrah","الْقَهْوَة|qahwah حَارَّة|harr"],
-["Ich bin Schüler.","anā ṭālib","أَنَا|ana طَالِب|talib"],
-["Er ist Lehrer.","huwa muʿallim","هُوَ|huwa مُعَلِّم|muallim"],
-["Sie ist Ärztin.","hiya ṭabībah","هِيَ|hiya طَبِيبَة|tabib"],
-["Wir sind Schüler.","naḥnu ṭullāb","نَحْنُ|nahnu طُلَّاب|talib"],
-["Bist du Schüler?","hal anta ṭālib","هَلْ|hal أَنْتَ|anta طَالِب|talib",1],
-["Ist das ein Buch?","hal hādhā kitāb","هَلْ|hal هَذَا|hadha كِتَاب|kitab",1],
-["Wo ist der Flughafen?","ayna l-maṭār","أَيْنَ|ayna الْمَطَار|matar",1],
-["Wo ist das Hotel?","ayna l-funduq","أَيْنَ|ayna الْفُنْدُق|funduq",1],
-["Wo ist der Bahnhof?","ayna l-maḥaṭṭah","أَيْنَ|ayna الْمَحَطَّة|mahattah",1],
-["Wo ist der Schlüssel?","ayna l-miftāḥ","أَيْنَ|ayna الْمِفْتَاح|miftah",1],
-["Das Restaurant ist nah.","al-maṭʿam qarīb","الْمَطْعَم|matam قَرِيب|qarib"],
-["Die Moschee ist dort.","al-masjid hunāka","الْمَسْجِد|masjid هُنَاكَ|hunaka"],
-["Heute ist es kalt.","al-yawm bārid","الْيَوْم|alyawm بَارِد|barid"],
-["Das Kind schlief.","nāma ṭ-ṭifl","نَامَ|nama الطِّفْل|tifl"],
-["Der Junge ging zur Schule.","dhahaba l-walad ilā l-madrasah","ذَهَبَ|dhahaba الْوَلَد|walad إِلَى|ila الْمَدْرَسَة|madrasah"],
-["Der Schüler las das Buch.","qaraʾa ṭ-ṭālib al-kitāb","قَرَأَ|qaraa الطَّالِب|talib الْكِتَاب|kitab"],
-["Der Lehrer schrieb das Wort.","kataba l-muʿallim al-kalimah","كَتَبَ|kataba الْمُعَلِّم|muallim الْكَلِمَة|kalimah"],
-["Der Mann öffnete die Tür.","fataḥa r-rajul al-bāb","فَتَحَ|fataha الرَّجُل|rajul الْبَاب|bab"],
-["Der Junge trank die Milch.","shariba l-walad al-ḥalīb","شَرِبَ|shariba الْوَلَد|walad الْحَلِيب|halib"],
-["Der Mann kaufte das Brot.","ishtarā r-rajul al-khubz","اِشْتَرَى|ishtara الرَّجُل|rajul الْخُبْز|khubz"],
-["Der Schüler nahm den Stift.","akhadha ṭ-ṭālib al-qalam","أَخَذَ|akhadha الطَّالِب|talib الْقَلَم|qalam"],
-["Das Kind setzte sich auf den Stuhl.","jalasa ṭ-ṭifl ʿalā l-kursī","جَلَسَ|jalasa الطِّفْل|tifl عَلَى|ala الْكُرْسِيّ|kursi"],
-["Das Buch ist auf dem Tisch.","al-kitāb ʿalā ṭ-ṭāwilah","الْكِتَاب|kitab عَلَى|ala الطَّاوِلَة|tawilah"],
-["Im Zimmer ist ein Bett.","fī l-ghurfah sarīr","فِي|fi الْغُرْفَة|ghurfah سَرِير|sarir"],
-["Im Garten ist ein Baum.","fī l-ḥadīqah shajarah","فِي|fi الْحَدِيقَة|hadiqah شَجَرَة|shajarah"],
-["Die Mutter ist in der Küche.","al-umm fī l-maṭbakh","الْأُمّ|umm فِي|fi الْمَطْبَخ|matbakh"],
-["Der Bruder ist in der Schule.","al-akh fī l-madrasah","الْأَخ|akh فِي|fi الْمَدْرَسَة|madrasah"],
-["Die Katze ist auf dem Stuhl.","al-qiṭṭah ʿalā l-kursī","الْقِطَّة|qittah عَلَى|ala الْكُرْسِيّ|kursi"],
-["Der Hund ist im Garten.","al-kalb fī l-ḥadīqah","الْكَلْب|kalb فِي|fi الْحَدِيقَة|hadiqah"],
-["Der Elefant ist sehr groß.","al-fīl kabīr jiddan","الْفِيل|fil كَبِير|kabir جِدًّا|jiddan"],
-["Der Vogel ist klein.","aṭ-ṭāʾir ṣaghīr","الطَّائِر|tair صَغِير|saghir"],
-["Das Meer ist blau.","al-baḥr azraq","الْبَحْر|bahr أَزْرَق|azraq"],
-["Der Himmel ist blau.","as-samāʾ zarqāʾ","السَّمَاء|samaa زَرْقَاء|azraq"],
-["Die Sonne ist heiß.","ash-shams ḥārrah","الشَّمْس|shams حَارَّة|harr"],
-["Der Schnee ist kalt.","ath-thalj bārid","الثَّلْج|thalj بَارِد|barid"],
-["Ich bin hungrig.","anā jāʾiʿ","أَنَا|ana جَائِع|jai"],
-["Er ist krank.","huwa marīḍ","هُوَ|huwa مَرِيض|marid"],
-["Sie ist glücklich.","hiya saʿīdah","هِيَ|hiya سَعِيدَة|said"],
-["Das Hotel ist teuer.","al-funduq ghālin","الْفُنْدُق|funduq غَالٍ|ghali"],
-["Das Brot ist billig.","al-khubz rakhīṣ","الْخُبْز|khubz رَخِيص|rakhis"],
-["Der Vater ist Arzt.","al-ab ṭabīb","الْأَب|ab طَبِيب|tabib"],
-["Das Zimmer ist sauber.","al-ghurfah naẓīfah","الْغُرْفَة|ghurfah نَظِيفَة|nazif"]
+["Das Buch ist groß.","al-kitābu kabīrun","الْكِتَابُ|kitab كَبِيرٌ|kabir"],
+["Das Haus ist schön.","al-baytu jamīlun","الْبَيْتُ|bayt جَمِيلٌ|jamil"],
+["Die Schule ist groß.","al-madrasatu kabīratun","الْمَدْرَسَةُ|madrasah كَبِيرَةٌ|kabir"],
+["Das Auto ist neu.","as-sayyāratu jadīdatun","السَّيَّارَةُ|sayyarah جَدِيدَةٌ|jadid"],
+["Das Wasser ist kalt.","al-māʾu bāridun","الْمَاءُ|ma بَارِدٌ|barid"],
+["Der Tee ist heiß.","ash-shāyu ḥārrun","الشَّايُ|shay حَارٌّ|harr"],
+["Der Kaffee ist heiß.","al-qahwatu ḥārratun","الْقَهْوَةُ|qahwah حَارَّةٌ|harr"],
+["Ich bin Schüler.","anā ṭālibun","أَنَا|ana طَالِبٌ|talib"],
+["Er ist Lehrer.","huwa muʿallimun","هُوَ|huwa مُعَلِّمٌ|muallim"],
+["Sie ist Ärztin.","hiya ṭabībatun","هِيَ|hiya طَبِيبَةٌ|tabib"],
+["Wir sind Schüler.","naḥnu ṭullābun","نَحْنُ|nahnu طُلَّابٌ|talib"],
+["Bist du Schüler?","hal anta ṭālibun","هَلْ|hal أَنْتَ|anta طَالِبٌ|talib",1],
+["Ist das ein Buch?","hal hādhā kitābun","هَلْ|hal هَذَا|hadha كِتَابٌ|kitab",1],
+["Wo ist der Flughafen?","ayna l-maṭāru","أَيْنَ|ayna الْمَطَارُ|matar",1],
+["Wo ist das Hotel?","ayna l-funduqu","أَيْنَ|ayna الْفُنْدُقُ|funduq",1],
+["Wo ist der Bahnhof?","ayna l-maḥaṭṭatu","أَيْنَ|ayna الْمَحَطَّةُ|mahattah",1],
+["Wo ist der Schlüssel?","ayna l-miftāḥu","أَيْنَ|ayna الْمِفْتَاحُ|miftah",1],
+["Das Restaurant ist nah.","al-maṭʿamu qarībun","الْمَطْعَمُ|matam قَرِيبٌ|qarib"],
+["Die Moschee ist dort.","al-masjidu hunāka","الْمَسْجِدُ|masjid هُنَاكَ|hunaka"],
+["Heute ist es kalt.","al-yawmu bāridun","الْيَوْمُ|alyawm بَارِدٌ|barid"],
+["Das Kind schlief.","nāma ṭ-ṭiflu","نَامَ|nama الطِّفْلُ|tifl"],
+["Der Junge ging zur Schule.","dhahaba l-waladu ilā l-madrasati","ذَهَبَ|dhahaba الْوَلَدُ|walad إِلَى|ila الْمَدْرَسَةِ|madrasah"],
+["Der Schüler las das Buch.","qaraʾa ṭ-ṭālibu l-kitāba","قَرَأَ|qaraa الطَّالِبُ|talib الْكِتَابَ|kitab"],
+["Der Lehrer schrieb das Wort.","kataba l-muʿallimu l-kalimata","كَتَبَ|kataba الْمُعَلِّمُ|muallim الْكَلِمَةَ|kalimah"],
+["Der Mann öffnete die Tür.","fataḥa r-rajulu l-bāba","فَتَحَ|fataha الرَّجُلُ|rajul الْبَابَ|bab"],
+["Der Junge trank die Milch.","shariba l-waladu l-ḥalība","شَرِبَ|shariba الْوَلَدُ|walad الْحَلِيبَ|halib"],
+["Der Mann kaufte das Brot.","ishtarā r-rajulu l-khubza","اِشْتَرَى|ishtara الرَّجُلُ|rajul الْخُبْزَ|khubz"],
+["Der Schüler nahm den Stift.","akhadha ṭ-ṭālibu l-qalama","أَخَذَ|akhadha الطَّالِبُ|talib الْقَلَمَ|qalam"],
+["Das Kind setzte sich auf den Stuhl.","jalasa ṭ-ṭiflu ʿalā l-kursiyyi","جَلَسَ|jalasa الطِّفْلُ|tifl عَلَى|ala الْكُرْسِيِّ|kursi"],
+["Das Buch ist auf dem Tisch.","al-kitābu ʿalā ṭ-ṭāwilati","الْكِتَابُ|kitab عَلَى|ala الطَّاوِلَةِ|tawilah"],
+["Im Zimmer ist ein Bett.","fī l-ghurfati sarīrun","فِي|fi الْغُرْفَةِ|ghurfah سَرِيرٌ|sarir"],
+["Im Garten ist ein Baum.","fī l-ḥadīqati shajaratun","فِي|fi الْحَدِيقَةِ|hadiqah شَجَرَةٌ|shajarah"],
+["Die Mutter ist in der Küche.","al-ummu fī l-maṭbakhi","الْأُمُّ|umm فِي|fi الْمَطْبَخِ|matbakh"],
+["Der Bruder ist in der Schule.","al-akhu fī l-madrasati","الْأَخُ|akh فِي|fi الْمَدْرَسَةِ|madrasah"],
+["Die Katze ist auf dem Stuhl.","al-qiṭṭatu ʿalā l-kursiyyi","الْقِطَّةُ|qittah عَلَى|ala الْكُرْسِيِّ|kursi"],
+["Der Hund ist im Garten.","al-kalbu fī l-ḥadīqati","الْكَلْبُ|kalb فِي|fi الْحَدِيقَةِ|hadiqah"],
+["Der Elefant ist sehr groß.","al-fīlu kabīrun jiddan","الْفِيلُ|fil كَبِيرٌ|kabir جِدًّا|jiddan"],
+["Der Vogel ist klein.","aṭ-ṭāʾiru ṣaghīrun","الطَّائِرُ|tair صَغِيرٌ|saghir"],
+["Das Meer ist blau.","al-baḥru azraqu","الْبَحْرُ|bahr أَزْرَقُ|azraq"],
+["Der Himmel ist blau.","as-samāʾu zarqāʾu","السَّمَاءُ|samaa زَرْقَاءُ|azraq"],
+["Die Sonne ist heiß.","ash-shamsu ḥārratun","الشَّمْسُ|shams حَارَّةٌ|harr"],
+["Der Schnee ist kalt.","ath-thalju bāridun","الثَّلْجُ|thalj بَارِدٌ|barid"],
+["Ich bin hungrig.","anā jāʾiʿun","أَنَا|ana جَائِعٌ|jai"],
+["Er ist krank.","huwa marīḍun","هُوَ|huwa مَرِيضٌ|marid"],
+["Sie ist glücklich.","hiya saʿīdatun","هِيَ|hiya سَعِيدَةٌ|said"],
+["Das Hotel ist teuer.","al-funduqu ghālin","الْفُنْدُقُ|funduq غَالٍ|ghali"],
+["Das Brot ist billig.","al-khubzu rakhīṣun","الْخُبْزُ|khubz رَخِيصٌ|rakhis"],
+["Der Vater ist Arzt.","al-abu ṭabībun","الْأَبُ|ab طَبِيبٌ|tabib"],
+["Das Zimmer ist sauber.","al-ghurfatu naẓīfatun","الْغُرْفَةُ|ghurfah نَظِيفَةٌ|nazif"]
 ];
 // Kleine Wörter, die in Sätzen vorkommen dürfen, ohne dass man sie vorher gelernt haben muss; sie werden dort mitgelernt.
 const SFREE=new Set("hadha hadhihi ma-was man ayna hal huwa hiya ana anta nahnu fi ala ila jiddan wa".split(" "));
@@ -801,15 +802,15 @@ let cd={order:[],n:0,flip:false,sig:0,anim:false};
 function cards(){
   const pool=unlockedWords();
   if(!cd.order.length||cd.sig!==pool.length){cd.order=shuffle(pool.map(w=>w.i));cd.n=0;cd.sig=pool.length;cd.flip=false}
-  const w=BY[cd.order[cd.n%cd.order.length]],isF=(S.fav||[]).includes(w.i),nt=noteOf(w);
+  const w=BY[cd.order[cd.n%cd.order.length]],isF=(S.fav||[]).includes(w.i);
   // Eine Seite ist nur Arabisch (mit Umschrift), die andere nur Deutsch (mit Hinweis). Die Lernrichtung bestimmt, welche vorne liegt.
-  // Hinweise mit arabischem Text (Plural, weibliche Form) stehen auf der arabischen Seite, alle anderen auf der deutschen
-  const hints=[w.n||(w.cat==="Farben"||w.cat==="Eigenschaften"?"männliche Form":""),genOf(w.i),PL[w.i]?"Plural: "+PL[w.i][0]+" ("+PL[w.i][1]+")":""].filter(Boolean),isAr=h=>/[\u0600-\u06FF]/.test(h),hAr=hints.filter(isAr),hDe=hints.filter(h=>!isAr(h));
-  const arSide=`<span class="side">Arabisch</span><div class="ar" lang="ar">${w.ar}</div><p class="mute">(${w.tr})</p>${hAr.length?`<p class="mute">${esc(hAr.join(" · "))}</p>`:""}`;
-  const deSide=`<span class="side">Deutsch</span><div class="h1">${w.de}</div>${hDe.length?`<p class="mute">${esc(hDe.join(" · "))}</p>`:""}`;
+  // Eine Seite zeigt nur Arabisch (mit Vokalzeichen und Umschrift), die andere nur Deutsch, sonst nichts. Die Lernrichtung bestimmt, welche vorne liegt.
+  const arSide=`<div class="ar" lang="ar">${w.ar}</div><p class="mute">(${w.tr})</p>`;
+  const deSide=`<div class="h1">${w.de}</div>`;
   const front=S.dir==="ad"?arSide:deSide,back=S.dir==="ad"?deSide:arSide;
   paint(`<div class="row sp"><h1>Karteikarten</h1><span class="mute">${cd.n%cd.order.length+1} / ${cd.order.length}</span></div>
-  <button class="card flash ${cd.anim?"flipped":""}" id="fl">${cd.flip?back:front}<p class="mute hintf">${cd.flip?"Tippen zum Zurückdrehen":"Tippen zum Umdrehen"}</p></button>
+  <button class="card flash ${cd.anim?"flipped":""}" id="fl">${cd.flip?back:front}</button>
+  <p class="mute hintf">${cd.flip?"Tippen zum Zurückdrehen":"Tippen zum Umdrehen"}</p>
   <div class="row" style="margin-top:12px"><button class="btn alt" id="sp" style="margin:0">${ic("speaker",18)} Anhören</button><button class="btn alt" id="fv" style="margin:0" aria-label="Favorit">${ic("star",18,isF)} Favorit</button></div>
   <div class="row" style="margin-top:0"><button class="btn alt" id="again">Nochmal</button><button class="btn" id="got">Gewusst</button></div>`);
   cd.anim=false;

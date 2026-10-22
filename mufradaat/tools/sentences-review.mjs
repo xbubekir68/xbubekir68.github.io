@@ -11,7 +11,7 @@ out.push("**Worauf es ankommt**\n");
 out.push("1. Ist der Satz richtiges Hocharabisch (Fusha) und klingt natürlich?");
 out.push("2. Stimmen die Vokalzeichen (Harakat) in jedem Wort?");
 out.push("3. Stimmt die Übereinstimmung von Geschlecht und Zahl (z. B. *al-madrasah kabīrah*)?");
-out.push("4. Die Sätze stehen bewusst **ohne Endvokale** (Pausalform: *al-kitāb kabīr*, nicht *al-kitābu kabīrun*). Ist das für Lernende ein guter Weg, oder sollen die Endungen mit rein?");
+out.push("4. Stimmen die **Endungen** (Kasus und Tanwin, z. B. *al-kitābu kabīrun*, *qaraʾa ṭ-ṭālibu l-kitāba*)?");
 out.push("5. Gefällt die deutsche Übersetzung?\n");
 out.push("| Nr. | Arabisch | Umschrift | Deutsch | Wörter |\n| --- | --- | --- | --- | --- |");
 S.forEach((r,n)=>{const toks=r[2].split(" ").map(x=>x.split("|")),ar=toks.map(x=>x[0]).join(" ")+(r[3]?" ؟":" ."),ids=[...new Set(toks.map(x=>x[1]))].map(i=>W[i]?W[i][3]:i).join(", ");

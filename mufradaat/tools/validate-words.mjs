@@ -57,6 +57,7 @@ SR.forEach((r,n)=>{const row=`Satz ${n+1}`;
     if(!AR.test(a))E(`${row}: „${a}“ enthält fremde Zeichen`);
     else if(!DIAC.test(a))Wn(`${row}: „${a}“ ohne Vokalzeichen`);
     ar.push(a);
+    if(!/[ً-ْٰاىيو]$/.test(a))Wn(`${row}: „${a}“ endet ohne Vokalzeichen (Endung fehlt?)`);
     if(a.startsWith("ال")){const base=stripD(a).slice(2,3),sol=SOLAR.has(base),sukun=a.startsWith("الْ");
       if(sol&&sukun)Wn(`${row}: „${a}“ – vor Sonnenbuchstabe steht kein Sukun auf dem Lam`);
       if(!sol&&!sukun)Wn(`${row}: „${a}“ – vor Mondbuchstabe fehlt das Sukun auf dem Lam`)}
