@@ -117,14 +117,18 @@ nav[hidden]{display:none}
 .opt.ok{animation:okpulse .55s ease-out}@keyframes okpulse{0%{transform:scale(.96);box-shadow:0 0 0 0 rgba(47,143,111,.55)}50%{transform:scale(1.025)}100%{transform:scale(1);box-shadow:0 0 0 14px rgba(47,143,111,0)}}
 .stars{display:flex;justify-content:center;gap:6px;color:var(--mute)}.star{display:grid}.star.on{color:#e0a82e;animation:starin .5s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(var(--k)*.2s + .15s)}
 @keyframes starin{from{transform:scale(0) rotate(-40deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
-.lp{margin-top:6px;position:relative}
-.gt{font-size:13px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.06em;margin:22px 0 4px}
-.les{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:none;border:0;padding:8px 0;animation:enter .35s both;animation-delay:calc(var(--k)*35ms)}
-.les .nd{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;flex:none;border:2px solid var(--line);background:var(--card);font-weight:700;font-size:16px;color:var(--mute)}
-.les .lt{flex:1;display:block}.les b{display:block}.les small{display:block;color:var(--mute);font-size:13px;margin:1px 0 6px}
-.les.cur .nd{border-color:var(--g);background:var(--g);color:var(--on);animation:pulse 2s ease-in-out infinite}
-.les.done .nd{border-color:var(--g);color:var(--g);background:var(--gl)}
-.les.lock{opacity:.5}
+.rule{display:grid;gap:10px;margin:14px 0 6px}.rule ol{margin:0;padding:0;list-style:none;display:grid;gap:8px}.rule li{display:flex;gap:12px;align-items:flex-start;font-size:14px;line-height:1.4}.rule li i{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:700;font-size:13px;background:var(--gl);color:var(--g)}
+.pth{position:relative;margin-top:10px}.pth>svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}.pth>svg path{fill:none;stroke:var(--line);stroke-width:4;stroke-linecap:round;vector-effect:non-scaling-stroke}.pth>svg path.dn{stroke:var(--g)}.pth>svg path.lk{stroke-dasharray:2 9}
+.pgr{position:absolute;left:0;right:0;display:flex;align-items:center;justify-content:center;height:30px}.pgr span{background:var(--bg);padding:0 12px;font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--mute)}
+.pn{position:absolute;width:72px;height:72px;transform:translateX(-50%);display:grid;place-items:center;background:none;border:0;padding:0;color:var(--ink)}
+.pn .nd{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;border:3px solid var(--g);background:var(--card);color:var(--g);font-weight:700;font-size:18px}
+.pn .lb{position:absolute;top:50%;transform:translateY(-50%);width:128px;display:grid;gap:2px;text-align:left}.pn .lb.l{right:calc(100% + 12px);text-align:right}.pn .lb.r{left:calc(100% + 12px)}
+.pn b{font-size:14px;line-height:1.2}.pn small{font-size:12px;color:var(--mute)}
+.pn.done .nd{background:var(--g);color:var(--on)}.pn.cur .nd{width:72px;height:72px;font-size:24px;background:var(--g);color:var(--on);box-shadow:0 0 0 6px var(--gl)}
+.pn.lock .nd{border-color:var(--line);color:var(--mute);background:var(--bg)}.pn.lock b,.pn.lock small{color:var(--mute)}
+.st{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;white-space:nowrap;background:var(--line);color:var(--mute)}.st.s{background:#f3e6c4;color:#6b5210}.st.l{background:var(--gl);color:var(--g)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .st.s{background:#3a3217;color:#e8c970}}:root[data-theme="dark"] .st.s{background:#3a3217;color:#e8c970}
+.wl .w{cursor:default;align-items:flex-start}.wl .w .ar{padding-top:4px}.wl .w .tr{display:block}.wl .sl{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;margin-top:6px}.wl .sl .tr{font-size:12px}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(47,143,111,.5)}50%{box-shadow:0 0 0 9px rgba(47,143,111,0)}}
 .med{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;margin:0 auto 6px;border:2px solid var(--g);background:var(--gl);color:var(--g);font-size:22px;line-height:1;overflow:hidden}
 .med .ar{font-size:22px;line-height:1.3}.med.big{width:104px;height:104px;font-size:46px}.med.big .ar{font-size:46px}
@@ -203,6 +207,19 @@ const isLearned=id=>(S.box[id]||0)>=2,knownN=()=>W.filter(w=>isLearned(w.i)).len
 // ===== Lernpfad =====
 const lessonStat=l=>({t:l.w.length,k:l.w.filter(isLearned).length,s:l.w.filter(id=>(S.box[id]||0)>=1).length}); // k = gelernt (nach Wiederholung), s = begonnen
 const need=l=>Math.ceil(l.w.length*.6);
+const LESOF={};LES.forEach(l=>l.w.forEach(id=>LESOF[id]=l.k));
+function whenTxt(t){const d=t-Date.now();if(d<=0)return"jetzt";const h=Math.round(d/36e5);if(h<1)return"in unter 1 Std.";if(h<24)return"in "+h+" Std.";const n=Math.round(d/864e5);return n<=1?"morgen":"in "+n+" Tagen"}
+function wordState(id){const b=S.box[id];
+  if(b===undefined)return{k:"n",t:"Neu",h:"noch nicht gesehen"};
+  if(b>=2)return{k:"l",t:"Gelernt",h:"Auffrischung "+whenTxt(S.due[id])};
+  if(S.due[id]<=Date.now())return{k:"s",t:"Begonnen",h:b===0?"nochmal üben":"jetzt fällig: richtig beantworten, dann gelernt"};
+  return{k:"s",t:"Begonnen",h:"wieder dran "+whenTxt(S.due[id])+", dann gelernt"}}
+// aufbauend lernen: Wörter früherer Lektionen werden mitgeprüft (zuerst Fälliges, sonst die schwächsten)
+function oldWords(k){
+  if(!k)return[];const now=Date.now(),prev=LES.slice(0,k).flatMap(l=>l.w.map(id=>BY[id])).filter(w=>S.box[w.i]!==undefined);
+  const pick=prev.filter(w=>S.due[w.i]<=now).sort((a,b)=>S.due[a.i]-S.due[b.i]).slice(0,4);
+  if(pick.length<3)pick.push(...prev.filter(w=>!pick.includes(w)).sort((a,b)=>(S.box[a.i]-S.box[b.i])||(LESOF[b.i]-LESOF[a.i])).slice(0,3-pick.length));
+  return pick}
 const isLocked=k=>k>0&&lessonStat(LES[k-1]).s<need(LES[k-1]);
 const unlockedWords=()=>LES.filter(l=>!isLocked(l.k)).flatMap(l=>l.w.map(id=>BY[id]));
 const currentLesson=()=>{const u=LES.filter(l=>!isLocked(l.k));return u.find(l=>l.w.some(id=>S.box[id]===undefined))||u[u.length-1]};
@@ -348,7 +365,7 @@ function addXP(n){
 // ===== Navigation =====
 let view="home",ui={cat:"Alle",q:""},gt=0;
 const TABS=[["home","home","Start"],["path","path","Lernpfad"],["games","bolt","Spiele"],["cards","cards","Karten"],["more","more","Mehr"]];
-const SUB={more:["stats","fav","settings","list","badges","legal"],games:["pairs","blitz"],path:["quiz"]};
+const SUB={more:["stats","fav","settings","list","badges","legal"],games:["pairs","blitz"],path:["quiz","lesson"]};
 function go(v){view=v;render()}
 const paint=h=>{app.innerHTML=h;fx()};
 function fx(){requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelectorAll("[data-to]").forEach(e=>{e.style.width=e.dataset.to+"%"})))}
@@ -356,13 +373,17 @@ function render(){
   clearInterval(gt);
   $("#nav").innerHTML=TABS.map(t=>`<button class="${(view===t[0]||(SUB[t[0]]||[]).includes(view))?"on":""}" data-go="${t[0]}"><span>${ic(t[1])}</span>${t[2]}</button>`).join("");
   $("#nav").hidden=["quiz","pairs","blitz"].includes(view)||(view==="legal"&&!U);
-  ({home,path,cards,more,list,stats,settings,quiz,fav,games,badges,pairs,blitz,legal})[view]();
+  ({home,path,lesson,cards,more,list,stats,settings,quiz,fav,games,badges,pairs,blitz,legal})[view]();
   app.classList.remove("enter");void app.offsetWidth;app.classList.add("enter");
   window.scrollTo(0,0);
 }
 document.addEventListener("click",e=>{
   const g=e.target.closest("[data-go]");
   if(g){const t=g.dataset.go;sfx("tap");if(t==="review")return startQuiz(null);if(t==="pairs")return startPairs();if(t==="blitz")return startBlitz();return go(t)}
+  const o=e.target.closest("[data-open]");
+  if(o){const k=+o.dataset.open;sfx("tap");
+    if(isLocked(k)){const p=LES[k-1],st=lessonStat(p);toast(`Gesperrt: Beginne erst noch ${need(p)-st.s} Wörter aus „${p.t}“.`);return}
+    ui.les=k;return go("lesson")}
   const l=e.target.closest("[data-les]");
   if(l){const k=+l.dataset.les;sfx("tap");
     if(isLocked(k)){const p=LES[k-1],st=lessonStat(p);toast(`Gesperrt: Lerne erst „${p.t}“ (noch ${need(p)-st.s} Wörter beginnen).`);return}
@@ -390,13 +411,27 @@ function home(){
   </div>`);
 }
 function path(){
-  const cur=currentLesson(),due=dueN(),done=LES.filter(l=>lessonStat(l).k>=l.w.length).length;let last="";
-  paint(`<h1>Lernpfad</h1><p class="mute">${knownN()} von ${W.length} Wörtern gelernt · ${done} von ${LES.length} Lektionen abgeschlossen</p><p class="mute" style="margin-top:6px">Ein Wort gilt als gelernt, wenn du es nach mindestens einem Tag erneut richtig beantwortest. Die nächste Lektion öffnet sich, sobald du 60 % der vorherigen begonnen hast.</p>
+  const cur=currentLesson(),due=dueN(),done=LES.filter(l=>lessonStat(l).k>=l.w.length).length;
+  let y=8,last="",gh=[],nodes=[],pts=[];const P=128;
+  LES.forEach(l=>{if(l.g!==last){gh.push(`<div class="pgr" style="top:${y}px"><span>${l.g}</span></div>`);y+=44;last=l.g}
+    const x=50+22*Math.sin(l.k*Math.PI/2),st=lessonStat(l),lock=isLocked(l.k),dn=st.k>=l.w.length,c=l===cur;
+    pts.push({x,y:y+36,dn,lock});
+    nodes.push(`<button class="pn ${lock?"lock":dn?"done":""} ${c?"cur":""}" data-open="${l.k}" style="left:${x}%;top:${y}px" aria-label="Lektion ${l.k+1}: ${l.t}, ${lock?"gesperrt":st.k+" von "+st.t+" gelernt"}"><span class="nd">${lock?ic("lock",20):dn?ic("check",24):l.k+1}</span><span class="lb ${x>50?"l":"r"}"><b>${l.t}</b><small>${lock?"gesperrt":st.k+" / "+st.t+" gelernt"}</small></span></button>`);
+    y+=P});
+  const seg=pts.slice(1).map((b,i)=>{const a=pts[i],m=(a.y+b.y)/2;return `<path class="${b.lock?"lk":a.dn?"dn":""}" d="M${a.x.toFixed(1)} ${a.y} C${a.x.toFixed(1)} ${m} ${b.x.toFixed(1)} ${m} ${b.x.toFixed(1)} ${b.y}"/>`}).join("");
+  paint(`<h1>Lernpfad</h1><p class="mute">${knownN()} von ${W.length} Wörtern gelernt · ${done} von ${LES.length} Lektionen abgeschlossen</p>
+  <div class="card rule"><b>Wann gilt ein Wort als gelernt?</b><ol><li><i>1</i><span>Du beantwortest es richtig. Es ist <b>begonnen</b>.</span></li><li><i>2</i><span>Du beantwortest es nach mindestens einem Tag noch einmal richtig. Jetzt ist es <b>gelernt</b>.</span></li></ol><p class="mute">Die nächste Lektion öffnet sich, sobald du 60 % der vorherigen begonnen hast. Wörter früherer Lektionen werden in neuen Runden mitgeprüft.</p></div>
   ${due?`<div class="menu">${itm('data-go="review"',"repeat","Wiederholen",due+" Wörter fällig")}</div>`:""}
-  <div class="lp">${LES.map(l=>{
-    const st=lessonStat(l),lock=isLocked(l.k),dn=st.k>=l.w.length,p=Math.round(st.k/st.t*100),h=l.g!==last?`<p class="gt">${l.g}</p>`:"";last=l.g;
-    return `${h}<button class="les ${lock?"lock":dn?"done":""} ${l===cur?"cur":""}" data-les="${l.k}" style="--k:${Math.min(l.k,14)}"><span class="nd">${lock?ic("lock",18):dn?ic("check",20):`<span>${l.k+1}</span>`}</span><span class="lt"><b>${l.t}</b><small>${lock?"Gesperrt":st.k+" von "+st.t+" gelernt"+(st.s>st.k?" · "+(st.s-st.k)+" warten auf Wiederholung":"")}</small><span class="bar"><i style="width:${p}%"></i></span></span></button>`}).join("")}</div>`);
-  const c=$(".les.cur");if(c)requestAnimationFrame(()=>c.scrollIntoView({block:"center"}));
+  <div class="pth" style="height:${y}px"><svg viewBox="0 0 100 ${y}" preserveAspectRatio="none" aria-hidden="true">${seg}</svg>${gh.join("")}${nodes.join("")}</div>`);
+  const c=$(".pn.cur");if(c)requestAnimationFrame(()=>c.scrollIntoView({block:"center"}));
+}
+function lesson(){
+  const L=LES[ui.les],st=lessonStat(L),old=L.k?oldWords(L.k):[],ws=L.w.map(id=>BY[id]),fresh=ws.filter(w=>S.box[w.i]===undefined).length;
+  paint(head(`Lektion ${L.k+1}: ${L.t}`,"path")+`<p class="mute">${st.k} von ${st.t} gelernt · ${st.s-st.k} begonnen · ${fresh} neu</p>
+  <div class="card rule"><b>So wird gelernt</b><ol><li><i>1</i><span>Richtig beantwortet: <b>begonnen</b></span></li><li><i>2</i><span>Nach mindestens einem Tag noch einmal richtig: <b>gelernt</b></span></li></ol></div>
+  ${old.length?`<p class="mute" style="margin-top:12px">In dieser Runde werden außerdem ${old.length} Wörter aus früheren Lektionen mitgeprüft.</p>`:""}
+  <button class="btn" data-les="${L.k}">${fresh===st.t?"Lektion starten":"Weiter üben"}</button>
+  <div class="wl">${ws.map(w=>{const t=wordState(w.i),nt=noteOf(w);return `<button class="w" data-say="${w.i}"><span class="ar" lang="ar">${w.ar}</span><span style="flex:1"><b>${w.de}</b><span class="tr">(${w.tr})${nt?" · "+esc(nt):""}</span><span class="sl"><span class="st ${t.k}">${t.k==="l"?ic("check",14)+" ":""}${t.t}</span><span class="tr">${t.h}</span></span></span></button>`}).join("")}</div>`);
 }
 function more(){
   paint(`<h1>Mehr</h1><div class="menu">${[["badges","medal","Abzeichen"],["list","list","Wortliste"],["stats","chart","Statistiken"],["fav","star","Favoriten"],["settings","gear","Einstellungen"],["legal","lock","Datenschutz &amp; Impressum"]].map(m=>itm(`data-go="${m[0]}"`,m[1],m[2],"")).join("")}</div>`);
@@ -441,18 +476,19 @@ function cards(){
 // ===== Lernrunde =====
 let Q={},G={},B={};
 function startQuiz(k){
-  const L=k==null?null:LES[k],seen=w=>S.box[w.i]!==undefined,now=Date.now();let base;
+  const L=k==null?null:LES[k],seen=w=>S.box[w.i]!==undefined,now=Date.now();let base,oldIds=new Set();
   if(L){
-    const pool=L.w.map(id=>BY[id]),due=shuffle(pool.filter(w=>seen(w)&&S.due[w.i]<=now)),nw=pool.filter(w=>!seen(w)).slice(0,5),rest=shuffle(pool.filter(w=>seen(w)&&S.due[w.i]>now));
-    base=[...due.slice(0,8),...nw];base.push(...rest.slice(0,Math.max(0,8-base.length)));
+    const pool=L.w.map(id=>BY[id]),old=oldWords(k),due=shuffle(pool.filter(w=>seen(w)&&S.due[w.i]<=now)),nw=pool.filter(w=>!seen(w)).slice(0,5),rest=shuffle(pool.filter(w=>seen(w)&&S.due[w.i]>now));
+    oldIds=new Set(old.map(w=>w.i));
+    base=[...old,...due.slice(0,Math.max(0,12-old.length-nw.length)),...nw];base.push(...rest.slice(0,Math.max(0,8-base.length)));
   }else{
     const pool=unlockedWords().filter(seen),due=shuffle(pool.filter(w=>S.due[w.i]<=now)),rest=shuffle(pool.filter(w=>S.due[w.i]>now));
     base=[...due.slice(0,10)];base.push(...rest.slice(0,Math.max(0,8-base.length)));
   }
   if(!base.length){toast("Hier gibt es gerade nichts zu üben.");return go("path")}
-  const news=base.filter(w=>!seen(w)),items=shuffle(base).map(w=>({w,rep:false}));
+  const news=base.filter(w=>!seen(w)),items=shuffle(base).map(w=>({w,rep:false,old:oldIds.has(w.i)})),b0={};base.forEach(w=>b0[w.i]=S.box[w.i]);
   news.forEach(w=>{const p=items.findIndex(x=>x.w===w&&!x.rep);items.splice(Math.min(items.length,p+3+Math.floor(Math.random()*3)),0,{w,rep:true})}); // neue Wörter kommen später noch einmal
-  Q={k,ws:items,intro:news,ii:0,ph:news.length?"intro":"quiz",n:0,right:0,done:0,hearts:3,combo:0,xp:0,wrong:[],fb:null,picked:null,res:null,out:false,fin:false,pct:0,nextLocked:L&&k+1<LES.length?isLocked(k+1):false};
+  Q={k,b0,ws:items,intro:news,ii:0,ph:news.length?"intro":"quiz",n:0,right:0,done:0,hearts:3,combo:0,xp:0,wrong:[],fb:null,picked:null,res:null,out:false,fin:false,pct:0,nextLocked:L&&k+1<LES.length?isLocked(k+1):false};
   view="quiz";render();
 }
 function intro(){ // neue Wörter erst zeigen, dann abfragen
@@ -491,6 +527,8 @@ function roundEnd(){
   paint(`<div style="text-align:center;margin-top:20px"><h1>${Q.out?"Keine Herzen mehr":"Geschafft"}</h1><p class="stars" role="img" aria-label="${stars} von 3 Sternen">${[0,1,2].map(i=>`<span class="star ${i<stars?"on":""}" style="--k:${i}">${ic("star",34,i<stars)}</span>`).join("")}</p></div>
   <div class="tiles"><div class="card"><p class="mute">Richtig</p><b>${Q.right} / ${Q.done}</b></div><div class="card"><p class="mute">XP verdient</p><b>+${Q.xp}</b>${Q.bonus?`<span class="mute">davon ${Q.bonus} Bonus</span>`:""}</div></div>
   ${L?`<div class="card" style="margin-top:10px"><div class="row sp"><b>${L.t}</b><span class="mute">${st.k} von ${st.t} gelernt</span></div><div class="bar" style="margin-top:10px"><i style="width:0" data-to="${Math.round(st.k/st.t*100)}"></i></div>${Q.unlocked?`<p style="margin-top:8px;color:var(--g);font-weight:600">Nächste Lektion freigeschaltet: ${LES[Q.k+1].t}</p>`:""}</div>`:""}
+  ${(()=>{const ids=[...new Set(Q.ws.map(x=>x.w.i))],nl=ids.filter(id=>(Q.b0[id]===undefined||Q.b0[id]<2)&&(S.box[id]||0)>=2).length,ns=ids.filter(id=>(Q.b0[id]===undefined||Q.b0[id]===0)&&S.box[id]===1).length;
+    return nl||ns?`<div class="card" style="margin-top:10px">${nl?`<p><b>${nl} ${nl===1?"Wort":"Wörter"} neu gelernt</b></p>`:""}${ns?`<p${nl?' style="margin-top:6px"':""}><b>${ns} ${ns===1?"Wort":"Wörter"} begonnen</b></p><p class="mute" style="margin-top:2px">Es zählt als gelernt, wenn du es morgen noch einmal richtig beantwortest.</p>`:""}</div>`:""})()}
   ${Q.wrong.length?`<p style="margin-top:18px"><b>Das üben wir nochmal</b></p>${Q.wrong.map(wordRow).join("")}`:""}
   <button class="btn" id="again">${Q.out?"Nochmal versuchen":"Noch eine Runde"}</button><button class="btn alt" data-go="path">Zum Lernpfad</button>`);
   $("#again").onclick=()=>startQuiz(Q.k);
@@ -500,7 +538,7 @@ function quiz(){
   if(Q.n>=Q.ws.length)return roundEnd();
   const h=Math.max(0,Q.hearts),it=Q.ws[Q.n],w=it.w,last=h<=0?"Ergebnis ansehen":"Weiter",lost=Q.fb&&!Q.fb.ok,from=Q.pct,to=Math.round(Q.n/Q.ws.length*100);Q.pct=to;
   const bar=`<div class="top">${xbtn("path")}<div class="bar"><i style="width:${from}%" data-to="${to}"></i></div><span class="hearts" role="img" aria-label="${h} Herzen übrig">${[0,1,2].map(i=>`<span class="hrt ${i<h?"":"off"} ${lost&&i===h?"lost":""}">${ic("heart",20,i<h)}</span>`).join("")}</span></div>
-  <div class="qmeta"><span class="mute">${Q.n+1} / ${Q.ws.length}${it.rep?" · Wiederholung":""}</span>${Q.combo>=3?`<span class="combo">${ic("flame",14,true)} ${Q.combo}</span>`:""}</div>`;
+  <div class="qmeta"><span class="mute">${Q.n+1} / ${Q.ws.length}${it.rep?" · Wiederholung":it.old?" · aus Lektion "+(LESOF[w.i]+1):""}</span>${Q.combo>=3?`<span class="combo">${ic("flame",14,true)} ${Q.combo}</span>`:""}</div>`;
   const fbHtml=Q.fb?`<div class="fb ${Q.fb.ok?"ok":"no"}" role="status"><span>${Q.fb.msg}${S.dir==="da"&&Q.res===false?` · richtig: <span class="ar" lang="ar" style="font-size:22px">${w.ar}</span>`:""}</span>${Q.fb.ok?`<span class="xpf">+${Q.fb.x} XP</span>`:""}</div>`:"";
   if(S.dir==="ad"){
     if(!Q.opts)Q.opts=options(w);
