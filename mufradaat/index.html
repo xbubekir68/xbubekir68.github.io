@@ -35,7 +35,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .menu{display:flex;flex-direction:column;gap:10px;margin-top:14px}
 .item{display:flex;align-items:center;gap:14px;text-align:left;width:100%;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
 .item.main{background:var(--g);color:var(--on);border-color:var(--g)}
-.item.main2{border-color:var(--g)}.item.main2 .ic{color:var(--g)}
+.item.main small{opacity:1}.item.main2{border-color:var(--g)}.item.main2 .ic{color:var(--g)}
 .item b{display:block}.item small{opacity:.75;font-size:13px}.item .ic{font-size:22px;width:28px;text-align:center}
 .item .ch{margin-left:auto;opacity:.5}
 .ring{--p:0;width:72px;height:72px;border-radius:50%;background:conic-gradient(var(--g) calc(var(--p)*1%),var(--line) 0);display:grid;place-items:center;flex:none}
@@ -90,7 +90,7 @@ nav[hidden]{display:none}
 .opt.ok{animation:pop .35s}.opt.no{animation:shake .35s}
 @keyframes pop{0%{transform:scale(.92)}60%{transform:scale(1.04)}100%{transform:scale(1)}}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
-.bg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.bdg{text-align:center;padding:14px 8px}.bdg .ic{font-size:34px;display:block;margin-bottom:4px}.bdg b{display:block;font-size:15px}.bdg small{display:block;color:var(--mute);font-size:12px;margin-top:2px}.bdg.lock{opacity:.45;filter:grayscale(1)}
+.bg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.bdg{text-align:center;padding:14px 8px}.bdg .ic{font-size:34px;display:block;margin-bottom:4px}.bdg b{display:block;font-size:15px}.bdg small{display:block;color:var(--mute);font-size:12px;margin-top:2px}.bdg.lock .med{opacity:.45;filter:grayscale(1)}.bdg.lock b{color:var(--mute)}
 .pg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.pg button{padding:12px 8px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);min-height:60px;font-size:16px}.pg button.ar{font-size:26px}.pg .sel{border-color:var(--g);background:var(--gl)}.pg .done{opacity:.35;border-color:var(--g)}.pg .bad{border-color:var(--bad);background:var(--badl);animation:shake .3s}
 #toasts{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:60;pointer-events:none}
 #upd{position:fixed;left:12px;right:12px;top:calc(10px + env(safe-area-inset-top));z-index:60;display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--g);color:var(--on);padding:10px 12px 10px 18px;border-radius:16px;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.25);animation:pop .3s}#upd .btn{width:auto;margin:0;padding:8px 16px;min-height:0;background:var(--on);color:var(--g)}
@@ -140,6 +140,8 @@ details.rule{display:block;margin-top:12px}details.rule>ol,details.rule>p{margin
 .pn.lock .nd{border-color:var(--line);color:var(--mute);background:var(--bg)}.pn.lock b,.pn.lock small{color:var(--mute)}
 .st{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;white-space:nowrap;background:var(--line);color:var(--mute)}.st.s{background:#f3e6c4;color:#6b5210}.st.l{background:var(--gl);color:var(--g)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .st.s{background:#3a3217;color:#e8c970}}:root[data-theme="dark"] .st.s{background:#3a3217;color:#e8c970}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn.alt{color:var(--g2)}}:root[data-theme="dark"] .btn.alt{color:var(--g2)}
+.set select{border:0;background:none;color:var(--mute);font:inherit;text-align:right;cursor:pointer}
 .wl .w{cursor:default;align-items:flex-start}.wl .w .ar{padding-top:4px}.wl .w .tr{display:block}.wl .sl{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;margin-top:6px}.wl .sl .tr{font-size:12px}
 .pg3{display:inline-flex;gap:3px;align-items:center;vertical-align:middle}
 .pg3 i{width:9px;height:5px;border-radius:2px;background:var(--line)}
@@ -168,7 +170,7 @@ details.rule{display:block;margin-top:12px}details.rule>ol,details.rule>p{margin
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(47,143,111,.5)}50%{box-shadow:0 0 0 9px rgba(47,143,111,0)}}
 .med{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;margin:0 auto 6px;border:2px solid var(--g);background:var(--gl);color:var(--g);font-size:22px;line-height:1;overflow:hidden}
 .med .ar{font-size:22px;line-height:1.3}.med.big{width:104px;height:104px;font-size:46px}.med.big .ar{font-size:46px}
-.bdg .med{margin-bottom:8px}.bdg.lock{opacity:.45;filter:grayscale(1)}
+.bdg .med{margin-bottom:8px}
 .lvfx{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 10px);transform:translateX(-50%);z-index:70;pointer-events:none;animation:lvin .45s cubic-bezier(.3,1.4,.5,1) both,lvout .4s ease-in 2.35s forwards}
 .lvc{position:relative;display:flex;align-items:center;gap:10px;background:var(--g);color:var(--on);border-radius:999px;padding:6px 18px 6px 8px;box-shadow:0 6px 18px rgba(0,0,0,.2)}.lvc .ar{width:34px;height:34px;border-radius:50%;background:var(--on);color:var(--g);display:grid;place-items:center;font-size:18px;line-height:1}.lvc b{font-size:16px}
 .lvr{position:absolute;left:50%;top:50%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:3px solid var(--g2);animation:lvring 1s ease-out .15s both}
@@ -545,7 +547,7 @@ function startListen(){
 function listen(){
   if(LN.n>=LN.ws.length){
     if(!LN.fin){LN.fin=true;LN.xp=LN.right*4+(LN.right>=8?10:0);S.st.listen=(S.st.listen||0)+1;if(LN.xp)addXP(LN.xp);else{save();checkBadges()}if(LN.right>=8){confetti();sfx("win")}}
-    paint(`<div style="text-align:center;margin-top:30px"><h1>Geschafft</h1></div><div class="tiles"><div class="card"><p class="mute">Richtig</p><b>${LN.right} / ${LN.ws.length}</b></div><div class="card"><p class="mute">XP verdient</p><b>+${LN.xp}</b></div></div><button class="btn" id="again">Nochmal</button><button class="btn alt" data-go="games">Zu den Spielen</button>`);
+    paint(`<div style="text-align:center;margin-top:30px"><h1>Runde beendet</h1></div><div class="tiles"><div class="card"><p class="mute">Richtig</p><b>${LN.right} / ${LN.ws.length}</b></div><div class="card"><p class="mute">XP verdient</p><b>+${LN.xp}</b></div></div><button class="btn" id="again">Nochmal</button><button class="btn alt" data-go="games">Zu den Spielen</button>`);
     $("#again").onclick=startListen;return;
   }
   const w=LN.ws[LN.n],p=LN.picked,done=p!==null;if(!LN.opts)LN.opts=options(w);
@@ -598,7 +600,7 @@ function zFinish(ok,x){
 function satz(){
   if(Z.n>=Z.items.length){
     if(!Z.fin){Z.fin=true;Z.bonus=Z.right===Z.items.length?10:0;S.st.sent=(S.st.sent||0)+1;if(Z.bonus){Z.xp+=Z.bonus;addXP(Z.bonus)}else{save();checkBadges()}if(Z.right>=Math.ceil(Z.items.length*.7)){confetti();sfx("win")}}
-    paint(`<div style="text-align:center;margin-top:30px"><h1>Geschafft</h1></div><div class="tiles"><div class="card"><p class="mute">Richtig</p><b>${Z.right} / ${Z.items.length}</b></div><div class="card"><p class="mute">XP verdient</p><b>+${Z.xp}</b>${Z.bonus?`<span class="mute">davon ${Z.bonus} Bonus</span>`:""}</div></div>
+    paint(`<div style="text-align:center;margin-top:30px"><h1>Runde beendet</h1></div><div class="tiles"><div class="card"><p class="mute">Richtig</p><b>${Z.right} / ${Z.items.length}</b></div><div class="card"><p class="mute">XP verdient</p><b>+${Z.xp}</b>${Z.bonus?`<span class="mute">davon ${Z.bonus} Bonus</span>`:""}</div></div>
     <div class="card" style="margin-top:10px"><b>${sentDone()} von ${SENT.length} Sätzen</b><p class="mute" style="margin-top:4px">schon einmal richtig. Mit jedem neuen Wort werden weitere Sätze frei.</p></div>
     <button class="btn" id="again">Noch eine Runde</button><button class="btn alt" data-go="${Z.back}">${Z.back==="path"?"Zurück zum Lernpfad":"Zur Startseite"}</button>`);
     $("#again").onclick=()=>startSatz(Z.u);return;
@@ -622,7 +624,7 @@ function satz(){
     paint(bar+`<p style="text-align:center;font-weight:600;margin-top:12px">Was bedeutet der Satz?</p>
     <div class="card sans" style="margin-top:14px"><div class="ar" lang="ar" style="font-size:34px;text-align:center">${sentAr(s)}</div><p class="mute" style="text-align:center;margin-top:4px">${done?esc(s.tr):"&nbsp;"}</p><p style="text-align:center"><button class="lnk" id="hear">${ic("speaker",16)} Anhören</button></p></div>
     <div style="margin-top:14px">${Z.opts.map((o,k)=>`<button class="opt ${done?(o===s?"ok":Z.picked===k?"no":""):""}" data-o="${k}" ${done?"disabled":""}>${esc(o.de)}</button>`).join("")}</div>
-    ${done?`<div class="fb ${Z.fb.ok?"ok":"no"}" role="status"><span>${Z.fb.ok?pick(GOOD):"Nicht ganz."}</span>${Z.fb.ok?`<span class="xpf">+${Z.fb.x} XP</span>`:""}</div>`:""}
+    ${done?`<div class="fb ${Z.fb.ok?"ok":"no"}" role="status"><span>${Z.fb.ok?pick(GOOD):"Richtig ist: "+esc(s.de)}</span>${Z.fb.ok?`<span class="xpf">+${Z.fb.x} XP</span>`:""}</div>`:""}
     <button class="btn" id="nx" ${done?"":"disabled"}>${last?"Ergebnis ansehen":"Weiter"}</button>`);
     document.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{Z.picked=+b.dataset.o;zFinish(Z.opts[Z.picked]===s,6);speakLater(s.ar);satz()});
   }
@@ -647,8 +649,8 @@ const ALPHA=[
 ["sin","س","Sīn","s","سِين","stimmloses s wie in Wasser",0,"سَمَك","samak","Fisch"],
 ["shin","ش","Shīn","sch","شِين","sch wie in Schule",0,"شَمْس","shams","Sonne"],
 ["sad","ص","Ṣād","ṣ","صَاد","dunkles, kräftiges s (emphatisch)",0,"صَبَاح","ṣabāḥ","Morgen"],
-["dad","ض","Ḍād","ḍ","ضَاد","dunkles, kräftiges d (emphatisch)",0,"ضَوْء","ḍaw’","Licht"],
-["tah","ط","Ṭāʾ","ṭ","طَاء","dunkles, kräftiges t (emphatisch)",0,"طَالِب","ṭālib","Student"],
+["dad","ض","Ḍād","ḍ","ضَاد","dunkles, kräftiges d (emphatisch)",0,"ضَوْء","ḍawʾ","Licht"],
+["tah","ط","Ṭāʾ","ṭ","طَاء","dunkles, kräftiges t (emphatisch)",0,"طَالِب","ṭālib","Schüler"],
 ["zah","ظ","Ẓāʾ","ẓ","ظَاء","dunkles, stimmhaftes th (emphatisch)",0,"ظُهْر","ẓuhr","Mittag"],
 ["ayn","ع","ʿAyn","ʿ","عَيْن","gepresster Laut aus dem Rachen, im Deutschen ohne Entsprechung",0,"عَيْن","ʿayn","Auge"],
 ["ghayn","غ","Ghayn","gh","غَيْن","Gaumen-r, hinten im Rachen gesprochen",0,"غَيْمَة","ghayma","Wolke"],
@@ -729,7 +731,7 @@ function aEnd(){
     if(!S.aok){if(AQ.test&&AQ.right>=8){S.aok="skip";AQ.msg="skip"}else if(alphaPassed()){S.aok="done";AQ.msg="done"}else if(AQ.test)AQ.msg="fail"}
     if(AQ.xp)addXP(AQ.xp);else{save();checkBadges()}if(good){confetti();sfx("win")}else sfx("tap")}
   const wr=[...new Set(AQ.wrong)],MSG={skip:["Stark, das sitzt.","Der Buchstaben-Abschnitt ist übersprungen. Weiter geht es mit den ersten Wörtern."],done:["Buchstaben geschafft.","Ab jetzt geht es mit Wörtern weiter. Das Alphabet bleibt zum Üben jederzeit offen."],fail:["Noch nicht ganz sicher.","Das macht nichts: Im Lernpfad üben wir die Buchstaben in vier kleinen Blöcken."]}[AQ.msg];
-  paint(`<div style="text-align:center;margin-top:20px"><h1>Geschafft</h1></div>${MSG?`<div class="card note" role="status" style="margin-top:12px"><p><b>${MSG[0]}</b> ${MSG[1]}</p></div>`:""}<div class="tiles"><div class="card"><p class="mute">Richtig</p><b>${AQ.right} / ${AQ.qs.length}</b></div><div class="card"><p class="mute">XP verdient</p><b>+${AQ.xp}</b></div><div class="card" style="grid-column:span 2"><p class="mute">Sichere Buchstaben</p><b>${alphaSure()} / ${ALPHA.length}</b></div></div>
+  paint(`<div style="text-align:center;margin-top:20px"><h1>Runde beendet</h1></div>${MSG?`<div class="card note" role="status" style="margin-top:12px"><p><b>${MSG[0]}</b> ${MSG[1]}</p></div>`:""}<div class="tiles"><div class="card"><p class="mute">Richtig</p><b>${AQ.right} / ${AQ.qs.length}</b></div><div class="card"><p class="mute">XP verdient</p><b>+${AQ.xp}</b></div><div class="card" style="grid-column:span 2"><p class="mute">Sichere Buchstaben</p><b>${alphaSure()} / ${ALPHA.length}</b></div></div>
   ${wr.length?`<p style="margin-top:18px"><b>Das üben wir nochmal</b></p><div class="agrid">${wr.map(a=>`<button class="card at" data-al="${a.i}"><span class="ar" lang="ar">${a.c}</span><b>${a.n}</b></button>`).join("")}</div>`:""}
   ${AQ.msg==="skip"||AQ.msg==="done"?`<button class="btn" data-go="path">Zu den Wörtern</button><button class="btn alt" id="again">Noch eine Runde</button>`:`<button class="btn" id="again">${AQ.test?"Test wiederholen":"Noch eine Runde"}</button><button class="btn alt" data-go="${AQ.back}">${AQ.back==="path"?"Zurück zum Lernpfad":"Zum Alphabet"}</button>`}`);
   $("#again").onclick=()=>startAQ(AQ.b,AQ.test,AQ.back);
@@ -780,7 +782,7 @@ function miniStats(){
   const days=[...Array(7)].map((_,k)=>{const d=ago(6-k);return{l:["So","Mo","Di","Mi","Do","Fr","Sa"][d.getDay()],n:S.days[ymd(d)]||0,t:k===6}}),mx=Math.max(1,...days.map(d=>d.n)),sum=days.reduce((a,d)=>a+d.n,0);
   const learnt=knownN(),started=W.filter(w=>S.box[w.i]!==undefined).length-learnt; // begonnen = angefangen, aber noch nicht gelernt
   return `<button class="card mini" data-go="stats" aria-label="Statistiken öffnen: ${sum} Wörter in den letzten 7 Tagen, ${learnt} gelernt, ${started} begonnen, ${dueN()} fällig">
-  <div class="row sp"><b>Diese Woche</b><span class="mute" style="display:inline-flex;align-items:center;gap:2px;white-space:nowrap">${sum} geübt ${ic("chev",16)}</span></div>
+  <div class="row sp"><b>Letzte 7 Tage</b><span class="mute" style="display:inline-flex;align-items:center;gap:2px;white-space:nowrap">${sum} geübt ${ic("chev",16)}</span></div>
   <div class="mbars" aria-hidden="true">${days.map(d=>`<div class="${d.t?"t":""}"><i style="height:${Math.max(3,Math.round(d.n/mx*38))}px"></i><span>${d.l}</span></div>`).join("")}</div>
   <div class="mnums"><div><b>${learnt}</b><span>gelernt</span></div><div><b>${started}</b><span>begonnen</span></div><div><b>${dueN()}</b><span>fällig</span></div></div></button>`;
 }
@@ -799,10 +801,10 @@ function home(){
   ${itm('data-go="path"',"list","Lernpfad","Buchstaben, Wörter, Sätze")}
   ${(()=>{const o=SENT.filter(sentOpen).length;return itm('data-go="satz"',"list","Sätze",o>=SMIN?o+" von "+SENT.length+" Sätzen frei · "+sentDone()+" geübt":"Ab "+SMIN+" freien Sätzen · lerne weiter Wörter")})()}
   ${itm('data-go="alphabet"',"list","Alphabet",alphaSure()+" von "+ALPHA.length+" Buchstaben sicher")}
-  ${itm('data-go="games"',"bolt","Spiele","Paare zuordnen, Wort-Blitz")}
-  ${itm('data-go="cards"',"cards","Karteikarten","Lernen im eigenen Tempo")}
+  ${itm('data-go="games"',"bolt","Spiele","Paare zuordnen, Wort-Blitz, Hörübung")}
+  ${itm('data-go="cards"',"cards","Karteikarten",unlockedWords().length+" Karten")}
   ${itm('data-go="badges"',"medal","Abzeichen",(S.badges||[]).length+" von "+BADGES.length+" freigeschaltet")}
-  ${itm('data-go="stats"',"chart","Statistiken","Dein Fortschritt im Überblick")}
+  ${itm('data-go="stats"',"chart","Statistiken",knownN()+" von "+W.length+" Wörtern gelernt")}
   </div>`);
 }
 // nächster Schritt: erst Buchstaben (solange nicht erledigt, übersprungen oder schon Wörter gestartet), dann die aktuelle Lektion
@@ -849,7 +851,7 @@ function path(){
   <div class="pth" style="height:${y}px"><svg viewBox="0 0 100 ${y}" preserveAspectRatio="none" aria-hidden="true">${seg}</svg>${hd.join("")}${nodes.join("")}</div>`);
   const on=id=>{const e=$(id);return f=>{if(e)e.onclick=f}};
   on("#sk")(()=>{ui.ask=true;path()});on("#skx")(()=>{ui.ask=false;path()});
-  on("#sk2")(()=>{S.aok="skip";ui.ask=false;save();toast("Buchstaben übersprungen. Viel Spaß mit den Wörtern!");path()});
+  on("#sk2")(()=>{S.aok="skip";ui.ask=false;save();toast("Buchstaben übersprungen.");path()});
   on("#sk3")(()=>{S.aok="";save();path()});
   const c=$(".pn.cur");if(c&&hasWords())requestAnimationFrame(()=>c.scrollIntoView({block:"center"}));
 }
@@ -869,7 +871,7 @@ function badges(){
   paint(head("Abzeichen","more")+`<p class="mute">${have.length} von ${BADGES.length} freigeschaltet</p><div class="bg">${BADGES.map(b=>`<div class="card bdg ${have.includes(b.id)?"":"lock"}"><span class="med">${medal(b.ic)}</span><b>${b.n}</b><small>${b.d}</small></div>`).join("")}</div>`);
 }
 function games(){
-  paint(`<h1>Spiele</h1><p class="mute">Üben mit Tempo. Jedes Spiel bringt XP.</p><div class="menu">${itm('data-go="pairs"',"pairs","Paare zuordnen","6 Wortpaare, so schnell du kannst")}${itm('data-go="blitz"',"bolt","Wort-Blitz","60 Sekunden · Rekord: "+(S.st.blitz||0)+" Treffer")}${itm('data-go="listen"',"speaker","Hörübung",ARV===false?"Braucht eine arabische Stimme auf dem Gerät":"Wort hören, Bedeutung wählen")}</div>`);
+  paint(`<h1>Spiele</h1><div class="menu">${itm('data-go="pairs"',"pairs","Paare zuordnen","6 Wortpaare, so schnell du kannst")}${itm('data-go="blitz"',"bolt","Wort-Blitz","60 Sekunden · Rekord: "+(S.st.blitz||0)+" Treffer")}${itm('data-go="listen"',"speaker","Hörübung",ARV===false?"Braucht eine arabische Stimme auf dem Gerät":"Wort hören, Bedeutung wählen")}</div>`);
 }
 function wordRow(w){const nt=noteOf(w);return `<button class="w" data-say="${w.i}"><span class="ar" lang="ar">${w.ar}</span><span style="flex:1"><b>${w.de}</b><span class="tr"><br>(${w.tr})${nt?" · "+esc(nt):""}</span></span><span class="mute" style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">${memBar(w.i)}${isLearned(w.i)?ic("check",16):""}${ic("speaker",18)}</span></button>`}
 function list(){
@@ -971,10 +973,10 @@ function answer(it,ok){ // Bewertung, XP, Herzen, Rückmeldung
     Q.fb={ok:true,x,msg:Q.combo>=3?Q.combo+" in Folge":pick(GOOD)};sfx("good",Q.combo);vib(12);addXP(x);
   }else{
     grade(w.i,false);Q.combo=0;Q.hearts--;if(!Q.wrong.includes(w))Q.wrong.push(w);
-    Q.fb={ok:false,msg:pick(BAD)};sfx("bad");vib([50,40,50]);setTimeout(()=>sfx("heart"),0);
+    Q.fb={ok:false,msg:S.dir==="ad"?"Richtig ist: "+w.de:"Richtig ist:"};sfx("bad");vib([50,40,50]);setTimeout(()=>sfx("heart"),0);
   }
 }
-const GOOD=["Mashallah!","Ausgezeichnet!","Sehr gut!","Stark!","Genau!"],BAD=["Fast!","Nicht ganz.","Kein Problem, weiter!","Das merkst du dir gleich."];
+const GOOD=["Richtig!"];
 function roundEnd(){
   const L=Q.k!=null?LES[Q.k]:null;
   if(!Q.fin){
@@ -988,7 +990,7 @@ function roundEnd(){
     if(Q.unlocked){setTimeout(()=>{toast("Neue Lektion: „"+LES[Q.k+1].t+"“");sfx("badge")},900)}
   }
   const acc=Q.done?Q.right/Q.done:0,stars=acc>=.9?3:acc>=.6?2:1,st=L?lessonStat(L):null;
-  paint(`<div style="text-align:center;margin-top:20px"><h1>${Q.out?"Keine Herzen mehr":"Geschafft"}</h1>${Q.mode==="mix"?'<p class="mute">Tages-Mischung</p>':""}<p class="stars" role="img" aria-label="${stars} von 3 Sternen">${[0,1,2].map(i=>`<span class="star ${i<stars?"on":""}" style="--k:${i}">${ic("star",34,i<stars)}</span>`).join("")}</p></div>
+  paint(`<div style="text-align:center;margin-top:20px"><h1>${Q.out?"Keine Herzen mehr":"Runde beendet"}</h1>${Q.mode==="mix"?'<p class="mute">Tages-Mischung</p>':""}<p class="stars" role="img" aria-label="${stars} von 3 Sternen">${[0,1,2].map(i=>`<span class="star ${i<stars?"on":""}" style="--k:${i}">${ic("star",34,i<stars)}</span>`).join("")}</p></div>
   <div class="tiles"><div class="card"><p class="mute">Richtig</p><b>${Q.right} / ${Q.done}</b></div><div class="card"><p class="mute">XP verdient</p><b>+${Q.xp}</b>${Q.bonus?`<span class="mute">davon ${Q.bonus} Bonus</span>`:""}</div></div>
   ${L?`<div class="card" style="margin-top:10px"><div class="row sp"><b>${L.t}</b><span class="mute">${st.k} von ${st.t} gelernt</span></div><div class="bar" style="margin-top:10px"><i style="width:0" data-to="${Math.round(st.k/st.t*100)}"></i></div>${Q.unlocked?`<p style="margin-top:8px;color:var(--g);font-weight:600">Nächste Lektion freigeschaltet: ${LES[Q.k+1].t}</p>`:""}</div>`:""}
   ${(()=>{const ids=[...new Set(Q.ws.map(x=>x.w.i))],nl=ids.filter(id=>(Q.b0[id]===undefined||Q.b0[id]<2)&&(S.box[id]||0)>=2).length,ns=ids.filter(id=>(Q.b0[id]===undefined||Q.b0[id]===0)&&S.box[id]===1).length;
@@ -1003,7 +1005,7 @@ function quiz(){
   const h=Math.max(0,Q.hearts),it=Q.ws[Q.n],w=it.w,last=h<=0?"Ergebnis ansehen":"Weiter",lost=Q.fb&&!Q.fb.ok,from=Q.pct,to=Math.round(Q.n/Q.ws.length*100);Q.pct=to;
   const bar=`<div class="top">${xbtn("path")}<div class="bar"><i style="width:${from}%" data-to="${to}"></i></div><span class="hearts" role="img" aria-label="${h} Herzen übrig">${[0,1,2].map(i=>`<span class="hrt ${i<h?"":"off"} ${lost&&i===h?"lost":""}">${ic("heart",20,i<h)}</span>`).join("")}</span></div>
   <div class="qmeta"><span class="mute">${Q.n+1} / ${Q.ws.length}${it.rep?" · Wiederholung":it.old?" · aus Lektion "+(LESOF[w.i]+1):""}</span>${Q.combo>=3?`<span class="combo">${ic("flame",14,true)} ${Q.combo}</span>`:""}</div>`;
-  const fbHtml=Q.fb?`<div class="fb ${Q.fb.ok?"ok":"no"}" role="status"><span>${Q.fb.msg}${S.dir==="da"&&Q.res===false?` · richtig: <span class="ar" lang="ar" style="font-size:22px">${w.ar}</span>`:""}</span>${Q.fb.ok?`<span class="xpf">+${Q.fb.x} XP</span>`:""}</div>`:"";
+  const fbHtml=Q.fb?`<div class="fb ${Q.fb.ok?"ok":"no"}" role="status"><span>${Q.fb.msg}${S.dir==="da"&&Q.res===false?` <span class="ar" lang="ar" style="font-size:22px">${w.ar}</span>`:""}</span>${Q.fb.ok?`<span class="xpf">+${Q.fb.x} XP</span>`:""}</div>`:"";
   if(S.dir==="ad"){
     if(!Q.opts)Q.opts=options(w);
     paint(bar+`<p style="text-align:center;font-weight:600;margin-top:12px">Was bedeutet das Wort?</p><div style="text-align:center;margin:18px 0">${arHead(w,64,Q.picked!==null)}</div>
@@ -1100,23 +1102,24 @@ function stats(){
   <div class="tiles"><div class="card"><p class="mute">Heute geübt</p><b>${S.days[today()]||0}</b><span class="mute">Wörter</span></div><div class="card"><p class="mute">Aktuelle Serie</p><b>${streak()}</b><span class="mute">Tage</span></div><div class="card"><p class="mute">Gefestigt</p><b>${Object.values(S.box).filter(b=>b>=3).length}</b><span class="mute">von ${W.length}</span></div><div class="card"><p class="mute">Gelernt gesamt</p><b>${knownN()}</b></div><div class="card"><p class="mute">Level</p><b>${lvl()}</b></div><div class="card"><p class="mute">XP gesamt</p><b>${S.xp||0}</b></div></div>
   <div class="card" style="margin-top:10px"><p><b>Gedächtnis</b></p><p class="mute" style="margin-top:2px">Wie frisch deine angefangenen Wörter gerade sind.</p>${(()=>{const c=[0,0,0,0];W.forEach(w=>{const m=mem(w.i);if(m)c[m.k]++});const tot=c.reduce((a,b)=>a+b,0);
     return tot?[[3,"frisch","var(--g)"],[2,"wackelig","#c99a2e"],[1,"fällig","#c99a2e"],[0,"vergessen","var(--bad)"]].map(([k,n,col])=>`<div class="row sp" style="margin-top:10px"><span style="width:92px;font-size:14px">${n}</span><div class="bar"><i style="width:${Math.round(c[k]/tot*100)}%;background:${col}"></i></div><span class="mute" style="width:32px;text-align:right">${c[k]}</span></div>`).join(""):'<p class="mute" style="margin-top:10px">Noch keine Wörter angefangen.</p>'})()}</div>
-  <div class="card" style="margin-top:10px"><p><b>Lernverlauf</b></p><div class="chart">${days.map(d=>`<div><i style="height:${d[1]/mx*80}px"></i>${d[0]}</div>`).join("")}</div></div><div class="card" style="margin-top:10px"><p><b>Nach Thema</b></p>${GROUPS.map(c=>{const t=W.filter(w=>w.cat===c),k=t.filter(w=>isLearned(w.i)).length;return `<div class="row sp" style="margin-top:10px"><span style="width:130px;font-size:14px">${c}</span><div class="bar"><i style="width:${k/t.length*100}%"></i></div><span class="mute">${k}/${t.length}</span></div>`}).join("")}</div>`);
+  <div class="card" style="margin-top:10px"><p><b>Lernverlauf</b></p><div class="chart" role="img" aria-label="Geübte Wörter der letzten 7 Tage: ${days.map(d=>d[0]+" "+d[1]).join(", ")}">${days.map(d=>`<div><i style="height:${d[1]/mx*80}px"></i>${d[0]}</div>`).join("")}</div></div><div class="card" style="margin-top:10px"><p><b>Nach Thema</b></p>${GROUPS.map(c=>{const t=W.filter(w=>w.cat===c),k=t.filter(w=>isLearned(w.i)).length;return `<div class="row sp" style="margin-top:10px"><span style="width:130px;font-size:14px">${c}</span><div class="bar"><i style="width:${k/t.length*100}%"></i></div><span class="mute">${k}/${t.length}</span></div>`}).join("")}</div>`);
 }
 function settings(){
-  const row=(id,l,v)=>`<button class="set" id="${id}"><span>${l}</span>${v}</button>`,sw=on=>`<span class="sw ${on?"on":""}"></span>`;
-  paint(head("Einstellungen","more")+`<p><b>Lernrichtung</b></p><div class="grp">${row("d1","Arabisch → Deutsch",S.dir==="ad"?ic("check",18):"")}${row("d2","Deutsch → Arabisch (Schreiben)",S.dir==="da"?ic("check",18):"")}</div>
-  <p><b>Lesen</b></p><div class="grp">${row("hk","Vokalzeichen",`<span class="mute">${["immer zeigen","automatisch","immer ohne"][hkSet()]}</span>`)}</div>
+  const row=(id,l,v,a="")=>`<button class="set" id="${id}" ${a}><span>${l}</span>${v}</button>`,sw=on=>`<span class="sw ${on?"on":""}" aria-hidden="true"></span>`,swr=(id,l,on)=>row(id,l,sw(on),`role="switch" aria-checked="${!!on}"`),
+    pick=(id,l,opts,cur)=>`<label class="set"><span>${l}</span><select id="${id}">${opts.map(([v,t])=>`<option value="${v}" ${String(v)===String(cur)?"selected":""}>${t}</option>`).join("")}</select></label>`;
+  paint(head("Einstellungen","more")+`<p><b>Lernrichtung</b></p><div class="grp">${row("d1","Arabisch → Deutsch",S.dir==="ad"?ic("check",18):"",`aria-pressed="${S.dir==="ad"}"`)}${row("d2","Deutsch → Arabisch (Schreiben)",S.dir==="da"?ic("check",18):"",`aria-pressed="${S.dir==="da"}"`)}</div>
+  <p><b>Lesen</b></p><div class="grp">${pick("hk","Vokalzeichen",[[0,"immer zeigen"],[1,"automatisch"],[2,"immer ohne"]],hkSet())}</div>
   <p class="mute" style="margin:-10px 0 18px">Bei „automatisch“ verschwinden die Vokalzeichen Schritt für Schritt, sobald ein Wort sicher sitzt – so wie in echten Texten. Antippen zeigt sie jederzeit wieder.</p>
-  <p><b>Spiel</b></p><div class="grp">${row("sd","Töne",sw(S.sound!==false))}${row("vb","Vibration",sw(S.vib!==false))}${row("au","Aussprache automatisch",sw(S.auto!==false))}${row("gl","Tagesziel",`<span class="mute">${S.goal||100} XP</span>`)}</div>
-  <p><b>Benachrichtigungen</b></p><div class="grp">${row("rm","Tägliche Lern-Erinnerung",sw(S.rem))}<label class="set"><span>Uhrzeit</span><input type="time" id="tm" value="${S.time}" style="border:0;background:none;color:var(--mute);font:inherit"></label></div>
-  <p class="mute" style="margin:-10px 0 18px">Die Erinnerung erscheint, solange die Seite geöffnet ist.</p><p><b>Weitere Einstellungen</b></p><div class="grp">${row("th","App-Design",`<span class="mute">${{system:"System",light:"Hell",dark:"Dunkel"}[S.theme]}</span>`)}${U!=="gast"?row("sy","Synchronisierung",`<span class="mute">${SY||"–"}</span>`):""}${row("lo",U==="gast"?"Anmelden oder registrieren":"Abmelden",`<span class="mute" style="max-width:50%;overflow:hidden;text-overflow:ellipsis">${U==="gast"?"Gast":esc(U)}</span>`)}${U!=="gast"?row("ex","Meine Daten exportieren",'<span class="mute">JSON</span>'):""}${row("lg","Datenschutz &amp; Impressum",ic("chev",18))}${row("rs","Fortschritt zurücksetzen",'<span class="mute">Löschen</span>')}${U!=="gast"?row("dl","Konto löschen",'<span class="mute" style="color:var(--bad)">Endgültig</span>'):""}</div>`);
+  <p><b>Spiel</b></p><div class="grp">${swr("sd","Töne",S.sound!==false)}${swr("vb","Vibration",S.vib!==false)}${swr("au","Aussprache automatisch",S.auto!==false)}${pick("gl","Tagesziel",[50,100,150,250].map(v=>[v,v+" XP"]),S.goal||100)}</div>
+  <p><b>Benachrichtigungen</b></p><div class="grp">${swr("rm","Tägliche Lern-Erinnerung",S.rem)}<label class="set"><span>Uhrzeit</span><input type="time" id="tm" value="${S.time}" style="border:0;background:none;color:var(--mute);font:inherit"></label></div>
+  <p class="mute" style="margin:-10px 0 18px">Die Erinnerung erscheint, solange die Seite geöffnet ist.</p><p><b>Darstellung und Konto</b></p><div class="grp">${pick("th","Darstellung",[["system","System"],["light","Hell"],["dark","Dunkel"]],S.theme)}${U!=="gast"?row("sy","Synchronisierung",`<span class="mute">${SY||"–"}</span>`):""}${row("lo",U==="gast"?"Anmelden oder registrieren":"Abmelden",`<span class="mute" style="max-width:50%;overflow:hidden;text-overflow:ellipsis">${U==="gast"?"Gast":esc(U)}</span>`)}${U!=="gast"?row("ex","Meine Daten exportieren",'<span class="mute">JSON</span>'):""}${row("lg","Datenschutz &amp; Impressum",ic("chev",18))}${row("rs","Fortschritt zurücksetzen",'<span class="mute">Löschen</span>')}${U!=="gast"?row("dl","Konto löschen",'<span class="mute" style="color:var(--bad)">Endgültig</span>'):""}</div>`);
   $("#sd").onclick=()=>{S.sound=S.sound===false;save();if(S.sound)sfx("good",1);settings()};
   $("#vb").onclick=()=>{S.vib=S.vib===false;save();if(S.vib)vib(30);settings()};
-  $("#gl").onclick=()=>{const o=[50,100,150,250];S.goal=o[(o.indexOf(S.goal)+1)%o.length];save();settings()};
-  $("#hk").onclick=()=>{S.hk=(hkSet()+1)%3;save();settings()};
+  $("#gl").onchange=e=>{S.goal=+e.target.value;save();settings()};
+  $("#hk").onchange=e=>{S.hk=+e.target.value;save();settings()};
   $("#d1").onclick=()=>{S.dir="ad";save();settings()};$("#d2").onclick=()=>{S.dir="da";save();settings()};
   $("#rm").onclick=()=>{S.rem=!S.rem;save();if(S.rem)try{Notification.requestPermission()}catch(e){}settings()};$("#tm").onchange=e=>{S.time=e.target.value;save()};
-  $("#th").onclick=()=>{S.theme={system:"light",light:"dark",dark:"system"}[S.theme];save();applyTheme();settings()};
+  $("#th").onchange=e=>{S.theme=e.target.value;save();applyTheme();settings()};
   $("#lo").onclick=logout;if($("#sy"))$("#sy").onclick=()=>sync();
   $("#lg").onclick=()=>go("legal");$("#au").onclick=()=>{S.auto=S.auto===false;save();settings()};
   if($("#ex"))$("#ex").onclick=exportData;
@@ -1179,7 +1182,7 @@ async function sync(){
       if(res.error){if(!data)continue;throw res.error}
       if(res.data&&res.data.length)ok=true; // 0 Zeilen: ein anderes Gerät war schneller, also nochmal lesen
     }
-    setSY(ok?"Synchronisiert ✓":"Konflikt – wird beim nächsten Mal erneut versucht");
+    setSY(ok?"Synchronisiert ✓":"Noch nicht gespeichert, wird gleich erneut versucht");
   }catch(e){setSY("Offline – wird später gespeichert")}
   finally{busy=false;lastSync=Date.now();if(again&&!out){again=false;setTimeout(sync,1200)}}
   if(!out&&["home","settings","stats"].includes(view))render();
@@ -1201,7 +1204,7 @@ function exportData(){
 async function deleteAccount(){
   if(!sb||!UID)return;
   const{error}=await sb.rpc("delete_my_account");
-  if(error){toast("Löschen nicht möglich: "+(error.message||"Fehler")+" – wurde das SQL-Update eingespielt?");return}
+  if(error){toast("Das Konto konnte nicht gelöscht werden. Bitte versuche es später noch einmal.");return}
   const id=UID,mail=String(U||"").toLowerCase();clearTimeout(T);U=null;UID=null;ready=false;
   try{await sb.auth.signOut()}catch(e){}
   try{localStorage.removeItem("mfr:"+id);localStorage.removeItem("mfr:"+mail);localStorage.removeItem("mfr_ses");sessionStorage.removeItem("mfr_ses")}catch(e){}
@@ -1238,7 +1241,7 @@ const SKY=`<svg viewBox='0 0 400 170' preserveAspectRatio='xMidYMax slice' aria-
 function showAuth(m){
   $('#nav').hidden=true;
   if(m==='start'){
-    app.innerHTML=`<div class='auth'>${SKY}<div class='hero2'><div class='ar'>مفردات</div><h1>Mufradaat</h1><p>Arabisch lernen.<br>Schritt für Schritt.</p></div><div class='acts'><button class='btn' id='go'>Los geht’s →</button><p style='text-align:center;margin-top:14px'>Schon ein Konto? <a href='#' id='li'>Anmelden</a></p><p style='text-align:center;margin-top:8px;font-size:14px'><a href='#' id='gu'>Als Gast fortfahren</a></p><p style='text-align:center;margin-top:10px;font-size:13px'><a href='#' id='lgl'>Datenschutz &amp; Impressum</a></p></div></div>`;
+    app.innerHTML=`<div class='auth'>${SKY}<div class='hero2'><div class='ar'>مفردات</div><h1>Mufradaat</h1><p>Hocharabisch für Deutschsprachige: Schrift, Wörter und Sätze mit allen Endungen.</p></div><div class='acts'><button class='btn' id='go'>Konto erstellen</button><p style='text-align:center;margin-top:14px'>Schon ein Konto? <a href='#' id='li'>Anmelden</a></p><p style='text-align:center;margin-top:8px;font-size:14px'><a href='#' id='gu'>Als Gast fortfahren</a></p><p style='text-align:center;margin-top:10px;font-size:13px'><a href='#' id='lgl'>Datenschutz &amp; Impressum</a></p></div></div>`;
     $('#go').onclick=()=>showAuth('register');
     $('#li').onclick=e=>{e.preventDefault();showAuth('login')};
     $('#gu').onclick=e=>{e.preventDefault();U='gast';UID=null;try{sessionStorage.setItem('mfr_ses','gast')}catch(x){}loadS();view='home';render()};
@@ -1267,7 +1270,7 @@ function msgErr(e){
   if(/already registered/i.test(m))return"Mit dieser E-Mail gibt es schon ein Konto. Bitte melde dich an.";
   if(/not confirmed/i.test(m))return"Bitte bestätige zuerst deine E-Mail-Adresse (Link in der Mail).";
   if(/rate limit|too many/i.test(m))return"Zu viele Versuche. Bitte warte kurz und versuche es erneut.";
-  return"Das hat nicht geklappt: "+m;
+  return"Das hat nicht geklappt. Bitte versuche es noch einmal.";
 }
 async function submit(reg){
   const em=$('#em').value.trim().toLowerCase(),pw=$('#pw').value,btn=$('#ok'),er=$('#err'),err=t=>{er.style.color='var(--bad)';er.textContent=t};
@@ -1310,7 +1313,7 @@ async function boot(){
 }
 loadSb().then(()=>{initSb();boot()});
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
-const APPV="mfr-v8"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v9"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>
