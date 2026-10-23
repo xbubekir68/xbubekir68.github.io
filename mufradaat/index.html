@@ -127,18 +127,21 @@ nav[hidden]{display:none}
 .agrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px;direction:rtl}.at{direction:ltr;display:grid;gap:2px;justify-items:center;padding:10px 4px;text-align:center}.at .ar{font-size:36px;line-height:1.35}.at b{font-size:12px}.dots{display:flex;gap:3px;margin-top:2px}.dots i{width:6px;height:6px;border-radius:50%;background:var(--line)}.dots i.on{background:var(--g)}
 .forms{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;direction:rtl}.forms .card{direction:ltr;display:grid;justify-items:center;gap:2px;padding:10px 4px}.forms .ar{font-size:38px;line-height:1.4}.forms small{font-size:12px;color:var(--mute)}.gt{font-weight:700;font-size:15px;margin:22px 0 8px}.rdir{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--mute);margin:0 2px 6px}.rdir i{flex:1;height:1px;background:var(--line);margin:0 8px}.nav2{direction:rtl}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.og{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .rule{display:grid;gap:10px;margin:14px 0 6px}.rule ol{margin:0;padding:0;list-style:none;display:grid;gap:8px}.rule li{display:flex;gap:12px;align-items:flex-start;font-size:14px;line-height:1.4}.rule li i{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:700;font-size:13px;background:var(--gl);color:var(--g)}
-.pth{margin-top:14px;display:grid}
-.pgr{display:grid;gap:2px;padding:26px 0 10px}.pgr .eta{font-size:13px;color:var(--mute)}.pgr b{font-size:19px;line-height:1.25}.pgr small{font-size:13px;color:var(--mute)}
-.goal{display:grid;gap:2px;text-align:left;background:none;border:0;padding:10px 0 4px;color:var(--ink);font:inherit;cursor:pointer}.goal .sent{font-size:30px;line-height:1.7;text-align:right;direction:rtl}.goal .sent span{transition:color .4s}.goal .sent .k{color:var(--g)}.goal .sent .u{color:var(--mute);opacity:.55;text-decoration:underline dotted 2px;text-underline-offset:9px}.goal .de{font-size:15px;font-weight:600;display:flex;align-items:center;gap:6px}.goal .de .i{color:var(--g)}.goal small{font-size:13px;color:var(--mute);line-height:1.4}
-.pn{position:relative;display:flex;align-items:center;gap:12px;width:100%;min-height:58px;padding:6px 0;background:none;border:0;text-align:left;color:var(--ink);font:inherit;cursor:pointer}
-.pn::before{content:"";position:absolute;left:19px;top:50%;height:100%;width:3px;border-radius:2px;background:var(--line)}.pn.done::before{background:var(--g)}.pn.end::before{display:none}
-.pn .nd{position:relative;z-index:1;flex:none;width:40px;height:40px;display:grid;place-items:center}.pn .nd i{display:block;width:18px;height:18px;border-radius:50%;border:3px solid var(--g);background:var(--bg)}
-.pn .lb{display:grid;gap:1px;min-width:0}.pn b{font-size:15px;line-height:1.25}.pn b .ar{font-size:17px;font-weight:500;color:var(--mute);margin-inline-start:8px}.pn small{font-size:13px;color:var(--mute)}.pn .hint{color:var(--g);font-weight:600;margin-top:2px}
-.pn.sat .nd i{border-radius:4px;transform:rotate(45deg);width:16px;height:16px}
+.pth{position:relative;margin-top:18px}.pth>svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.pth>svg path{fill:none;stroke-linecap:round;vector-effect:non-scaling-stroke}.pth .bed{stroke:var(--line);stroke-width:30}.pth .bed.dn{stroke:var(--gl)}.pth .mid{stroke:var(--card);stroke-width:3;stroke-dasharray:1 11}.pth .mid.dn{stroke:var(--g);stroke-dasharray:none}
+.pgr{position:absolute;left:0;right:0;display:grid;justify-items:center;text-align:center;gap:2px;padding-top:14px}.pgr .ut{font-size:30px;line-height:1.5;color:var(--g)}.pgr b{font-size:16px}.pgr small{font-size:13px;color:var(--mute)}
+.pn{position:absolute;width:64px;height:64px;transform:translateX(-50%);display:grid;place-items:center;background:none;border:0;padding:0;color:var(--ink)}
+.pn .nd{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;border:3px solid var(--g);background:var(--card);color:var(--g);overflow:hidden}.pn .nd .ar{font-size:17px;line-height:1;padding-top:5px;white-space:nowrap}
+.pn .lb{position:absolute;top:50%;transform:translateY(-50%);width:140px;display:grid;gap:2px;text-align:left}.pn .lb.l{right:calc(100% + 10px);text-align:right}.pn .lb.r{left:calc(100% + 10px)}
+.pn b{font-size:15px;line-height:1.2}.pn small{font-size:12px;color:var(--mute)}.pn small .ar{font-size:15px}.pn .hint,.sgn .hint{display:block;color:var(--g);font-weight:600;margin-top:2px}
+.pn.abl .nd .ar{font-size:22px}
 .askip{margin-top:12px}.askip .btn{margin-top:10px}.askip p{margin-top:4px}.note{margin-top:12px;border-color:var(--g);background:var(--gl)}.note p{font-size:14px;line-height:1.45}
 details.rule{display:block;margin-top:12px}details.rule>ol,details.rule>p{margin-top:10px}details.rule summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between}details.rule summary::-webkit-details-marker{display:none}details.rule summary::after{content:"+";font-size:20px;color:var(--mute);line-height:1}details.rule[open] summary::after{content:"–"}details.rule[open] summary{margin-bottom:8px}
-.pn.done .nd i{background:var(--g)}.pn.cur .nd img{width:40px;height:40px;border-radius:10px;box-shadow:0 0 0 4px var(--gl)}.pn.cur b{font-size:16px}
-.pn.lock .nd i{border-color:var(--line)}.pn.lock b{color:var(--mute);font-weight:500}.pn.lock b .ar{opacity:.7}
+.pn.done .nd{background:var(--g);color:var(--on)}.pn.cur .nd{width:76px;height:76px;border:0;box-shadow:0 0 0 6px var(--gl)}.pn.cur .nd img{width:100%;height:100%}.pn.cur .lb.r{left:calc(100% + 18px)}.pn.cur .lb.l{right:calc(100% + 18px)}.pn.cur b{font-size:16px}
+.pn.lock .nd{border-color:var(--line);color:var(--mute);background:var(--bg)}.pn.lock b{color:var(--mute);font-weight:500}
+.sgn{position:absolute;left:50%;transform:translateX(-50%);width:min(320px,96%);display:grid;justify-items:center;gap:2px;text-align:center;background:var(--card);border:2px solid var(--line);border-radius:20px;padding:10px 14px 12px}.sgn.all,.sgn.done{border-color:var(--g)}
+.sgn .eta{font-size:12px;color:var(--mute)}.sgn .sent{background:none;border:0;padding:0;font-family:var(--ar);font-size:27px;line-height:1.7;color:var(--ink)}.sgn .sent .k{color:var(--g)}.sgn .sent .u{color:var(--mute);opacity:.6}.sgn .de{font-weight:600;font-size:15px}.sgn small{font-size:12px;color:var(--mute)}
+.sbt{display:grid;gap:0;justify-items:center;border:0;border-radius:14px;background:var(--gl);color:var(--g);font-weight:600;font-size:14px;padding:6px 14px;min-height:44px}.sbt .ar{display:none}.sbt small{font-weight:400}.sbt.lock{background:var(--bg);color:var(--mute)}
 .st{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;white-space:nowrap;background:var(--line);color:var(--mute)}.st.s{background:#f3e6c4;color:#6b5210}.st.l{background:var(--gl);color:var(--g)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .st.s{background:#3a3217;color:#e8c970}}:root[data-theme="dark"] .st.s{background:#3a3217;color:#e8c970}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn.alt{color:var(--g2)}}:root[data-theme="dark"] .btn.alt{color:var(--g2)}
@@ -816,35 +819,46 @@ function nextStep(){
 }
 // Ziel jeder Einheit: ihr längster Satz. Er färbt sich Wort für Wort grün, sobald die Wörter begonnen sind.
 const goalOf=ui=>{const l=SSTA[ui];return l&&l.length?l.reduce((a,b)=>b.t.length>a.t.length?b:a):null};
+const UAR=["الْخُطُوَاتُ الْأُولَى","فِي الْمَدْرَسَةِ","فِي الْبَيْتِ","الطَّعَامُ وَالشَّرَابُ","الْأَرْقَامُ وَالْأَلْوَانُ","فِي الطَّرِيقِ","الطَّبِيعَةُ وَالْحَيَوَانَاتُ","الْوَقْتُ وَالْجِسْمُ","الْأَفْعَالُ","الْحَيَاةُ الْيَوْمِيَّةُ"]; // Einheiten auf Arabisch
+const lesWord=l=>(l.w.map(id=>BY[id]).find(w=>{const n=w.ar.replace(/[ً-ْٰ]/g,"").length;return n>=3&&n<=5&&!w.ar.includes(" ")})||BY[l.w[0]]).ar; // kurzes Beispielwort für die Station
 function path(){
-  const ns=nextStep(),due=dueN(),gate=alphaGate(),items=[],hint=ui.hint;let grp=[];
-  const flush=()=>{if(grp.length){grp[grp.length-1]=grp[grp.length-1].replace('class="pn ','class="pn end ');items.push(...grp);grp=[]}};
-  const hdr=(a,b,c,g)=>{flush();items.push(`<div class="pgr"><span class="eta">${a}</span><b>${b}</b>${c?`<small>${c}</small>`:""}${g||""}</div>`)};
-  const node=o=>{ // eine Station: erledigt = gefüllter Punkt, aktuell = Mim, noch zu = heller Name, Grund erst beim Antippen
-    const why=o.lock&&hint===o.attr?`<small class="hint" role="status">${o.why}</small>`:"";
-    grp.push(`<button class="pn ${o.cls||""} ${o.lock?"lock":o.dn?"done":""} ${o.cur?"cur":""}" ${o.attr} aria-label="${o.aria}"><span class="nd">${o.cur?'<img src="icons/favicon-64.png" alt="">':"<i></i>"}</span><span class="lb"><b>${o.t}${o.ar?` <span class="ar" lang="ar">${o.ar}</span>`:""}</b><small>${o.sm}</small>${why}</span></button>`)};
-  const goal=ui=>{const s=goalOf(ui);if(!s)return "";const has=id=>(S.box[id]||0)>=1,n=s.t.filter(x=>has(x.i)).length,miss=s.t.filter(x=>!has(x.i));
-    return `<button class="goal" data-goal="${s.k}" aria-label="Ziel dieser Einheit: ${s.de} ${n} von ${s.t.length} Wörtern begonnen. Antippen zum Anhören."><span class="sent ar" lang="ar">${s.t.map(x=>`<span class="${has(x.i)?"k":"u"}">${x.a}</span>`).join(" ")}</span><span class="de">${ic("speaker",16)}${s.de}</span><small>${n===s.t.length?"Alle Wörter begonnen. Lies den Satz laut vor.":!n?"Diesen Satz liest du am Ende der Einheit.":`${n} von ${s.t.length} Wörtern begonnen · es fehlt <span class="ar" lang="ar">${miss.map(x=>x.a).join(" ")}</span>`}</small></button>`};
+  const ns=nextStep(),due=dueN(),gate=alphaGate(),hint=ui.hint,nodes=[],pts=[],hd=[],P=104;
+  let y=0,br=true,i=0,amp=22,fr=1.1,ph=0;
+  const bend=s=>{i=0;amp=18+(s*5)%9;fr=[1.15,.8,1.4,.95,1.25][(s+5)%5];ph=s*1.7}; // jede Einheit windet sich anders
+  const why=o=>o.lock&&hint===o.attr?`<small class="hint" role="status">${o.why}</small>`:"";
+  const hdr=(n,ar,t,d)=>{hd.push(`<div class="pgr" style="top:${y}px"><span class="ar ut" lang="ar">${ar}</span><b>${n} · ${t}</b>${d?`<small>${d}</small>`:""}</div>`);y+=118;br=true};
+  const node=o=>{ // Station auf dem Weg: zeigt ihr eigenes arabisches Wort, die aktuelle trägt das Mim
+    const x=Math.max(24,Math.min(76,50+amp*Math.sin(i*fr+ph)));i++;pts.push({x,y:y+32,dn:!!o.dn,brk:br});br=false;
+    nodes.push(`<button class="pn ${o.cls||""} ${o.lock?"lock":o.dn?"done":""} ${o.cur?"cur":""}" ${o.attr} style="left:${x.toFixed(1)}%;top:${y}px" aria-label="${o.aria}"><span class="nd">${o.cur?'<img src="icons/favicon-64.png" alt="">':o.dn?ic("check",24):`<span class="ar" lang="ar">${o.ar}</span>`}</span><span class="lb ${x>50?"l":"r"}"><b>${o.t}</b><small>${o.sm}</small>${why(o)}</span></button>`);
+    y+=P};
+  const sign=(ui,u)=>{ // Ziel der Einheit: ein Schild am Ende des Wegstücks mit dem Zielsatz
+    const sl=SSTA[ui],s=goalOf(ui);if(!sl||!s)return;
+    const o=sl.filter(sentOpen).length,pr=sl.filter(x=>((S.sent||{})[x.k]||0)>0).length,lock=o<SMIN,dn=pr>=sl.length,has=id=>(S.box[id]||0)>=1,n=s.t.filter(x=>has(x.i)).length,all=n===s.t.length,attr=`data-sat="${ui}"`;
+    pts.push({x:50,y:y+14,dn:false,brk:br});br=false;
+    nodes.push(`<div class="sgn ${all?"all":""} ${dn?"done":""}" style="top:${y}px"><span class="eta">Ziel der Einheit</span>
+      <button class="sent ar" lang="ar" data-goal="${s.k}" aria-label="Zielsatz anhören: ${s.de}">${s.t.map(x=>`<span class="${has(x.i)?"k":"u"}">${x.a}</span>`).join(" ")}</button>
+      <span class="de">${s.de}</span><small>${all?"Alle Wörter begonnen. Lies den Satz laut vor.":n?`${n} von ${s.t.length} Wörtern begonnen`:"Diesen Satz liest du am Ende der Einheit."}</small>
+      <span class="row" style="justify-content:center;gap:10px;margin-top:8px"><button class="lnk" data-goal="${s.k}">${ic("speaker",16)} Anhören</button><button class="sbt ${lock?"lock":""}" ${attr} aria-label="Satzrunde zu ${u.t}: ${lock?"noch gesperrt, "+o+" von "+sl.length+" Sätzen frei":pr+" von "+sl.length+" Sätzen geübt"}">Sätze üben <span class="ar" lang="ar">جُمَل</span><small>${lock?o+" von "+sl.length+" frei":pr+" von "+sl.length+" geübt"}</small></button></span>
+      ${lock&&hint===attr?`<small class="hint" role="status">Noch zu wenige Sätze frei (${o} von ${SMIN}). Lerne weiter Wörter aus dieser Einheit.</small>`:""}</div>`);
+    y+=212};
   if(!S.aok){
-    hdr("Schrift","Die Buchstaben","4 Blöcke · jederzeit überspringbar");
+    hdr("Schrift","الْحُرُوفُ","Die Buchstaben","4 Blöcke · jederzeit überspringbar");bend(-1);
     ABLOCKS.forEach((bl,bi)=>{const st=aStat(bl),lock=aLocked(bi),dn=aPass(bi);
-      node({cls:"abl",attr:`data-ab="${bi}"`,lock,dn,cur:ns.t==="a"&&ns.b===bi,t:"Buchstaben "+(bi+1),ar:bl.slice(0,3).map(a=>a.c).join(" "),sm:lock?"nach Buchstaben "+bi:st.g+" von "+st.n+" erkannt",
+      node({cls:"abl",attr:`data-ab="${bi}"`,lock,dn,cur:ns.t==="a"&&ns.b===bi,t:"Buchstaben "+(bi+1),ar:bl.slice(0,2).map(a=>a.c).join(" "),sm:lock?"nach Buchstaben "+bi:st.g+" von "+st.n+" erkannt",
         why:`Erkenne erst mehr Buchstaben aus Block ${bi}.`,
         aria:`Buchstaben, Block ${bi+1}: ${bl.map(a=>a.n).join(", ")}, ${lock?"gesperrt":st.g+" von "+st.n+" erkannt"}`})});
   }
   UNITS.forEach((u,ui)=>{
-    hdr("Einheit "+(ui+1),u.t,u.d,goal(ui));
+    hdr("Einheit "+(ui+1),UAR[ui],u.t,u.d);bend(ui);
     LES.filter(l=>l.u===ui).forEach(l=>{const st=lessonStat(l),lock=isLocked(l.k)||(l.k===0&&gate),dn=st.k>=l.w.length,cur=ns.t==="v"&&ns.L===l,nx=cur&&l.w.find(id=>S.box[id]===undefined),p=LES[l.k-1];
-      node({attr:`data-open="${l.k}"`,lock,dn,cur,t:l.t,ar:(l.w.map(id=>BY[id]).find(w=>w.ar.replace(/[\u064B-\u0652\u0670]/g,"").length>=3)||BY[l.w[0]]).ar,sm:lock?(l.k===0?"nach den Buchstaben":"nach „"+p.t+"“"):st.k+" / "+st.t+" gelernt"+(nx?` · weiter mit <span class="ar" lang="ar">${BY[nx].ar}</span>`:""),
+      node({attr:`data-open="${l.k}"`,lock,dn,cur,t:l.t,ar:lesWord(l),sm:lock?(l.k===0?"nach den Buchstaben":"nach „"+p.t+"“"):st.k+" / "+st.t+" gelernt"+(nx?` · weiter mit <span class="ar" lang="ar">${BY[nx].ar}</span>`:""),
         why:l.k===0&&gate?"Erst die Buchstaben: übe sie oder überspringe den Abschnitt.":p?`Beginne erst noch ${need(p)-lessonStat(p).s} Wörter aus „${p.t}“.`:"",
         aria:`Lektion ${l.k+1}: ${l.t}, ${lock?"gesperrt":st.k+" von "+st.t+" gelernt"}`})});
-    const sl=SSTA[ui];
-    if(sl){const o=sl.filter(sentOpen).length,pr=sl.filter(x=>((S.sent||{})[x.k]||0)>0).length,lock=o<SMIN,dn=pr>=sl.length;
-      node({cls:"sat",attr:`data-sat="${ui}"`,lock,dn,t:"Sätze",ar:"جُمَل",sm:lock?o+" von "+sl.length+" frei":pr+" von "+sl.length+" geübt",
-        why:`Noch zu wenige Sätze frei (${o} von ${SMIN}). Lerne weiter Wörter aus dieser Einheit.`,
-        aria:`Satzrunde zu ${u.t}: ${lock?"noch gesperrt, "+o+" von "+sl.length+" Sätzen frei":pr+" von "+sl.length+" Sätzen geübt"}`})}
+    sign(ui,u);
   });
-  flush();
+  // der Weg: Wegbett, erledigter Teil grün, Mittellinie gestrichelt bzw. durchgezogen
+  const seg=pts.slice(1).map((b,k)=>{if(b.brk)return null;const a=pts[k],m=(a.y+b.y)/2;return{d:`M${a.x.toFixed(1)} ${a.y} C${a.x.toFixed(1)} ${m} ${b.x.toFixed(1)} ${m} ${b.x.toFixed(1)} ${b.y}`,dn:a.dn}}).filter(Boolean);
+  const road=`<svg viewBox="0 0 100 ${y}" preserveAspectRatio="none" aria-hidden="true">${seg.map(s=>`<path class="bed" d="${s.d}"/>`).join("")}${seg.filter(s=>s.dn).map(s=>`<path class="bed dn" d="${s.d}"/>`).join("")}${seg.map(s=>`<path class="mid ${s.dn?"dn":""}" d="${s.d}"/>`).join("")}</svg>`;
   const as=aStat(ALPHA),skipCard=S.aok
     ?`<div class="card askip"><div class="row sp"><b>Buchstaben ${S.aok==="skip"?"übersprungen":"geschafft"}</b>${ic("check",20)}</div><p class="mute">${S.aok==="skip"?"Du startest direkt mit Wörtern und Sätzen.":"Ab jetzt geht es mit Wörtern weiter."} Das Alphabet bleibt zum Üben offen.</p><div class="row" style="gap:18px;margin-top:8px"><button class="lnk" data-go="alphabet">Alphabet üben</button><button class="lnk" id="sk3">Abschnitt wieder einblenden</button></div></div>`
     :ui.ask
@@ -854,7 +868,7 @@ function path(){
   ${skipCard}
   <details class="card rule"><summary><b>So funktioniert der Lernpfad</b></summary><ol><li><i>1</i><span>Erst die <b>Buchstaben</b>, in vier kleinen Blöcken. Wer sie schon kann, überspringt sie.</span></li><li><i>2</i><span>Dann <b>Wörter</b> in Lektionen. Ein Wort ist <b>begonnen</b>, sobald du es richtig beantwortest, und <b>gelernt</b>, wenn du es nach mindestens einem Tag noch einmal weißt.</span></li><li><i>3</i><span>Nach jeder Einheit warten <b>Sätze</b> mit genau den Wörtern, die du gerade gelernt hast.</span></li></ol><p class="mute">Die nächste Lektion öffnet sich, sobald du 60 % der vorherigen begonnen hast, bei den Buchstaben 60 % eines Blocks (zweimal richtig erkannt). Satzrunden sind freiwillig und sperren nichts. Wörter früherer Lektionen werden in neuen Runden mitgeprüft.</p><p class="mute" style="margin-top:6px">Wie lange es bis zur Auffrischung dauert, richtet sich nach dir: Was sicher sitzt, kommt später wieder, was wackelt, früher. Der kleine Balken zeigt, wie frisch ein Wort ist.</p></details>
   ${due?`<div class="menu">${itm('data-go="review"',"repeat","Wiederholen",due+" Wörter fällig")}</div>`:""}
-  <div class="pth">${items.join("")}</div>`);
+  <div class="pth" style="height:${y}px">${road}${hd.join("")}${nodes.join("")}</div>`);
   const on=id=>{const e=$(id);return f=>{if(e)e.onclick=f}};
   on("#sk")(()=>{ui.ask=true;path()});on("#skx")(()=>{ui.ask=false;path()});
   on("#sk2")(()=>{S.aok="skip";ui.ask=false;save();toast("Buchstaben übersprungen.");path()});
