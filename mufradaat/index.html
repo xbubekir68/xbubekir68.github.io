@@ -823,7 +823,7 @@ function path(){
   const node=o=>{ // eine Station: erledigt = gefüllter Punkt, aktuell = Mim, noch zu = heller Name, Grund erst beim Antippen
     const why=o.lock&&hint===o.attr?`<small class="hint" role="status">${o.why}</small>`:"";
     grp.push(`<button class="pn ${o.cls||""} ${o.lock?"lock":o.dn?"done":""} ${o.cur?"cur":""}" ${o.attr} aria-label="${o.aria}"><span class="nd">${o.cur?'<img src="icons/favicon-64.png" alt="">':"<i></i>"}</span><span class="lb"><b>${o.t}${o.ar?` <span class="ar" lang="ar">${o.ar}</span>`:""}</b><small>${o.sm}</small>${why}</span></button>`)};
-  const goal=ui=>{const s=goalOf(ui);if(!s)return "";const has=id=>S.box[id]!==undefined,n=s.t.filter(x=>has(x.i)).length,miss=s.t.filter(x=>!has(x.i));
+  const goal=ui=>{const s=goalOf(ui);if(!s)return "";const has=id=>(S.box[id]||0)>=1,n=s.t.filter(x=>has(x.i)).length,miss=s.t.filter(x=>!has(x.i));
     return `<button class="goal" data-goal="${s.k}" aria-label="Ziel dieser Einheit: ${s.de} ${n} von ${s.t.length} Wörtern begonnen. Antippen zum Anhören."><span class="sent ar" lang="ar">${s.t.map(x=>`<span class="${has(x.i)?"k":"u"}">${x.a}</span>`).join(" ")}</span><span class="de">${ic("speaker",16)}${s.de}</span><small>${n===s.t.length?"Alle Wörter begonnen. Lies den Satz laut vor.":!n?"Diesen Satz liest du am Ende der Einheit.":`${n} von ${s.t.length} Wörtern begonnen · es fehlt <span class="ar" lang="ar">${miss.map(x=>x.a).join(" ")}</span>`}</small></button>`};
   if(!S.aok){
     hdr("Schrift","Die Buchstaben","4 Blöcke · jederzeit überspringbar");
