@@ -748,7 +748,7 @@ function aEnd(){
 
 // ===== Navigation =====
 let view="home",ui={cat:"Alle",q:""},gt=0;
-const TABS=[["home","home","Start"],["path","path","Lernpfad"],["games","bolt","Spiele"],["cards","cards","Karten"],["more","more","Mehr"]];
+const TABS=[["home","home","Start"],["games","bolt","Spiele"],["path","path","Lernpfad"],["cards","cards","Karten"],["more","more","Mehr"]];
 const SUB={more:["stats","fav","settings","list","badges","legal"],games:["pairs","blitz","listen"],path:["quiz","lesson","alphabet","letter","aquiz","satz"]};
 const pHint=a=>{if(view!=="path"){ui.hint=a;return go("path")}ui.hint=ui.hint===a?null:a;ui.keep=true;path()}; // gesperrte Station: Grund direkt darunter zeigen statt als Toast
 function go(v){if(v!=="path")ui.hint=null;view=v;render();const m=$("#app");if(m){m.setAttribute("tabindex","-1");try{m.focus({preventScroll:true})}catch(e){}}} // Fokus an den Seitenanfang, damit Screenreader den Wechsel bemerken
@@ -808,11 +808,7 @@ function home(){
     return n&&!alphaGate()?itm('data-go="mix"',"bolt","Heute dran",n+" Wörter · "+mixText(p),"main"):""})()}
   ${ns.t==="a"?itm(`data-ab="${ns.b}"`,"path","Weiterlernen",`Buchstaben ${ns.b+1} von ${ABLOCKS.length} · ${aStat(ABLOCKS[ns.b]).g} von ${ABLOCKS[ns.b].length} erkannt`,"main2"):itm(`data-les="${cur.k}"`,"path","Weiterlernen",`Lektion ${cur.k+1}: ${cur.t}`,"main2")}
   ${due?itm('data-go="review"',"repeat","Wiederholen",due+" Wörter fällig"):""}
-  ${itm('data-go="path"',"list","Lernpfad","Buchstaben, Wörter, Sätze")}
-  ${(()=>{const o=SENT.filter(sentOpen).length;return itm('data-go="satz"',"list","Sätze",o>=SMIN?o+" von "+SENT.length+" Sätzen frei · "+sentDone()+" geübt":"Ab "+SMIN+" freien Sätzen · lerne weiter Wörter")})()}
   ${itm('data-go="alphabet"',"list","Alphabet",alphaSure()+" von "+ALPHA.length+" Buchstaben sicher")}
-  ${itm('data-go="games"',"bolt","Spiele","Paare zuordnen, Wort-Blitz, Hörübung")}
-  ${itm('data-go="cards"',"cards","Karteikarten",unlockedWords().length+" Karten")}
   ${itm('data-go="badges"',"medal","Abzeichen",(S.badges||[]).length+" von "+BADGES.length+" freigeschaltet")}
   ${itm('data-go="stats"',"chart","Statistiken",knownN()+" von "+W.length+" Wörtern gelernt")}
   </div>`);
@@ -1341,7 +1337,7 @@ async function boot(){
 }
 loadSb().then(()=>{initSb();boot()});
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
-const APPV="mfr-v13"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v14"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>

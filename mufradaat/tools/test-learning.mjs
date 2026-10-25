@@ -234,7 +234,9 @@ ok("Abzeichen „Satzbauer“ bei 10 Sätzen",run(`S.badges.includes("sent10")`)
 r=JSON.parse(run(`JSON.stringify(mergeS({epoch:0,box:{},due:{},sent:{0:2,1:1}},{epoch:0,box:{},due:{},sent:{0:1,2:3}}))`));
 ok("Merge: Satzfortschritt pro Satz das Maximum",r.sent[0]===2&&r.sent[1]===1&&r.sent[2]===3,r.sent);
 run(`S.sent={0:1};S.epoch=0;home()`);
-ok("Startseite bietet Sätze an",/Sätze/.test(run(`app.innerHTML`)));
+f=run(`app.innerHTML`);
+ok("Startseite ohne doppelte Einträge (Lernpfad, Sätze, Spiele, Karteikarten)",/class="menu"/.test(f)&&!/data-go="(path|satz|games|cards)"/.test(f.split('class="menu"')[1]||""));
+ok("Navigation: Lernpfad steht in der Mitte",run(`TABS.map(t=>t[0]).join()`)==="home,games,path,cards,more",run(`TABS.map(t=>t[0]).join()`));
 
 
 // ---------- 7. Neuer Lernpfad: Buchstaben, Wörter, Sätze ----------
@@ -315,7 +317,7 @@ run(`S.box={};S.due={};S.sent={};S.aok="skip";LES.forEach(l=>l.w.forEach(id=>{S.
 ok("Satzrunde aus dem Pfad: zuerst Sätze dieser Einheit",run(`Z.u===1&&Z.back==="path"&&Z.items.length===6&&Z.items.every(it=>it.s.st===1)`),run(`JSON.stringify(Z.items.map(it=>it.s.st))`));
 ok("… Beenden führt zurück zum Lernpfad",/data-go="path"/.test(run(`app.innerHTML`)));
 run(`S.sent={};startSatz()`);
-ok("Sätze von der Startseite: Rücksprung zur Startseite",run(`Z.u===undefined&&Z.back==="home"`));
+ok("Satzrunde ohne Einheit: Rücksprung zur Startseite",run(`Z.u===undefined&&Z.back==="home"`));
 // Rechts nach links
 run(`S.aok="skip";ui.al="ba";letter()`);let lt=run(`app.innerHTML`);
 const labs=[...lt.matchAll(/<small>(Anfang|Mitte|Ende|Allein)<\/small>/g)].map(x=>x[1]);
