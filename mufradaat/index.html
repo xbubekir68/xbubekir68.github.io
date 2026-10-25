@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Mufradaat – Arabisch lernen</title>
 <meta name="description" content="Arabisch lernen für Deutschsprachige: Vokabeln, Karteikarten, Spiele.">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://yvhfnatslxrkmqpivvxg.supabase.co wss://yvhfnatslxrkmqpivvxg.supabase.co; manifest-src 'self'; worker-src 'self'; media-src 'self' blob: data:; object-src 'none'; base-uri 'none'; form-action 'self'">
@@ -18,7 +18,7 @@
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111a16;--card:#18241f;--ink:#e8efe9;--mute:#93a39a;--line:#26352e;--g:#3aa57f;--g2:#4fbd95;--gl:#1d3a2f;--on:#0b1511;--bad:#e27a68;--badl:#3a1f1a}}
 :root[data-theme="dark"]{--bg:#111a16;--card:#18241f;--ink:#e8efe9;--mute:#93a39a;--line:#26352e;--g:#3aa57f;--g2:#4fbd95;--gl:#1d3a2f;--on:#0b1511;--bad:#e27a68;--badl:#3a1f1a}
 *,*::before,*::after{box-sizing:inherit}
-html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)}
+html{touch-action:pan-x pan-y}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)}
 body{min-height:100vh}
 .ar{font-family:var(--ar);direction:rtl}
 main{max-width:560px;margin:0 auto;padding:20px 24px 110px}
@@ -1406,6 +1406,8 @@ async function boot(){
 }
 loadSb().then(()=>{initSb();boot()});
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
+// Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
+['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
 const APPV="mfr-v17"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
