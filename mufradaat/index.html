@@ -78,7 +78,7 @@ nav[hidden]{display:none}
 .auth{position:fixed;inset:0;z-index:10;overflow:auto;display:flex;flex-direction:column;align-items:center;background:linear-gradient(#f2cf9f,#ead9bd 36%,#2d7059 80%,#0f3a2c);padding:max(24px,env(safe-area-inset-top)) 22px max(24px,env(safe-area-inset-bottom));color:#12332a}
 .auth>*{width:100%;max-width:400px;position:relative;z-index:1}
 .auth svg{position:absolute;left:0;right:0;bottom:0;width:100%;max-width:none;height:46%;z-index:0}
-.hero2{text-align:center;margin-top:8vh}.hero2 .ar{font-size:76px;color:#1f6f55;line-height:1.3}
+.hero2{text-align:center;margin-top:8vh}.hero2 .wm{width:min(320px,80vw)}.wmh{margin:0 0 10px;line-height:0}
 .acts{margin-top:auto;padding-bottom:20px;color:#fff}.acts a,.auth a{font-weight:600;color:inherit}
 .pane{background:var(--card);color:var(--ink);border-radius:20px;padding:22px;margin:auto 0;box-shadow:0 10px 30px rgba(0,0,0,.18)}
 .pane label{display:block;font-size:14px;font-weight:600;margin:14px 0 6px}
@@ -105,7 +105,7 @@ nav[hidden]{display:none}
 .i{display:block;flex:none}
 .item .ic{display:grid;place-items:center}.item .ch{display:grid;place-items:center}
 .x{display:grid;place-items:center}
-.mark{text-align:center;font-size:34px;color:var(--g);margin-top:4px}
+.mark{text-align:center;margin-top:4px}.wm{display:inline-block;width:170px;height:auto;vertical-align:top}
 .bar i{transition:width .5s cubic-bezier(.3,.7,.2,1)}.bar.low i{background:var(--bad)}
 @property --p{syntax:"<number>";inherits:false;initial-value:0}
 .ring{animation:ringin .9s cubic-bezier(.3,.7,.2,1)}@keyframes ringin{from{--p:0}}
@@ -798,7 +798,7 @@ function miniStats(){
 }
 function home(){
   const g=S.goal||100,xd=S.xpDays[today()]||0,gp=Math.min(100,Math.round(xd/g*100)),L=lvl(),lo=xpFor(L),hi=xpFor(L+1),xp=S.xp||0,lp=Math.round((xp-lo)/(hi-lo)*100),st=streak(),lit=S.last===today(),ns=nextStep(),cur=currentLesson(),due=dueN();
-  paint(`<div class="ar mark" lang="ar">مفردات</div>
+  paint(`<div class="mark"><img class="wm" src="brand/mufradaat.webp" width="720" height="194" alt="Mufradaat"></div>
   <div class="row sp" style="margin-top:8px"><div><h1 style="margin:0">Hallo${U&&U!=="gast"?", "+esc(U.split("@")[0]):""}!</h1><p class="mute">${due?due+" Wörter zur Wiederholung":"Nichts zu wiederholen"}</p></div><span class="flame ${lit?"on":"off"}" role="img" aria-label="Serie: ${st} Tage">${ic("flame",18,true)} ${st}</span></div>
   ${ARV===false&&!hintOff?`<div class="card hint" role="note"><p>Auf diesem Gerät ist keine arabische Stimme installiert. Die Aussprache fehlt oder klingt falsch. Du kannst in den Systemeinstellungen (Sprachausgabe) eine arabische Stimme hinzufügen.</p><button class="x" id="hx" aria-label="Hinweis schließen">${ic("close")}</button></div>`:""}<div class="card row" style="margin-top:14px"><div class="ring" style="--p:${gp}" role="img" aria-label="Tagesziel ${gp} Prozent"><span>${gp}%</span></div><div style="flex:1"><p class="mute">Tagesziel</p><p class="big">${Math.min(xd,g)} / ${g} XP</p><p class="mute">${xd>=g?"Geschafft, weiter so":lit?"Noch "+(g-xd)+" XP bis zum Ziel":"Lerne heute, um deine Serie zu halten"}</p></div></div>
   <div class="card" style="margin-top:10px"><div class="row sp"><b>Level ${L}</b><span class="mute">${xp} XP</span></div><div class="bar" style="margin-top:10px"><i style="width:0" data-to="${lp}"></i></div><p class="mute" style="margin-top:6px">Noch ${hi-xp} XP bis Level ${L+1} · ${knownN()} von ${W.length} Wörtern gelernt</p></div>
@@ -1269,14 +1269,14 @@ const SKY=`<svg viewBox='0 0 400 170' preserveAspectRatio='xMidYMax slice' aria-
 function showAuth(m){
   $('#nav').hidden=true;
   if(m==='start'){
-    app.innerHTML=`<div class='auth'>${SKY}<div class='hero2'><div class='ar'>مفردات</div><h1>Mufradaat</h1><p>Hocharabisch für Deutschsprachige: Schrift, Wörter und Sätze mit allen Endungen.</p></div><div class='acts'><button class='btn' id='go'>Konto erstellen</button><p style='text-align:center;margin-top:14px'>Schon ein Konto? <a href='#' id='li'>Anmelden</a></p><p style='text-align:center;margin-top:8px;font-size:14px'><a href='#' id='gu'>Als Gast fortfahren</a></p><p style='text-align:center;margin-top:10px;font-size:13px'><a href='#' id='lgl'>Datenschutz &amp; Impressum</a></p></div></div>`;
+    app.innerHTML=`<div class='auth'>${SKY}<div class='hero2'><h1 class='wmh'><img class='wm' src='brand/mufradaat.webp' width='720' height='194' alt='Mufradaat'></h1><p>Hocharabisch für Deutschsprachige: Schrift, Wörter und Sätze mit allen Endungen.</p></div><div class='acts'><button class='btn' id='go'>Konto erstellen</button><p style='text-align:center;margin-top:14px'>Schon ein Konto? <a href='#' id='li'>Anmelden</a></p><p style='text-align:center;margin-top:8px;font-size:14px'><a href='#' id='gu'>Als Gast fortfahren</a></p><p style='text-align:center;margin-top:10px;font-size:13px'><a href='#' id='lgl'>Datenschutz &amp; Impressum</a></p></div></div>`;
     $('#go').onclick=()=>showAuth('register');
     $('#li').onclick=e=>{e.preventDefault();showAuth('login')};
     $('#gu').onclick=e=>{e.preventDefault();U='gast';UID=null;try{sessionStorage.setItem('mfr_ses','gast')}catch(x){}loadS();view='home';render()};
     $('#lgl').onclick=openLegal;
     return}
   const reg=m==='register';
-  app.innerHTML=`<div class='auth'>${SKY}<div class='pane'><button class='x' id='bk' aria-label='Zurück'>←</button><div class='ar' style='font-size:40px;color:var(--g);text-align:center'>مفردات</div><h1 style='text-align:center'>${reg?'Konto erstellen':'Willkommen zurück'}</h1><p class='mute' style='text-align:center'>${reg?'Speichere deinen Lernfortschritt.':'Melde dich an, um weiterzulernen.'}</p>
+  app.innerHTML=`<div class='auth'>${SKY}<div class='pane'><button class='x' id='bk' aria-label='Zurück'>←</button><div class='mark'><img class='wm' src='brand/mufradaat.webp' width='720' height='194' alt='Mufradaat'></div><h1 style='text-align:center'>${reg?'Konto erstellen':'Willkommen zurück'}</h1><p class='mute' style='text-align:center'>${reg?'Speichere deinen Lernfortschritt.':'Melde dich an, um weiterzulernen.'}</p>
 <label for='em'>E-Mail-Adresse</label><input class='t' id='em' type='email' autocomplete='email' inputmode='email' placeholder='name@beispiel.de'>
 <label for='pw'>Passwort</label><input class='t' id='pw' type='password' autocomplete='${reg?'new-password':'current-password'}' placeholder='Mindestens 8 Zeichen'>
 ${reg?`<label for='pw2'>Passwort wiederholen</label><input class='t' id='pw2' type='password' autocomplete='new-password'>`:''}<button type='button' class='lnk' id='tp'>Passwort anzeigen</button>
@@ -1341,7 +1341,7 @@ async function boot(){
 }
 loadSb().then(()=>{initSb();boot()});
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
-const APPV="mfr-v12"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v13"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>
