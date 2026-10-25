@@ -175,7 +175,7 @@ run(`S.hk=1`);
 // ---------- 8. Startseite: Statistik-Einblick ----------
 run(`S.box={};S.due={};S.ef={};S.days={};S.hk=1;LES[0].w.forEach((id,i)=>{S.box[id]=i<3?2:1;S.due[id]=Date.now()-1000});S.days[today()]=7;home()`);
 f=run(`app.innerHTML`);
-ok("Startseite zeigt die Statistik-Karte",/class="card mini"/.test(f)&&/Letzte 7 Tage/.test(f)&&/data-go="stats"/.test(f));
+ok("Startseite zeigt die Statistik-Karte",/class="card mini ov"/.test(f)&&/Letzte 7 Tage/.test(f)&&/data-go="stats"/.test(f));
 ok("Karte nennt gelernt/begonnen/fällig richtig",/<b>3<\/b><span>gelernt<\/span>/.test(f)&&new RegExp("<b>"+(run(`LES[0].w.length`)-3)+"</b><span>begonnen").test(f)&&new RegExp("<b>"+run(`dueN()`)+"</b><span>fällig").test(f),f.match(/mnums[\s\S]*?<\/div><\/button>/)?.[0].replace(/<[^>]+>/g," "));
 ok("Wochenbalken: sieben Tage, heute markiert",(f.match(/<div class="(t)?"><i/g)||[]).length===7&&/<div class="t"><i/.test(f));
 ok("Karte nennt die Wochensumme",/7 geübt/.test(f),f.match(/\d+ Wör?ter? geübt/)?.[0]);

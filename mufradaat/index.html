@@ -160,6 +160,15 @@ details.rule{display:block;margin-top:12px}details.rule>ol,details.rule>p{margin
 .arw.off .a2,.arw.off .t2{display:none}.arw:not(.off) .a1,.arw:not(.off) .hkb{display:none}
 .hkb{margin-left:4px}
 .mini{display:block;width:100%;text-align:left;margin-top:10px}
+.ov{margin-top:14px;padding:0}
+.ovtop{display:flex;align-items:center;gap:18px;padding:18px 18px 16px}
+.lring{--p:0;width:112px;height:112px;border-radius:50%;background:conic-gradient(var(--g) calc(var(--p)*1%),var(--line) 0);display:grid;place-items:center;flex:none;position:relative;animation:ringin .9s cubic-bezier(.3,.7,.2,1)}
+.lring::after{content:"";position:absolute;inset:9px;border-radius:50%;background:var(--card)}
+.lring span{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center}.lring b{font-size:38px;line-height:1}.lring small{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-top:4px}
+.ovtxt{flex:1;min-width:0}.ovtxt .bar{margin-top:8px}.ovtxt .lvl{font-weight:600}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--g);margin-right:8px;vertical-align:1px}
+.ovst{display:block;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);border-radius:0 0 var(--r,16px) var(--r,16px);cursor:pointer;padding:16px 18px 18px;font:inherit;color:inherit}
+.ovst .mnums{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
 .mbars{display:flex;align-items:flex-end;gap:6px;height:58px;margin-top:10px}
 .mbars div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:100%}
 .mbars i{display:block;width:100%;max-width:26px;border-radius:5px;background:var(--line)}
@@ -788,21 +797,24 @@ function head(t,back="home"){return `<div class="top"><button class="x" data-go=
 const itm=(attr,icon,title,sub,cls="")=>`<button class="item ${cls}" ${attr}><span class="ic">${ic(icon)}</span><span><b>${title}</b>${sub?`<small>${sub}</small>`:""}</span><span class="ch">${ic("chev",18)}</span></button>`;
 
 // Kleiner Einblick in die Statistik für die Startseite: Wochenbalken plus drei Zahlen, antippen öffnet alles
-function miniStats(){
+function miniStats(o){
   const days=[...Array(7)].map((_,k)=>{const d=ago(6-k);return{l:["So","Mo","Di","Mi","Do","Fr","Sa"][d.getDay()],n:S.days[ymd(d)]||0,t:k===6}}),mx=Math.max(1,...days.map(d=>d.n)),sum=days.reduce((a,d)=>a+d.n,0);
   const learnt=knownN(),started=W.filter(w=>S.box[w.i]!==undefined).length-learnt; // begonnen = angefangen, aber noch nicht gelernt
-  return `<button class="card mini" data-go="stats" aria-label="Statistiken öffnen: ${sum} Wörter in den letzten 7 Tagen, ${learnt} gelernt, ${started} begonnen, ${dueN()} fällig">
+  return `<div class="card mini ov">
+  <div class="ovtop"><div class="lring" style="--p:${o.lp}" role="img" aria-label="Level ${o.L}, ${o.lp} Prozent bis Level ${o.L+1}"><span><b>${o.L}</b><small>Level</small></span></div>
+  <div class="ovtxt"><p class="mute"><i class="dot"></i>Tagesziel</p><p class="big">${Math.min(o.xd,o.g)} / ${o.g} XP</p><p class="mute">${o.xd>=o.g?"Geschafft, weiter so":o.lit?"Noch "+(o.g-o.xd)+" XP bis zum Ziel":"Lerne heute, um deine Serie zu halten"}</p>
+  <div class="bar" role="img" aria-label="Tagesziel ${o.gp} Prozent"><i style="width:0" data-to="${o.gp}"></i></div>
+  <p class="mute" style="margin-top:10px"><i class="dot"></i>Level ${o.L} · ${o.xp} XP</p><p class="lvl">Noch ${o.hi-o.xp} XP bis Level ${o.L+1}</p></div></div>
+  <button class="ovst" data-go="stats" aria-label="Statistiken öffnen: ${sum} Wörter in den letzten 7 Tagen, ${learnt} gelernt, ${started} begonnen, ${dueN()} fällig">
   <div class="row sp"><b>Letzte 7 Tage</b><span class="mute" style="display:inline-flex;align-items:center;gap:2px;white-space:nowrap">${sum} geübt ${ic("chev",16)}</span></div>
   <div class="mbars" aria-hidden="true">${days.map(d=>`<div class="${d.t?"t":""}"><i style="height:${Math.max(3,Math.round(d.n/mx*38))}px"></i><span>${d.l}</span></div>`).join("")}</div>
-  <div class="mnums"><div><b>${learnt}</b><span>gelernt</span></div><div><b>${started}</b><span>begonnen</span></div><div><b>${dueN()}</b><span>fällig</span></div></div></button>`;
+  <div class="mnums"><div><b>${learnt}</b><span>gelernt</span></div><div><b>${started}</b><span>begonnen</span></div><div><b>${dueN()}</b><span>fällig</span></div></div></button></div>`;
 }
 function home(){
   const g=S.goal||100,xd=S.xpDays[today()]||0,gp=Math.min(100,Math.round(xd/g*100)),L=lvl(),lo=xpFor(L),hi=xpFor(L+1),xp=S.xp||0,lp=Math.round((xp-lo)/(hi-lo)*100),st=streak(),lit=S.last===today(),ns=nextStep(),cur=currentLesson(),due=dueN();
   paint(`<div class="mark"><img class="wm" src="brand/mufradaat.webp" width="720" height="194" alt="Mufradaat"></div>
   <div class="row sp" style="margin-top:8px"><div><h1 style="margin:0">Hallo${U&&U!=="gast"?", "+esc(U.split("@")[0]):""}!</h1><p class="mute">${due?due+" Wörter zur Wiederholung":"Nichts zu wiederholen"}</p></div><span class="flame ${lit?"on":"off"}" role="img" aria-label="Serie: ${st} Tage">${ic("flame",18,true)} ${st}</span></div>
-  ${ARV===false&&!hintOff?`<div class="card hint" role="note"><p>Auf diesem Gerät ist keine arabische Stimme installiert. Die Aussprache fehlt oder klingt falsch. Du kannst in den Systemeinstellungen (Sprachausgabe) eine arabische Stimme hinzufügen.</p><button class="x" id="hx" aria-label="Hinweis schließen">${ic("close")}</button></div>`:""}<div class="card row" style="margin-top:14px"><div class="ring" style="--p:${gp}" role="img" aria-label="Tagesziel ${gp} Prozent"><span>${gp}%</span></div><div style="flex:1"><p class="mute">Tagesziel</p><p class="big">${Math.min(xd,g)} / ${g} XP</p><p class="mute">${xd>=g?"Geschafft, weiter so":lit?"Noch "+(g-xd)+" XP bis zum Ziel":"Lerne heute, um deine Serie zu halten"}</p></div></div>
-  <div class="card" style="margin-top:10px"><div class="row sp"><b>Level ${L}</b><span class="mute">${xp} XP</span></div><div class="bar" style="margin-top:10px"><i style="width:0" data-to="${lp}"></i></div><p class="mute" style="margin-top:6px">Noch ${hi-xp} XP bis Level ${L+1} · ${knownN()} von ${W.length} Wörtern gelernt</p></div>
-  ${miniStats()}
+  ${ARV===false&&!hintOff?`<div class="card hint" role="note"><p>Auf diesem Gerät ist keine arabische Stimme installiert. Die Aussprache fehlt oder klingt falsch. Du kannst in den Systemeinstellungen (Sprachausgabe) eine arabische Stimme hinzufügen.</p><button class="x" id="hx" aria-label="Hinweis schließen">${ic("close")}</button></div>`:""}${miniStats({g,xd,gp,L,lp,hi,xp,lit})}
   <div class="menu">
   ${(()=>{const p=mixPlan(),n=p.due.length+p.nw.length+p.weak.length;
     return n&&!alphaGate()?itm('data-go="mix"',"bolt","Heute dran",n+" Wörter · "+mixText(p),"main"):""})()}
@@ -1337,7 +1349,7 @@ async function boot(){
 }
 loadSb().then(()=>{initSb();boot()});
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
-const APPV="mfr-v14"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v15"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>
