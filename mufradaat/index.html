@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Mufradaat – Arabisch lernen</title>
 <meta name="description" content="Arabisch lernen für Deutschsprachige: Vokabeln, Karteikarten, Spiele.">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://yvhfnatslxrkmqpivvxg.supabase.co wss://yvhfnatslxrkmqpivvxg.supabase.co; manifest-src 'self'; worker-src 'self'; media-src 'self' blob: data:; object-src 'none'; base-uri 'none'; form-action 'self'">
@@ -18,7 +18,7 @@
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111a16;--card:#18241f;--ink:#e8efe9;--mute:#93a39a;--line:#26352e;--g:#3aa57f;--g2:#4fbd95;--gl:#1d3a2f;--on:#0b1511;--bad:#e27a68;--badl:#3a1f1a}}
 :root[data-theme="dark"]{--bg:#111a16;--card:#18241f;--ink:#e8efe9;--mute:#93a39a;--line:#26352e;--g:#3aa57f;--g2:#4fbd95;--gl:#1d3a2f;--on:#0b1511;--bad:#e27a68;--badl:#3a1f1a}
 *,*::before,*::after{box-sizing:inherit}
-html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)}
+html{touch-action:pan-x pan-y}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)}
 body{min-height:100vh}
 .ar{font-family:var(--ar);direction:rtl}
 main{max-width:560px;margin:0 auto;padding:20px 24px 110px}
@@ -73,6 +73,21 @@ input[type=search],input.t{width:100%;padding:13px 14px;border-radius:12px;borde
 nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:center;padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px))}
 nav button{flex:1;max-width:120px;border:0;background:none;color:var(--mute);font-size:12px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px;min-height:48px;justify-content:center}
 nav button span{font-size:20px}nav button.on{color:var(--g);font-weight:700}
+:root{--vi:#231a45;--vn:#c98bff;--vil:#5a49a6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--vi:#21193f;--vn:#d4a0ff;--vil:#cdb8ff}}
+:root[data-theme="dark"]{--vi:#21193f;--vn:#d4a0ff;--vil:#cdb8ff}
+nav button.main{color:var(--vil);font-weight:600}nav button.main span{display:grid;place-items:center;width:46px;height:46px;margin:-30px 0 -2px;border-radius:50%;background:var(--vi);color:#fff;border:5px solid var(--card);box-sizing:content-box;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--vn) 40%,transparent)}
+nav button.main span svg{width:24px;height:24px;stroke-width:2}
+nav button.main.on span{color:var(--vn);animation:vi-on .55s ease-out}
+nav button.main.on span svg{filter:drop-shadow(0 0 2px var(--vn)) drop-shadow(0 0 7px color-mix(in srgb,var(--vn) 60%,transparent));animation:vi-glow .55s ease-out}
+@keyframes vi-on{from{color:#fff}to{color:var(--vn)}}
+@keyframes vi-glow{0%{filter:drop-shadow(0 0 0 transparent);transform:scale(.9)}45%{filter:drop-shadow(0 0 4px var(--vn)) drop-shadow(0 0 14px var(--vn));transform:scale(1.12)}100%{filter:drop-shadow(0 0 2px var(--vn)) drop-shadow(0 0 7px color-mix(in srgb,var(--vn) 60%,transparent));transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){nav button.main.on span,nav button.main.on span svg{animation:none}}
+nav button.main.on{font-weight:700}
+nav button.main:focus-visible{outline:none}nav button.main:focus-visible span{outline:2px solid var(--ink);outline-offset:1px}
+.wm{filter:drop-shadow(1px 0 0 #0b3d2e) drop-shadow(-1px 0 0 #0b3d2e) drop-shadow(0 1px 0 #0b3d2e) drop-shadow(0 -1px 0 #0b3d2e)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .wm{filter:none}}:root[data-theme="dark"] .wm{filter:none}
+.auth .wm{filter:drop-shadow(1px 0 0 #0b3d2e) drop-shadow(-1px 0 0 #0b3d2e) drop-shadow(0 1px 0 #0b3d2e) drop-shadow(0 -1px 0 #0b3d2e)}
 .hero{text-align:center;padding:40px 10px 10px}.hero .ar{font-size:72px;color:var(--g);line-height:1.3}
 nav[hidden]{display:none}
 .auth{position:fixed;inset:0;z-index:10;overflow:auto;display:flex;flex-direction:column;align-items:center;background:linear-gradient(#f2cf9f,#ead9bd 36%,#2d7059 80%,#0f3a2c);padding:max(24px,env(safe-area-inset-top)) 22px max(24px,env(safe-area-inset-bottom));color:#12332a}
@@ -472,6 +487,7 @@ const ICO={
 home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
 path:'<circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h6a4 4 0 0 0 0-8h-4a4 4 0 0 1 0-8h6"/>',
 bolt:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
+pad:'<path d="M7 7h10a4.5 4.5 0 0 1 4.4 5.4l-.9 4.4a2.5 2.5 0 0 1-4.4 1.1L14.5 16h-5l-1.6 1.9a2.5 2.5 0 0 1-4.4-1.1l-.9-4.4A4.5 4.5 0 0 1 7 7z"/><path d="M8 10v4M6 12h4"/><circle cx="15.5" cy="11" r=".6"/><circle cx="17.5" cy="13" r=".6"/>',
 cards:'<rect x="3" y="7" width="14" height="13" rx="2"/><path d="M7 7V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/>',
 more:'<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>',
 list:'<path d="M9 6h12M9 12h12M9 18h12"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/>',
@@ -796,7 +812,7 @@ function aEnd(){
 
 // ===== Navigation =====
 let view="home",ui={cat:"Alle",q:""},gt=0;
-const TABS=[["home","home","Start"],["games","bolt","Spiele"],["path","path","Lernpfad"],["cards","cards","Karten"],["more","more","Mehr"]];
+const TABS=[["home","home","Start"],["games","pad","Spiele"],["path","path","Lernpfad"],["cards","cards","Karten"],["more","more","Mehr"]];
 const SUB={more:["stats","fav","settings","list","badges","legal"],games:["pairs","blitz","listen"],path:["quiz","lesson","alphabet","letter","aquiz","satz"]};
 const pHint=a=>{if(view!=="path"){ui.hint=a;return go("path")}ui.hint=ui.hint===a?null:a;ui.keep=true;path()}; // gesperrte Station: Grund direkt darunter zeigen statt als Toast
 function go(v){if(v!=="path")ui.hint=null;view=v;render();const m=$("#app");if(m){m.setAttribute("tabindex","-1");try{m.focus({preventScroll:true})}catch(e){}}} // Fokus an den Seitenanfang, damit Screenreader den Wechsel bemerken
@@ -804,7 +820,7 @@ const paint=h=>{app.innerHTML=h;fx()};
 function fx(){requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelectorAll("[data-to]").forEach(e=>{e.style.width=e.dataset.to+"%"})))}
 function render(){
   clearInterval(gt);
-  $("#nav").innerHTML=TABS.map(t=>`<button class="${(view===t[0]||(SUB[t[0]]||[]).includes(view))?"on":""}" data-go="${t[0]}" ${(view===t[0]||(SUB[t[0]]||[]).includes(view))?'aria-current="page"':""}><span>${ic(t[1])}</span>${t[2]}</button>`).join("");
+  $("#nav").innerHTML=TABS.map(t=>`<button class="${(view===t[0]||(SUB[t[0]]||[]).includes(view))?"on":""}${t[0]==="path"?" main":""}" data-go="${t[0]}" ${(view===t[0]||(SUB[t[0]]||[]).includes(view))?'aria-current="page"':""}><span>${ic(t[1])}</span>${t[2]}</button>`).join("");
   $("#nav").hidden=["quiz","pairs","blitz","aquiz","listen","satz"].includes(view)||(view==="legal"&&!U);
   ({home,path,lesson,alphabet,letter,aquiz,listen,satz,cards,more,list,stats,settings,quiz,fav,games,badges,pairs,blitz,legal})[view]();
   app.classList.remove("enter");void app.offsetWidth;app.classList.add("enter");
@@ -1390,7 +1406,9 @@ async function boot(){
 }
 loadSb().then(()=>{initSb();boot()});
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
-const APPV="mfr-v16"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+// Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
+['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
+const APPV="mfr-v17"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>
