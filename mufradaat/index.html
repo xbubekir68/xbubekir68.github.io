@@ -21,7 +21,7 @@
 html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)}
 body{min-height:100vh}
 .ar{font-family:var(--ar);direction:rtl}
-main{max-width:560px;margin:0 auto;padding:20px 18px 110px}
+main{max-width:560px;margin:0 auto;padding:20px 24px 110px}
 h1,.h1{font-size:26px;font-weight:700;margin:6px 0 4px}h2{font-size:20px;margin:0}
 p{margin:0}.mute{color:var(--mute);font-size:14px}
 button{font:inherit;color:inherit;cursor:pointer}
@@ -159,16 +159,55 @@ details.rule{display:block;margin-top:12px}details.rule>ol,details.rule>p{margin
 .pg3.p3 i{background:var(--g)}
 .arw.off .a2,.arw.off .t2{display:none}.arw:not(.off) .a1,.arw:not(.off) .hkb{display:none}
 .hkb{margin-left:4px}
-.mini{display:block;width:100%;text-align:left;margin-top:10px}
-.ov{margin-top:14px;padding:0}
-.ovtop{display:flex;align-items:center;gap:18px;padding:18px 18px 16px}
-.lring{--p:0;width:112px;height:112px;border-radius:50%;background:conic-gradient(var(--g) calc(var(--p)*1%),var(--line) 0);display:grid;place-items:center;flex:none;position:relative;animation:ringin .9s cubic-bezier(.3,.7,.2,1)}
-.lring::after{content:"";position:absolute;inset:9px;border-radius:50%;background:var(--card)}
-.lring span{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center}.lring b{font-size:38px;line-height:1}.lring small{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-top:4px}
-.ovtxt{flex:1;min-width:0}.ovtxt .bar{margin-top:8px}.ovtxt .lvl{font-weight:600}
-.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--g);margin-right:8px;vertical-align:1px}
-.ovst{display:block;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);border-radius:0 0 var(--r,16px) var(--r,16px);cursor:pointer;padding:16px 18px 18px;font:inherit;color:inherit}
-.ovst .mnums{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+/* Übersicht: Level-Ring, Tagesziel und Woche in einer Karte (Maße aus der Vorlage, alles in px bei 1×) */
+.ov{--line2:var(--line);--mint:var(--g);--bar:color-mix(in srgb,var(--g) 38%,var(--card));--n0:#6fb89c;--n1:#2f8f6f;--n2:#1f6f55;--rt:var(--line);--glow:0;container-type:inline-size;display:block;margin-top:14px;padding:28px;border-radius:18px;border-color:var(--line2);text-align:left}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .ov{--line2:#23322b;--mint:#7fdcb8;--bar:#3f7d65;--n0:#247058;--n1:#32bf8c;--n2:#3dfbb3;--rt:rgba(240,255,248,.065);--rt2:rgba(240,255,248,.07);--glow:1}}
+:root[data-theme="dark"] .ov{--line2:#23322b;--mint:#7fdcb8;--bar:#3f7d65;--n0:#247058;--n1:#32bf8c;--n2:#3dfbb3;--rt:rgba(240,255,248,.065);--rt2:rgba(240,255,248,.07);--glow:1}
+.ovtop{display:flex;align-items:center;gap:28px}
+.ovr{position:relative;flex:none;width:176px;height:176px}
+.ovr>*{position:absolute}
+.ovr .rt,.ovr .it,.rarc .ra,.ovr .ia{inset:0;border-radius:50%}
+.ovr .rt{background:var(--rt);-webkit-mask:radial-gradient(circle,transparent 70.8px,#000 71.2px,#000 80.8px,transparent 81.2px);mask:radial-gradient(circle,transparent 70.8px,#000 71.2px,#000 80.8px,transparent 81.2px)}
+.ovr .it{background:var(--rt2,var(--rt));-webkit-mask:radial-gradient(circle,transparent 53.8px,#000 54.2px,#000 63.8px,transparent 64.2px);mask:radial-gradient(circle,transparent 53.8px,#000 54.2px,#000 63.8px,transparent 64.2px)}
+.rarc{inset:0}.rarc>*{position:absolute}
+.rarc .ra{background:conic-gradient(from 0deg,var(--n0) 0deg,var(--n1) calc(var(--e)*.625),var(--n2) var(--e),transparent var(--e));-webkit-mask:radial-gradient(circle,transparent 70.8px,#000 71.2px,#000 80.8px,transparent 81.2px);mask:radial-gradient(circle,transparent 70.8px,#000 71.2px,#000 80.8px,transparent 81.2px)}
+.rarc.glow1 .ra,.rarc.glow2 .ra,.rarc.glow3 .ra{background:conic-gradient(from 0deg,color-mix(in srgb,var(--n0) calc(var(--gm)*100%),transparent) 0deg,color-mix(in srgb,var(--n1) calc((var(--gm) + (1 - var(--gm))*.625)*100%),transparent) calc(var(--e)*.625),var(--n2) var(--e),transparent var(--e))}
+.rarc.glow1{--gm:var(--gm1,.45);filter:blur(var(--gb1,20px));opacity:calc(var(--glow)*var(--go1,1))}
+.rarc.glow2{--gm:var(--gm2,.3);filter:blur(var(--gb2,12px));opacity:calc(var(--glow)*var(--go2,1))}
+.rarc.glow3{--gm:var(--gm3,.3);filter:blur(var(--gb3,13px));opacity:calc(var(--glow)*var(--go3,.2))}
+.ovr .cp.hd{box-shadow:0 0 var(--hb,14px) var(--hs,2px) rgba(61,251,179,calc(var(--glow)*var(--ha,.7)))}
+.ovr .ia{background:conic-gradient(from 0deg,var(--mint) var(--e),transparent var(--e));-webkit-mask:radial-gradient(circle,transparent 53.8px,#000 54.2px,#000 63.8px,transparent 64.2px);mask:radial-gradient(circle,transparent 53.8px,#000 54.2px,#000 63.8px,transparent 64.2px)}
+.ovr .cp{left:83px;top:83px;width:10px;height:10px;border-radius:50%;background:var(--c);transform:rotate(var(--a)) translateY(var(--rr,-76px))}
+.ovr .rn{inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ovr .rn b{font-size:44px;line-height:1;font-weight:700}
+.ovr .rn small{margin-top:2px;font-size:11px;line-height:1.4;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.ovt{flex:1;min-width:0}
+.ovl{display:flex;align-items:center;gap:8px;font-size:13px;line-height:1.3;color:var(--mute)}
+.ovl.l2{font-size:14px}
+.ovl i{flex:none;width:10px;height:10px;border-radius:50%}
+.ovb{margin-top:4px;font-size:32px;line-height:1.1;font-weight:700}
+.ovs{margin-top:4px;font-size:13px;line-height:1.4;color:var(--mute)}
+.ovd{height:1px;background:var(--line2)}
+.ovt .ovd{margin:18px 0 17px}
+.ovn{margin-top:4px;font-size:15px;line-height:21px;font-weight:600}
+.ov>.ovd{margin-top:24px}
+.ovst{display:block;width:100%;padding:36px 0 0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.ovh{display:flex;align-items:center;justify-content:space-between;height:20px}
+.ovh b{font-size:15px;font-weight:600}
+.ovh span{display:inline-flex;align-items:center;gap:2px;white-space:nowrap;font-size:13px;color:var(--mute)}
+.ov .mbars{height:auto;gap:8px;margin-top:28px;align-items:flex-start}
+.ov .mbars div{height:auto;gap:0;justify-content:flex-start}
+.ov .mbars i{width:28px;max-width:100%;border-radius:6px;background:var(--bar);margin-top:auto}
+.ov .mbars .t i{background:var(--mint)}
+.ov .mbars em{display:flex;align-items:flex-end;justify-content:center;width:100%;height:56px}
+.ov .mbars span{margin-top:8px;font-size:12px;line-height:16px;color:var(--mute)}
+.ov .mbars .t span{color:var(--mint);font-weight:700}
+.ov .mnums{margin-top:23px;border:0;padding:0}
+.ov .mnums b{font-size:26px;line-height:1.1;font-weight:700}
+.ov .mnums span{margin-top:3px;font-size:13px;line-height:1.3}
+.ov .mnums div:nth-child(3) b{color:var(--mint)}
+.cta{display:block;width:100%;margin-top:16px;padding:16px;border:0;border-radius:16px;background:var(--g);color:var(--on);font:inherit;font-size:16px;line-height:24px;font-weight:700;text-align:center;cursor:pointer}
+@container (max-width:430px){.ovtop{flex-direction:column;align-items:stretch;gap:20px}.ovr{align-self:center}}
 .mbars{display:flex;align-items:flex-end;gap:6px;height:58px;margin-top:10px}
 .mbars div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:100%}
 .mbars i{display:block;width:100%;max-width:26px;border-radius:5px;background:var(--line)}
@@ -800,27 +839,29 @@ const itm=(attr,icon,title,sub,cls="")=>`<button class="item ${cls}" ${attr}><sp
 function miniStats(o){
   const days=[...Array(7)].map((_,k)=>{const d=ago(6-k);return{l:["So","Mo","Di","Mi","Do","Fr","Sa"][d.getDay()],n:S.days[ymd(d)]||0,t:k===6}}),mx=Math.max(1,...days.map(d=>d.n)),sum=days.reduce((a,d)=>a+d.n,0);
   const learnt=knownN(),started=W.filter(w=>S.box[w.i]!==undefined).length-learnt; // begonnen = angefangen, aber noch nicht gelernt
-  return `<div class="card mini ov">
-  <div class="ovtop"><div class="lring" style="--p:${o.lp}" role="img" aria-label="Level ${o.L}, ${o.lp} Prozent bis Level ${o.L+1}"><span><b>${o.L}</b><small>Level</small></span></div>
-  <div class="ovtxt"><p class="mute"><i class="dot"></i>Tagesziel</p><p class="big">${Math.min(o.xd,o.g)} / ${o.g} XP</p><p class="mute">${o.xd>=o.g?"Geschafft, weiter so":o.lit?"Noch "+(o.g-o.xd)+" XP bis zum Ziel":"Lerne heute, um deine Serie zu halten"}</p>
-  <div class="bar" role="img" aria-label="Tagesziel ${o.gp} Prozent"><i style="width:0" data-to="${o.gp}"></i></div>
-  <p class="mute" style="margin-top:10px"><i class="dot"></i>Level ${o.L} · ${o.xp} XP</p><p class="lvl">Noch ${o.hi-o.xp} XP bis Level ${o.L+1}</p></div></div>
+  const e1=Math.min(359.9,o.lp*3.6).toFixed(1),e2=Math.min(359.9,o.gp*3.6).toFixed(1);
+  const arc=g=>`<div class="rarc${g?" glow"+g:""}" style="--e:${e1}deg" aria-hidden="true"><i class="ra"></i><i class="cp" style="--a:0deg;--c:var(--n0)"></i><i class="cp${g?"":" hd"}" style="--a:${e1}deg;--c:var(--n2)"></i></div>`;
+  return `<div class="card ov">
+  <div class="ovtop"><div class="ovr" role="img" aria-label="Level ${o.L}, ${o.lp} Prozent bis Level ${o.L+1}. Tagesziel ${o.gp} Prozent"><i class="rt"></i>${arc(3)}${arc(2)}${arc(1)}${arc(0)}<i class="it"></i><i class="ia" style="--e:${e2}deg"></i><i class="cp" style="--a:0deg;--c:var(--mint);--rr:-59px"></i><i class="cp" style="--a:${e2}deg;--c:var(--mint);--rr:-59px"></i><div class="rn"><b>${o.L}</b><small>Level</small></div></div>
+  <div class="ovt"><div class="ovl"><i style="background:var(--mint)"></i>Tagesziel</div><p class="ovb">${Math.min(o.xd,o.g)} / ${o.g} XP</p><p class="ovs">${o.xd>=o.g?"Geschafft, weiter so":o.lit?"Noch "+(o.g-o.xd)+" XP bis zum Ziel":"Lerne heute, um deine Serie zu halten"}</p>
+  <div class="ovd"></div><div class="ovl l2"><i style="background:var(--g)"></i>Level ${o.L} · ${o.xp} XP</div><p class="ovn">Noch ${o.hi-o.xp} XP bis Level ${o.L+1}</p></div></div>
+  <div class="ovd"></div>
   <button class="ovst" data-go="stats" aria-label="Statistiken öffnen: ${sum} Wörter in den letzten 7 Tagen, ${learnt} gelernt, ${started} begonnen, ${dueN()} fällig">
-  <div class="row sp"><b>Letzte 7 Tage</b><span class="mute" style="display:inline-flex;align-items:center;gap:2px;white-space:nowrap">${sum} geübt ${ic("chev",16)}</span></div>
-  <div class="mbars" aria-hidden="true">${days.map(d=>`<div class="${d.t?"t":""}"><i style="height:${Math.max(3,Math.round(d.n/mx*38))}px"></i><span>${d.l}</span></div>`).join("")}</div>
-  <div class="mnums"><div><b>${learnt}</b><span>gelernt</span></div><div><b>${started}</b><span>begonnen</span></div><div><b>${dueN()}</b><span>fällig</span></div></div></button></div>`;
+  <div class="ovh"><b>Letzte 7 Tage</b><span>${sum} geübt ${ic("chev",16)}</span></div>
+  <div class="mbars" aria-hidden="true">${days.map(d=>`<div class="${d.t?"t":""}"><em><i style="height:${Math.max(4,Math.round(d.n/mx*56))}px"></i></em><span>${d.l}</span></div>`).join("")}</div>
+  <div class="ovd" style="margin-top:24px"></div>
+  <div class="mnums"><div><b>${learnt}</b><span>von ${W.length} gelernt</span></div><div><b>${started}</b><span>begonnen</span></div><div><b>${dueN()}</b><span>fällig</span></div></div></button></div>`;
 }
 function home(){
   const g=S.goal||100,xd=S.xpDays[today()]||0,gp=Math.min(100,Math.round(xd/g*100)),L=lvl(),lo=xpFor(L),hi=xpFor(L+1),xp=S.xp||0,lp=Math.round((xp-lo)/(hi-lo)*100),st=streak(),lit=S.last===today(),ns=nextStep(),cur=currentLesson(),due=dueN();
   paint(`<div class="mark"><img class="wm" src="brand/mufradaat.webp" width="720" height="194" alt="Mufradaat"></div>
   <div class="row sp" style="margin-top:8px"><div><h1 style="margin:0">Hallo${U&&U!=="gast"?", "+esc(U.split("@")[0]):""}!</h1><p class="mute">${due?due+" Wörter zur Wiederholung":"Nichts zu wiederholen"}</p></div><span class="flame ${lit?"on":"off"}" role="img" aria-label="Serie: ${st} Tage">${ic("flame",18,true)} ${st}</span></div>
-  ${ARV===false&&!hintOff?`<div class="card hint" role="note"><p>Auf diesem Gerät ist keine arabische Stimme installiert. Die Aussprache fehlt oder klingt falsch. Du kannst in den Systemeinstellungen (Sprachausgabe) eine arabische Stimme hinzufügen.</p><button class="x" id="hx" aria-label="Hinweis schließen">${ic("close")}</button></div>`:""}${miniStats({g,xd,gp,L,lp,hi,xp,lit})}
+  ${ARV===false&&!hintOff?`<div class="card hint" role="note"><p>Auf diesem Gerät ist keine arabische Stimme installiert. Die Aussprache fehlt oder klingt falsch. Du kannst in den Systemeinstellungen (Sprachausgabe) eine arabische Stimme hinzufügen.</p><button class="x" id="hx" aria-label="Hinweis schließen">${ic("close")}</button></div>`:""}${miniStats({g,xd,gp,L,lp,hi,xp,lit})}${due?`<button class="cta" data-go="review">${due} Wörter wiederholen</button>`:""}
   <div class="menu">
   ${(()=>{const p=mixPlan(),n=p.due.length+p.nw.length+p.weak.length;
     return n&&!alphaGate()?itm('data-go="mix"',"bolt","Heute dran",n+" Wörter · "+mixText(p),"main"):""})()}
   ${ns.t==="a"?itm(`data-ab="${ns.b}"`,"path","Weiterlernen",`Buchstaben ${ns.b+1} von ${ABLOCKS.length} · ${aStat(ABLOCKS[ns.b]).g} von ${ABLOCKS[ns.b].length} erkannt`,"main2"):itm(`data-les="${cur.k}"`,"path","Weiterlernen",`Lektion ${cur.k+1}: ${cur.t}`,"main2")}
-  ${due?itm('data-go="review"',"repeat","Wiederholen",due+" Wörter fällig"):""}
-  ${itm('data-go="alphabet"',"list","Alphabet",alphaSure()+" von "+ALPHA.length+" Buchstaben sicher")}
+    ${itm('data-go="alphabet"',"list","Alphabet",alphaSure()+" von "+ALPHA.length+" Buchstaben sicher")}
   ${itm('data-go="badges"',"medal","Abzeichen",(S.badges||[]).length+" von "+BADGES.length+" freigeschaltet")}
   ${itm('data-go="stats"',"chart","Statistiken",knownN()+" von "+W.length+" Wörtern gelernt")}
   </div>`);
@@ -1349,7 +1390,7 @@ async function boot(){
 }
 loadSb().then(()=>{initSb();boot()});
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
-const APPV="mfr-v15"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v16"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>
