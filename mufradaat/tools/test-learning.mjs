@@ -175,9 +175,9 @@ run(`S.hk=1`);
 // ---------- 8. Startseite: Statistik-Einblick ----------
 run(`S.box={};S.due={};S.ef={};S.days={};S.hk=1;LES[0].w.forEach((id,i)=>{S.box[id]=i<3?2:1;S.due[id]=Date.now()-1000});S.days[today()]=7;home()`);
 f=run(`app.innerHTML`);
-ok("Startseite zeigt die Statistik-Karte",/class="card mini"/.test(f)&&/Letzte 7 Tage/.test(f)&&/data-go="stats"/.test(f));
-ok("Karte nennt gelernt/begonnen/fällig richtig",/<b>3<\/b><span>gelernt<\/span>/.test(f)&&new RegExp("<b>"+(run(`LES[0].w.length`)-3)+"</b><span>begonnen").test(f)&&new RegExp("<b>"+run(`dueN()`)+"</b><span>fällig").test(f),f.match(/mnums[\s\S]*?<\/div><\/button>/)?.[0].replace(/<[^>]+>/g," "));
-ok("Wochenbalken: sieben Tage, heute markiert",(f.match(/<div class="(t)?"><i/g)||[]).length===7&&/<div class="t"><i/.test(f));
+ok("Startseite zeigt die Statistik-Karte",/class="card ov"/.test(f)&&/Letzte 7 Tage/.test(f)&&/data-go="stats"/.test(f));
+ok("Karte nennt gelernt/begonnen/fällig richtig",/<b>3<\/b><span>von 330 gelernt<\/span>/.test(f)&&new RegExp("<b>"+(run(`LES[0].w.length`)-3)+"</b><span>begonnen").test(f)&&new RegExp("<b>"+run(`dueN()`)+"</b><span>fällig").test(f),f.match(/mnums[\s\S]*?<\/div><\/button>/)?.[0].replace(/<[^>]+>/g," "));
+ok("Wochenbalken: sieben Tage, heute markiert",(f.match(/<div class="(t)?"><em><i/g)||[]).length===7&&/<div class="t"><em><i/.test(f));
 ok("Karte nennt die Wochensumme",/7 geübt/.test(f),f.match(/\d+ Wör?ter? geübt/)?.[0]);
 run(`S.days={};home()`);ok("ohne Übung: 0 Wörter, Balken bleiben sichtbar",/0 geübt/.test(run(`app.innerHTML`)));
 
@@ -234,7 +234,9 @@ ok("Abzeichen „Satzbauer“ bei 10 Sätzen",run(`S.badges.includes("sent10")`)
 r=JSON.parse(run(`JSON.stringify(mergeS({epoch:0,box:{},due:{},sent:{0:2,1:1}},{epoch:0,box:{},due:{},sent:{0:1,2:3}}))`));
 ok("Merge: Satzfortschritt pro Satz das Maximum",r.sent[0]===2&&r.sent[1]===1&&r.sent[2]===3,r.sent);
 run(`S.sent={0:1};S.epoch=0;home()`);
-ok("Startseite bietet Sätze an",/Sätze/.test(run(`app.innerHTML`)));
+f=run(`app.innerHTML`);
+ok("Startseite ohne doppelte Einträge (Lernpfad, Sätze, Spiele, Karteikarten)",/class="menu"/.test(f)&&!/data-go="(path|satz|games|cards)"/.test(f.split('class="menu"')[1]||""));
+ok("Navigation: Lernpfad steht in der Mitte",run(`TABS.map(t=>t[0]).join()`)==="home,games,path,cards,more",run(`TABS.map(t=>t[0]).join()`));
 
 
 // ---------- 7. Neuer Lernpfad: Buchstaben, Wörter, Sätze ----------
@@ -315,7 +317,7 @@ run(`S.box={};S.due={};S.sent={};S.aok="skip";LES.forEach(l=>l.w.forEach(id=>{S.
 ok("Satzrunde aus dem Pfad: zuerst Sätze dieser Einheit",run(`Z.u===1&&Z.back==="path"&&Z.items.length===6&&Z.items.every(it=>it.s.st===1)`),run(`JSON.stringify(Z.items.map(it=>it.s.st))`));
 ok("… Beenden führt zurück zum Lernpfad",/data-go="path"/.test(run(`app.innerHTML`)));
 run(`S.sent={};startSatz()`);
-ok("Sätze von der Startseite: Rücksprung zur Startseite",run(`Z.u===undefined&&Z.back==="home"`));
+ok("Satzrunde ohne Einheit: Rücksprung zur Startseite",run(`Z.u===undefined&&Z.back==="home"`));
 // Rechts nach links
 run(`S.aok="skip";ui.al="ba";letter()`);let lt=run(`app.innerHTML`);
 const labs=[...lt.matchAll(/<small>(Anfang|Mitte|Ende|Allein)<\/small>/g)].map(x=>x[1]);
