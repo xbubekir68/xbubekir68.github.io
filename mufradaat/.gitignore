@@ -1,0 +1,4 @@
+# Schlüssel für tools/gen-audio.mjs
+tools/.env
+# Stimmproben, nur lokal zum Anhören
+audio-proben/

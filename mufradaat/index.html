@@ -539,7 +539,13 @@ const pick=a=>a[Math.floor(Math.random()*a.length)];
 let ARV=null,AVOICE=null,hintOff=false; // ARV: false = Gerät hat sicher keine arabische Stimme
 function pickVoice(){try{const v=speechSynthesis.getVoices();if(!v.length)return;const ar=v.filter(x=>/^(ar|ara)([-_]|$)/i.test(x.lang));ARV=ar.length>0;AVOICE=ar.find(x=>x.localService)||ar[0]||null}catch(e){}}
 try{pickVoice();speechSynthesis.onvoiceschanged=pickVoice}catch(e){}
-const speak=t=>{try{const u=new SpeechSynthesisUtterance(t);u.lang="ar-SA";if(AVOICE)u.voice=AVOICE;u.rate=.85;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}};
+const tts=t=>{try{const u=new SpeechSynthesisUtterance(t);u.lang="ar-SA";if(AVOICE)u.voice=AVOICE;u.rate=.85;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}};
+// Audiodateien (KI-Stimme oder eigene Aufnahme) aus audio/audio.json, Schlüssel = vorgelesener Text; ohne Datei liest die Gerätestimme
+let AUD={},AUDN=0,AEL=null;
+try{fetch("audio/audio.json").then(r=>r.ok?r.json():null).then(j=>{if(j&&j.items){AUD=j.items;AUDN=Object.keys(AUD).length;if(AUDN&&ARV===false&&view==="home")home()}}).catch(()=>{})}catch(e){}
+const canSpeak=()=>ARV!==false||AUDN>0;
+const speak=t=>{const a=AUD[t];if(!a)return tts(t);try{speechSynthesis.cancel()}catch(e){}
+  try{if(AEL)AEL.pause();AEL=new Audio("audio/"+a.f+"?v="+a.v);AEL.play().catch(()=>tts(t))}catch(e){tts(t)}};
 const speakLater=t=>{if(S.auto!==false)setTimeout(()=>speak(t),420)};
 const toAr=n=>String(n).replace(/\d/g,d=>"٠١٢٣٤٥٦٧٨٩"[d]);
 function applyTheme(){S.theme==="system"?document.documentElement.removeAttribute("data-theme"):document.documentElement.setAttribute("data-theme",S.theme)}
@@ -753,7 +759,7 @@ function addXP(n){
 // ===== Spiel 3: Hörübung (Wort hören, Bedeutung wählen) =====
 let LN=null;
 function startListen(){
-  if(ARV===false){toast("Dafür brauchst du eine arabische Stimme auf dem Gerät.");return}
+  if(!canSpeak()){toast("Dafür brauchst du eine arabische Stimme auf dem Gerät.");return}
   const pool=gamePool(10),ws=[];for(const w of shuffle(pool)){if(ws.length<10)ws.push(w)}
   LN={ws,n:0,right:0,picked:null,xp:0,fin:false,opts:null};view="listen";render();
 }
@@ -910,7 +916,7 @@ function letter(){
 let AQ=null;
 function adistr(a,n,noHamza){const same=shuffle((AFAM.find(f=>f.includes(a.i))||[]).filter(i=>i!==a.i).map(i=>ALBY[i])),rest=shuffle(ALPHA.filter(x=>x.i!==a.i&&!same.includes(x)));return [...same,...rest].filter(x=>!(noHamza&&x.i==="hamza")).slice(0,n)}
 function startAQ(b,test,back){
-  const canHear=ARV!==false,cnt=(x,y)=>aCnt(x.i)-aCnt(y.i);
+  const canHear=canSpeak(),cnt=(x,y)=>aCnt(x.i)-aCnt(y.i);
   let ws;
   if(test)ws=shuffle(ALPHA).slice(0,10); // Kurztest: zehn zufällige Buchstaben
   else if(b!==undefined&&ABLOCKS[b])ws=[...shuffle(ABLOCKS[b]),...shuffle(ABLOCKS[b])]; // Block: jeder Buchstabe zweimal, damit eine fehlerfreie Runde den Block schafft
@@ -1012,7 +1018,7 @@ function home(){
   const g=S.goal||100,xd=S.xpDays[today()]||0,gp=Math.min(100,Math.round(xd/g*100)),L=lvl(),lo=xpFor(L),hi=xpFor(L+1),xp=S.xp||0,lp=Math.round((xp-lo)/(hi-lo)*100),st=streak(),lit=S.last===today(),ns=nextStep(),cur=currentLesson(),due=dueN();
   paint(`<div class="mark"><img class="wm" src="brand/mufradaat.webp" width="720" height="194" alt="Mufradaat"></div>
   <div class="row sp" style="margin-top:8px"><div><h1 style="margin:0">Hallo${U&&U!=="gast"?", "+esc(U.split("@")[0]):""}!</h1><p class="mute">${due?due+" Wörter zur Wiederholung":"Nichts zu wiederholen"}</p></div><span class="flame ${lit?"on":"off"}" role="img" aria-label="Serie: ${st} Tage">${ic("flame",18,true)} ${st}</span></div>
-  ${ARV===false&&!hintOff?`<div class="card hint" role="note"><p>Auf diesem Gerät ist keine arabische Stimme installiert. Die Aussprache fehlt oder klingt falsch. Du kannst in den Systemeinstellungen (Sprachausgabe) eine arabische Stimme hinzufügen.</p><button class="x" id="hx" aria-label="Hinweis schließen">${ic("close")}</button></div>`:""}${miniStats({g,xd,gp,L,lp,hi,xp,lit})}${due?`<button class="cta" data-go="review">${due} Wörter wiederholen</button>`:""}
+  ${!canSpeak()&&!hintOff?`<div class="card hint" role="note"><p>Auf diesem Gerät ist keine arabische Stimme installiert. Die Aussprache fehlt oder klingt falsch. Du kannst in den Systemeinstellungen (Sprachausgabe) eine arabische Stimme hinzufügen.</p><button class="x" id="hx" aria-label="Hinweis schließen">${ic("close")}</button></div>`:""}${miniStats({g,xd,gp,L,lp,hi,xp,lit})}${due?`<button class="cta" data-go="review">${due} Wörter wiederholen</button>`:""}
   <div class="menu">
   ${(()=>{const p=mixPlan(),n=p.due.length+p.nw.length+p.weak.length;
     return n&&!alphaGate()?itm('data-go="mix"',"bolt","Heute dran",n+" Wörter · "+mixText(p),"main"):""})()}
@@ -1549,7 +1555,7 @@ loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v18"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v19"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>
