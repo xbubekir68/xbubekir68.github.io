@@ -311,7 +311,7 @@ r=JSON.parse(run(`JSON.stringify(mergeS({epoch:0,box:{},due:{},aok:""},{epoch:0,
 ok("Merge: übersprungen auf einem Gerät gilt überall",r.aok==="skip",r.aok);
 r=JSON.parse(run(`JSON.stringify(mergeS({epoch:0,box:{},due:{},aok:"done"},{epoch:0,box:{},due:{}}))`));
 ok("Merge: erledigt bleibt erledigt",r.aok==="done",r.aok);
-ok("Zurücksetzen löscht auch den Abschnitt",/S\.aok="";S\.sent=\{\}/.test(fileSrc));
+ok("Zurücksetzen löscht auch den Abschnitt und den neuen Lernpfad",/S\.aok="";S\.kp=\{d:\{\}\};S\.sent=\{\}/.test(fileSrc));
 // Satzrunde aus dem Pfad
 run(`S.box={};S.due={};S.sent={};S.aok="skip";LES.forEach(l=>l.w.forEach(id=>{S.box[id]=1;S.due[id]=Date.now()+864e5}));startSatz(1)`);
 ok("Satzrunde aus dem Pfad: zuerst Sätze dieser Einheit",run(`Z.u===1&&Z.back==="path"&&Z.items.length===6&&Z.items.every(it=>it.s.st===1)`),run(`JSON.stringify(Z.items.map(it=>it.s.st))`));
@@ -333,6 +333,81 @@ ok("Service Worker meldet offenen Seiten die neue Version",/postMessage\(\{v:V\}
 // Wortliste: Leiste ohne Scrollbar
 ok("Kategorien-Leiste: Scrollbar ausgeblendet (Firefox und WebKit)",/\.chips\{[^}]*scrollbar-width:none/.test(fileSrc)&&/\.chips::-webkit-scrollbar\{display:none\}/.test(fileSrc));
 ok("Kategorien-Leiste: Chips schrumpfen nicht",/\.chip\{flex:none/.test(fileSrc));
+
+// ---------- 10. Neuer Lernpfad (Vorschau): Kursdateien, Lektionen, Schlösser ----------
+const {pruefen}=await import("./kurs-pruefen.mjs");
+const pr=pruefen();
+ok("Kursdateien bestehen die Prüfung",pr.fehler.length===0,pr.fehler);
+const kdir=path.join(path.dirname(fileURLToPath(import.meta.url)),"..","kurs");
+const kidx=JSON.parse(fs.readFileSync(path.join(kdir,"kurs.json"),"utf8")),kfiles={};
+kidx.stufen.flatMap(s=>s.etappen).filter(e=>e.datei).forEach(e=>kfiles[e.id]=JSON.parse(fs.readFileSync(path.join(kdir,e.datei),"utf8")));
+run(`kursSet(${JSON.stringify(kidx)},${JSON.stringify(kfiles)});S.kp={d:{}};S.alpha={};S.np=true;K=null`);
+ok("Etappe S1 hat 6 Lektionen",run(`KL.filter(l=>l.e==="s1").length`)===6,run(`KL.length`));
+ok("S1 führt alle 29 Buchstaben genau einmal ein",run(`(a=>a.length===29&&new Set(a).size===29)(KL.filter(l=>l.e==="s1").flatMap(l=>l.neu))`));
+ok("erste Lektion offen, zweite gesperrt",run(`!kLocked(KL[0])&&kLocked(KL[1])`));
+ok("aktuelle Lektion = erste nicht abgeschlossene",run(`kCur().id`)==="s1-1",run(`kCur().id`));
+// Aufgaben jeder Lektion: 12 bis 16 bewertete Aufgaben, neue Buchstaben erst vorstellen, nur bekannte abfragen
+const kt=JSON.parse(run(`JSON.stringify(KL.map(l=>{const T=kTasks(kLet(l),kKnown(l.k),true),known=new Set([...kKnown(l.k),...kLet(l)].map(a=>a.i)),seen=new Set(kKnown(l.k).map(a=>a.i));let order=true,onlyKnown=true,dots=true;
+  T.forEach(t=>{if(t.t==="neu")seen.add(t.a.i);else if(t.t==="paare"){if(!t.set.every(a=>seen.has(a.i)))order=false}else{if(!seen.has(t.a.i))order=false;if(!known.has(t.a.i))onlyKnown=false;if(t.t==="punkte"&&!dotPeers(t.a,[...known].map(i=>ALBY[i])).length)dots=false}});
+  return{id:l.id,g:T.filter(t=>t.t!=="neu").length,intro:T.filter(t=>t.t==="neu").length,n:l.neu.length,order,onlyKnown,dots,pairs:T.filter(t=>t.t==="paare").length}}))`));
+ok("jede Lektion: 12 bis 16 bewertete Aufgaben",kt.every(x=>x.g>=12&&x.g<=16),kt.map(x=>x.id+":"+x.g));
+ok("jeder neue Buchstabe wird einmal vorgestellt",kt.every(x=>x.intro===x.n),kt.map(x=>x.intro+"/"+x.n));
+ok("abgefragt wird erst nach dem Vorstellen",kt.every(x=>x.order),kt.filter(x=>!x.order).map(x=>x.id));
+ok("abgefragt werden nur schon eingeführte Buchstaben",kt.every(x=>x.onlyKnown));
+ok("Punkte-Aufgaben nur mit bekannten Buchstaben derselben Form",kt.every(x=>x.dots));
+ok("jede Lektion hat eine Zuordnungs-Aufgabe",kt.every(x=>x.pairs===1));
+ok("ohne Stimme keine Höraufgaben",run(`KL.every(l=>kTasks(kLet(l),kKnown(l.k),false).every(t=>t.t!=="hoeren"))`));
+ok("Ablenker: bei bekannten zuerst bekannte Buchstaben",run(`(()=>{const kn=[...kKnown(4),...kLet(KL[4])];for(let i=0;i<20;i++){if(!kDistr(ALBY.kaf,kn,3).every(x=>kn.includes(x)))return false}return true})()`));
+// eine Lektion durchspielen
+run(`function playK(wrong){let g=0;while(K.n<K.T.length&&g++<300){const it=K.T[K.n];if(it.t==="paare"){K.fb={ok:true,x:5};K.first++}else if(it.t!=="neu"&&it.t!=="tipp")kAns(!wrong.includes(K.n));K.n++;K.fb=null;K.picked=null;K.ps=null}klek()}`);
+run(`S.xp=0;startK(KL[0])`);
+ok("Lektion startet mit der Tipp-Karte",run(`view==="klek"&&K.T[0].t==="tipp"`)&&/Gut zu wissen/.test(run(`app.innerHTML`)));
+run(`K.n=1;klek()`);
+ok("dann wird der erste Buchstabe vorgestellt",/Neuer Buchstabe/.test(run(`app.innerHTML`))&&/Name anhören/.test(run(`app.innerHTML`)));
+ok("keine Herzen in der Lektion",!/hearts|hrt/.test(run(`app.innerHTML`)));
+const kT0=run(`K.T.length`),kW=run(`K.T.findIndex(t=>!["neu","tipp","paare"].includes(t.t))`);
+run(`K.n=${kW};kAns(false)`);
+ok("Fehler: die Aufgabe kommt am Ende noch einmal",run(`K.T.length`)===kT0+1&&run(`K.T[K.T.length-1].rep===true&&K.T[K.T.length-1].a.i===K.T[${kW}].a.i`));
+run(`klek()`);
+ok("… und die Rückmeldung sagt es",/am Ende noch einmal/.test(run(`app.innerHTML`)));
+run(`K.n=0;K.fb=null;K.T.pop();K.miss=0;playK([${kW}])`);
+ok("Lektion abgeschlossen → gespeichert",run(`S.kp.d["s1-1"]`)===1,run(`JSON.stringify(S.kp)`));
+ok("Ende: „Lektion geschafft“ und Weiter zur nächsten",/Lektion geschafft/.test(run(`app.innerHTML`))&&/data-kl="s1-2"/.test(run(`app.innerHTML`)));
+ok("Wiederholte Aufgabe zählt nicht als gleich richtig",run(`K.first===K.graded-1`),[run(`K.first`),run(`K.graded`)]);
+ok("XP: 3 pro Aufgabe, 1 für die Wiederholung, Bonus für den Abschluss",run(`S.xp`)===run(`K.xp`)&&run(`K.bonus`)===10,[run(`S.xp`),run(`K.xp`),run(`K.bonus`)]);
+ok("zweite Lektion jetzt offen, dritte noch gesperrt",run(`!kLocked(KL[1])&&kLocked(KL[2])&&kCur().id==="s1-2"`));
+ok("Buchstaben-Zähler steigen (Alphabet-Seite zeigt den Stand)",run(`kLet(KL[0]).every(a=>aCnt(a.i)>=1)`));
+run(`startK(KL[0]);playK([])`);
+ok("eine abgeschlossene Lektion lässt sich wiederholen",run(`S.kp.d["s1-1"]`)===2&&/Geübt/.test(run(`app.innerHTML`)));
+// der neue Pfad
+run(`view="path";ui.hint=null;path()`);let kh=run(`app.innerHTML`);
+ok("Pfad zeigt die 6 Stationen von S1",(kh.match(/class="pn /g)||[]).length===6&&(kh.match(/data-kl="s1-\d"/g)||[]).length===6);
+ok("… erledigt, aktuell (Mim) und gesperrt",/pn abl done[^"]*" data-kl="s1-1"/.test(kh)&&/pn abl\s+cur[^"]*" data-kl="s1-2"/.test(kh)&&/pn abl lock[^"]*" data-kl="s1-3"/.test(kh),kh.match(/class="pn [^"]*" data-kl="s1-\d"/g));
+ok("… Ziel der Etappe mit allen 29 Buchstaben",/Ziel der Etappe/.test(kh)&&(kh.match(/<span class="[ku]">/g)||[]).length===29);
+ok("… Demnächst: S2 bis S8",(kh.match(/<li><span class="ar" lang="ar">/g)||[]).length===7&&/S8 · Alles zusammen/.test(kh));
+ok("… Vorschau-Hinweis mit Weg zurück",/data-ko/.test(kh)&&/Vorschau/.test(kh));
+ok("… keine Buchnamen oder Verweise",!/Qaida|Noorani|Nuraniyya|Medina|Madina|Band [123]/i.test(kh+fs.readFileSync(path.join(kdir,"kurs.json"),"utf8")+fs.readFileSync(path.join(kdir,"s1.json"),"utf8")));
+run(`pHint('data-kl="s1-3"')`);
+ok("gesperrte Station: Grund direkt darunter",/Schließe erst „Jīm bis Dhāl“ ab\./.test(run(`app.innerHTML`)));
+run(`home()`);
+ok("Startseite: Weiterlernen führt zur aktuellen Lektion",/data-kl="s1-2"/.test(run(`app.innerHTML`))&&/Etappe S1 · Lektion 2: Jīm bis Dhāl/.test(run(`app.innerHTML`)));
+run(`S.np=false;path()`);
+ok("bisheriger Pfad bleibt und bietet die Vorschau an",/data-kn/.test(run(`app.innerHTML`))&&/data-open="0"/.test(run(`app.innerHTML`)));
+// Wiederholung aller Buchstaben
+run(`S.kp={d:{}};view="path";startK(null)`);
+ok("Wiederholung erst nach der ersten Lektion",run(`view`)==="path");
+run(`S.kp={d:{"s1-1":1,"s1-2":1,"s1-3":1}};startK(null)`);
+ok("Wiederholung: 10 Aufgaben plus Zuordnen, nur gelernte Buchstaben",run(`view==="klek"&&K.T.length===11&&K.T.filter(t=>t.t==="paare").length===1&&K.T.every(t=>t.t==="paare"?t.set.every(a=>kLearnt().includes(a)):kLearnt().includes(t.a))`));
+run(`playK([])`);
+ok("Wiederholung zählt nicht als Lektion",run(`JSON.stringify(S.kp.d)`)==='{"s1-1":1,"s1-2":1,"s1-3":1}'&&/Runde beendet/.test(run(`app.innerHTML`)));
+// Zusammenführen und Geräte-Einstellung
+r=JSON.parse(run(`JSON.stringify(mergeS({epoch:0,box:{},due:{},kp:{d:{"s1-1":2}}},{epoch:0,box:{},due:{},kp:{d:{"s1-1":1,"s1-2":1}}}))`));
+ok("Merge: abgeschlossene Lektionen von beiden Geräten",r.kp.d["s1-1"]===2&&r.kp.d["s1-2"]===1,r.kp);
+r=JSON.parse(run(`JSON.stringify(mergeS({epoch:0,box:{},due:{}},{epoch:0,box:{},due:{}}))`));
+ok("Merge: alter Stand ohne Lernpfad-Daten geht",JSON.stringify(r.kp)==='{"d":{}}',r.kp);
+ok("Vorschau an/aus bleibt auf dem Gerät",run(`LOCALKEYS.includes("np")`));
+ok("Service Worker: Kursdateien offline verfügbar",kidx.stufen.flatMap(s=>s.etappen).filter(e=>e.datei).every(e=>swSrc.includes(`"kurs/${e.datei}"`))&&swSrc.includes('"kurs/kurs.json"'));
+ok("Service Worker: Kursdateien zuerst aus dem Netz",/\\\/kurs\\\/\[\^\/\]\+\\\.json\$/.test(swSrc));
 
 console.log("\n"+pass+" OK, "+fail+" FAIL");
 process.exit(fail?1:0);

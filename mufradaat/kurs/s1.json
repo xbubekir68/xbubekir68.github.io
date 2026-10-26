@@ -1,0 +1,42 @@
+{
+  "id": "s1",
+  "ziel": {"art": "alle-buchstaben", "text": "Alle 29 Buchstaben erkennen"},
+  "lektionen": [
+    {
+      "id": "s1-1", "titel": "Alif, Bāʾ, Tāʾ, Thāʾ", "art": "buchstaben",
+      "neu": ["alif", "ba", "ta", "tha"],
+      "tipp": {"titel": "Von rechts nach links", "zeichen": "ب ت ث",
+        "text": "Arabisch liest und schreibt man von rechts nach links. Viele Buchstaben haben dieselbe Grundform und unterscheiden sich nur durch Punkte: ب hat einen Punkt unten, ت zwei oben, ث drei oben."}
+    },
+    {
+      "id": "s1-2", "titel": "Jīm bis Dhāl", "art": "buchstaben",
+      "neu": ["jim", "hha", "kha", "dal", "dhal"],
+      "tipp": {"titel": "Eine Form, drei Buchstaben", "zeichen": "ج ح خ",
+        "text": "ج ح خ sehen gleich aus. Bei ج sitzt der Punkt innen, ح hat keinen, خ hat ihn oben. Bei د und ذ ist es genauso: ذ trägt einen Punkt."}
+    },
+    {
+      "id": "s1-3", "titel": "Rāʾ bis Ḍād", "art": "buchstaben",
+      "neu": ["ra", "zay", "sin", "shin", "sad", "dad"],
+      "tipp": {"titel": "Zähnchen und Punkte", "zeichen": "س ش",
+        "text": "ر und ز reichen unter die Zeile, ز hat einen Punkt. س hat drei kleine Zähnchen, ش dazu drei Punkte. Bei ص und ض macht wieder ein Punkt den Unterschied."}
+    },
+    {
+      "id": "s1-4", "titel": "Ṭāʾ bis Qāf", "art": "buchstaben",
+      "neu": ["tah", "zah", "ayn", "ghayn", "fa", "qaf"],
+      "tipp": {"titel": "Dunkle Laute", "zeichen": "ص ض ط ظ",
+        "text": "ص ض ط ظ klingen dunkel und kräftig, die Zunge liegt dabei tief. ط und ظ unterscheidet ein Punkt, ebenso ع und غ. ف hat einen Punkt oben, ق zwei."}
+    },
+    {
+      "id": "s1-5", "titel": "Kāf, Lām, Mīm, Nūn", "art": "buchstaben",
+      "neu": ["kaf", "lam", "mim", "nun"],
+      "tipp": {"titel": "Ganz ohne Punkte", "zeichen": "ك ل م",
+        "text": "ك ل م kommen ohne Punkte aus. ن hat einen Punkt über einer runden Schale. Zum Vergleich: ب hat seinen Punkt unten."}
+    },
+    {
+      "id": "s1-6", "titel": "Hāʾ, Wāw, Hamza, Yāʾ", "art": "buchstaben",
+      "neu": ["he", "waw", "hamza", "ya"],
+      "tipp": {"titel": "Das Hamza", "zeichen": "ء",
+        "text": "ء ist das Hamza, ein kurzer Stimmabsatz wie in „be-achten“. Es ist eher ein Zeichen als ein Buchstabe und sitzt oft auf ا, و oder ي. Dazu später mehr. ي selbst hat zwei Punkte unten."}
+    }
+  ]
+}
