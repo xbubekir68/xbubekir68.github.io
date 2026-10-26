@@ -1015,7 +1015,7 @@ function miniStats(o){
 function home(){
   const g=S.goal||100,xd=S.xpDays[today()]||0,gp=Math.min(100,Math.round(xd/g*100)),L=lvl(),lo=xpFor(L),hi=xpFor(L+1),xp=S.xp||0,lp=Math.round((xp-lo)/(hi-lo)*100),st=streak(),lit=S.last===today(),ns=nextStep(),cur=currentLesson(),due=dueN();
   paint(`<div class="mark"><img class="wm" src="brand/mufradaat.webp" width="720" height="194" alt="Mufradaat"></div>
-  <div class="row sp" style="margin-top:8px"><div><h1 style="margin:0">Ahlan wa sahlan${U&&U!=="gast"?", "+esc(U.split("@")[0]):""}!</h1></div><span class="flame ${lit?"on":"off"}" role="img" aria-label="Serie: ${st} Tage">${ic("flame",18,true)} ${st}</span></div>
+  <div class="row sp" style="margin-top:8px"><div><h1 style="margin:0">Ahlan wa Sahlan${U&&U!=="gast"?", "+esc(U.split("@")[0]):""}!</h1></div><span class="flame ${lit?"on":"off"}" role="img" aria-label="Serie: ${st} Tage">${ic("flame",18,true)} ${st}</span></div>
   ${!canSpeak()&&!hintOff?`<div class="card hint" role="note"><p>Auf diesem Gerät ist keine arabische Stimme installiert. Die Aussprache fehlt oder klingt falsch. Du kannst in den Systemeinstellungen (Sprachausgabe) eine arabische Stimme hinzufügen.</p><button class="x" id="hx" aria-label="Hinweis schließen">${ic("close")}</button></div>`:""}${miniStats({g,xd,gp,L,lp,hi,xp,lit})}${due?`<button class="cta" data-go="review">${due} Wörter wiederholen</button>`:""}
   <div class="menu">
   ${(()=>{const p=mixPlan(),n=p.due.length+p.nw.length+p.weak.length;
