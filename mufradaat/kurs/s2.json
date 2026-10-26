@@ -1,0 +1,70 @@
+{
+  "id": "s2",
+  "ziel": {"art": "lesen", "ar": "كٓهيعٓصٓ", "sp": "كَافْ هَا يَا عَيْنْ صَادْ", "text": "Den längsten Surenanfang lesen",
+    "geschafft": "Du kannst jetzt verbundene Buchstaben lesen, dazu alle Surenanfänge."},
+  "lektionen": [
+    {
+      "id": "s2-1", "titel": "Zähnchen mit Punkten", "art": "verbinden", "station": "بيت",
+      "neu": ["ba", "ta", "tha", "nun", "ya"],
+      "woerter": ["بيت", "بنت", "بين", "تين", "نبي", "نبت", "ثبت"],
+      "tipp": {"titel": "Buchstaben verbinden sich", "zeichen": "بـ ـبـ ـب",
+        "text": "In einem Wort hängen die Buchstaben aneinander und werden dabei kürzer. Am Anfang und in der Mitte eines Wortes schrumpfen ب ت ث ن ي zu einem kleinen Zähnchen. Welcher Buchstabe es ist, verraten nur die Punkte."}
+    },
+    {
+      "id": "s2-2", "titel": "Haken und Zähne", "art": "verbinden", "station": "شيخ",
+      "neu": ["jim", "hha", "kha", "sin", "shin"],
+      "woerter": ["حب", "جيب", "سبت", "شبح", "بحث", "شيخ", "تحت", "حيث", "سجن"],
+      "tipp": {"titel": "Der Bogen fällt weg", "zeichen": "جـ ـحـ سـ",
+        "text": "ج ح خ verlieren am Anfang und in der Mitte ihren großen Bogen, übrig bleibt ein kleiner Haken. Den Bogen siehst du nur am Ende und allein. س und ش werden zu drei Zähnchen ohne Schwanz, ش trägt dazu drei Punkte."}
+    },
+    {
+      "id": "s2-3", "titel": "Schlaufen", "art": "verbinden", "station": "عين",
+      "neu": ["sad", "dad", "tah", "zah", "ayn", "ghayn"],
+      "woerter": ["صبي", "صحن", "طبيب", "ظبي", "عين", "شعب", "بطن", "بعض", "غصن", "صنع"],
+      "tipp": {"titel": "ع hat vier Gesichter", "zeichen": "عـ ـعـ ـع",
+        "text": "ص ض ط ظ behalten ihre Schlaufe in jeder Form. ع und غ verändern sich am stärksten: Am Anfang sind sie ein offener Haken, in der Mitte eine kleine geschlossene Schlaufe, am Ende bekommen sie wieder ihren Bogen."}
+    },
+    {
+      "id": "s2-4", "titel": "Bögen und Kreise", "art": "verbinden", "station": "قلم",
+      "neu": ["fa", "qaf", "kaf", "lam", "mim", "he"],
+      "woerter": ["فيل", "قلم", "كلب", "علم", "ملك", "لحم", "شمس", "فهم", "قلب", "عقل", "كتب", "سمك", "كهف", "فقه"],
+      "tipp": {"titel": "Ähnliche Paare", "zeichen": "فـ قـ ـهـ",
+        "text": "Am Anfang und in der Mitte sehen ف und ق gleich aus, bis auf die Punkte: einer bei ف, zwei bei ق. Erst am Ende zeigt ق seinen tiefen Bogen. ه hat die meisten Gesichter: هـ am Anfang, ـهـ in der Mitte, ـه am Ende."}
+    },
+    {
+      "id": "s2-5", "titel": "Die Einzelgänger", "art": "verbinden", "station": "دار",
+      "neu": ["alif", "dal", "dhal", "ra", "zay", "waw", "hamza"],
+      "woerter": ["باب", "دار", "نور", "ورد", "زيت", "رجل", "ولد", "ذهب", "قمر", "بحر", "درس", "يد", "ماء", "سماء", "ضوء"],
+      "tipp": {"titel": "Nur nach rechts", "zeichen": "ا د ذ ر ز و",
+        "text": "Sechs Buchstaben verbinden sich nie mit dem folgenden: ا د ذ ر ز و. Nach ihnen beginnt der nächste Buchstabe neu, als stünde er am Wortanfang. Darum hat دار keine einzige Verbindung. ء verbindet sich gar nicht."}
+    },
+    {
+      "id": "s2-6", "titel": "Lām-Alif", "art": "verbinden", "station": "لا",
+      "neu": [],
+      "woerter": ["لا", "سلام", "كلام", "فلاح", "لاعب", "بلاد", "غلام", "ملابس", "علاج", "مسجد", "كتاب"],
+      "tipp": {"titel": "Zwei werden eins", "zeichen": "لا ـلا",
+        "text": "Folgt auf ل ein ا, verschmelzen beide zu einem eigenen Zeichen: لا. Mitten im Wort sieht es so aus wie in سلام. Es bleiben trotzdem zwei Buchstaben, ل und ا."}
+    },
+    {
+      "id": "s2-7", "titel": "Surenanfänge", "art": "suren", "station": "الٓمٓ",
+      "suren": [
+        {"t": "الٓمٓ", "sp": "أَلِفْ لَامْ مِيمْ", "vorstellen": true},
+        {"t": "الٓر", "sp": "أَلِفْ لَامْ رَا", "vorstellen": true},
+        {"t": "يسٓ", "sp": "يَا سِينْ", "vorstellen": true},
+        {"t": "حمٓ", "sp": "حَا مِيمْ", "vorstellen": true},
+        {"t": "الٓمٓصٓ", "sp": "أَلِفْ لَامْ مِيمْ صَادْ"},
+        {"t": "الٓمٓر", "sp": "أَلِفْ لَامْ مِيمْ رَا"},
+        {"t": "كٓهيعٓصٓ", "sp": "كَافْ هَا يَا عَيْنْ صَادْ"},
+        {"t": "طه", "sp": "طَا هَا"},
+        {"t": "طسٓمٓ", "sp": "طَا سِينْ مِيمْ"},
+        {"t": "طسٓ", "sp": "طَا سِينْ"},
+        {"t": "حمٓ عٓسٓقٓ", "sp": "حَا مِيمْ عَيْنْ سِينْ قَافْ"},
+        {"t": "صٓ", "sp": "صَادْ"},
+        {"t": "قٓ", "sp": "قَافْ"},
+        {"t": "نٓ", "sp": "نُونْ"}
+      ],
+      "tipp": {"titel": "Buchstabe für Buchstabe", "zeichen": "الٓمٓ",
+        "text": "29 Suren beginnen mit einzelnen Buchstaben. Diese liest man nicht als Wort, sondern Buchstabe für Buchstabe mit ihrem Namen: الٓمٓ heißt Alif Lām Mīm. Das Hamza am Ende eines Namens fällt dabei weg, man sagt Rā statt Rāʾ. Das kleine Wellenzeichen bedeutet: den Namen lang ziehen."}
+    }
+  ]
+}
