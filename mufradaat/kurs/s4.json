@@ -1,0 +1,39 @@
+{
+  "id": "s4",
+  "ziel": {"art": "lesen", "ar": "رَسَمَ وَلَدٌ شَجَرَةً بِقَلَمٍ", "sp": "رَسَمَ وَلَدٌ شَجَرَةً بِقَلَمٍ", "de": "Ein Junge zeichnete einen Baum mit einem Stift.",
+    "text": "Einen Satz mit allen Endungen lesen", "geschafft": "Du kannst jetzt Wörter mit Tanwin lesen und erkennst das Ta marbuta."},
+  "lektionen": [
+    {
+      "id": "s4-1", "titel": "Endung -an", "art": "vokale", "zeichen": "an", "station": "مَعًا",
+      "woerter": [["مَعًا", "zusammen"], ["غَدًا", "morgen"], ["أَبَدًا", "für immer"], ["أَكَلَ سَمَكًا", "er aß Fisch"], ["شَرِبَ لَبَنًا", "er trank Milch"],
+        ["رَكِبَ جَمَلًا", "er ritt auf einem Kamel"], ["حَمَلَ حَجَرًا", "er trug einen Stein"], ["رَسَمَ قَمَرًا", "er zeichnete einen Mond"],
+        ["وَجَدَ ذَهَبًا", "er fand Gold"], ["أَخَذَ قَلَمًا", "er nahm einen Stift"], ["سَمِعَ خَبَرًا", "er hörte eine Nachricht"]],
+      "tipp": {"titel": "Doppelte Zeichen, dazu ein n", "zeichen": "ـًا",
+        "text": "Steht ein Vokalzeichen doppelt, kommt ein n dazu. Das nennt man Tanwin, es steht nur am Wortende. Zwei Fatha-Striche klingen wie an, und danach folgt meist ein Alif, das man nicht spricht: قَلَمًا liest man qalaman, einen Stift."}
+    },
+    {
+      "id": "s4-2", "titel": "Endung -in", "art": "vokale", "zeichen": "in", "station": "بِقَلَمٍ",
+      "woerter": [["بِقَلَمٍ", "mit einem Stift"], ["لِوَلَدٍ", "für einen Jungen"], ["كَقَمَرٍ", "wie ein Mond"], ["كَأَسَدٍ", "wie ein Löwe"], ["بِحَجَرٍ", "mit einem Stein"],
+        ["لِرَجُلٍ", "für einen Mann"], ["كَجَبَلٍ", "wie ein Berg"], ["بِلَبَنٍ", "mit Milch"], ["كَذَهَبٍ", "wie Gold"], ["مَعَ وَلَدٍ", "mit einem Jungen"],
+        ["لِبَلَدٍ", "für ein Land"]],
+      "tipp": {"titel": "Zwei Striche unten", "zeichen": "ـٍ",
+        "text": "Zwei Kasra-Striche unter dem letzten Buchstaben klingen wie in. Hier kommt kein Alif dazu. So enden Wörter oft nach بِ mit, لِ für und كَ wie: بِقَلَمٍ liest man biqalamin, mit einem Stift."}
+    },
+    {
+      "id": "s4-3", "titel": "Endung -un", "art": "vokale", "zeichen": "un", "station": "قَلَمٌ",
+      "woerter": [["قَلَمٌ", "ein Stift"], ["وَلَدٌ", "ein Junge"], ["رَجُلٌ", "ein Mann"], ["جَمَلٌ", "ein Kamel"], ["قَمَرٌ", "ein Mond"],
+        ["أَسَدٌ", "ein Löwe"], ["جَبَلٌ", "ein Berg"], ["مَطَرٌ", "Regen"], ["عِنَبٌ", "Trauben"], ["أُذُنٌ", "ein Ohr"],
+        ["إِبِلٌ", "Kamele"], ["ذَهَبٌ", "Gold"], ["هُوَ وَلَدٌ", "er ist ein Junge"]],
+      "tipp": {"titel": "Damma mit Haken", "zeichen": "ـٌ",
+        "text": "Zwei Damma klingen wie un. Oft sieht das Zeichen aus wie ein Damma mit kleinem Haken. So endet ein Wort, wenn es allein steht oder das Subjekt ist: قَلَمٌ liest man qalamun, ein Stift. Achte auf das Ende: ذَهَبَ heißt er ging, ذَهَبٌ heißt Gold."}
+    },
+    {
+      "id": "s4-4", "titel": "Ta marbuta", "art": "vokale", "zeichen": "ta", "station": "شَجَرَةٌ",
+      "woerter": [["شَجَرَةٌ", "ein Baum"], ["وَرَقَةٌ", "ein Blatt"], ["بَقَرَةٌ", "eine Kuh"], ["ثَمَرَةٌ", "eine Frucht"], ["كَلِمَةٌ", "ein Wort"],
+        ["مَلِكَةٌ", "eine Königin"], ["سَنَةٌ", "ein Jahr"], ["لُغَةٌ", "eine Sprache"], ["بَرَكَةٌ", "Segen"], ["أَكَلَ ثَمَرَةً", "er aß eine Frucht"],
+        ["كَتَبَ كَلِمَةً", "er schrieb ein Wort"], ["بِكَلِمَةٍ", "mit einem Wort"], ["هِيَ شَجَرَةٌ", "es ist ein Baum"]],
+      "tipp": {"titel": "Ein ه mit zwei Punkten", "zeichen": "ـة ة",
+        "text": "Das Ta marbuta ة sieht aus wie ein ه mit den zwei Punkten des ت. Es steht nur am Wortende, meist bei weiblichen Wörtern, und klingt mit Vokal wie t: شَجَرَةٌ liest man shajaratun. Bei -an kommt hier kein Alif dazu: شَجَرَةً."}
+    }
+  ]
+}

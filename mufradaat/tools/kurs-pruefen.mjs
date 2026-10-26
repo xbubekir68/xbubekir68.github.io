@@ -7,13 +7,19 @@
 //   verbinden:  neu[] = Buchstaben, deren verbundene Formen die Lektion einführt (darf leer sein), woerter[] = Wörter ohne Vokalzeichen,
 //               die nur Buchstaben mit schon eingeführten Formen enthalten
 //   suren:      suren[] = {t: Surenanfang, sp: Text zum Vorlesen, vorstellen: true bei den vorgestellten}
-// Ziele: alle-buchstaben (alle 29 eingeführt) oder lesen {ar, sp}: ein Text, den man am Ende der Etappe lesen kann.
+//   vokale:     zeichen = das neue Zeichen der Lektion (a, i, u = Fatha, Kasra, Damma; hamza = Hamza auf Alif; an, in, un = Tanwin;
+//               ta = Ta marbuta), fehlt bei reinen Übungslektionen. woerter[] = [Wort oder kurzer Satz mit allen Vokalzeichen, Bedeutung].
+//               Jeder Buchstabe trägt genau ein schon eingeführtes Zeichen, Tanwin nur am Wortende, nach -an das stumme Alif
+//               (außer nach ة und Hamza). Sukun, Schadda und lange Vokale kommen erst in späteren Etappen.
+// Ziele: alle-buchstaben (alle 29 eingeführt) oder lesen {ar, sp, de}: ein Text, den man am Ende der Etappe lesen kann
+// (de = Übersetzung, nur bei Texten mit Vokalzeichen; die Umschrift erzeugt die App).
 // Neue Etappen-Dateien gehören auch in die Offline-Liste SHELL in sw.js.
 import fs from "node:fs";
 import vm from "node:vm";
 import {fileURLToPath} from "node:url";
 const APP=fileURLToPath(new URL("..",import.meta.url)),KURS=APP+"kurs/";
-const ARTEN=["buchstaben","verbinden","suren"],ZIELE=["alle-buchstaben","lesen"];
+const ARTEN=["buchstaben","verbinden","suren","vokale"],ZIELE=["alle-buchstaben","lesen"];
+const ZEICHEN_ARTEN=["a","i","u","hamza","an","in","un","ta"],VZ={"\u064e":"a","\u0650":"i","\u064f":"u","\u064b":"an","\u064d":"in","\u064c":"un"};
 const AR=/^[؀-ۿݐ-ݿ ]+$/; // nur arabische Zeichen und Leerzeichen
 const txt=v=>typeof v==="string"&&v.trim().length>0;
 const ZEICHEN=/[\u064b-\u065f\u0670\u0640 ]/g; // Vokal- und Lesezeichen, Dehnungsstrich, Leerzeichen
@@ -34,6 +40,27 @@ export function pruefen(){
     const r=[];for(const c of t.replace(ZEICHEN,"")){const a=AC[c];if(!a){f(`${lw}: ${was} „${t}“ enthält „${c}“, das ist kein Buchstabe des Alphabets`);continue}
       if(!formen.has(a[0])&&a[0]!=="hamza")f(`${lw}: ${was} „${t}“ enthält ${a[2]}, dessen verbundene Formen noch nicht eingeführt sind`);r.push(a)}
     return r};
+  const zk=new Map(); // eingeführte Zeichen → Lektion
+  const vokal=(t,lw,was)=>{ // Text mit Vokalzeichen: jeder Buchstabe genau ein bekanntes Zeichen, Tanwin am Wortende, -an mit stummem Alif
+    if(!txt(t)||!AR.test(t)){f(`${lw}: ${was} „${t}“ ist kein arabischer Text`);return}
+    const ch=[...t];
+    for(let k=0;k<ch.length;k++){const c=ch[k];if(c===" ")continue;
+      const hz=c==="أ"||c==="إ",tm=c==="ة",a=AC[c];
+      if(!a&&!hz&&!tm){f(`${lw}: ${was} „${t}“ enthält „${c}“ an falscher Stelle oder ein Zeichen, das noch nicht dran ist`);return}
+      if(a&&a[0]==="alif"){f(`${lw}: ${was} „${t}“: ein Alif ohne Hamza ist hier nur nach -an erlaubt`);return}
+      if(hz&&!zk.has("hamza")||tm&&!zk.has("ta")){f(`${lw}: ${was} „${t}“ enthält ${c}, das noch nicht eingeführt ist`);return}
+      if(a&&!formen.has(a[0])&&a[0]!=="hamza")f(`${lw}: ${was} „${t}“ enthält ${a[2]}, dessen verbundene Formen noch nicht eingeführt sind`);
+      const v=VZ[ch[k+1]];
+      if(!v){f(`${lw}: ${was} „${t}“: ${c} hat kein Vokalzeichen`);return}
+      if(!zk.has(v)){f(`${lw}: ${was} „${t}“ nutzt ${v}, das noch nicht eingeführt ist`);return}
+      if(c==="إ"&&v!=="i"&&v!=="in"||c==="أ"&&(v==="i"||v==="in"))f(`${lw}: ${was} „${t}“: Hamza mit Kasra steht unter dem Alif (إ), sonst darüber (أ)`);
+      if(tm&&!["an","in","un"].includes(v))f(`${lw}: ${was} „${t}“: ة steht hier nur mit Tanwin`);
+      k++;
+      if(["an","in","un"].includes(v)){
+        if(v==="an"&&!tm&&!hz&&a&&a[0]!=="hamza"){if(ch[k+1]!=="ا"){f(`${lw}: ${was} „${t}“: nach -an fehlt das stumme Alif`);return}k++}
+        if(ch[k+1]!==undefined&&ch[k+1]!==" "){f(`${lw}: ${was} „${t}“: Tanwin steht nur am Wortende`);return}}
+      else if(tm){f(`${lw}: ${was} „${t}“: ة steht nur am Wortende`);return}
+    }};
   for(const st of idx.stufen||[]){
     if(!txt(st.titel)||!txt(st.ar))f(`Stufe ${st.id}: Titel oder arabischer Titel fehlt`);
     if(txt(st.ar)&&!AR.test(st.ar))f(`Stufe ${st.id}: arabischer Titel enthält andere Zeichen`);
@@ -84,6 +111,19 @@ export function pruefen(){
           }
           if(new Set((l.suren||[]).map(x=>x.t)).size!==(l.suren||[]).length)f(`${lw}: ein Surenanfang steht doppelt`);
         }
+        if(l.art==="vokale"){
+          if(l.zeichen!==undefined){
+            if(!ZEICHEN_ARTEN.includes(l.zeichen))f(`${lw}: unbekanntes Zeichen „${l.zeichen}“`);
+            else if(zk.has(l.zeichen))f(`${lw}: Zeichen „${l.zeichen}“ wurde schon in ${zk.get(l.zeichen)} eingeführt`);else zk.set(l.zeichen,l.id);
+          }
+          if(!Array.isArray(l.woerter)||l.woerter.length<8)f(`${lw}: mindestens 8 Wörter nötig`);
+          const W=(l.woerter||[]).map(x=>Array.isArray(x)?x[0]:x);
+          if(new Set(W).size!==W.length)f(`${lw}: ein Wort steht doppelt in der Liste`);
+          for(const x of l.woerter||[]){if(!Array.isArray(x)||x.length!==2||!txt(x[1])){f(`${lw}: „${x}“ braucht die Form [Wort, Bedeutung]`);continue}vokal(x[0],lw,"Wort")}
+          const neu={a:"\u064e",i:"\u0650",u:"\u064f",an:"\u064b",in:"\u064d",un:"\u064c",hamza:/[أإ]/,ta:"ة"}[l.zeichen];
+          if(neu&&W.filter(w=>typeof neu==="string"?w.includes(neu):neu.test(w)).length<W.length/2)f(`${lw}: weniger als die Hälfte der Wörter nutzt das neue Zeichen`);
+          if(l.station!==undefined&&txt(l.station))vokal(l.station,lw,"Station");
+        }
         if(l.station!==undefined&&(!txt(l.station)||!AR.test(l.station)))f(`${lw}: Station ist kein arabischer Text`);
         if(l.tipp){
           if(!txt(l.tipp.titel)||!txt(l.tipp.text)||!txt(l.tipp.zeichen))f(`${lw}: Tipp unvollständig`);
@@ -93,7 +133,9 @@ export function pruefen(){
       if(d.ziel){
         if(!ZIELE.includes(d.ziel.art)||!txt(d.ziel.text))f(`${wo}: Ziel unvollständig oder unbekannt`);
         if(d.ziel.geschafft!==undefined&&!txt(d.ziel.geschafft))f(`${wo}: Ziel-Text „geschafft“ ist leer`);
-        if(d.ziel.art==="lesen"){buchst(d.ziel.ar,wo+", Ziel","Zieltext",true);if(!txt(d.ziel.sp)||!AR.test(d.ziel.sp))f(`${wo}: Ziel ohne arabischen Vorlesetext`)}
+        if(d.ziel.art==="lesen"&&d.ziel.de!==undefined){vokal(d.ziel.ar,wo+", Ziel","Zieltext");if(!txt(d.ziel.de))f(`${wo}: Ziel ohne Übersetzung`)}
+        else if(d.ziel.art==="lesen")buchst(d.ziel.ar,wo+", Ziel","Zieltext",true);
+        if(d.ziel.art==="lesen"){if(!txt(d.ziel.sp)||!AR.test(d.ziel.sp))f(`${wo}: Ziel ohne arabischen Vorlesetext`)}
         if(d.ziel.art==="alle-buchstaben"){const fehlt=ALPHA.filter(a=>!eingef.has(a[0])).map(a=>a[0]);if(fehlt.length)f(`${wo}: Ziel „alle Buchstaben“, aber es fehlen ${fehlt.join(", ")}`)}
       }
     }
