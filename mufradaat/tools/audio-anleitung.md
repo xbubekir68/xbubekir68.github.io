@@ -51,3 +51,14 @@ node tools/gen-audio.mjs liste
 ```
 
 Das braucht keinen Schlüssel. Die KI-Datei bleibt liegen und springt wieder ein, wenn du die Aufnahme löschst.
+
+## 5. Silben selbst aufnehmen
+
+Die Etappen „Kurze Vokale“ und „Tanwin“ brauchen kurze Silben wie بَ بِ بُ oder بًا بٍ بٌ.
+In `audio/liste.csv` stehen sie mit IDs der Form `sb/<Buchstabe>-<Zeichen>`, z. B. `sb/ba-a` für بَ,
+`sb/ba-i` für بِ, `sb/ba-an` für بًا und `sb/tam-un` für ةٌ. Die Aufnahme kommt nach `audio/eigen/sb/ba-a.mp3` usw.,
+danach `node tools/gen-audio.mjs liste` ausführen. Nur وَ (wa) liegt als Wort unter `w/wa`.
+
+Tipps: eine Silbe pro Datei, ohne lange Pause davor und danach, gleichmäßig laut.
+Beim Tanwin das n deutlich sprechen (ban, bin, bun), damit man es von ba, bi, bu unterscheiden kann.
+Solange eine Aufnahme fehlt, spricht die KI-Stimme als Platzhalter, sobald ihre Dateien erzeugt sind.

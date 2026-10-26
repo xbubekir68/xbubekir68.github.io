@@ -8,8 +8,8 @@
       "etappen": [
         {"id": "s1", "titel": "Die Buchstaben", "ar": "الْحُرُوفُ", "kurz": "Alle 29 Buchstaben einzeln", "datei": "s1.json"},
         {"id": "s2", "titel": "Buchstaben verbinden", "ar": "وَصْلُ الْحُرُوفِ", "kurz": "Formen am Anfang, in der Mitte und am Ende, dazu die Surenanfänge", "datei": "s2.json"},
-        {"id": "s3", "titel": "Kurze Vokale", "ar": "الْحَرَكَاتُ", "kurz": "Fatha, Kasra und Damma, erste Silben und Wörter"},
-        {"id": "s4", "titel": "Tanwin", "ar": "التَّنْوِينُ", "kurz": "Endungen -an, -in, -un und das Ta marbuta"},
+        {"id": "s3", "titel": "Kurze Vokale", "ar": "الْحَرَكَاتُ", "kurz": "Fatha, Kasra und Damma, erste Silben und Wörter", "datei": "s3.json"},
+        {"id": "s4", "titel": "Tanwin", "ar": "التَّنْوِينُ", "kurz": "Endungen -an, -in, -un und das Ta marbuta", "datei": "s4.json"},
         {"id": "s5", "titel": "Lange Vokale", "ar": "حُرُوفُ الْمَدِّ", "kurz": "ā, ī, ū, das kleine Alif, aw und ay"},
         {"id": "s6", "titel": "Sukun", "ar": "السُّكُونُ", "kurz": "Geschlossene Silben und das Hamza auf seinen Trägern"},
         {"id": "s7", "titel": "Schadda", "ar": "الشَّدَّةُ", "kurz": "Verdoppelte Buchstaben"},

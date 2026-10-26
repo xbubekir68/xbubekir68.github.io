@@ -271,7 +271,16 @@ details.rule{display:block;margin-top:12px}details.rule>ol,details.rule>p{margin
 .ksn>.ar{font-size:72px;line-height:1.5}.ksn .klt{display:flex;flex-direction:row-reverse;justify-content:center;flex-wrap:wrap;gap:8px 16px;margin:6px 0 14px}.ksn .klt>span{display:grid;justify-items:center;gap:0}.ksn .klt .ar{font-size:30px;line-height:1.5;color:var(--g)}.ksn .klt small{font-size:12px;color:var(--mute)}
 .kzr{text-align:center;margin:14px 0 6px;font-size:14px}.kzs .tk{display:inline-grid;place-items:center}
 .kws{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 18px;font-size:30px}
-.kzl .sent{font-size:44px;line-height:1.6;margin:2px 0}
+.kzl .sent{font-size:44px;line-height:1.6;margin:2px 0}.kzl .sent.lng{font-size:34px}
+/* Vokale und Tanwin: Zeichen, Silbentafel, Wörter mit Umschrift, Nachsprechen */
+.kzn>.ar{font-size:88px;line-height:1.3;color:var(--g)}.kwl{text-align:center;font-size:15px;color:var(--mute);line-height:1.45}.kwl .kgp{color:var(--g);font-weight:700}
+.kwr{font-size:56px;line-height:1.7;margin:10px 0 6px}.kgp{color:var(--g)}.kla small{display:block;font-size:14px;font-weight:400;color:var(--mute);margin-top:4px}
+.ktf{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;direction:rtl;margin-top:14px}.ktf.few{grid-template-columns:repeat(3,minmax(0,96px));justify-content:center;gap:10px}
+.kts{display:grid;justify-items:center;padding:2px 0 6px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);font:inherit}
+.kts .ar{font-size:26px;line-height:1.7}.ktf.few .kts .ar{font-size:44px}.kts small{font-size:11px;color:var(--mute);direction:ltr}.ktu{font-size:13px;line-height:1.5;text-align:center;margin-top:12px}
+.ksp{margin-top:14px;display:grid;gap:8px;justify-items:center;text-align:center;padding:16px}.ksp .kgl{margin:4px 0}.ksh{font-size:13px;line-height:1.5}
+.ksr{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:6px}.ksr .btn{width:auto;margin:0;padding:10px 18px;display:inline-flex;align-items:center;gap:6px}
+.ksr .krec{background:var(--bad);color:var(--on)}.ksk{display:block;margin:10px auto 0}
 .ksoon{margin-top:14px}.ksoon ol{list-style:none;margin:10px 0;padding:0;display:grid;gap:10px}.ksoon li{display:flex;gap:12px;align-items:center;opacity:.8}.ksoon li .ar{flex:none;width:96px;text-align:right;font-size:18px;color:var(--mute)}.ksoon li b{display:block;font-size:14px}.ksoon li small{display:block;font-size:12px;color:var(--mute)}
 html.splash-lock{overflow:hidden}
 /* ===== MUFRADAAT STARTBILDSCHIRM ===== */
@@ -668,7 +677,10 @@ back:'<path d="M19 12H5M11 6l-6 6 6 6"/>',
 close:'<path d="M6 6l12 12M18 6L6 18"/>',
 pairs:'<rect x="3" y="4" width="8" height="8" rx="2"/><rect x="13" y="12" width="8" height="8" rx="2"/>',
 repeat:'<path d="M4 12a8 8 0 0 1 14-5l2 2M20 4v5h-5M20 12a8 8 0 0 1-14 5l-2-2M4 20v-5h5"/>',
-chev:'<path d="M9 6l6 6-6 6"/>'
+chev:'<path d="M9 6l6 6-6 6"/>',
+mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
+stop:'<rect x="7" y="7" width="10" height="10" rx="1.5"/>',
+play:'<path d="M8 5v14l11-7z"/>'
 };
 const ic=(n,s=22,f=false)=>`<svg class="i" viewBox="0 0 24 24" width="${s}" height="${s}" ${f?'fill="currentColor" stroke="none"':'fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"'} aria-hidden="true">${ICO[n]}</svg>`;
 const xbtn=(go,label="Beenden")=>`<button class="x" data-go="${go}" aria-label="${label}">${ic("close")}</button>`;
@@ -1028,7 +1040,8 @@ const posOf=a=>a.i==="hamza"?[]:a.nj?["f"]:["b","m","f"]; // Stellen, an denen d
 const POSN={b:"am Anfang",m:"in der Mitte",f:"am Ende",i:"allein"};
 const kLesung=t=>kChars(t).map(a=>a.n.replace(/ʾ$/,"")).join(" "); // Surenanfang: Buchstabe für Buchstabe, das Hamza am Namensende fällt weg
 const kHearT=t=>!!AUD[t]||ARV===true; // Höraufgabe nur, wenn der Text sicher vorgelesen werden kann
-const KCARD=["neu","tipp","neuform","neusure"]; // Karten zum Kennenlernen, ohne Bewertung
+const KCARD=["neu","tipp","neuform","neusure","neuz","tafel","sprechen"]; // Karten zum Kennenlernen und Nachsprechen, ohne Bewertung
+const KCHO=["formsuche","bauen","sure","surehoeren","silbe","silbewahl","silbehoeren","wortlesen","worthoeren","luecke"]; // Aufgaben mit Antworten als Text
 function kTasksV(l){
   const nw=kLet(l),forms=nw.filter(a=>posOf(a).length),W=shuffle(l.woerter),T=[],tail=[],fm=a=>({t:"form",a,pos:pick(posOf(a))});
   for(let c=0;c<nw.length;c+=2){const ch=nw.slice(c,c+2);
@@ -1053,8 +1066,115 @@ function kTasksS(l,hear){ // Surenanfänge: vier vorstellen, dann lesen, hören 
   shuffle(su.filter(s=>kChars(s.t).length>=3)).sort((x,y)=>!!x.vorstellen-!!y.vorstellen).slice(0,3).forEach(s=>tail.push({t:"zerlegen",w:s.t,s}));
   return [...T,...shuffle(tail)];
 }
+// Vokale und Tanwin: Silben aus Buchstabe und Zeichen, Wörter mit Umschrift und Bedeutung
+const TAM={i:"tam",c:"ة",n:"Tāʾ marbūṭa",s:"t"}; // Ta marbuta: kein eigener Buchstabe des Alphabets
+const KCH={...ALC,"أ":ALBY.hamza,"إ":ALBY.hamza,"ة":TAM};
+const VZ={a:"َ",i:"ِ",u:"ُ",an:"ً",in:"ٍ",un:"ٌ"},VZR=Object.fromEntries(Object.entries(VZ).map(([k,v])=>[v,k]));
+const TANW=["an","in","un"],VFAM={a:"an",i:"in",u:"un",an:"a",in:"i",un:"u"},VL={a:"a",i:"i",u:"u",an:"an",in:"in",un:"un"};
+const ZI={ // neue Zeichen: Name, Aussehen, Klang
+  a:{n:"Fatha",g:"ـَ",l:"a",h:"Ein schräger Strich über dem Buchstaben."},
+  i:{n:"Kasra",g:"ـِ",l:"i",h:"Ein schräger Strich unter dem Buchstaben."},
+  u:{n:"Damma",g:"ـُ",l:"u",h:"Ein kleines Wāw über dem Buchstaben."},
+  hamza:{n:"Hamza auf Alif",g:"أ إ",l:"ʾa, ʾi, ʾu",h:"Ein kurzer Stimmabsatz mit Vokal. Bei i sitzt das Hamza unter dem Alif."},
+  an:{n:"Tanwin -an",g:"ـًا",l:"an",h:"Zwei Fatha-Striche, danach meist ein Alif, das man nicht spricht."},
+  in:{n:"Tanwin -in",g:"ـٍ",l:"in",h:"Zwei Kasra-Striche unter dem Buchstaben."},
+  un:{n:"Tanwin -un",g:"ـٌ",l:"un",h:"Zwei Damma, oft als Damma mit kleinem Haken geschrieben."},
+  ta:{n:"Ta marbuta",g:"ـة ة",l:"t",h:"Ein ه mit zwei Punkten. Es steht nur am Wortende und klingt mit Vokal wie t."}};
+const trL=a=>a.i==="tam"?"t":({jim:"j",kha:"kh",shin:"sh"})[a.i]||a.s; // Umschrift wie bei den Wörtern der App
+const kSyl=(c,v)=>{if(!v)return c;const b=c==="أ"||c==="إ"?(v==="i"||v==="in"?"إ":"أ"):c;return b+VZ[v]+(v==="an"&&!"ةأء".includes(b)?"ا":"")}; // -an mit stummem Alif, außer nach ة und Hamza
+function kUnits(w){ // Wort in Silben: Buchstabe mit seinem Zeichen, das stumme Alif nach -an gehört dazu
+  const U=[];
+  for(const c of w){const u=U[U.length-1];
+    if(c===" ")U.push({sp:true});
+    else if(VZR[c]){if(u)u.v=VZR[c]}
+    else if(c==="ْ"||c==="ّ"){if(u)u[c==="ْ"?"o":"sh"]=true}
+    else if(c==="ا"&&u&&u.v==="an")u.x=true;
+    else U.push({a:KCH[c]||null,c,v:""})}
+  return U;
+}
+const kUw=u=>u.sp?" ":kSyl(u.c,u.v)+(u.sh?"ّ":"")+(u.o?"ْ":"");
+const kJoin=U=>U.map(kUw).join("");
+const kTrU=U=>U.map((u,k)=>{if(u.sp)return " ";const p=U[k-1];let c=u.a?(u.a.i==="hamza"&&(!p||p.sp)?"":trL(u.a)):"";if(u.sh)c+=c;return c+(VL[u.v]||"")}); // das Hamza am Wortanfang schreibt man nicht
+const kTr=w=>kTrU(kUnits(w)).join("");
+const kZK=k=>KL.slice(0,k+1).filter(l=>l.art==="vokale"&&l.zeichen).map(l=>l.zeichen); // bis zu dieser Lektion eingeführte Zeichen
+const kWs=l=>(l.woerter||[]).map(([w,de])=>({w,de,lat:kTr(w)}));
+const kSy=(a,v)=>({a,v,t:kSyl(a.i==="hamza"?"أ":a.c,v),lat:(a.i==="hamza"?"ʾ":trL(a))+VL[v],k:a.i+"-"+v});
+const kSyOk=(a,v)=>a.i!=="alif"&&(a===TAM?TANW.includes(v):!(a.i==="hamza"&&TANW.includes(v))); // Ta marbuta nur mit Tanwin, Hamza mit Tanwin erst später
+const kSylls=(zk,v)=>[...ALPHA,TAM].filter(a=>kSyOk(a,v)&&(a.i!=="hamza"||zk.includes("hamza"))&&(a!==TAM||zk.includes("ta"))).map(a=>kSy(a,v));
+const LATSIM=[["s","ṣ"],["d","ḍ"],["t","ṭ"],["z","ẓ"],["h","ḥ"],["ʿ","ʾ"],["dh","ẓ"]]; // in der Umschrift kaum zu unterscheiden
+const latNear=(a,b)=>trL(a)===trL(b)||LATSIM.some(g=>g.includes(trL(a))&&g.includes(trL(b)));
+function kSylD(y,zk){ // ähnliche Silben als Ablenker: anderes Zeichen auf demselben Buchstaben, dann ähnlich aussehende Buchstaben
+  const vs=zk.filter(z=>VZ[z]),a=y.a,fam=a===TAM?[ALBY.he]:[...dotPeers(a,ALPHA),...(AFAM.find(f=>f.includes(a.i))||[]).map(i=>ALBY[i])];
+  const c=[...(vs.includes(VFAM[y.v])?[VFAM[y.v]]:[]),...shuffle(vs.filter(v=>v!==y.v))].map(v=>[a,v]).concat(shuffle(fam).map(g=>[g,y.v]),shuffle([...ALPHA,TAM]).map(g=>[g,y.v]));
+  const out=[],seen=new Set([y.t,y.lat]);
+  for(const [g,v] of c){
+    if(out.length>=3)break;
+    if(!kSyOk(g,v)||(g!==a&&latNear(a,g))||(g.i==="hamza"&&!zk.includes("hamza"))||(g===TAM&&!zk.includes("ta")))continue;
+    const s=kSy(g,v);if(!seen.has(s.t)&&!seen.has(s.lat)){seen.add(s.t);seen.add(s.lat);out.push(s)}}
+  return out;
+}
+function kWVar(w,zk){ // falsch gelesene Fassungen mit bekannten Zeichen: andere Vokale, eine andere Endung oder ein Buchstabe mit anderen Punkten
+  const U=kUnits(w),ix=U.map((u,k)=>k).filter(k=>U[k].a&&U[k].v),out=new Set(),lat=new Set([kTr(w)]),vs=zk.filter(z=>VZ[z]);
+  const alt=u=>(TANW.includes(u.v)?[VFAM[u.v],...TANW]:["a","i","u"]).filter(v=>v!==u.v&&vs.includes(v)&&kSyOk(u.a,v));
+  for(let g=0;g<80&&out.size<3;g++){
+    const V=U.map(u=>({...u})),r=Math.random(),k=pick(ix),f=V[k].a&&(DOTF.find(f=>f.includes(V[k].a.i))||AFAM.find(f=>f.includes(V[k].a.i)));
+    if((r<.75||!f)&&ix.some(k=>alt(U[k]).length))(r<.3&&ix.length>1?shuffle(ix).slice(0,2):[k]).forEach(k=>{const o=alt(V[k]);if(o.length)V[k].v=pick(o)});
+    else if(!f)continue;
+    else{const b=ALBY[pick(f.filter(i=>i!==V[k].a.i&&i!=="alif"))];V[k].a=b;V[k].c=b.c}
+    const s=kJoin(V),t=kTrU(V).join("");if(s!==w&&!lat.has(t)&&!out.has(s)){out.add(s);lat.add(t)}}
+  return [...out];
+}
+function kGapOpts(U,g,zk){ // Silben für die Lücke: dasselbe Zeichen-Paar zuerst (a und -an), Tanwin nur am Wortende
+  const u=U[g],end=!U[g+1]||U[g+1].sp,vs=zk.filter(z=>VZ[z]&&(end||!TANW.includes(z)));
+  return [u.v,VFAM[u.v],...shuffle(vs)].filter((v,k,a)=>v&&vs.includes(v)&&a.indexOf(v)===k&&kSyOk(u.a,v)).slice(0,4).map(v=>kSyl(u.c,v));
+}
+function kGap(wo,z,zk){ // welche Silbe fehlt: bevorzugt eine mit dem neuen Zeichen, nur wo es mindestens zwei Möglichkeiten gibt
+  const U=kUnits(wo.w),ks=U.map((u,k)=>k).filter(k=>U[k].a&&U[k].v&&kGapOpts(U,k,zk).length>1);
+  const pr=ks.filter(k=>z==="ta"?U[k].a===TAM:z==="hamza"?U[k].a.i==="hamza":U[k].v===z);
+  return ks.length?pick(pr.length?pr:ks):-1;
+}
+function kSbD(U,zk){ // falsche Silben für den Baukasten: anderes Zeichen auf demselben Buchstaben oder andere Punkte
+  const vs=zk.filter(z=>VZ[z]),have=new Set(U.map(kUw)),out=new Set(),n=U.length>3?3:2;
+  for(let g=0;g<60&&out.size<n;g++){
+    const u=pick(U),ov=vs.filter(v=>v!==u.v&&kSyOk(u.a,v)&&TANW.includes(v)===TANW.includes(u.v)),f=DOTF.find(f=>f.includes(u.a.i));let s=null;
+    if(ov.length&&(Math.random()<.65||!f))s=kSyl(u.c,pick(ov));
+    else if(f){const b=ALBY[pick(f.filter(i=>i!==u.a.i))];s=kSyl(b.c,u.v)}
+    if(s&&!have.has(s))out.add(s)}
+  return [...out];
+}
+const kBauL=wo=>wo.w.includes(" ")?wo.w.split(" ").map(c=>({c,k:c})):kUnits(wo.w).map(u=>({c:kUw(u),k:kUw(u)})); // Sätze aus Wörtern, Wörter aus Silben
+const kBauD=(wo,zk)=>wo.w.includes(" ")?[...new Set(wo.w.split(" ").map(x=>kWVar(x,zk)[0]).filter(Boolean))]:kSbD(kUnits(wo.w),zk);
+const kHasZ=(wo,z)=>kUnits(wo.w).some(u=>u.a&&(z==="ta"?u.a===TAM:z==="hamza"?u.a.i==="hamza":u.v===z));
+function kTasksZ(l,hear){ // Vokale und Tanwin: Zeichen vorstellen, Silben lesen und hören, dann Wörter lesen, ergänzen, bauen und nachsprechen
+  const zk=kZK(l.k),z=l.zeichen,W=shuffle(kWs(l)).sort((x,y)=>z?kHasZ(y,z)-kHasZ(x,z):0),T=[],tail=[],hs=y=>!!AUD[y.t],hw=wo=>hear&&kHearT(wo.w);
+  const q=(t,y)=>({t,y,zk}),qw=(t,wo)=>({t,wo,zk});
+  let p=0;const take=(f=()=>true)=>{for(let k=0;k<W.length;k++){const wo=W[p++%W.length];if(f(wo))return wo}return null}; // Wörter der Reihe nach, damit sich wenig wiederholt
+  let fill=[];
+  if(z){
+    const nw=z==="hamza"?["a","i","u"].map(v=>kSy(ALBY.hamza,v)):z==="ta"?["un","in","an"].map(v=>kSy(TAM,v)):kSylls(zk,z);
+    const sel=shuffle(nw),at=k=>sel[k%sel.length];
+    T.push({t:"neuz",z,wo:W.find(wo=>kHasZ(wo,z))||W[0]},{t:"tafel",z,sy:nw});
+    T.push(q("silbe",at(0)),q("silbewahl",at(1)),q("silbe",at(2)),q(hs(at(3))?"silbehoeren":"silbewahl",at(3)));
+    const vv=TANW.includes(z)?[...zk.filter(v=>TANW.includes(v)),VFAM[z]]:zk.filter(v=>VZ[v]&&!TANW.includes(v)),lt=[];
+    for(const y of sel)if(y.a.i!=="hamza"&&lt.length<Math.ceil(5/vv.length)&&!lt.some(a=>latNear(a,y.a)))lt.push(y.a);
+    const set=z==="hamza"?[...nw,kSy(ALBY.he,"a"),kSy(ALBY.he,"u")]:z==="ta"?[...nw,kSy(ALBY.he,"un"),kSy(ALBY.he,"in")]
+      :shuffle(lt.flatMap(a=>vv.map(v=>kSy(a,v)))).sort((x,y)=>(y.v===z)-(x.v===z)).slice(0,5);
+    T.push({t:"paare",syl:true,set:shuffle(set).map(y=>({i:y.k,c:y.t,n:y.lat,sp:hs(y)?y.t:null}))});
+    if(hs(at(0)))T.push({t:"sprechen",y:at(0)});
+    fill=sel.slice(4);
+  }
+  for(let k=0;k<(z?3:5);k++)tail.push(qw("wortlesen",take()));
+  for(let k=0;k<2;k++){const wo=take(hw);if(wo)tail.push(qw("worthoeren",wo))}
+  if(zk.filter(v=>VZ[v]).length>1)for(let k=0;k<(z?2:3);k++){const wo=take(wo=>kGap(wo,z,zk)>=0);if(wo)tail.push({...qw("luecke",wo),g:kGap(wo,z,zk)})}
+  for(let k=0;k<(z?2:3);k++){const wo=take(wo=>wo.w.includes(" ")||kUnits(wo.w).length<=5);if(wo)tail.push(qw("bau",wo))}
+  const sw=take(hw);if(sw)tail.push({t:"sprechen",wo:sw});
+  const g=[...T,...tail].filter(x=>!KCARD.includes(x.t)).length; // bis 13 mit weiteren Silben auffüllen, zuerst aus früheren Lektionen
+  fill=[...shuffle(zk.filter(v=>VZ[v]&&v!==z).flatMap(v=>kSylls(zk,v))),...fill];
+  for(let k=0;k<13-g&&fill.length;k++)tail.push(q(k%2?"silbewahl":"silbe",fill[k%fill.length]));
+  return [...T,...shuffle(tail)];
+}
 function kGen(l,hear){
-  const T=l.art==="verbinden"?kTasksV(l):l.art==="suren"?kTasksS(l,hear):kTasks(kLet(l),kKnown(l.k),hear);
+  const T=l.art==="verbinden"?kTasksV(l):l.art==="suren"?kTasksS(l,hear):l.art==="vokale"?kTasksZ(l,hear):kTasks(kLet(l),kKnown(l.k),hear);
   if(l.tipp)T.unshift({t:"tipp",p:l.tipp});return T;
 }
 const kRevOk=e=>e==="s1"?kLearnt().length>=4:KL.some(l=>l.e===e&&kDone(l.id));
@@ -1082,17 +1202,35 @@ function kOpts(it){ // vier Antworten als Text, it.ok = Index der richtigen
   if(it.t==="formsuche"){const a=it.a,p=it.pos,kn=[...kFormKnown(K.l?K.l.k:KL.length),...(K.l?kLet(K.l):[])];
     r=aform(a,p);o=[...(a.nj?[]:[aform(a,p==="f"?pick(["b","m"]):"f")]),...kDistr(a,kn,28).filter(x=>posOf(x).includes(p)).map(x=>aform(x,p))]} // dazu derselbe Buchstabe an anderer Stelle, außer bei den Einzelgängern
   else if(it.t==="bauen"){r=it.w;o=kVariants(it.w)}
+  else if(it.y){r=it.t==="silbe"?it.y.lat:it.y.t;o=kSylD(it.y,it.zk).map(x=>it.t==="silbe"?x.lat:x.t)}
+  else if(it.t==="wortlesen"||it.t==="worthoeren"){r=it.t==="wortlesen"?it.wo.lat:it.wo.w;o=kWVar(it.wo.w,it.zk).map(x=>it.t==="wortlesen"?kTr(x):x)}
+  else if(it.t==="luecke"){const U=kUnits(it.wo.w);r=kUw(U[it.g]);o=kGapOpts(U,it.g,it.zk)}
   else{const sim=kSimilar(it.s,it.pool);r=it.t==="sure"?it.s.lesung:it.s.t;o=sim.map(x=>it.t==="sure"?x.lesung:x.t)}
   it.opts=shuffle([r,...[...new Set(o)].filter(x=>x!==r).slice(0,3)]);it.ok=it.opts.indexOf(r);
 }
 const kZDistr=L=>{const has=new Set(L.map(a=>a.i)),pe=shuffle(L.flatMap(a=>DOTF.find(f=>f.includes(a.i))||[]));
   return [...new Set([...pe,...shuffle(ALPHA.map(a=>a.i))])].filter(i=>!has.has(i)&&i!=="hamza").slice(0,L.length>3?3:2).map(i=>ALBY[i])};
 let K=null;
+// Nachsprechen: eigene Aufnahme neben dem Vorbild, bleibt auf dem Gerät. Ohne Mikrofon oder nach „Gerade nicht sprechen“ fällt die Karte weg.
+let MREC=null,MICNO=false,SPAUSE=0;
+const kSpOk=()=>!MICNO&&Date.now()>SPAUSE&&!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.MediaRecorder);
+function kRecStop(){try{if(MREC&&MREC.state==="recording")MREC.stop()}catch(e){}}
+const kPlayMe=()=>{const R=K&&K.rec;if(!R||!R.url)return;try{if(AEL)AEL.pause();AEL=new Audio(R.url);AEL.play().catch(()=>{})}catch(e){}};
+async function kRec(){ // höchstens 5 Sekunden, danach wird die eigene Aufnahme gleich abgespielt
+  const R=K.rec;
+  try{
+    const st=await navigator.mediaDevices.getUserMedia({audio:true}),ch=[],m=new MediaRecorder(st);MREC=m;
+    m.ondataavailable=e=>{if(e.data&&e.data.size)ch.push(e.data)};
+    m.onstop=()=>{st.getTracks().forEach(t=>t.stop());if(!K||K.rec!==R)return;if(R.url)URL.revokeObjectURL(R.url);
+      R.url=URL.createObjectURL(new Blob(ch,{type:m.mimeType||"audio/webm"}));R.st="done";if(view==="klek")klek();kPlayMe()};
+    m.start();R.st="rec";klek();setTimeout(()=>{if(MREC===m)kRecStop()},5000);
+  }catch(e){R.st="err";MICNO=true;klek()}
+}
 function startK(l,e){ // l = Lektion; ohne l: Wiederholung der Etappe e
   const hear=canSpeak();let T;e=l?l.e:e||"s1";
   if(l)T=kGen(l,hear);
   else{if(!kRevOk(e)){toast(e==="s1"?"Schließe erst die erste Lektion ab.":"Schließe erst die erste Lektion dieser Etappe ab.");return go("path")}T=kRevE(e,hear)}
-  K={l,e,T,n:0,graded:T.filter(x=>!KCARD.includes(x.t)).length,first:0,miss:0,xp:0,fb:null,picked:null,ps:null,sel:[],fin:false};
+  K={l,e,T,n:0,graded:T.filter(x=>!KCARD.includes(x.t)).length,first:0,miss:0,xp:0,fb:null,picked:null,ps:null,sel:[],rec:null,fin:false};
   view="klek";render();
 }
 function kAns(ok){ // Bewertung: Fehler kommen am Ende noch einmal, es gibt keine Herzen
@@ -1103,6 +1241,7 @@ function kAns(ok){ // Bewertung: Fehler kommen am Ende noch einmal, es gibt kein
 function klek(){
   if(K.n>=K.T.length)return kEnd();
   const it=K.T[K.n],a=it.a,s=it.s,done=K.fb!==null,p=K.picked;
+  if(it.t==="sprechen"&&!K.rec&&!kSpOk()){K.n++;return klek()} // ohne Mikrofon oder gerade pausiert
   const top=`<div class="top">${xbtn("path","Lektion beenden")}<div class="bar"><i style="width:${Math.round(K.n/K.T.length*100)}%"></i></div></div>${it.rep?'<p class="mute kre">Noch einmal</p>':""}`;
   const nx=`<button class="btn" id="nx" ${done||KCARD.includes(it.t)?"":"disabled"}>Weiter</button>`;
   const fb=h=>done?`<div class="fb ${K.fb.ok?"ok":"no"}" role="status"><span>${K.fb.ok?"Richtig":"Richtig ist"}: ${h}${K.fb.ok?"":". Das kommt am Ende noch einmal."}</span>${K.fb.ok?`<span class="xpf">+${K.fb.x} XP</span>`:""}</div>`:"";
@@ -1123,42 +1262,67 @@ function klek(){
     paint(top+`<p class="kq">Neuer Surenanfang</p><div class="card flash slide ksn"><div class="ar" lang="ar">${s.t}</div><p><b>${esc(s.lesung)}</b></p>
     <div class="klt">${kChars(s.t).map(x=>`<span><span class="ar" lang="ar">${x.c}</span><small>${x.n.replace(/ʾ$/,"")}</small></span>`).join("")}</div>${sp("Anhören")}</div>${nx}`);
     $("#sp").onclick=()=>speak(s.sp);if(S.auto!==false)speak(s.sp);
+  }else if(it.t==="neuz"){ // neues Zeichen: Aussehen, Klang, ein Wort damit
+    const Z=ZI[it.z],wo=it.wo;
+    paint(top+`<p class="kq">Neues Zeichen</p><div class="card flash slide kzn"><div class="ar" lang="ar">${Z.g}</div><p><b>${Z.n}</b> · klingt wie ${Z.l}</p><p class="mute">${Z.h}</p>
+    ${wo?`<p class="kbsp">Im Wort: <span class="ar" lang="ar">${wo.w}</span></p><p class="kwl">${esc(wo.lat)} · ${esc(wo.de)}</p>`:""}${wo&&kHearT(wo.w)?sp("Wort anhören"):""}</div>${nx}`);
+    if($("#sp"))$("#sp").onclick=()=>speak(wo.w);
+  }else if(it.t==="tafel"){ // alle Silben mit dem neuen Zeichen, mit Audiodatei zum Antippen
+    const Z=ZI[it.z],au=it.sy.some(y=>AUD[y.t]),tg=au?"button":"span";
+    paint(top+`<p class="kq">Alle Silben mit ${Z.n}</p><div class="ktf ${it.sy.length<6?"few":""}">${it.sy.map((y,k)=>`<${tg} class="kts" ${au?`data-sy="${k}"`:""}><span class="ar" lang="ar">${y.t}</span><small>${esc(y.lat)}</small></${tg}>`).join("")}</div>
+    <p class="mute ktu">${au?"Tippe eine Silbe an, um sie zu hören. ":""}${it.z==="ta"?"":it.z==="hamza"?"ʾ steht in der Umschrift für das Hamza.":"In der Umschrift steht j für dsch, kh für ch, sh für sch, ʿ für ʿAyn und ʾ für Hamza."}</p>${nx}`);
+    document.querySelectorAll("[data-sy]").forEach(b=>b.onclick=()=>speak(it.sy[+b.dataset.sy].t));
+  }else if(it.t==="sprechen"){ // nachsprechen: Vorbild hören, sich aufnehmen, vergleichen, ohne Bewertung
+    const tx=it.y?it.y.t:it.wo.w,R=K.rec||(K.rec={st:"idle"});
+    const msg={idle:"Hör dir das Vorbild an, dann nimm dich auf. Die Aufnahme bleibt auf deinem Gerät.",rec:"Ich höre zu …",done:"Vergleiche deine Aufnahme mit dem Vorbild.",err:"Das Mikrofon ist nicht verfügbar. Sprich einfach laut mit."}[R.st];
+    paint(top+`<p class="kq">Sprich nach</p><div class="card ksp slide"><div class="ar kgl ${it.y?"":"kwr"}" lang="ar">${tx}</div><p class="kwl">${esc(it.y?it.y.lat:it.wo.lat+" · "+it.wo.de)}</p>
+    <div class="ksr"><button class="btn alt" id="sp">${ic("speaker",18)} Vorbild</button>${R.st==="err"?"":`<button class="btn ${R.st==="rec"?"krec":"alt"}" id="mic">${ic(R.st==="rec"?"stop":"mic",18)} ${R.st==="rec"?"Stopp":R.st==="done"?"Nochmal":"Aufnehmen"}</button>`}${R.st==="done"?`<button class="btn alt" id="me">${ic("play",18)} Du</button>`:""}</div>
+    <p class="mute ksh" role="status">${msg}</p></div>${nx}<button class="lnk ksk" id="nsp">Gerade nicht sprechen</button>`);
+    $("#sp").onclick=()=>speak(tx);if(!R.heard){R.heard=true;if(S.auto!==false)speak(tx)}
+    if($("#mic"))$("#mic").onclick=()=>{if(R.st==="rec")kRecStop();else kRec()};
+    if($("#me"))$("#me").onclick=kPlayMe;
+    $("#nsp").onclick=()=>{SPAUSE=Date.now()+15*60e3;kRecStop();toast("Sprechübungen pausieren für 15 Minuten.");$("#nx").click()};
   }else if(it.t==="paare"){
     const P=K.ps=K.ps||{L:shuffle(it.set),R:shuffle(it.set),sel:null,done:[],bad:null,last:null,miss:0};
     const cell=(x,side)=>{const d=P.done.includes(x.i),s=P.sel&&P.sel.id===x.i&&P.sel.side===side,b=P.bad&&P.bad.includes(side+x.i);
       return `<button class="${side==="L"?"ar":""} ${d?"done":s?"sel":""} ${b?"bad":""} ${P.last===x.i?"just":""}" ${side==="L"?'lang="ar"':""} data-p="${side}${x.i}" ${d?"disabled":""}>${side==="L"?x.c:x.n}</button>`};
-    paint(top+`<p class="kq">${it.forms?"Ordne jeder Form ihren Buchstaben zu":"Ordne jedem Buchstaben seinen Namen zu"}</p><div class="pg kpg">${P.L.map((x,k)=>cell(x,"L")+cell(P.R[k],"R")).join("")}</div>
+    paint(top+`<p class="kq">${it.syl?"Ordne jeder Silbe ihre Umschrift zu":it.forms?"Ordne jeder Form ihren Buchstaben zu":"Ordne jedem Buchstaben seinen Namen zu"}</p><div class="pg kpg">${P.L.map((x,k)=>cell(x,"L")+cell(P.R[k],"R")).join("")}</div>
     ${done?`<div class="fb ok" role="status"><span>Alle zugeordnet</span><span class="xpf">+${K.fb.x} XP</span></div>`:""}${nx}`);
     if(!done)document.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{
       const side=b.dataset.p[0],id=b.dataset.p.slice(1);
       if(!P.sel||P.sel.side===side){P.sel={side,id};P.bad=null;P.last=null;sfx("tap");return klek()}
-      if(P.sel.id===id){P.done.push(id);P.last=id;P.sel=null;P.bad=null;sfx("match");vib(12);speak(ALBY[id].sp);
+      if(P.sel.id===id){P.done.push(id);P.last=id;P.sel=null;P.bad=null;sfx("match");vib(12);const X=it.set.find(x=>x.i===id);if(X.sp!==null)speak(X.sp||ALBY[id].sp);
         if(P.done.length===P.L.length){const x=it.rep?1:Math.max(2,5-P.miss);K.xp+=x;K.fb={ok:true,x};if(!P.miss&&!it.rep)K.first++;addXP(x)}return klek()}
       P.miss++;P.bad=[P.sel.side+P.sel.id,side+id];P.sel=null;P.last=null;sfx("bad");vib([40,30,40]);klek()});
-  }else if(it.t==="zerlegen"){ // Wort in seine Buchstaben zerlegen: der Reihe nach antippen, dann prüfen
-    const L=kChars(it.w),bad=done&&!K.fb.ok;
-    if(!it.bank)it.bank=shuffle([...L,...kZDistr(L)]).map((x,u)=>({u,a:x}));
+  }else if(it.t==="zerlegen"||it.t==="bau"){ // Wort in Buchstaben zerlegen oder aus Silben bauen (Sätze aus Wörtern): der Reihe nach antippen, dann prüfen
+    const bau=it.t==="bau",wo=it.wo,L=bau?kBauL(wo):kChars(it.w).map(x=>({a:x,c:x.c,k:x.i,n:x.n})),bad=done&&!K.fb.ok,unit=bau?(wo.w.includes(" ")?"Wörter":"Silben"):"Buchstaben";
+    if(!it.bank)it.bank=shuffle([...L,...(bau?kBauD(wo,it.zk).map(c=>({c,k:c})):kZDistr(L.map(x=>x.a)).map(x=>({a:x,c:x.c,k:x.i,n:x.n})))]).map((x,u)=>({...x,u}));
     const used=new Set(K.sel);
-    paint(top+`<p class="kq">Aus welchen Buchstaben besteht das?</p><div class="ar kgl kwd" lang="ar">${it.w}</div>
-    <div class="sb ${done?(K.fb.ok?"ok":"no"):""}" aria-label="Deine Buchstaben" aria-live="polite">${K.sel.length?K.sel.map(u=>`<button class="tk" lang="ar" data-rm="${u}" ${done?"disabled":""}>${it.bank[u].a.c}</button>`).join(""):`<span class="mute sbh">Tippe die ${L.length} Buchstaben der Reihe nach an, von rechts nach links</span>`}</div>
+    paint(top+`<p class="kq">${bau?"Setze zusammen":"Aus welchen Buchstaben besteht das?"}</p>${bau?`<p class="klaut kla">„${esc(wo.lat)}“<small>${esc(wo.de)}</small></p>`:`<div class="ar kgl kwd" lang="ar">${it.w}</div>`}
+    <div class="sb ${done?(K.fb.ok?"ok":"no"):""}" aria-label="${bau?"Deine Auswahl":"Deine Buchstaben"}" aria-live="polite">${K.sel.length?K.sel.map(u=>`<button class="tk" lang="ar" data-rm="${u}" ${done?"disabled":""}>${it.bank[u].c}</button>`).join(""):`<span class="mute sbh">Tippe die ${L.length} ${unit} der Reihe nach an, von rechts nach links</span>`}</div>
     ${bad?`<p class="mute kzr">Richtig ist:</p><div class="sb ok kzs" aria-label="Richtige Reihenfolge">${L.map(x=>`<span class="tk" lang="ar">${x.c}</span>`).join("")}</div>` // Lösung in derselben Richtung wie die eigene Antwort
-      :`<div class="sbk" aria-label="Buchstaben zur Auswahl">${it.bank.map(x=>`<button class="tk" lang="ar" data-add="${x.u}" aria-label="${x.a.n}" ${used.has(x.u)||done?"disabled":""}>${x.a.c}</button>`).join("")}</div>`}
-    ${done?(bad?`<div class="fb no" role="status"><span>Nicht ganz. Das kommt am Ende noch einmal.</span></div>`:fb(`<span class="ar kfa" lang="ar">${it.w}</span>`))+nx:`<button class="btn" id="chk" ${K.sel.length===L.length?"":"disabled"}>Prüfen</button>`}`);
+      :`<div class="sbk" aria-label="${unit} zur Auswahl">${it.bank.map(x=>`<button class="tk" lang="ar" data-add="${x.u}" ${x.n?`aria-label="${x.n}"`:""} ${used.has(x.u)||done?"disabled":""}>${x.c}</button>`).join("")}</div>`}
+    ${done?(bad?`<div class="fb no" role="status"><span>Nicht ganz. Das kommt am Ende noch einmal.</span></div>`:fb(bau?`<span class="ar kfa" lang="ar">${wo.w}</span> ${esc(wo.lat)} · ${esc(wo.de)}`:`<span class="ar kfa" lang="ar">${it.w}</span>`))+nx:`<button class="btn" id="chk" ${K.sel.length===L.length?"":"disabled"}>Prüfen</button>`}`);
     if(!done){
       document.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>{if(K.sel.length<L.length){K.sel.push(+b.dataset.add);sfx("tap")}klek()});
       document.querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>{K.sel=K.sel.filter(u=>u!==+b.dataset.rm);sfx("tap");klek()});
-      $("#chk").onclick=()=>{kAns(K.sel.map(u=>it.bank[u].a.i).join()===L.map(x=>x.i).join());if(s)speakLater(s.sp);klek()}}
-  }else if(["formsuche","bauen","sure","surehoeren"].includes(it.t)){ // eine von vier Antworten, als Text
+      $("#chk").onclick=()=>{kAns(K.sel.map(u=>it.bank[u].k).join()===L.map(x=>x.k).join());if(bau)speakLater(wo.w);else if(s)speakLater(s.sp);klek()}}
+  }else if(KCHO.includes(it.t)){ // eine von bis zu vier Antworten, als Text
     if(!it.opts)kOpts(it);
-    const lat=it.t==="sure",right=it.opts[it.ok];
-    const prompt={formsuche:`Wie sieht <b>${a&&a.n}</b> ${POSN[it.pos]} aus?`,bauen:"Welches Wort entsteht aus diesen Buchstaben?",sure:"Wie liest man diesen Surenanfang?",surehoeren:"Welchen Surenanfang hörst du?"}[it.t];
+    const y=it.y,wo=it.wo,lat=["sure","silbe","wortlesen"].includes(it.t),right=it.opts[it.ok],hr=/hoeren$/.test(it.t),say=y?y.t:wo?wo.w:s&&s.sp,U=it.t==="luecke"&&kUnits(wo.w);
+    const prompt={formsuche:`Wie sieht <b>${a&&a.n}</b> ${POSN[it.pos]} aus?`,bauen:"Welches Wort entsteht aus diesen Buchstaben?",sure:"Wie liest man diesen Surenanfang?",surehoeren:"Welchen Surenanfang hörst du?",
+      silbe:"Wie liest man diese Silbe?",silbewahl:"Welche Silbe liest man so?",silbehoeren:"Welche Silbe hörst du?",wortlesen:wo&&wo.w.includes(" ")?"Wie liest man das?":"Wie liest man dieses Wort?",worthoeren:"Was hörst du?",luecke:"Welche Silbe fehlt?"}[it.t];
     const stage=it.t==="bauen"?`<div class="ar kbt" lang="ar">${kChars(it.w).map(x=>x.c).join(" + ")}</div>`:it.t==="sure"?`<div class="ar kgl ksu" lang="ar">${s.t}</div>`
-      :it.t==="surehoeren"?`<div style="text-align:center;margin:14px 0"><button class="btn alt" id="rp" style="width:auto;padding:14px 26px">${ic("speaker",22)} Nochmal hören</button></div>`:"";
+      :it.t==="silbe"?`<div class="ar kgl" lang="ar">${y.t}</div>`:it.t==="silbewahl"?`<p class="klaut kla">„${esc(y.lat)}“</p>`:it.t==="wortlesen"?`<div class="ar kgl kwr" lang="ar">${wo.w}</div>`
+      :it.t==="luecke"?`<div class="ar kgl kwr" lang="ar">${U.map((u,k)=>k===it.g?`<span class="kgp">${u.a.i==="hamza"?"ا":u.c}</span>`:kUw(u)).join("")}</div><p class="kwl">${kTrU(U).map((x,k)=>k===it.g?`<b class="kgp">${esc(x)}</b>`:esc(x)).join("")} · ${esc(wo.de)}</p>` // Lücke: Buchstabe ohne Zeichen, Umschrift verrät den Klang
+      :hr?`<div style="text-align:center;margin:14px 0"><button class="btn alt" id="rp" style="width:auto;padding:14px 26px">${ic("speaker",22)} Nochmal hören</button></div>`:"";
     const opt=(o,k)=>`<button class="opt ${lat?"":"ar"} ${done?(k===it.ok?"ok":k===p?"no":""):""}" ${lat?"":'lang="ar"'} data-o="${k}" ${done?"disabled":""}>${esc(o)}</button>`;
-    const fbt=it.t==="formsuche"?`<span class="ar kfa" lang="ar">${right}</span> ${a.n} ${POSN[it.pos]}`:it.t==="bauen"?`<span class="ar kfa" lang="ar">${right}</span>`:`<span class="ar kfa" lang="ar">${s.t}</span> ${esc(s.lesung)}`;
+    const fbt=it.t==="formsuche"?`<span class="ar kfa" lang="ar">${right}</span> ${a.n} ${POSN[it.pos]}`:it.t==="bauen"?`<span class="ar kfa" lang="ar">${right}</span>`
+      :y?`<span class="ar kfa" lang="ar">${y.t}</span> ${esc(y.lat)}`:wo?`<span class="ar kfa" lang="ar">${wo.w}</span> ${esc(wo.lat)} · ${esc(wo.de)}`:`<span class="ar kfa" lang="ar">${s.t}</span> ${esc(s.lesung)}`;
     paint(top+`<p class="kq">${prompt}</p>${stage}<div class="${lat?"ksl":"og kog"}">${it.opts.map(opt).join("")}</div>${fb(fbt)}${nx}`);
-    if(it.t==="surehoeren"){$("#rp").onclick=()=>speak(s.sp);if(!done)speak(s.sp)}
-    if(!done)document.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{K.picked=+b.dataset.o;kAns(K.picked===it.ok);if(s&&(it.t!=="surehoeren"||!K.fb.ok))speakLater(s.sp);klek()});
+    const sayOk=say&&(!y||AUD[say]); // Silben nur mit Audiodatei, die Gerätestimme liest einzelne Silben nicht sicher
+    if(hr){$("#rp").onclick=()=>speak(say);if(!done)speak(say)}
+    if(!done)document.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{K.picked=+b.dataset.o;kAns(K.picked===it.ok);if(sayOk&&(!hr||!K.fb.ok))speakLater(say);klek()});
   }else{ // ein Buchstabe: Name, Zeichen, Laut, Hören, Punkte, Form im Wort, verbindet sich nicht
     const byName=it.t==="name"||it.t==="form",kn=kKnownAll();
     if(!it.opts)it.opts=it.t==="punkte"?shuffle([a,...dotPeers(a,kn).slice(0,3)]):it.t==="einzel"?shuffle([a,...shuffle(kn.filter(x=>!x.nj)).slice(0,3)]):shuffle([a,...kDistr(a,kn,3)]);
@@ -1172,11 +1336,11 @@ function klek(){
     if(it.t==="hoeren"){$("#rp").onclick=()=>speak(a.sp);if(!done)speak(a.sp)}
     if(!done)document.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{K.picked=b.dataset.o;kAns(K.picked===a.i);if(it.t!=="hoeren"||!K.fb.ok)speakLater(a.sp);klek()});
   }
-  if($("#nx"))$("#nx").onclick=()=>{K.n++;K.fb=null;K.picked=null;K.ps=null;K.sel=[];sfx("tap");klek()};
+  if($("#nx"))$("#nx").onclick=()=>{kRecStop();K.n++;K.fb=null;K.picked=null;K.ps=null;K.sel=[];K.rec=null;sfx("tap");klek()};
 }
 const kKnownAll=()=>K&&K.l?[...kKnown(K.l.k),...(K.l.art==="buchstaben"?kLet(K.l):[])]:kLearnt();
 function kSum(l){ // was die Lektion gebracht hat: Buchstaben, gelesene Wörter oder Surenanfänge
-  const ws=l.art==="verbinden"?l.woerter:l.art==="suren"?l.suren.map(s=>s.t):null;
+  const ws=l.art==="verbinden"?l.woerter:l.art==="suren"?l.suren.map(s=>s.t):l.art==="vokale"?l.woerter.map(w=>w[0]):null;
   return ws?`<div class="ar klet kws" lang="ar">${ws.slice(0,6).map(w=>`<span>${w}</span>`).join("")}</div>`:`<div class="ar klet" lang="ar">${kLet(l).map(a=>a.c).join(" ")}</div>`;
 }
 function kEnd(){
@@ -1192,7 +1356,8 @@ function kEnd(){
   ${etDone?`<div class="card note" role="status"><p><b>Etappe „${esc(et.titel)}“ geschafft.</b> ${zl&&zl.geschafft?esc(zl.geschafft):""}${nx?"":" Die nächste Etappe ist in Arbeit."}</p></div>`:""}
   ${nx?`<button class="btn" data-kl="${nx.id}">Weiter: ${nxe.id!==l.e?"Etappe "+nx.e.toUpperCase()+", ":""}${esc(nx.titel)}</button><button class="btn alt" data-go="path">Zum Lernpfad</button>`:`<button class="btn" data-go="path">Zum Lernpfad</button>${l?"":`<button class="btn alt" data-krev="${K.e}">Noch eine Runde</button>`}`}`);
 }
-const kSm=l=>l.art==="verbinden"?(l.neu.length?l.neu.length+" Buchstaben verbinden":l.woerter.length+" Wörter lesen"):l.art==="suren"?l.suren.length+" Surenanfänge":kLet(l).length+" neue Buchstaben";
+const kSm=l=>l.art==="verbinden"?(l.neu.length?l.neu.length+" Buchstaben verbinden":l.woerter.length+" Wörter lesen"):l.art==="suren"?l.suren.length+" Surenanfänge"
+  :l.art==="vokale"?(l.zeichen?"Neu: "+ZI[l.zeichen].n:l.woerter.length+" kurze Sätze"):kLet(l).length+" neue Buchstaben";
 function kpath(){
   const off=`<button class="lnk" data-ko>Zum bisherigen Lernpfad</button>`;
   if(!KURS||!KL.length){paint(`<h1>Lernpfad</h1>${KURS===false?`<div class="card note"><p>Der neue Lernpfad konnte nicht geladen werden. Prüfe die Verbindung.</p><button class="btn alt" id="kr">Nochmal versuchen</button></div>`:`<p class="mute">Lädt …</p>`}${off}`);
@@ -1221,10 +1386,10 @@ function kpath(){
       const dl=ls.filter(l=>kDone(l.id)).length,all=dl===ls.length;
       pts.push({x:50,y:y+14,dn:false,brk:br,th});br=false;
       nodes.push(`<div class="sgn kzl ${all?"all":""} ${th}" style="top:${y}px"><span class="eta">Ziel der Etappe</span>
-        <button class="sent ar" lang="ar" data-kz="${e.id}" aria-label="Ziel anhören">${f.ziel.ar}</button>
-        <span class="de">${all?esc(kLesung(f.ziel.ar)):esc(f.ziel.text)}</span><small>${all?"Geschafft: "+esc(f.ziel.text):dl+" von "+ls.length+" Lektionen geschafft"}</small>
+        <button class="sent ar ${f.ziel.ar.split(" ").length>3?"lng":""}" lang="ar" data-kz="${e.id}" aria-label="Ziel anhören">${f.ziel.ar}</button>
+        <span class="de">${all?(f.ziel.de?`${esc(kTr(f.ziel.ar))}<br>${esc(f.ziel.de)}`:esc(kLesung(f.ziel.ar))):esc(f.ziel.text)}</span><small>${all?"Geschafft: "+esc(f.ziel.text):dl+" von "+ls.length+" Lektionen geschafft"}</small>
         <span class="row" style="justify-content:center;gap:14px;margin-top:8px"><button class="lnk" data-kz="${e.id}">${ic("speaker",16)} Anhören</button><button class="sbt ${dl?"":"lock"}" data-krev="${e.id}" aria-label="Diese Etappe üben${dl?"":", noch gesperrt"}">Alle üben<small>${dl?dl+(dl>1?" Lektionen":" Lektion"):"nach Lektion 1"}</small></button></span></div>`);
-      y+=236}
+      y+=f.ziel.de?280:236}
   }));
   const seg=pts.slice(1).map((b,k)=>{if(b.brk)return null;const a=pts[k],m=(a.y+b.y)/2;return{d:`M${a.x.toFixed(1)} ${a.y} C${a.x.toFixed(1)} ${m} ${b.x.toFixed(1)} ${m} ${b.x.toFixed(1)} ${b.y}`,dn:a.dn,th:a.th,k}}).filter(Boolean);
   const lay=(c,fl)=>seg.filter(fl||(()=>true)).map(s=>`<path class="${c(s)} ${s.th}" d="${s.d}"/>`).join("");
@@ -1372,7 +1537,7 @@ function path(){
       ?`<div class="card askip"><b>Wie sicher bist du bei den Buchstaben?</b><p class="mute">Ein Kurztest mit 10 Fragen zeigt es. Ab 8 richtigen Antworten überspringen wir den Abschnitt für dich.</p><button class="btn" data-atest>Kurztest starten</button><button class="btn alt" id="sk2">Ohne Test überspringen</button><button class="lnk" id="skx" style="margin-top:8px">Doch lieber üben</button></div>`
       :`<div class="card askip"><b>${as.s} von ${as.n} Buchstaben sicher</b><p class="mute">${gate?"Zuerst kommen die Buchstaben, dann Wörter und Sätze. ":""}Du kennst die Schrift schon? Dann spring direkt zu den Wörtern und Sätzen.</p><button class="btn alt" id="sk" style="margin-top:8px">Ich kann die Buchstaben schon</button></div>`;
   paint(`<h1>Lernpfad</h1><p class="mute">${knownN()} von ${W.length} Wörtern gelernt · ${sentDone()} von ${SENT.length} Sätzen geübt</p>
-  ${KL.length?`<div class="card note kpv"><p><b>Neu: Vorschau des neuen Lernpfads.</b> Er beginnt mit „Lesen lernen“. Schon spielbar: ${KURS.stufen.flatMap(s=>s.etappen).filter(e=>KE[e.id]).map(e=>"„"+esc(e.titel)+"“").join(" und ")}.</p><button class="btn" data-kn>Vorschau öffnen</button></div>`:""}
+  ${KL.length?`<div class="card note kpv"><p><b>Neu: Vorschau des neuen Lernpfads.</b> Er beginnt mit „Lesen lernen“. Schon spielbar: ${KURS.stufen.flatMap(s=>s.etappen).filter(e=>KE[e.id]).map(e=>"„"+esc(e.titel)+"“").join(", ").replace(/, (?=[^,]*$)/," und ")}.</p><button class="btn" data-kn>Vorschau öffnen</button></div>`:""}
   ${skipCard}
   <details class="card rule"><summary><b>So funktioniert der Lernpfad</b></summary><ol><li><i>1</i><span>Erst die <b>Buchstaben</b>, in vier kleinen Blöcken. Wer sie schon kann, überspringt sie.</span></li><li><i>2</i><span>Dann <b>Wörter</b> in Lektionen. Ein Wort ist <b>begonnen</b>, sobald du es richtig beantwortest, und <b>gelernt</b>, wenn du es nach mindestens einem Tag noch einmal weißt.</span></li><li><i>3</i><span>Nach jeder Einheit warten <b>Sätze</b> mit genau den Wörtern, die du gerade gelernt hast.</span></li></ol><p class="mute">Die nächste Lektion öffnet sich, sobald du 60 % der vorherigen begonnen hast, bei den Buchstaben 60 % eines Blocks (zweimal richtig erkannt). Satzrunden sind freiwillig und sperren nichts. Wörter früherer Lektionen werden in neuen Runden mitgeprüft.</p><p class="mute" style="margin-top:6px">Wie lange es bis zur Auffrischung dauert, richtet sich nach dir: Was sicher sitzt, kommt später wieder, was wackelt, früher. Der kleine Balken zeigt, wie frisch ein Wort ist.</p></details>
   ${due?`<div class="menu">${itm('data-go="review"',"repeat","Wiederholen",due+" Wörter fällig")}</div>`:""}
@@ -1846,7 +2011,7 @@ loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v22"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v23"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>

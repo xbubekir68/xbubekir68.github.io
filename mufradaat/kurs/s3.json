@@ -1,0 +1,48 @@
+{
+  "id": "s3",
+  "ziel": {"art": "lesen", "ar": "هُوَ سَمِعَ وَفَهِمَ", "sp": "هُوَ سَمِعَ وَفَهِمَ", "de": "Er hörte und verstand.", "text": "Einen ersten Satz lesen",
+    "geschafft": "Du kannst jetzt Wörter mit kurzen Vokalen lesen, dazu die ersten kleinen Sätze."},
+  "lektionen": [
+    {
+      "id": "s3-1", "titel": "Fatha", "art": "vokale", "zeichen": "a", "station": "كَتَبَ",
+      "woerter": [["كَتَبَ", "er schrieb"], ["ذَهَبَ", "er ging"], ["جَلَسَ", "er setzte sich"], ["فَتَحَ", "er öffnete"], ["دَخَلَ", "er trat ein"],
+        ["خَرَجَ", "er ging hinaus"], ["رَجَعَ", "er kam zurück"], ["صَنَعَ", "er stellte her"], ["رَسَمَ", "er zeichnete"], ["غَسَلَ", "er wusch"],
+        ["طَبَخَ", "er kochte"], ["حَمَلَ", "er trug"], ["وَصَلَ", "er kam an"], ["شَكَرَ", "er dankte"]],
+      "tipp": {"titel": "Vokale sind kleine Zeichen", "zeichen": "بَ",
+        "text": "Die Buchstaben, die du kennst, sind Konsonanten. Die kurzen Vokale a, i und u schreibt man als kleine Zeichen über oder unter den Buchstaben. Der schräge Strich darüber heißt Fatha und klingt wie a: بَ liest man ba."}
+    },
+    {
+      "id": "s3-2", "titel": "Kasra", "art": "vokale", "zeichen": "i", "station": "شَرِبَ",
+      "woerter": [["شَرِبَ", "er trank"], ["سَمِعَ", "er hörte"], ["عَلِمَ", "er wusste"], ["فَهِمَ", "er verstand"], ["لَبِسَ", "er zog an"],
+        ["رَكِبَ", "er stieg auf"], ["حَفِظَ", "er lernte auswendig"], ["عَمِلَ", "er arbeitete"], ["فَرِحَ", "er freute sich"], ["ضَحِكَ", "er lachte"],
+        ["تَعِبَ", "er wurde müde"], ["هِيَ", "sie"], ["لَكِ", "für dich (zu einer Frau)"], ["بِكَ", "mit dir"]],
+      "tipp": {"titel": "Oben a, unten i", "zeichen": "بِ",
+        "text": "Kasra ist derselbe schräge Strich wie Fatha, nur unter dem Buchstaben. Er klingt wie i: بِ liest man bi. Achte darauf, wo der Strich sitzt: شَرِبَ liest man shariba, er trank."}
+    },
+    {
+      "id": "s3-3", "titel": "Damma", "art": "vokale", "zeichen": "u", "station": "كُتِبَ",
+      "woerter": [["كَبُرَ", "er wurde groß"], ["صَغُرَ", "er wurde klein"], ["حَسُنَ", "er wurde gut"], ["قَرُبَ", "er kam nahe"], ["بَعُدَ", "er war weit weg"],
+        ["كُتِبَ", "es wurde geschrieben"], ["ذُكِرَ", "es wurde erwähnt"], ["خُلِقَ", "er wurde erschaffen"], ["فُتِحَ", "es wurde geöffnet"], ["سُمِعَ", "es wurde gehört"],
+        ["هُوَ", "er"], ["لَهُ", "für ihn"], ["مَعَهُ", "mit ihm"]],
+      "tipp": {"titel": "Ein kleines Wāw", "zeichen": "بُ",
+        "text": "Damma sieht aus wie ein kleines و über dem Buchstaben und klingt wie u: بُ liest man bu. Oft ändern nur die Vokale die Bedeutung: كَتَبَ heißt er schrieb, كُتِبَ heißt es wurde geschrieben."}
+    },
+    {
+      "id": "s3-4", "titel": "Hamza auf Alif", "art": "vokale", "zeichen": "hamza", "station": "أَكَلَ",
+      "woerter": [["أَكَلَ", "er aß"], ["أَخَذَ", "er nahm"], ["أَمَرَ", "er befahl"], ["أَذِنَ", "er erlaubte"], ["أَمِنَ", "er war in Sicherheit"],
+        ["أُكِلَ", "es wurde gegessen"], ["أُخِذَ", "es wurde genommen"], ["سَأَلَ", "er fragte"], ["قَرَأَ", "er las"], ["بَدَأَ", "er begann"],
+        ["مَلَأَ", "er füllte"]],
+      "tipp": {"titel": "Das Alif trägt das Hamza", "zeichen": "أَ إِ أُ",
+        "text": "Ein Alif trägt nie selbst einen Vokal. Sitzt aber ein kleines Hamza auf dem Alif, spricht man einen kurzen Stimmabsatz mit Vokal: أَ a, أُ u. Bei إِ sitzen Hamza und Kasra unter dem Alif. Am Wortanfang lässt die Umschrift das Hamza weg: أَكَلَ ist akala."}
+    },
+    {
+      "id": "s3-5", "titel": "Kleine Sätze", "art": "vokale", "station": "هُوَ",
+      "woerter": [["جَلَسَ وَأَكَلَ", "er setzte sich und aß"], ["دَخَلَ وَجَلَسَ", "er trat ein und setzte sich"], ["قَرَأَ وَكَتَبَ", "er las und schrieb"],
+        ["ذَهَبَ وَرَجَعَ", "er ging und kam zurück"], ["سَأَلَ وَفَهِمَ", "er fragte und verstand"], ["ضَحِكَ وَفَرِحَ", "er lachte und freute sich"],
+        ["فَتَحَ وَخَرَجَ", "er öffnete und ging hinaus"], ["كُتِبَ لَهُ", "es wurde für ihn geschrieben"], ["هِيَ لَكَ", "sie gehört dir"],
+        ["هُوَ لَكِ", "er gehört dir (zu einer Frau)"], ["هُوَ مَعَكَ", "er ist mit dir"], ["هِيَ مَعَهُ", "sie ist bei ihm"]],
+      "tipp": {"titel": "Kleine Wörter hängen sich an", "zeichen": "وَ",
+        "text": "Manche Wörter bestehen nur aus einem Buchstaben mit Vokal und werden an das nächste Wort gehängt. وَ heißt und: وَأَكَلَ liest man waʾakala, und er aß. Genauso hängen sich die Wörter für mit und für an: بِكَ mit dir, لَهُ für ihn."}
+    }
+  ]
+}
