@@ -25,12 +25,14 @@ const env=n=>{const v=process.env[n];if(!v){console.error(`Es fehlt ${n}. Trag i
 const tempo=opt("tempo")||"-10%",pct=parseFloat(tempo)||0;
 // Aussprache-Korrektur: Die Stimmen sprechen ein Wort am Ende in Pausalform und verschlucken dabei Endungen
 // (سَيَّارَة → „sayyār“, كِتَابٌ → „kitāb“). Darum wird die Endung für die Stimme ausgeschrieben,
-// so wie die Umschrift in der App sie zeigt: ة am Wortende → هْ (-ah), Tanwin → Vokal + نْ (-un, -in, -an).
+// so wie die Umschrift in der App sie zeigt: ة am Wortende → هْ (-ah), Tanwin → Vokal + نْ (-un, -in, -an),
+// ى am Wortende → ا (langes -ā, z. B. مُسْتَشْفَى).
 // Angezeigt wird in der App weiter der normale Text.
-const KORR="k1";
+const KORR="k2";
 const spoken=t=>opt("roh")?t:t
   .replace(/([ًٌٍَُِ])ّ/g,"ّ$1") // Schadda vor den Vokal, damit die Regeln unten greifen
   .replace(/ة(?=[\s.,،؟!?]|$)/g,"هْ")
+  .replace(/َىٰ?(?=[\s.,،؟!?]|$)/g,"َا") // Alif maqṣūra am Wortende (مُسْتَشْفَى) wird sonst zu kurz gesprochen
   .replace(/ًا|اً/g,"َنْ").replace(/ً/g,"َنْ").replace(/ٌ/g,"ُنْ").replace(/ٍ/g,"ِنْ");
 const esc=t=>t.replace(/[<>&]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;"})[c]);
 
