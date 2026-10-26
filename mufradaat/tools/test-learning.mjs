@@ -347,7 +347,7 @@ ok("S1 führt alle 29 Buchstaben genau einmal ein",run(`(a=>a.length===29&&new S
 ok("erste Lektion offen, zweite gesperrt",run(`!kLocked(KL[0])&&kLocked(KL[1])`));
 ok("aktuelle Lektion = erste nicht abgeschlossene",run(`kCur().id`)==="s1-1",run(`kCur().id`));
 // Aufgaben jeder Lektion: 12 bis 16 bewertete Aufgaben, neue Buchstaben erst vorstellen, nur bekannte abfragen
-const kt=JSON.parse(run(`JSON.stringify(KL.map(l=>{const T=kTasks(kLet(l),kKnown(l.k),true),known=new Set([...kKnown(l.k),...kLet(l)].map(a=>a.i)),seen=new Set(kKnown(l.k).map(a=>a.i));let order=true,onlyKnown=true,dots=true;
+const kt=JSON.parse(run(`JSON.stringify(KL.filter(l=>l.art==="buchstaben").map(l=>{const T=kTasks(kLet(l),kKnown(l.k),true),known=new Set([...kKnown(l.k),...kLet(l)].map(a=>a.i)),seen=new Set(kKnown(l.k).map(a=>a.i));let order=true,onlyKnown=true,dots=true;
   T.forEach(t=>{if(t.t==="neu")seen.add(t.a.i);else if(t.t==="paare"){if(!t.set.every(a=>seen.has(a.i)))order=false}else{if(!seen.has(t.a.i))order=false;if(!known.has(t.a.i))onlyKnown=false;if(t.t==="punkte"&&!dotPeers(t.a,[...known].map(i=>ALBY[i])).length)dots=false}});
   return{id:l.id,g:T.filter(t=>t.t!=="neu").length,intro:T.filter(t=>t.t==="neu").length,n:l.neu.length,order,onlyKnown,dots,pairs:T.filter(t=>t.t==="paare").length}}))`));
 ok("jede Lektion: 12 bis 16 bewertete Aufgaben",kt.every(x=>x.g>=12&&x.g<=16),kt.map(x=>x.id+":"+x.g));
@@ -356,7 +356,7 @@ ok("abgefragt wird erst nach dem Vorstellen",kt.every(x=>x.order),kt.filter(x=>!
 ok("abgefragt werden nur schon eingeführte Buchstaben",kt.every(x=>x.onlyKnown));
 ok("Punkte-Aufgaben nur mit bekannten Buchstaben derselben Form",kt.every(x=>x.dots));
 ok("jede Lektion hat eine Zuordnungs-Aufgabe",kt.every(x=>x.pairs===1));
-ok("ohne Stimme keine Höraufgaben",run(`KL.every(l=>kTasks(kLet(l),kKnown(l.k),false).every(t=>t.t!=="hoeren"))`));
+ok("ohne Stimme keine Höraufgaben",run(`KL.filter(l=>l.art==="buchstaben").every(l=>kTasks(kLet(l),kKnown(l.k),false).every(t=>t.t!=="hoeren"))`));
 ok("Ablenker: bei bekannten zuerst bekannte Buchstaben",run(`(()=>{const kn=[...kKnown(4),...kLet(KL[4])];for(let i=0;i<20;i++){if(!kDistr(ALBY.kaf,kn,3).every(x=>kn.includes(x)))return false}return true})()`));
 // eine Lektion durchspielen
 run(`function playK(wrong){let g=0;while(K.n<K.T.length&&g++<300){const it=K.T[K.n];if(it.t==="paare"){K.fb={ok:true,x:5};K.first++}else if(it.t!=="neu"&&it.t!=="tipp")kAns(!wrong.includes(K.n));K.n++;K.fb=null;K.picked=null;K.ps=null}klek()}`);
@@ -381,12 +381,12 @@ run(`startK(KL[0]);playK([])`);
 ok("eine abgeschlossene Lektion lässt sich wiederholen",run(`S.kp.d["s1-1"]`)===2&&/Geübt/.test(run(`app.innerHTML`)));
 // der neue Pfad
 run(`view="path";ui.hint=null;path()`);let kh=run(`app.innerHTML`);
-ok("Pfad zeigt die 6 Stationen von S1",(kh.match(/class="pn /g)||[]).length===6&&(kh.match(/data-kl="s1-\d"/g)||[]).length===6);
+ok("Pfad zeigt die 6 Stationen von S1 und die 7 von S2",(kh.match(/class="pn /g)||[]).length===13&&(kh.match(/data-kl="s1-\d"/g)||[]).length===6&&(kh.match(/data-kl="s2-\d"/g)||[]).length===7);
 ok("… erledigt, aktuell (Mim) und gesperrt",/pn abl done[^"]*" data-kl="s1-1"/.test(kh)&&/pn abl\s+cur[^"]*" data-kl="s1-2"/.test(kh)&&/pn abl lock[^"]*" data-kl="s1-3"/.test(kh),kh.match(/class="pn [^"]*" data-kl="s1-\d"/g));
 ok("… Ziel der Etappe mit allen 29 Buchstaben",/Ziel der Etappe/.test(kh)&&(kh.match(/<span class="[ku]">/g)||[]).length===29);
-ok("… Demnächst: S2 bis S8",(kh.match(/<li><span class="ar" lang="ar">/g)||[]).length===7&&/S8 · Alles zusammen/.test(kh));
+ok("… Demnächst: S3 bis S8",(kh.match(/<li><span class="ar" lang="ar">/g)||[]).length===6&&/S3 · Kurze Vokale/.test(kh)&&/S8 · Alles zusammen/.test(kh)&&!/<b>S2 · /.test(kh));
 ok("… Vorschau-Hinweis mit Weg zurück",/data-ko/.test(kh)&&/Vorschau/.test(kh));
-ok("… keine Buchnamen oder Verweise",!/Qaida|Noorani|Nuraniyya|Medina|Madina|Band [123]/i.test(kh+fs.readFileSync(path.join(kdir,"kurs.json"),"utf8")+fs.readFileSync(path.join(kdir,"s1.json"),"utf8")));
+ok("… keine Buchnamen oder Verweise",!/Qaida|Noorani|Nuraniyya|Medina|Madina|Band [123]/i.test(kh+fs.readFileSync(path.join(kdir,"kurs.json"),"utf8")+fs.readFileSync(path.join(kdir,"s1.json"),"utf8")+fs.readFileSync(path.join(kdir,"s2.json"),"utf8")));
 run(`pHint('data-kl="s1-3"')`);
 ok("gesperrte Station: Grund direkt darunter",/Schließe erst „Jīm bis Dhāl“ ab\./.test(run(`app.innerHTML`)));
 run(`home()`);
@@ -408,6 +408,92 @@ ok("Merge: alter Stand ohne Lernpfad-Daten geht",JSON.stringify(r.kp)==='{"d":{}
 ok("Vorschau an/aus bleibt auf dem Gerät",run(`LOCALKEYS.includes("np")`));
 ok("Service Worker: Kursdateien offline verfügbar",kidx.stufen.flatMap(s=>s.etappen).filter(e=>e.datei).every(e=>swSrc.includes(`"kurs/${e.datei}"`))&&swSrc.includes('"kurs/kurs.json"'));
 ok("Service Worker: Kursdateien zuerst aus dem Netz",/\\\/kurs\\\/\[\^\/\]\+\\\.json\$/.test(swSrc));
+
+// ---------- 11. Etappe S2: Buchstaben verbinden und Surenanfänge ----------
+run(`S.kp={d:{}};S.alpha={};K=null;ARV=null;S.np=true`);
+const s1done=`S.kp={d:Object.fromEntries(KL.filter(l=>l.e==="s1").map(l=>[l.id,1]))}`;
+ok("Etappe S2 hat 7 Lektionen: 6 zum Verbinden, 1 mit Surenanfängen",run(`(l=>l.length===7&&l.filter(x=>x.art==="verbinden").length===6&&l[6].art==="suren")(KL.filter(l=>l.e==="s2"))`));
+ok("S2 führt die Formen aller Buchstaben mit Formen genau einmal ein",run(`(a=>a.length===29&&new Set(a).size===29)(KL.filter(l=>l.e==="s2").flatMap(l=>l.neu||[]))`));
+ok("S2 erst nach S1: gesperrt, Grund „nach Etappe S1“",run(`kLocked(KL.find(l=>l.id==="s2-1"))`)&&/nach Etappe S1/.test((run(`view="path";ui.hint=null;path();app.innerHTML`).match(/data-kl="s2-1"[\s\S]*?<\/button>/)||[""])[0]));
+ok("Buchstaben-Wissen zählt nur Buchstaben-Lektionen",run(`kKnown(KL.length).length===29&&kFormKnown(KL.length).length===29`));
+ok("Wörter werden in Buchstaben zerlegt",run(`kChars("بيت").map(a=>a.i).join()`)==="ba,ya,ta"&&run(`kChars("سماء").map(a=>a.i).join()`)==="sin,mim,alif,hamza"&&run(`kChars("لا").map(a=>a.i).join()`)==="lam,alif");
+ok("Surenanfänge: Zeichen und Leerzeichen zählen nicht mit",run(`kChars("حمٓ عٓسٓقٓ").map(a=>a.i).join()`)==="hha,mim,ayn,sin,qaf");
+ok("Surenanfänge werden Buchstabe für Buchstabe gelesen, ohne Hamza am Namensende",run(`kLesung("كٓهيعٓصٓ")`)==="Kāf Hā Yā ʿAyn Ṣād"&&run(`kLesung("الٓر")`)==="Alif Lām Rā"&&run(`kLesung("طه")`)==="Ṭā Hā",[run(`kLesung("كٓهيعٓصٓ")`)]);
+ok("alle Wörter und Surenanfänge bestehen nur aus Buchstaben des Alphabets",run(`KL.filter(l=>l.e==="s2").every(l=>[...(l.woerter||[]),...(l.suren||[]).map(s=>s.t)].every(w=>kChars(w).every(Boolean)))`));
+ok("Formen: Hamza hat keine, die Einzelgänger nur das Ende",run(`posOf(ALBY.hamza).length===0&&posOf(ALBY.ra).join()==="f"&&posOf(ALBY.ba).join()==="b,m,f"`));
+const vt=JSON.parse(run(`JSON.stringify(KL.filter(l=>l.e==="s2").map(l=>{const T=kGen(l,true),seen=new Set(),fk=new Set(kFormKnown(l.k).map(a=>a.i));let order=true,ownW=true,oldOk=true;
+  T.forEach(t=>{if(t.t==="neuform")seen.add(t.a.i);else if(["form","formsuche","einzel"].includes(t.t)&&!seen.has(t.a.i)&&!fk.has(t.a.i))order=false;
+    if(t.t==="form"&&fk.has(t.a.i)&&!fk.has(t.a.i))oldOk=false;if(t.t==="bauen"&&!l.woerter.includes(t.w))ownW=false;
+    if(t.t==="zerlegen"&&!(l.woerter||l.suren.map(s=>s.t)).includes(t.w))ownW=false});
+  return{id:l.id,g:T.filter(t=>!KCARD.includes(t.t)).length,nf:T.filter(t=>t.t==="neuform").length,n:(l.neu||[]).length,ns:T.filter(t=>t.t==="neusure").length,
+    tipp:T[0].t==="tipp",order,ownW,kinds:[...new Set(T.map(t=>t.t))],z:T.filter(t=>t.t==="zerlegen").length,b:T.filter(t=>t.t==="bauen").length,
+    noHamza:T.every(t=>!["form","formsuche","einzel"].includes(t.t)||t.a.i!=="hamza"),einzelNj:T.every(t=>t.t!=="einzel"||t.a.nj)}}))`));
+ok("S2: jede Lektion 12 bis 16 bewertete Aufgaben",vt.every(x=>x.g>=12&&x.g<=16),vt.map(x=>x.id+":"+x.g));
+ok("S2: jede Lektion beginnt mit dem Tipp",vt.every(x=>x.tipp));
+ok("S2: jeder Buchstabe bekommt eine Formen-Karte",vt.every(x=>x.nf===x.n),vt.map(x=>x.nf+"/"+x.n));
+ok("S2: Formen erst abgefragt, wenn sie vorgestellt sind",vt.every(x=>x.order),vt.filter(x=>!x.order).map(x=>x.id));
+ok("S2: Wörter stammen aus der eigenen Lektion",vt.every(x=>x.ownW));
+ok("S2: kein Hamza in Formen-Aufgaben, „verbindet sich nicht“ nur bei Einzelgängern",vt.every(x=>x.noHamza&&x.einzelNj));
+ok("S2: zerlegen und zusammensetzen in jeder Verbinden-Lektion (Lām-Alif mit mehr Wörtern)",vt.slice(0,5).every(x=>x.z===3&&x.b===2)&&vt[5].z===5&&vt[5].b===4,vt.map(x=>x.z+"+"+x.b));
+ok("S2: „verbindet sich nicht“ nur in der Lektion mit den Einzelgängern",vt.every((x,k)=>x.kinds.includes("einzel")===(k===4)));
+ok("S2: Surenanfänge: 4 vorgestellt, dann lesen und zerlegen",vt[6].ns===4&&vt[6].kinds.includes("sure")&&vt[6].z===3&&!vt[6].kinds.includes("form"),vt[6]);
+ok("S2: Höraufgaben zu Surenanfängen nur, wenn eine arabische Stimme sicher da ist",run(`kGen(KL.find(l=>l.id==="s2-7"),true).every(t=>t.t!=="surehoeren")`)&&run(`ARV=true;(T=>T.some(t=>t.t==="surehoeren"))(kGen(KL.find(l=>l.id==="s2-7"),true))`)&&run(`ARV=null;true`));
+ok("S2: die neuen Buchstaben werden in der Lām-Alif-Lektion nicht vorgestellt, frühere Formen kommen dran",run(`(T=>!T.some(t=>t.t==="neuform")&&T.filter(t=>t.t==="form").length>=2)(kGen(KL.find(l=>l.id==="s2-6"),true))`));
+// Antworten
+ok("Zusammensetzen: drei verschiedene falsche Varianten für jedes Wort",run(`KL.filter(l=>l.woerter).flatMap(l=>l.woerter).every(w=>{for(let i=0;i<5;i++){const v=kVariants(w);if(v.length!==3||new Set(v).size!==3||v.includes(w))return false}return true})`));
+run(s1done+`;startK(KL.find(l=>l.id==="s2-1"))`);
+const kOk=t=>run(`(()=>{const it=${t};kOpts(it);return it.opts.length===4&&new Set(it.opts).size===4&&it.opts[it.ok]===(it.t==="bauen"?it.w:it.t==="sure"?it.s.lesung:it.t==="surehoeren"?it.s.t:aform(it.a,it.pos))})()`);
+ok("Formsuche: vier verschiedene Formen, die richtige dabei",["ba","ta","ya","nun"].every(i=>["b","m","f"].every(p=>kOk(`{t:"formsuche",a:ALBY.${i},pos:"${p}"}`)))&&kOk(`{t:"formsuche",a:ALBY.ra,pos:"f"}`));
+ok("Formsuche: bei Einzelgängern keine Form desselben Buchstabens als Falle",run(`(()=>{for(let i=0;i<20;i++){const it={t:"formsuche",a:ALBY.dal,pos:"f"};kOpts(it);if(it.opts.filter(o=>o.includes("د")).length!==1)return false}return true})()`));
+ok("Zusammensetzen und Surenanfänge: vier verschiedene Antworten",kOk(`{t:"bauen",w:"بيت"}`)&&kOk(`{t:"bauen",w:"لا"}`)&&kOk(`{t:"sure",s:kSuren(KL.find(l=>l.id==="s2-7"))[0],pool:kSuren(KL.find(l=>l.id==="s2-7"))}`)&&kOk(`{t:"surehoeren",s:kSuren(KL.find(l=>l.id==="s2-7"))[6],pool:kSuren(KL.find(l=>l.id==="s2-7"))}`));
+// Darstellung
+const kShow=t=>run(`K.T.splice(K.n,0,${t});K.fb=null;K.sel=[];klek();app.innerHTML`);
+let sh=kShow(`{t:"neuform",a:ALBY.ba,w:"بيت"}`);
+ok("Formen-Karte: vier Formen, Wortbeispiel, Name anhören",/So verbindet sich <b>Bāʾ<\/b>/.test(sh)&&(sh.match(/<small>(Anfang|Mitte|Ende|Allein)<\/small>/g)||[]).length===4&&/Im Wort: <span class="ar" lang="ar">بيت/.test(sh)&&/Name anhören/.test(sh));
+sh=kShow(`{t:"neuform",a:ALBY.ra}`);
+ok("Formen-Karte Einzelgänger: erklärt, warum Anfang und Mitte fehlen",/nie mit dem danach/.test(sh));
+sh=kShow(`{t:"form",a:ALBY.ba,pos:"m"}`);
+ok("Form erkennen: Form in der Mitte, Namen zur Auswahl",sh.includes(`<div class="ar kgl" lang="ar">‍ب‍</div>`)&&/in der Mitte eines Wortes/.test(sh)&&(sh.match(/data-o="/g)||[]).length===4);
+sh=kShow(`{t:"zerlegen",w:"طبيب"}`);
+const zb=run(`K.T[K.n].bank.length`);
+ok("Zerlegen: Wort, Prüfen gesperrt, Buchstaben plus 3 Fallen",/kwd" lang="ar">طبيب/.test(sh)&&/id="chk" disabled/.test(sh)&&zb===7&&/Tippe die 4 Buchstaben/.test(sh),zb);
+run(`K.sel=(it=>{const u=[];kChars(it.w).forEach(a=>u.push(it.bank.find(b=>b.a===a&&!u.includes(b.u)).u));return u})(K.T[K.n]);klek()`);
+ok("… alle gewählt: Prüfen frei, Reihenfolge von rechts nach links",/id="chk" >Prüfen/.test(run(`app.innerHTML`))&&run(`K.sel.map(u=>K.T[K.n].bank[u].a.c).join("")`)==="طبيب");
+run(`kAns(false);klek()`);sh=run(`app.innerHTML`);
+ok("… falsch: Lösung als Buchstabenreihe wie die eigene Antwort, Aufgabe kommt wieder (neu gemischt)",/Richtig ist:<\/p><div class="sb ok kzs"[^>]*>(<span class="tk" lang="ar">[طبي]<\/span>){4}<\/div>/.test(sh)&&(sh.match(/class="tk" lang="ar">(.)</g)||[]).slice(-4).map(x=>x.slice(-2,-1)).join("")==="طبيب"&&!/data-add=/.test(sh)&&/am Ende noch einmal/.test(sh)&&run(`(r=>r.rep&&r.t==="zerlegen"&&r.w==="طبيب"&&r.bank===null)(K.T[K.T.length-1])`));
+sh=kShow(`{t:"bauen",w:"بنت"}`);
+ok("Zusammensetzen: Buchstaben mit Pluszeichen, vier Wörter zur Auswahl",/kbt" lang="ar">ب \+ ن \+ ت</.test(sh)&&(sh.match(/data-o="\d"/g)||[]).length===4);
+sh=kShow(`{t:"einzel",a:ALBY.ra}`);
+ok("Einzelgänger finden: einer verbindet sich nicht, drei schon",/verbindet sich nicht mit dem folgenden/.test(sh)&&run(`K.T[K.n].opts.filter(o=>o.nj).length===1`));
+run(`K=null;S.kp={d:{}};${s1done};startK(KL.find(l=>l.id==="s2-7"))`);
+sh=kShow(`{t:"neusure",s:kSuren(K.l)[6]}`);
+ok("Surenanfang-Karte: Text, Lesung und die Buchstaben einzeln",/kSn|ksn/.test(sh)&&/<b>Kāf Hā Yā ʿAyn Ṣād<\/b>/.test(sh)&&(sh.match(/<small>(Kāf|Hā|Yā|ʿAyn|Ṣād)<\/small>/g)||[]).length===5);
+sh=kShow(`{t:"sure",s:kSuren(K.l)[0],pool:kSuren(K.l)}`);
+ok("Surenanfang lesen: vier Lesungen zur Auswahl",/Wie liest man diesen Surenanfang/.test(sh)&&/>Alif Lām Mīm</.test(sh)&&(sh.match(/class="opt /g)||[]).length===4);
+// Durchspielen
+run(`K=null;S.xp=0;${s1done}`);
+for(const id of ["s2-1","s2-2","s2-3","s2-4","s2-5","s2-6","s2-7"]){run(`startK(KL.find(l=>l.id==="${id}"));playK([])`)}
+ok("alle Lektionen von S2 durchgespielt und gespeichert",run(`KL.filter(l=>l.e==="s2").every(l=>S.kp.d[l.id]===1)`));
+sh=run(`app.innerHTML`);
+ok("Ende der Etappe: geschafft, Text aus der Kursdatei, nächste Etappe in Arbeit",/Etappe „Buchstaben verbinden“ geschafft/.test(sh)&&/Du kannst jetzt verbundene Buchstaben lesen/.test(sh)&&/nächste Etappe ist in Arbeit/.test(sh)&&/Gelesen/.test(sh));
+run(`view="path";ui.hint=null;path()`);kh=run(`app.innerHTML`);
+ok("Pfad S2: Stationen zeigen ihr Wort",/data-kl="s2-1"[^>]*>[\s\S]*?(<svg|<span class="ar" lang="ar">بيت)/.test(kh));
+ok("Pfad S2: Ziel mit dem längsten Surenanfang, nach der Etappe mit Lesung",/class="sgn kzl all/.test(kh)&&/data-kz="s2"[^>]*>كٓهيعٓصٓ/.test(kh)&&/Kāf Hā Yā ʿAyn Ṣād/.test(kh)&&/data-krev="s2"/.test(kh));
+run(`${s1done};path()`);kh=run(`app.innerHTML`);
+ok("Pfad S2 vorher: Ziel noch ohne Lesung, Üben gesperrt, erste Station offen",/class="sgn kzl  /.test(kh)&&!/Kāf Hā Yā ʿAyn Ṣād/.test(kh)&&/class="sbt lock" data-krev="s2"/.test(kh)&&/5 Buchstaben verbinden/.test(kh)&&/0 von 7 Lektionen geschafft/.test(kh));
+ok("Stationslabel nach Art der Lektion",run(`[kSm(KL.find(l=>l.id==="s2-5")),kSm(KL.find(l=>l.id==="s2-6")),kSm(KL.find(l=>l.id==="s2-7")),kSm(KL[0])].join("|")`)==="7 Buchstaben verbinden|11 Wörter lesen|14 Surenanfänge|4 neue Buchstaben");
+run(`view="path";startK(null,"s2")`);
+ok("Wiederholung S2 erst nach einer Lektion der Etappe",run(`view`)==="path");
+run(`S.kp.d["s2-1"]=1;S.kp.d["s2-7"]=1;startK(null,"s2")`);
+ok("Wiederholung S2: 12 Aufgaben aus geschafften Lektionen, ohne Karten, höchstens einmal zuordnen",run(`view==="klek"&&K.T.length===12&&K.T.every(t=>!KCARD.includes(t.t))&&K.T.filter(t=>t.t==="paare").length<=1&&K.T.every(t=>!t.w||["بيت","بنت","بين","تين","نبي","نبت","ثبت"].includes(t.w)||kSuren(KL.find(l=>l.id==="s2-7")).some(s=>s.t===t.w))`));
+run(`playK([])`);
+ok("… Ende: Runde beendet, nochmal üben bleibt in der Etappe",/Runde beendet/.test(run(`app.innerHTML`))&&/Wiederholung · Etappe S2/.test(run(`app.innerHTML`))&&/data-krev="s2"/.test(run(`app.innerHTML`)));
+run(`S.np=false;path()`);
+ok("bisheriger Pfad nennt beide spielbaren Etappen",/Schon spielbar: „Die Buchstaben“ und „Buchstaben verbinden“/.test(run(`app.innerHTML`)));
+run(`S.np=true`);
+const {texts}=await import("./audio-texts.mjs");
+const at=texts().filter(t=>t.id.startsWith("k/"));
+ok("Vorleseliste enthält alle 14 Surenanfänge",at.length===14&&at.some(t=>t.text==="كَافْ هَا يَا عَيْنْ صَادْ"),at.length);
 
 console.log("\n"+pass+" OK, "+fail+" FAIL");
 process.exit(fail?1:0);

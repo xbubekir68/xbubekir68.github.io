@@ -1,6 +1,6 @@
 {
   "id": "s1",
-  "ziel": {"art": "alle-buchstaben", "text": "Alle 29 Buchstaben erkennen"},
+  "ziel": {"art": "alle-buchstaben", "text": "Alle 29 Buchstaben erkennen", "geschafft": "Du kennst jetzt alle 29 Buchstaben einzeln."},
   "lektionen": [
     {
       "id": "s1-1", "titel": "Alif, Bāʾ, Tāʾ, Thāʾ", "art": "buchstaben",
