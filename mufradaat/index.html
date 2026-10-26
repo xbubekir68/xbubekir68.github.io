@@ -253,6 +253,17 @@ details.rule{display:block;margin-top:12px}details.rule>ol,details.rule>p{margin
 .pg .just{animation:pop .4s}.pg button.done{border-color:var(--g);background:var(--gl)}
 .pg button{transition:background .15s,border-color .15s}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+/* Neuer Lernpfad (Vorschau): Lektion mit gemischten Aufgaben */
+.kq{text-align:center;font-weight:600;margin-top:12px}.kre{text-align:center;margin-top:-4px}
+.kgl{font-size:96px;line-height:1.4;text-align:center;margin:14px 0}
+.kog{margin-top:18px}.kog .opt.ar{font-size:34px;line-height:1.4;text-align:center;margin-top:0}
+.klaut{text-align:center;font-size:18px;font-weight:600;line-height:1.4;margin:22px 8px}
+.ktip{margin-top:16px;display:grid;gap:10px;justify-items:center;text-align:center;padding:22px 20px}.ktip>.ar{font-size:48px;line-height:1.5;color:var(--g)}.ktip p{font-size:15px;line-height:1.55;text-align:left}.ktip p .ar{font-size:21px;line-height:1}
+.klet{font-size:34px;line-height:1.5;text-align:center;margin-top:2px}
+.kpv{display:grid;gap:4px}.kpv .btn{margin-top:8px}.kpv .lnk{justify-self:start}
+.ksg .sent{display:grid;grid-template-columns:repeat(10,1fr);gap:0 3px;width:100%;max-width:290px;margin:4px 0 6px;font-size:22px;line-height:1.75}
+.kfa{font-size:24px;line-height:1;vertical-align:-2px;margin:0 2px}.kpg button.ar{font-size:34px;line-height:1.3}
+.ksoon{margin-top:14px}.ksoon ol{list-style:none;margin:10px 0;padding:0;display:grid;gap:10px}.ksoon li{display:flex;gap:12px;align-items:center;opacity:.8}.ksoon li .ar{flex:none;width:96px;text-align:right;font-size:18px;color:var(--mute)}.ksoon li b{display:block;font-size:14px}.ksoon li small{display:block;font-size:12px;color:var(--mute)}
 html.splash-lock{overflow:hidden}
 /* ===== MUFRADAAT STARTBILDSCHIRM ===== */
 @property --spp{syntax:'<percentage>';inherits:false;initial-value:140%}
@@ -497,7 +508,7 @@ const sentAr=s=>s.ar+(s.q?" ؟":" .");
 const sentDone=()=>Object.values(S.sent||{}).filter(n=>n>0).length;
 
 // ===== Zustand =====
-let S={v:2,days:{},fav:[],dir:"ad",rem:true,time:"19:00",theme:"system",streak:0,last:"",box:{},due:{},ef:{},sent:{},hk:1,seen:[],seenDay:"",notified:"",xp:0,xpDays:{},badges:[],alpha:{},aok:"",goal:100,goalv:1,sound:true,vib:true,auto:true,epoch:0,st:{perfect:0,rounds:0,goals:0,pairs:0,blitz:0,mix:0,sent:0}};
+let S={v:2,days:{},fav:[],dir:"ad",rem:true,time:"19:00",theme:"system",streak:0,last:"",box:{},due:{},ef:{},sent:{},hk:1,seen:[],seenDay:"",notified:"",xp:0,xpDays:{},badges:[],alpha:{},aok:"",goal:100,goalv:1,sound:true,vib:true,auto:true,epoch:0,np:false,kp:{d:{}},st:{perfect:0,rounds:0,goals:0,pairs:0,blitz:0,mix:0,sent:0}};
 const DEF=JSON.stringify(S);let U=null;const SK=()=>"mfr:"+(UID||U);
 function migrate(st){
   if((st.v||1)<2){ // v1: Fortschritt hing am Array-Index -> auf feste IDs umstellen
@@ -954,10 +965,156 @@ function aEnd(){
   $("#again").onclick=()=>startAQ(AQ.b,AQ.test,AQ.back);
 }
 
+// ===== Neuer Lernpfad (Vorschau): Kurs aus kurs/*.json =====
+// Läuft neben dem bisherigen Pfad, bis Stufe 1 fertig ist (S.np schaltet um). Stand: S.kp.d[Lektions-ID] = wie oft abgeschlossen.
+let KURS=null,KE={},KL=[]; // Übersicht (false = Laden fehlgeschlagen), geladene Etappen, alle Lektionen in Kursreihenfolge
+function kursSet(idx,files){
+  KURS=idx;KE=files||{};KL=[];
+  idx.stufen.forEach(st=>st.etappen.forEach(e=>{const f=KE[e.id];if(f)f.lektionen.forEach((l,li)=>KL.push({...l,e:e.id,li,k:KL.length}))}));
+}
+function loadKurs(){
+  const j=u=>fetch("kurs/"+u).then(r=>{if(!r.ok)throw r.status;return r.json()});
+  try{j("kurs.json").then(idx=>Promise.all(idx.stufen.flatMap(s=>s.etappen).filter(e=>e.datei).map(e=>j(e.datei).then(f=>[e.id,f]))).then(fs=>kursSet(idx,Object.fromEntries(fs))))
+    .catch(()=>{if(!KURS)KURS=false}).then(()=>{if(U&&(view==="path"||(S.np&&view==="home")))render()})}catch(e){KURS=false}
+}
+loadKurs();
+const kp=()=>S.kp||(S.kp={d:{}});
+const kDone=id=>(kp().d[id]||0)>0;
+const kLocked=l=>l.k>0&&!kDone(KL[l.k-1].id); // weiter erst, wenn die vorherige Lektion abgeschlossen ist
+const kCur=()=>KL.find(l=>!kDone(l.id))||KL[KL.length-1];
+const kEtap=id=>KURS.stufen.flatMap(s=>s.etappen).find(e=>e.id===id);
+const kLet=l=>(l.neu||[]).map(i=>ALBY[i]);
+const kKnown=k=>KL.slice(0,k).flatMap(kLet); // in früheren Lektionen eingeführte Buchstaben
+const kLearnt=()=>KL.filter(l=>kDone(l.id)).flatMap(kLet);
+const arIn=s=>esc(s).replace(/[؀-ۿ]+(?: [؀-ۿ]+)*/g,m=>`<span class="ar" lang="ar">${m}</span>`); // arabische Stellen im deutschen Text
+// Diese Formen unterscheiden nur die Punkte
+const DOTF=[["ba","ta","tha","nun","ya"],["jim","hha","kha"],["dal","dhal"],["ra","zay"],["sin","shin"],["sad","dad"],["tah","zah"],["ayn","ghayn"],["fa","qaf"]];
+const dotPeers=(a,known)=>{const f=DOTF.find(f=>f.includes(a.i));return f?known.filter(x=>x!==a&&f.includes(x.i)):[]};
+function kDistr(a,known,n){ // Ablenker: zuerst ähnliche schon bekannte, dann andere bekannte, dann ähnliche neue, dann der Rest
+  const fam=AFAM.find(f=>f.includes(a.i))||[],k=new Set(known.map(x=>x.i)),rank=x=>(k.has(x.i)?0:2)+(fam.includes(x.i)?0:1);
+  return shuffle(ALPHA.filter(x=>x!==a)).sort((x,y)=>rank(x)-rank(y)).slice(0,n);
+}
+const kKinds=(a,known,hear)=>["name","zeichen","laut",hear&&"hoeren",dotPeers(a,known).length&&"punkte"].filter(Boolean);
+// Aufgaben einer Buchstaben-Lektion: je zwei neue Buchstaben kennenlernen und gleich üben, dann zuordnen, am Ende gemischt mit früheren
+function kTasks(nw,old,hear){
+  const known=[...old,...nw],T=[],tail=[],used={},q=(a,t)=>{(used[a.i]=used[a.i]||[]).push(t);return{t,a}};
+  const fresh=a=>{const k=kKinds(a,known,hear),f=k.filter(t=>!used[a.i].includes(t));return pick(f.length?f:k)};
+  for(let c=0;c<nw.length;c+=2){const ch=nw.slice(c,c+2);
+    ch.forEach(a=>T.push({t:"neu",a}));ch.forEach(a=>T.push(q(a,"name")));ch.forEach((a,x)=>T.push(q(a,hear&&!x?"hoeren":"zeichen")))}
+  if(nw.length>=3)T.push({t:"paare",set:shuffle(nw)});
+  if(nw.length<=4)nw.forEach(a=>tail.push(q(a,fresh(a)))); // kleine Lektionen: jeder neue Buchstabe ein drittes Mal
+  const nOld=old.length?Math.min(4,Math.max(2,13-T.filter(x=>x.t!=="neu").length-tail.length)):0;
+  shuffle(old).sort((x,y)=>aCnt(x.i)-aCnt(y.i)).slice(0,nOld).forEach(a=>tail.push(q(a,pick(kKinds(a,known,hear)))));
+  return [...T,...shuffle(tail)];
+}
+function kRevTasks(ls,hear){ // Wiederholung: die schwächsten bisherigen Buchstaben, einmal zuordnen
+  const T=shuffle(ls).sort((x,y)=>aCnt(x.i)-aCnt(y.i)).slice(0,10).map(a=>({t:pick(kKinds(a,ls,hear)),a}));
+  T.splice(Math.min(5,T.length),0,{t:"paare",set:shuffle(ls).slice(0,5)});return T;
+}
+let K=null;
+function startK(l){ // l = Lektion; ohne l: Wiederholung aller bisher gelernten Buchstaben
+  const hear=canSpeak();let T;
+  if(l){T=kTasks(kLet(l),kKnown(l.k),hear);if(l.tipp)T.unshift({t:"tipp",p:l.tipp})}
+  else{const ls=kLearnt();if(ls.length<4){toast("Schließe erst die erste Lektion ab.");return go("path")}T=kRevTasks(ls,hear)}
+  K={l,T,n:0,graded:T.filter(x=>!["neu","tipp"].includes(x.t)).length,first:0,miss:0,xp:0,fb:null,picked:null,ps:null,fin:false};
+  view="klek";render();
+}
+function kAns(ok){ // Bewertung: Fehler kommen am Ende noch einmal, es gibt keine Herzen
+  const it=K.T[K.n],a=it.a;S.alpha=S.alpha||{};K.fb={ok};
+  if(ok){S.alpha[a.i]=Math.min(5,aCnt(a.i)+1);const x=it.rep?1:3;K.xp+=x;K.fb.x=x;if(!it.rep)K.first++;sfx("good",Math.min(6,K.first));vib(10);addXP(x)}
+  else{S.alpha[a.i]=Math.max(0,aCnt(a.i)-1);K.miss++;K.T.push({t:it.t,a,rep:true});sfx("bad");vib([40,30,40]);save()}
+}
+function klek(){
+  if(K.n>=K.T.length)return kEnd();
+  const it=K.T[K.n],a=it.a,done=K.fb!==null,p=K.picked;
+  const top=`<div class="top">${xbtn("path","Lektion beenden")}<div class="bar"><i style="width:${Math.round(K.n/K.T.length*100)}%"></i></div></div>${it.rep?'<p class="mute kre">Noch einmal</p>':""}`;
+  const nx=`<button class="btn" id="nx" ${done||["neu","tipp"].includes(it.t)?"":"disabled"}>Weiter</button>`;
+  if(it.t==="tipp"){
+    paint(top+`<p class="kq">Gut zu wissen</p><div class="card ktip"><div class="ar" lang="ar">${it.p.zeichen}</div><h2>${esc(it.p.titel)}</h2><p>${arIn(it.p.text)}</p></div>${nx}`);
+  }else if(it.t==="neu"){
+    paint(top+`<p class="kq">Neuer Buchstabe</p><div class="card flash slide"><div class="ar" lang="ar" style="font-size:110px;line-height:1.4">${a.c}</div><p><b>${a.n}</b> · ${a.s}</p><p class="mute">${a.h}</p><button class="btn alt" id="sp" style="width:auto;padding:10px 22px">${ic("speaker",18)} Name anhören</button></div>${nx}`);
+    $("#sp").onclick=()=>speak(a.sp);if(S.auto!==false)speak(a.sp);
+  }else if(it.t==="paare"){
+    const P=K.ps=K.ps||{L:shuffle(it.set),R:shuffle(it.set),sel:null,done:[],bad:null,last:null,miss:0};
+    const cell=(x,side)=>{const d=P.done.includes(x.i),s=P.sel&&P.sel.id===x.i&&P.sel.side===side,b=P.bad&&P.bad.includes(side+x.i);
+      return `<button class="${side==="L"?"ar":""} ${d?"done":s?"sel":""} ${b?"bad":""} ${P.last===x.i?"just":""}" ${side==="L"?'lang="ar"':""} data-p="${side}${x.i}" ${d?"disabled":""}>${side==="L"?x.c:x.n}</button>`};
+    paint(top+`<p class="kq">Ordne jedem Buchstaben seinen Namen zu</p><div class="pg kpg">${P.L.map((x,k)=>cell(x,"L")+cell(P.R[k],"R")).join("")}</div>
+    ${done?`<div class="fb ok" role="status"><span>Alle zugeordnet</span><span class="xpf">+${K.fb.x} XP</span></div>`:""}${nx}`);
+    if(!done)document.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{
+      const side=b.dataset.p[0],id=b.dataset.p.slice(1);
+      if(!P.sel||P.sel.side===side){P.sel={side,id};P.bad=null;P.last=null;sfx("tap");return klek()}
+      if(P.sel.id===id){P.done.push(id);P.last=id;P.sel=null;P.bad=null;sfx("match");vib(12);speak(ALBY[id].sp);
+        if(P.done.length===P.L.length){const x=it.rep?1:Math.max(2,5-P.miss);K.xp+=x;K.fb={ok:true,x};if(!P.miss&&!it.rep)K.first++;addXP(x)}return klek()}
+      P.miss++;P.bad=[P.sel.side+P.sel.id,side+id];P.sel=null;P.last=null;sfx("bad");vib([40,30,40]);klek()});
+  }else{
+    const byName=it.t==="name";
+    if(!it.opts)it.opts=it.t==="punkte"?shuffle([a,...dotPeers(a,kKnownAll()).slice(0,3)]):shuffle([a,...kDistr(a,kKnownAll(),3)]);
+    const prompt={name:"Wie heißt dieser Buchstabe?",zeichen:`Welcher Buchstabe ist <b>${a.n}</b>?`,hoeren:"Welchen Buchstaben hörst du?",laut:"Welcher Buchstabe klingt so?",punkte:`Achte auf die Punkte: Welcher ist <b>${a.n}</b>?`}[it.t];
+    const stage=byName?`<div class="ar kgl" lang="ar">${a.c}</div>`:it.t==="hoeren"?`<div style="text-align:center;margin:14px 0"><button class="btn alt" id="rp" style="width:auto;padding:14px 26px">${ic("speaker",22)} Nochmal hören</button></div>`:it.t==="laut"?`<p class="klaut">„${a.h}“</p>`:"";
+    const opt=o=>`<button class="opt ${byName?"":"ar"} ${done?(o===a?"ok":o.i===p?"no":""):""}" ${byName?"":'lang="ar"'} data-o="${o.i}" ${done?"disabled":""}>${byName?o.n:o.c}</button>`;
+    const fb=done?`<div class="fb ${K.fb.ok?"ok":"no"}" role="status"><span>${K.fb.ok?"Richtig":"Richtig ist"}: <span class="ar kfa" lang="ar">${a.c}</span> ${a.n} (${a.s})${K.fb.ok?"":". Er kommt am Ende noch einmal."}</span>${K.fb.ok?`<span class="xpf">+${K.fb.x} XP</span>`:""}</div>`:"";
+    paint(top+`<p class="kq">${prompt}</p>${stage}<div class="${byName?"":"og kog"}">${it.opts.map(opt).join("")}</div>${fb}${nx}`);
+    if(it.t==="hoeren"){$("#rp").onclick=()=>speak(a.sp);if(!done)speak(a.sp)}
+    if(!done)document.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{K.picked=b.dataset.o;kAns(K.picked===a.i);if(it.t!=="hoeren"||!K.fb.ok)speakLater(a.sp);klek()});
+  }
+  $("#nx").onclick=()=>{K.n++;K.fb=null;K.picked=null;K.ps=null;sfx("tap");klek()};
+}
+const kKnownAll=()=>K&&K.l?[...kKnown(K.l.k),...kLet(K.l)]:kLearnt();
+function kEnd(){
+  const l=K.l,nx=l&&KL[l.k+1];
+  if(!K.fin){K.fin=true;K.newDone=l&&!kDone(l.id);
+    if(l)kp().d[l.id]=(kp().d[l.id]||0)+1;
+    S.st.kurs=(S.st.kurs||0)+1;K.bonus=(l?10:5)+(K.miss?0:5);K.xp+=K.bonus;addXP(K.bonus);
+    if(K.newDone)confetti();sfx("win")}
+  const etDone=K.newDone&&(!nx||nx.e!==l.e),et=l&&kEtap(l.e),nxe=nx&&kEtap(nx.e);
+  paint(`<div style="text-align:center;margin-top:20px"><h1>${l?"Lektion geschafft":"Runde beendet"}</h1><p class="mute">${l?`Etappe ${l.e.toUpperCase()} · Lektion ${l.li+1}: ${esc(l.titel)}`:"Wiederholung"}</p></div>
+  <div class="tiles"><div class="card"><p class="mute">Gleich richtig</p><b>${K.first} / ${K.graded}</b></div><div class="card"><p class="mute">XP verdient</p><b>+${K.xp}</b>${K.bonus?`<span class="mute">davon ${K.bonus} Bonus</span>`:""}</div></div>
+  ${l?`<div class="card" style="margin-top:10px"><p class="mute">${K.newDone?"Neu gelernt":"Geübt"}</p><div class="ar klet" lang="ar">${kLet(l).map(a=>a.c).join(" ")}</div></div>`:""}
+  ${etDone?`<div class="card note" role="status"><p><b>Etappe „${esc(et.titel)}“ geschafft.</b> ${l.e==="s1"?"Du kennst jetzt alle 29 Buchstaben einzeln.":""}${nx?"":" Die nächste Etappe ist in Arbeit."}</p></div>`:""}
+  ${nx?`<button class="btn" data-kl="${nx.id}">Weiter: ${nxe.id!==l.e?"Etappe "+nx.e.toUpperCase()+", ":""}${esc(nx.titel)}</button><button class="btn alt" data-go="path">Zum Lernpfad</button>`:`<button class="btn" data-go="path">Zum Lernpfad</button>${l?"":`<button class="btn alt" data-krev>Noch eine Runde</button>`}`}`);
+}
+function kpath(){
+  const off=`<button class="lnk" data-ko>Zum bisherigen Lernpfad</button>`;
+  if(!KURS||!KL.length){paint(`<h1>Lernpfad</h1>${KURS===false?`<div class="card note"><p>Der neue Lernpfad konnte nicht geladen werden. Prüfe die Verbindung.</p><button class="btn alt" id="kr">Nochmal versuchen</button></div>`:`<p class="mute">Lädt …</p>`}${off}`);
+    const r=$("#kr");if(r)r.onclick=()=>{KURS=null;loadKurs();kpath()};return}
+  const hint=ui.hint,cur=kCur(),nodes=[],pts=[],bands=[],soon=[],P=104;
+  let y=0,br=true,i=0,amp=22,fr=1.1,ph=0,th="";
+  const bend=s=>{i=0;amp=18+(s*5)%9;fr=[1.15,.8,1.4,.95,1.25][(s+5)%5];ph=s*1.7};
+  KURS.stufen.forEach(st=>st.etappen.forEach((e,ei)=>{
+    const f=KE[e.id];if(!f){soon.push({...e,st});return}
+    const ls=KL.filter(l=>l.e===e.id);th=e.id==="s1"?"ths":"th"+(ei%10);
+    bands.push({y,th,h:`<div class="pgr" style="top:0"><span class="ar ut" lang="ar">${e.ar}</span><b>Etappe ${e.id.toUpperCase()} · ${esc(e.titel)}</b><small>${ls.length} Lektionen · ${esc(e.kurz)}</small></div>`});y+=118;br=true;bend(ei-1);
+    ls.forEach(l=>{const lock=kLocked(l),dn=kDone(l.id),c=l===cur&&!dn,attr=`data-kl="${l.id}"`,x=Math.max(24,Math.min(76,50+amp*Math.sin(i*fr+ph))),pv=KL[l.k-1];i++;
+      pts.push({x,y:y+32,dn,brk:br,th});br=false;
+      const sm=lock?"nach Lektion "+(pv.li+1):dn?"geschafft":kLet(l).length+" neue Buchstaben";
+      nodes.push(`<button class="pn abl ${lock?"lock":dn?"done":""} ${c?"cur":""} ${th}" ${attr} style="left:${x.toFixed(1)}%;top:${y}px" aria-label="Lektion ${l.li+1}: ${esc(l.titel)}, ${lock?"gesperrt":dn?"geschafft":"offen"}"><span class="nd">${c?'<img src="icons/favicon-64.png" alt="">':dn?ic("check",24):`<span class="ar" lang="ar">${kLet(l).slice(0,2).map(a=>a.c).join(" ")}</span>`}</span><span class="lb ${x>50?"l":"r"}"><b>${esc(l.titel)}</b><small>${sm}</small>${lock&&hint===attr?`<small class="hint" role="status">Schließe erst „${esc(pv.titel)}“ ab.</small>`:""}</span></button>`);
+      y+=P});
+    if(f.ziel&&f.ziel.art==="alle-buchstaben"){ // Ziel der Etappe: alle Buchstaben, gelernte färben sich grün
+      const lt=new Set(kLearnt().map(a=>a.i)),sure=ALPHA.filter(a=>aCnt(a.i)>=3).length,can=lt.size>=4,all=lt.size===ALPHA.length;
+      pts.push({x:50,y:y+14,dn:false,brk:br,th});br=false;
+      nodes.push(`<div class="sgn ksg ${all?"all":""} ${th}" style="top:${y}px"><span class="eta">Ziel der Etappe</span>
+        <div class="sent ar" lang="ar" role="img" aria-label="${lt.size} von ${ALPHA.length} Buchstaben gelernt">${ALPHA.map(a=>`<span class="${lt.has(a.i)?"k":"u"}">${a.c}</span>`).join("")}</div>
+        <span class="de">${esc(f.ziel.text)}</span><small>${lt.size} von ${ALPHA.length} gelernt · ${sure} sicher</small>
+        <span class="row" style="justify-content:center;gap:14px;margin-top:8px"><button class="lnk" data-go="alphabet">Alphabet ansehen</button><button class="sbt ${can?"":"lock"}" data-krev aria-label="Alle bisherigen Buchstaben üben${can?"":", noch gesperrt"}">Alle üben<small>${can?lt.size+" Buchstaben":"nach Lektion 1"}</small></button></span></div>`);
+      y+=272}
+  }));
+  const seg=pts.slice(1).map((b,k)=>{if(b.brk)return null;const a=pts[k],m=(a.y+b.y)/2;return{d:`M${a.x.toFixed(1)} ${a.y} C${a.x.toFixed(1)} ${m} ${b.x.toFixed(1)} ${m} ${b.x.toFixed(1)} ${b.y}`,dn:a.dn,th:a.th,k}}).filter(Boolean);
+  const lay=(c,fl)=>seg.filter(fl||(()=>true)).map(s=>`<path class="${c(s)} ${s.th}" d="${s.d}"/>`).join("");
+  const road=`<svg viewBox="0 0 100 ${y}" preserveAspectRatio="none" aria-hidden="true">${lay(()=>"ed")}${lay(s=>"bed c"+s.k%5)}${lay(()=>"dc")}${lay(()=>"mid dn",s=>s.dn)}</svg>`;
+  const land=bands.map((b,n)=>`<div class="ub ${b.th}" style="top:${b.y+4}px;height:${(n+1<bands.length?bands[n+1].y:y)-b.y-8}px">${b.h}</div>`).join("");
+  const dn=KL.filter(l=>kDone(l.id)).length,st1=KURS.stufen[0];
+  paint(`<h1>Lernpfad</h1><p class="mute">Stufe ${st1.id} · ${esc(st1.titel)} · ${dn} von ${KL.length} Lektionen geschafft</p>
+  <div class="card note kpv"><p><b>Vorschau.</b> So sieht der neue Lernpfad aus. Er wächst Etappe für Etappe und ersetzt den bisherigen, sobald Stufe 1 fertig ist.</p>${off}</div>
+  <details class="card rule"><summary><b>So funktioniert der Lernpfad</b></summary><ol><li><i>1</i><span>Stufe 1 bringt dir das <b>Lesen</b> bei, von den Buchstaben bis zu ganzen Wörtern. Danach lernst du in Stufe 2 die Sprache.</span></li><li><i>2</i><span>Jede <b>Lektion</b> mischt kurze Aufgaben: kennenlernen, erkennen, hören und zuordnen.</span></li><li><i>3</i><span>Fehler kommen am Ende der Lektion noch einmal, bis sie sitzen. Danach öffnet sich die nächste Lektion.</span></li></ol></details>
+  <div class="pth" style="height:${y}px">${land}${road}${nodes.join("")}</div>
+  ${soon.length?`<div class="card ksoon"><b>Demnächst</b><p class="mute">Diese Etappen entstehen gerade.</p><ol>${soon.map(e=>`<li><span class="ar" lang="ar">${e.ar}</span><span><b>${e.id.toUpperCase()} · ${esc(e.titel)}</b><small>${esc(e.kurz||"")}</small></span></li>`).join("")}</ol>${KURS.stufen.slice(1).map(s=>`<p class="mute">Danach: Stufe ${s.id} · ${esc(s.titel)}</p>`).join("")}</div>`:""}`);
+  if(ui.keep){ui.keep=false;return}
+  const c=$(".pn.cur");if(c&&dn)requestAnimationFrame(()=>c.scrollIntoView({block:"center"}));
+}
 // ===== Navigation =====
 let view="home",ui={cat:"Alle",q:""},gt=0;
 const TABS=[["home","home","Start"],["games","pad","Spiele"],["path","path","Lernpfad"],["cards","cards","Karten"],["more","more","Mehr"]];
-const SUB={more:["stats","fav","settings","list","badges","legal"],games:["pairs","blitz","listen"],path:["quiz","lesson","alphabet","letter","aquiz","satz"]};
+const SUB={more:["stats","fav","settings","list","badges","legal"],games:["pairs","blitz","listen"],path:["quiz","lesson","alphabet","letter","aquiz","satz","klek"]};
 const pHint=a=>{if(view!=="path"){ui.hint=a;return go("path")}ui.hint=ui.hint===a?null:a;ui.keep=true;path()}; // gesperrte Station: Grund direkt darunter zeigen statt als Toast
 function go(v){if(v!=="path")ui.hint=null;view=v;render();const m=$("#app");if(m){m.setAttribute("tabindex","-1");try{m.focus({preventScroll:true})}catch(e){}}} // Fokus an den Seitenanfang, damit Screenreader den Wechsel bemerken
 const paint=h=>{app.innerHTML=h;fx()};
@@ -965,8 +1122,8 @@ function fx(){requestAnimationFrame(()=>requestAnimationFrame(()=>document.query
 function render(){
   clearInterval(gt);
   $("#nav").innerHTML=TABS.map(t=>`<button class="${(view===t[0]||(SUB[t[0]]||[]).includes(view))?"on":""}${t[0]==="path"?" main":""}" data-go="${t[0]}" ${(view===t[0]||(SUB[t[0]]||[]).includes(view))?'aria-current="page"':""}><span>${ic(t[1])}</span>${t[2]}</button>`).join("");
-  $("#nav").hidden=["quiz","pairs","blitz","aquiz","listen","satz"].includes(view)||(view==="legal"&&!U);
-  ({home,path,lesson,alphabet,letter,aquiz,listen,satz,cards,more,list,stats,settings,quiz,fav,games,badges,pairs,blitz,legal})[view]();
+  $("#nav").hidden=["quiz","pairs","blitz","aquiz","listen","satz","klek"].includes(view)||(view==="legal"&&!U);
+  ({home,path,lesson,alphabet,letter,aquiz,listen,satz,cards,more,list,stats,settings,quiz,fav,games,badges,pairs,blitz,legal,klek})[view]();
   app.classList.remove("enter");void app.offsetWidth;app.classList.add("enter");
   window.scrollTo(0,0);
 }
@@ -976,6 +1133,10 @@ document.addEventListener("click",e=>{
   const ab=e.target.closest("[data-ab]");
   if(ab){const b=+ab.dataset.ab;sfx("tap");if(aLocked(b))return pHint(`data-ab="${b}"`);return startAQ(b,false,"path")}
   if(e.target.closest("[data-atest]")){sfx("tap");return startAQ(undefined,true,"path")}
+  const kl=e.target.closest("[data-kl]");
+  if(kl){const l=KL.find(x=>x.id===kl.dataset.kl);sfx("tap");if(!l)return;if(kLocked(l))return pHint(`data-kl="${l.id}"`);return startK(l)}
+  if(e.target.closest("[data-krev]")){sfx("tap");if(kLearnt().length<4)return toast("Schließe erst die erste Lektion ab.");return startK(null)}
+  const kn=e.target.closest("[data-kn],[data-ko]");if(kn){S.np=kn.hasAttribute("data-kn");save();sfx("tap");return go("path")}
   const gl=e.target.closest("[data-goal]");if(gl)return speak(SENT[+gl.dataset.goal].ar);
   const sa=e.target.closest("[data-sat]");
   if(sa){const u=+sa.dataset.sat,o=SSTA[u].filter(sentOpen).length;sfx("tap");if(o<SMIN){if(view==="path")return pHint(`data-sat="${u}"`);toast(`Noch zu wenige Sätze frei (${o} von ${SMIN}). Lerne weiter Wörter aus dieser Einheit.`);return}return startSatz(u)}
@@ -1020,7 +1181,7 @@ function home(){
   <div class="menu">
   ${(()=>{const p=mixPlan(),n=p.due.length+p.nw.length+p.weak.length;
     return n&&!alphaGate()?itm('data-go="mix"',"bolt","Heute dran",n+" Wörter · "+mixText(p),"main"):""})()}
-  ${ns.t==="a"?itm(`data-ab="${ns.b}"`,"path","Weiterlernen",`Buchstaben ${ns.b+1} von ${ABLOCKS.length} · ${aStat(ABLOCKS[ns.b]).g} von ${ABLOCKS[ns.b].length} erkannt`,"main2"):itm(`data-les="${cur.k}"`,"path","Weiterlernen",`Lektion ${cur.k+1}: ${cur.t}`,"main2")}
+  ${S.np&&KL.length?(c=>itm(`data-kl="${c.id}"`,"path","Weiterlernen",`Etappe ${c.e.toUpperCase()} · Lektion ${c.li+1}: ${esc(c.titel)}`,"main2"))(kCur()):ns.t==="a"?itm(`data-ab="${ns.b}"`,"path","Weiterlernen",`Buchstaben ${ns.b+1} von ${ABLOCKS.length} · ${aStat(ABLOCKS[ns.b]).g} von ${ABLOCKS[ns.b].length} erkannt`,"main2"):itm(`data-les="${cur.k}"`,"path","Weiterlernen",`Lektion ${cur.k+1}: ${cur.t}`,"main2")}
     ${itm('data-go="alphabet"',"list","Alphabet",alphaSure()+" von "+ALPHA.length+" Buchstaben sicher")}
   ${itm('data-go="badges"',"medal","Abzeichen",(S.badges||[]).length+" von "+BADGES.length+" freigeschaltet")}
   ${itm('data-go="stats"',"chart","Statistiken",knownN()+" von "+W.length+" Wörtern gelernt")}
@@ -1036,6 +1197,7 @@ const goalOf=ui=>{const l=SSTA[ui];return l&&l.length?l.reduce((a,b)=>b.t.length
 const UAR=["الْخُطُوَاتُ الْأُولَى","فِي الْمَدْرَسَةِ","فِي الْبَيْتِ","الطَّعَامُ وَالشَّرَابُ","الْأَرْقَامُ وَالْأَلْوَانُ","فِي الطَّرِيقِ","الطَّبِيعَةُ وَالْحَيَوَانَاتُ","الْوَقْتُ وَالْجِسْمُ","الْأَفْعَالُ","الْحَيَاةُ الْيَوْمِيَّةُ"]; // Einheiten auf Arabisch
 const lesWord=l=>(l.w.map(id=>BY[id]).find(w=>{const n=w.ar.replace(/[ً-ْٰ]/g,"").length;return n>=3&&n<=5&&!w.ar.includes(" ")})||BY[l.w[0]]).ar; // kurzes Beispielwort für die Station
 function path(){
+  if(S.np)return kpath();
   const ns=nextStep(),due=dueN(),gate=alphaGate(),hint=ui.hint,nodes=[],pts=[],P=104;
   let y=0,br=true,i=0,amp=22,fr=1.1,ph=0,th="",bands=[];
   const bend=s=>{i=0;amp=18+(s*5)%9;fr=[1.15,.8,1.4,.95,1.25][(s+5)%5];ph=s*1.7}; // jede Einheit windet sich anders
@@ -1081,6 +1243,7 @@ function path(){
       ?`<div class="card askip"><b>Wie sicher bist du bei den Buchstaben?</b><p class="mute">Ein Kurztest mit 10 Fragen zeigt es. Ab 8 richtigen Antworten überspringen wir den Abschnitt für dich.</p><button class="btn" data-atest>Kurztest starten</button><button class="btn alt" id="sk2">Ohne Test überspringen</button><button class="lnk" id="skx" style="margin-top:8px">Doch lieber üben</button></div>`
       :`<div class="card askip"><b>${as.s} von ${as.n} Buchstaben sicher</b><p class="mute">${gate?"Zuerst kommen die Buchstaben, dann Wörter und Sätze. ":""}Du kennst die Schrift schon? Dann spring direkt zu den Wörtern und Sätzen.</p><button class="btn alt" id="sk" style="margin-top:8px">Ich kann die Buchstaben schon</button></div>`;
   paint(`<h1>Lernpfad</h1><p class="mute">${knownN()} von ${W.length} Wörtern gelernt · ${sentDone()} von ${SENT.length} Sätzen geübt</p>
+  ${KL.length?`<div class="card note kpv"><p><b>Neu: Vorschau des neuen Lernpfads.</b> Er beginnt mit „Lesen lernen“. Die erste Etappe mit allen 29 Buchstaben ist schon spielbar.</p><button class="btn" data-kn>Vorschau öffnen</button></div>`:""}
   ${skipCard}
   <details class="card rule"><summary><b>So funktioniert der Lernpfad</b></summary><ol><li><i>1</i><span>Erst die <b>Buchstaben</b>, in vier kleinen Blöcken. Wer sie schon kann, überspringt sie.</span></li><li><i>2</i><span>Dann <b>Wörter</b> in Lektionen. Ein Wort ist <b>begonnen</b>, sobald du es richtig beantwortest, und <b>gelernt</b>, wenn du es nach mindestens einem Tag noch einmal weißt.</span></li><li><i>3</i><span>Nach jeder Einheit warten <b>Sätze</b> mit genau den Wörtern, die du gerade gelernt hast.</span></li></ol><p class="mute">Die nächste Lektion öffnet sich, sobald du 60 % der vorherigen begonnen hast, bei den Buchstaben 60 % eines Blocks (zweimal richtig erkannt). Satzrunden sind freiwillig und sperren nichts. Wörter früherer Lektionen werden in neuen Runden mitgeprüft.</p><p class="mute" style="margin-top:6px">Wie lange es bis zur Auffrischung dauert, richtet sich nach dir: Was sicher sitzt, kommt später wieder, was wackelt, früher. Der kleine Balken zeigt, wie frisch ein Wort ist.</p></details>
   ${due?`<div class="menu">${itm('data-go="review"',"repeat","Wiederholen",due+" Wörter fällig")}</div>`:""}
@@ -1361,7 +1524,7 @@ function settings(){
   $("#lg").onclick=()=>go("legal");$("#au").onclick=()=>{S.auto=S.auto===false;save();settings()};
   if($("#ex"))$("#ex").onclick=exportData;
   if($("#dl")){let a2=false;$("#dl").onclick=()=>{if(!a2){a2=true;$("#dl").lastChild.textContent="Nochmal tippen: alles wird gelöscht";return}deleteAccount()}}
-  let arm=false;$("#rs").onclick=()=>{if(!arm){arm=true;$("#rs").lastChild.textContent="Nochmal tippen zum Löschen";return}S.seen=[];S.seenDay="";S.xp=0;S.xpDays={};S.badges=[];S.st={perfect:0,rounds:0,goals:0,pairs:0,blitz:0,mix:0,sent:0};S.alpha={};S.aok="";S.sent={};S.days={};S.fav=[];S.box={};S.due={};S.ef={};S.streak=0;S.last="";S.epoch=Date.now();save();settings()};
+  let arm=false;$("#rs").onclick=()=>{if(!arm){arm=true;$("#rs").lastChild.textContent="Nochmal tippen zum Löschen";return}S.seen=[];S.seenDay="";S.xp=0;S.xpDays={};S.badges=[];S.st={perfect:0,rounds:0,goals:0,pairs:0,blitz:0,mix:0,sent:0};S.alpha={};S.aok="";S.kp={d:{}};S.sent={};S.days={};S.fav=[];S.box={};S.due={};S.ef={};S.streak=0;S.last="";S.epoch=Date.now();save();settings()};
 }
 setInterval(()=>{try{const hm=new Date().toTimeString().slice(0,5);if(S.rem&&hm===S.time&&S.notified!==today()&&Notification.permission==="granted"){S.notified=today();save();new Notification("Mufradaat",{body:"Zeit für deine arabischen Vokabeln!"})}}catch(e){}},20000);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -1383,9 +1546,9 @@ let UID=null,T=0,ready=false,SY="",wasGuest=false,recovering=false,busy=false,ag
 const setSY=t=>{SY=t;if(view==="settings")settings()};
 const clone=o=>JSON.parse(JSON.stringify(o));
 function sched(){if(UID&&sb&&ready){clearTimeout(T);T=setTimeout(sync,2000)}}
-const LOCALKEYS=["dir","rem","time","theme","goal","sound","vib","auto","hk"]; // Geräte-Einstellungen bleiben auf dem Gerät
+const LOCALKEYS=["dir","rem","time","theme","goal","sound","vib","auto","hk","np"]; // Geräte-Einstellungen bleiben auf dem Gerät
 function mergeS(a,b){ // pro Wort der bessere Stand, Favoriten vereinigen, pro Tag das Maximum; ein späteres Zurücksetzen gewinnt
-  b=Object.assign({box:{},due:{},ef:{},sent:{},days:{},xpDays:{},st:{},alpha:{},fav:[],badges:[],seen:[]},b);
+  b=Object.assign({box:{},due:{},ef:{},sent:{},days:{},xpDays:{},st:{},alpha:{},kp:{d:{}},fav:[],badges:[],seen:[]},b);
   const ea=a.epoch||0,eb=b.epoch||0;
   if(ea!==eb){const w=clone(ea>eb?a:b);for(const k of LOCALKEYS)if(a[k]!==undefined)w[k]=a[k];return w}
   const r=Object.assign({},a);r.box={};r.due={};r.ef={};
@@ -1398,6 +1561,7 @@ function mergeS(a,b){ // pro Wort der bessere Stand, Favoriten vereinigen, pro T
   const mx=(x,y)=>{const o={};for(const k of new Set([...Object.keys(x||{}),...Object.keys(y||{})]))o[k]=Math.max((x||{})[k]||0,(y||{})[k]||0);return o};
   r.xp=Math.max(a.xp||0,b.xp||0);r.xpDays=mx(a.xpDays,b.xpDays);r.st=mx(a.st,b.st);r.days=mx(a.days,b.days);r.alpha=mx(a.alpha,b.alpha);r.sent=mx(a.sent,b.sent);r.aok=a.aok||b.aok||""; // Buchstaben-Abschnitt: erledigt oder übersprungen gilt überall
   r.badges=[...new Set([...(a.badges||[]),...(b.badges||[])])];
+  r.kp={d:mx((a.kp||{}).d,(b.kp||{}).d)}; // neuer Lernpfad: abgeschlossen bleibt abgeschlossen
   const al=a.last||"",bl=b.last||"";if(bl>al||(bl===al&&(b.streak||0)>(a.streak||0))){r.streak=b.streak||0;r.last=bl}
   const as=a.seenDay||"",bs=b.seenDay||"";if(bs>as){r.seenDay=bs;r.seen=b.seen||[]}else if(bs===as)r.seen=[...new Set([...(a.seen||[]),...(b.seen||[])])];
   return r;
@@ -1553,7 +1717,7 @@ loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v20"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v21"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>

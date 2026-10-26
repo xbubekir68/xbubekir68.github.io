@@ -1,5 +1,5 @@
 // Mufradaat Service Worker: App-Hülle offline, Anmeldung/Sync nie aus dem Cache.
-const V="mfr-v20",AC="mfr-audio",SHELL=["./","index.html","manifest.webmanifest","icons/icon-192.png","icons/icon-512.png","icons/favicon-64.png","icons/icon-180.png","fonts/noto-naskh-arabic-500.woff2","fonts/noto-naskh-arabic-700.woff2","brand/mufradaat.webp","vendor/supabase.js"];
+const V="mfr-v21",AC="mfr-audio",SHELL=["./","index.html","manifest.webmanifest","icons/icon-192.png","icons/icon-512.png","icons/favicon-64.png","icons/icon-180.png","fonts/noto-naskh-arabic-500.woff2","fonts/noto-naskh-arabic-700.woff2","brand/mufradaat.webp","vendor/supabase.js","kurs/kurs.json","kurs/s1.json"];
 self.addEventListener("install",e=>{
   e.waitUntil(caches.open(V).then(c=>Promise.all(SHELL.map(u=>c.add(u).catch(()=>{})))).then(()=>self.skipWaiting()));
 });
@@ -9,7 +9,7 @@ self.addEventListener("activate",e=>{
 self.addEventListener("fetch",e=>{
   const r=e.request,u=new URL(r.url);
   if(r.method!=="GET"||u.origin!==location.origin)return; // Supabase & CDN bleiben unberührt
-  if(/\/audio\/audio\.json$/.test(u.pathname)){ // Liste der Audiodateien: erst Netz, damit neue Aufnahmen sofort ankommen
+  if(/\/audio\/audio\.json$/.test(u.pathname)||/\/kurs\/[^/]+\.json$/.test(u.pathname)){ // Audioliste und Kursdateien: erst Netz, damit Korrekturen sofort ankommen
     e.respondWith(fetch(r,{cache:"no-cache"}).then(res=>{if(res.ok){const cp=res.clone();caches.open(V).then(c=>c.put(r,cp))}return res}).catch(()=>caches.match(r)));
     return;
   }
