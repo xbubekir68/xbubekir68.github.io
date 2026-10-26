@@ -6,7 +6,8 @@
 //                                                             alle fehlenden oder geänderten Texte → audio/ und audio/audio.json
 //   node tools/gen-audio.mjs liste                            nur audio/audio.json und audio/liste.csv neu schreiben (ohne Schlüssel),
 //                                                             z. B. nachdem eigene Aufnahmen in audio/eigen/ gelegt wurden
-// Weitere Schalter: --neu (alles neu erzeugen), --tempo -10% (Sprechtempo), --nur w/kitab,w/bayt (nur diese IDs)
+// Weitere Schalter: --neu (alles neu erzeugen), --tempo -10% (Sprechtempo), --nur w/kitab,w/bayt (nur diese IDs),
+//   --roh (Text ohne Aussprache-Korrektur vorlesen), bei "proben": --vergleich (jede Stimme mit und ohne Korrektur)
 //
 // Eigene Aufnahmen (Muttersprachler) haben immer Vorrang: Datei unter audio/eigen/<ID>.mp3 ablegen
 // (z. B. audio/eigen/w/kitab.mp3, auch .m4a, .ogg, .wav), dann "liste" ausführen. Die IDs stehen in audio/liste.csv.
@@ -22,6 +23,15 @@ const opt=n=>{const i=args.indexOf("--"+n);return i<0?null:(args[i+1]&&!args[i+1
 try{for(const l of fs.readFileSync(path.join(APP,"tools",".env"),"utf8").split(/\r?\n/)){const m=l.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*?)\s*$/);if(m&&!process.env[m[1]])process.env[m[1]]=m[2].replace(/^["']|["']$/g,"")}}catch(e){}
 const env=n=>{const v=process.env[n];if(!v){console.error(`Es fehlt ${n}. Trag ihn in mufradaat/tools/.env ein (eine Zeile: ${n}=...).`);process.exit(1)}return v};
 const tempo=opt("tempo")||"-10%",pct=parseFloat(tempo)||0;
+// Aussprache-Korrektur: Die Stimmen sprechen ein Wort am Ende in Pausalform und verschlucken dabei Endungen
+// (سَيَّارَة → „sayyār“, كِتَابٌ → „kitāb“). Darum wird die Endung für die Stimme ausgeschrieben,
+// so wie die Umschrift in der App sie zeigt: ة am Wortende → هْ (-ah), Tanwin → Vokal + نْ (-un, -in, -an).
+// Angezeigt wird in der App weiter der normale Text.
+const KORR="k1";
+const spoken=t=>opt("roh")?t:t
+  .replace(/([ًٌٍَُِ])ّ/g,"ّ$1") // Schadda vor den Vokal, damit die Regeln unten greifen
+  .replace(/ة(?=[\s.,،؟!?]|$)/g,"هْ")
+  .replace(/ًا|اً/g,"َنْ").replace(/ً/g,"َنْ").replace(/ٌ/g,"ُنْ").replace(/ٍ/g,"ِنْ");
 const esc=t=>t.replace(/[<>&]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;"})[c]);
 
 // ---------- Anbieter ----------
@@ -62,14 +72,15 @@ const write=(f,b)=>{fs.mkdirSync(path.dirname(f),{recursive:true});fs.writeFileS
 
 // ---------- Befehle ----------
 // Probewörter mit schwierigen Lauten: ʿAyn, ḥ, q, emphatische Laute, Hamza, Schadda, Artikel, Alif maqṣūra
-const PROBEN=["w/ayn","w/halib","w/qalb","w/taam","w/zahr","w/khubz","w/sayyarah","w/suaal","w/mustashfa","w/sabah-al-khayr"];
+const PROBEN=["w/ayn","w/halib","w/qalb","w/taam","w/zahr","w/khubz","w/sayyarah","w/madrasah","w/suaal","w/mustashfa","w/sabah-al-khayr","w/shukran"];
 async function proben(){
   const [n,p]=provider(),all=texts(),list=PROBEN.map(id=>all.find(t=>t.id===id)).filter(Boolean);
-  list.push(all.find(t=>t.id.startsWith("s/")&&[...t.text].length>25)); // dazu ein Satz
-  const voices=typeof opt("stimme")==="string"?opt("stimme").split(","):p.stimmen,dir=path.join(APP,"audio-proben");
-  for(const v of voices)for(const t of list){
-    const f=path.join(dir,v,t.id.replace("/","-")+".mp3");
-    try{write(f,await retry(()=>p.say(t.text,v)));process.stdout.write(".")}catch(e){console.error(`\n${v} ${t.id}: ${e.message}`)}
+  list.push(...all.filter(t=>t.id.startsWith("s/")).filter((t,k,a)=>k<2||t===a.find(x=>[...x.text].length>25))); // dazu drei Sätze
+  const base=typeof opt("stimme")==="string"?opt("stimme").split(","):p.stimmen,dir=path.join(APP,"audio-proben");
+  const voices=opt("vergleich")?base.flatMap(v=>[v+"~roh",v]):base; // ~roh: ohne Aussprache-Korrektur
+  for(const c of voices)for(const t of list){
+    const [v,raw]=c.split("~"),f=path.join(dir,c,t.id.replace("/","-")+".mp3"),txt=raw?t.text:spoken(t.text);
+    try{write(f,await retry(()=>p.say(txt,v)));process.stdout.write(".")}catch(e){console.error(`\n${c} ${t.id}: ${e.message}`)}
   }
   const cell=(v,t)=>fs.existsSync(path.join(dir,v,t.id.replace("/","-")+".mp3"))?`<audio controls preload="none" src="${v}/${t.id.replace("/","-")}.mp3"></audio>`:"–";
   write(path.join(dir,"index.html"),`<!doctype html><meta charset="utf-8"><title>Stimmproben ${n}</title><style>body{font:15px system-ui;margin:24px}td,th{padding:6px 10px;border-bottom:1px solid #ddd;text-align:left}.ar{font-size:24px}audio{width:150px}</style>
@@ -96,14 +107,14 @@ function manifest(gen){ // gen: ID → {f,q} der KI-Dateien
 }
 const genOf=m=>Object.fromEntries(Object.entries(m.items).filter(([,e])=>e.q!=="eigen").map(([t,e])=>[e.i,{f:e.f,q:e.q,t}]));
 async function alle(){
-  const [n,p]=provider(),voice=typeof opt("stimme")==="string"?opt("stimme"):p.stimmen[0],q=`${n}:${voice}:${tempo}`;
+  const [n,p]=provider(),voice=typeof opt("stimme")==="string"?opt("stimme"):p.stimmen[0],q=`${n}:${voice}:${tempo}:${opt("roh")?"roh":KORR}`;
   const gen=genOf(readMan()),only=typeof opt("nur")==="string"?new Set(opt("nur").split(",")):null;
   const todo=texts().filter(t=>(!only||only.has(t.id))&&!ownFile(t.id)&&(opt("neu")||!gen[t.id]||gen[t.id].t!==t.text||gen[t.id].q!==q||!fs.existsSync(path.join(AUD,gen[t.id].f))));
   console.log(`${todo.length} Texte mit ${voice} erzeugen (${todo.reduce((s,t)=>s+[...t.text].length,0)} Zeichen) …`);
   let k=0,bad=0;const queue=[...todo];
   await Promise.all([0,1,2,3].map(async()=>{for(let t;(t=queue.shift());){
     const f=t.id+".mp3";
-    try{write(path.join(AUD,f),await retry(()=>p.say(t.text,voice)));gen[t.id]={f,q,t:t.text}}catch(e){bad++;console.error(`\n${t.id} (${t.text}): ${e.message}`)}
+    try{write(path.join(AUD,f),await retry(()=>p.say(spoken(t.text),voice)));gen[t.id]={f,q,t:t.text}}catch(e){bad++;console.error(`\n${t.id} (${t.text}): ${e.message}`)}
     if(++k%20===0)process.stdout.write(` ${k}`);
   }}));
   console.log(bad?`\n${bad} Fehler, einfach erneut ausführen.`:"\nFertig.");
