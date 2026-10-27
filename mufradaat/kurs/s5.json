@@ -1,0 +1,49 @@
+{
+  "id": "s5",
+  "ziel": {"art": "lesen", "ar": "هٰذَا يَوْمٌ جَمِيلٌ يَا صَدِيقِي", "sp": "هٰذَا يَوْمٌ جَمِيلٌ يَا صَدِيقِي", "de": "Das ist ein schöner Tag, mein Freund.", "text": "Einen Satz mit langen Vokalen lesen",
+    "geschafft": "Du kannst jetzt lange Vokale lesen, dazu das kleine Alif, ى, aw und ay."},
+  "lektionen": [
+    {
+      "id": "s5-1", "titel": "Langes ā", "art": "vokale", "zeichen": "aa", "station": "بَابٌ",
+      "woerter": [["بَابٌ", "eine Tür"], ["كِتَابٌ", "ein Buch"], ["قَالَ", "er sagte"], ["نَامَ", "er schlief"], ["طَارَ", "er flog"],
+        ["زَارَ", "er besuchte"], ["سَلَامٌ", "Frieden"], ["طَعَامٌ", "Essen"], ["حِمَارٌ", "ein Esel"], ["غَزَالٌ", "eine Gazelle"],
+        ["جِبَالٌ", "Berge"], ["رِجَالٌ", "Männer"], ["كَانَ", "er war"], ["أَنَا", "ich"], ["قَالَ لَهُ", "er sagte zu ihm"],
+        ["هُوَ كِتَابٌ", "es ist ein Buch"]],
+      "tipp": {"titel": "Ein Alif macht das a lang", "zeichen": "ـَا",
+        "text": "Folgt auf ein Fatha ein Alif ohne eigenes Zeichen, wird das a lang gezogen: بَا klingt wie bā. In der Umschrift zeigt ein Strich über dem Vokal, dass er lang ist: بَابٌ liest man bābun, eine Tür."}
+    },
+    {
+      "id": "s5-2", "titel": "Langes ī", "art": "vokale", "zeichen": "ii", "station": "فِيلٌ",
+      "woerter": [["فِيلٌ", "ein Elefant"], ["كَبِيرٌ", "groß"], ["صَغِيرٌ", "klein"], ["جَمِيلٌ", "schön"], ["قَرِيبٌ", "nah"],
+        ["بَعِيدٌ", "fern"], ["كَرِيمٌ", "großzügig"], ["سَعِيدٌ", "glücklich"], ["فِي", "in"], ["رِيحٌ", "ein Wind"],
+        ["دِينٌ", "eine Religion"], ["حَدِيقَةٌ", "ein Garten"], ["صَدِيقٌ", "ein Freund"], ["فِي كِتَابٍ", "in einem Buch"], ["هُوَ كَبِيرٌ", "er ist groß"]],
+      "tipp": {"titel": "Ein Yāʾ macht das i lang", "zeichen": "ـِي",
+        "text": "Nach einem Kasra spricht man ein Yāʾ ohne eigenes Zeichen nicht als y. Es dehnt das i: فِيلٌ liest man fīlun, ein Elefant."}
+    },
+    {
+      "id": "s5-3", "titel": "Langes ū", "art": "vokale", "zeichen": "uu", "station": "نُورٌ",
+      "woerter": [["نُورٌ", "ein Licht"], ["سُوقٌ", "ein Markt"], ["حُوتٌ", "ein Wal"], ["تُوتٌ", "Maulbeeren"], ["فُولٌ", "Bohnen"],
+        ["رَسُولٌ", "ein Gesandter"], ["يَقُولُ", "er sagt"], ["يَكُونُ", "er wird sein"], ["جُنُودٌ", "Soldaten"], ["دُرُوسٌ", "Lektionen"],
+        ["قُلُوبٌ", "Herzen"], ["عُيُونٌ", "Augen"], ["يَطِيرُ", "er fliegt"], ["يَقُولُ لَهُ", "er sagt zu ihm"], ["نُورٌ جَمِيلٌ", "ein schönes Licht"]],
+      "tipp": {"titel": "Ein Wāw macht das u lang", "zeichen": "ـُو",
+        "text": "Nach einem Damma spricht man ein Wāw ohne eigenes Zeichen nicht als w. Es dehnt das u: نُورٌ liest man nūrun, ein Licht. Trägt das Wāw ein Zeichen, bleibt es ein w, wie in هُوَ huwa, er."}
+    },
+    {
+      "id": "s5-4", "titel": "Kleines Alif und ى", "art": "vokale", "zeichen": "kl", "station": "هٰذَا",
+      "woerter": [["هٰذَا", "dieser, das"], ["هٰذِهِ", "diese"], ["ذٰلِكَ", "jener"], ["إِلٰهٌ", "ein Gott"], ["عَلَى", "auf"],
+        ["إِلَى", "zu, nach"], ["مَتَى", "wann"], ["بَلَى", "doch"], ["مُوسَى", "Mose"], ["عِيسَى", "Jesus"],
+        ["مَشَى", "er ging"], ["بَنَى", "er baute"], ["هٰذَا كِتَابٌ", "Das ist ein Buch."], ["هٰذِهِ حَدِيقَةٌ", "Das ist ein Garten."]],
+      "tipp": {"titel": "Langes ā ohne Alif", "zeichen": "ـٰ ى",
+        "text": "Manchmal steht statt des Alifs nur ein kleines Alif über dem Buchstaben: هٰذَا liest man hādhā, das. Am Wortende schreibt man das lange ā oft mit ى, einem Yāʾ ohne Punkte: عَلَى liest man ʿalā, auf."}
+    },
+    {
+      "id": "s5-5", "titel": "aw und ay", "art": "vokale", "zeichen": "dip", "station": "يَوْمٌ",
+      "woerter": [["يَوْمٌ", "ein Tag"], ["نَوْمٌ", "Schlaf"], ["لَوْنٌ", "eine Farbe"], ["قَوْمٌ", "ein Volk"], ["خَوْفٌ", "Angst"],
+        ["ثَوْبٌ", "ein Gewand"], ["بَيْتٌ", "ein Haus"], ["عَيْنٌ", "ein Auge"], ["لَيْلٌ", "Nacht"], ["زَيْتٌ", "Öl"],
+        ["خَيْرٌ", "Gutes"], ["صَيْفٌ", "Sommer"], ["بَيْنَ", "zwischen"], ["حَوْلَ", "um … herum"], ["أَيْنَ", "wo"],
+        ["لَوْنٌ جَمِيلٌ", "eine schöne Farbe"], ["فِي بَيْتٍ", "in einem Haus"], ["هٰذَا بَيْتٌ", "Das ist ein Haus."]],
+      "tipp": {"titel": "Vom a zum w oder y", "zeichen": "ـَوْ ـَيْ",
+        "text": "Ein kleiner Kreis auf Wāw oder Yāʾ nach Fatha macht einen Gleitlaut: يَوْمٌ liest man yawmun, ein Tag, wie au in Auto. بَيْتٌ liest man baytun, ein Haus, wie ei in Ei. Der Kreis heißt Sukun, in der nächsten Etappe steht er auf allen Buchstaben."}
+    }
+  ]
+}

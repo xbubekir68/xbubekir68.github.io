@@ -1,0 +1,48 @@
+{
+  "id": "s7",
+  "ziel": {"art": "lesen", "ar": "السَّلَامُ عَلَيْكُمْ يَا مُعَلِّمُ", "sp": "السَّلَامُ عَلَيْكُمْ يَا مُعَلِّمُ", "de": "Friede sei mit euch, Lehrer!", "text": "Einen Gruß lesen",
+    "geschafft": "Du kannst jetzt Schadda und Sonnenbuchstaben lesen."},
+  "lektionen": [
+    {
+      "id": "s7-1", "titel": "Schadda", "art": "vokale", "zeichen": "sh", "station": "عَلَّمَ",
+      "woerter": [["عَلَّمَ", "er lehrte"], ["دَرَّسَ", "er unterrichtete"], ["كَسَّرَ", "er zerbrach"], ["قَطَّعَ", "er zerschnitt"], ["مُعَلِّمٌ", "ein Lehrer"],
+        ["أُمٌّ", "eine Mutter"], ["جَدٌّ", "ein Großvater"], ["عَمٌّ", "ein Onkel"], ["سُكَّرٌ", "Zucker"], ["قِطَّةٌ", "eine Katze"],
+        ["جَنَّةٌ", "ein Paradies"], ["رُمَّانٌ", "Granatäpfel"], ["تُفَّاحٌ", "Äpfel"], ["حَمَّامٌ", "ein Bad"], ["رَبٌّ", "ein Herr"],
+        ["هُوَ مُعَلِّمٌ", "er ist Lehrer"]],
+      "tipp": {"titel": "Ein Buchstabe, doppelt gesprochen", "zeichen": "ـّ",
+        "text": "Das kleine Zeichen wie ein w heißt Schadda. Der Buchstabe darunter klingt doppelt: Er schließt die eine Silbe und öffnet die nächste. عَلَّمَ liest man ʿallama, er lehrte. Der Vokal kommt zur Schadda dazu, Fatha darüber, Kasra meist direkt darunter."}
+    },
+    {
+      "id": "s7-2", "titel": "Berufe", "art": "vokale", "station": "نَجَّارٌ",
+      "woerter": [["نَجَّارٌ", "ein Tischler"], ["خَبَّازٌ", "ein Bäcker"], ["رَسَّامٌ", "ein Maler"], ["طَبَّاخٌ", "ein Koch"], ["فَلَّاحٌ", "ein Bauer"],
+        ["بَوَّابٌ", "ein Pförtner"], ["حَدَّادٌ", "ein Schmied"], ["بَقَّالٌ", "ein Lebensmittelhändler"], ["حَلَّاقٌ", "ein Friseur"], ["صَيَّادٌ", "ein Jäger"],
+        ["هُوَ نَجَّارٌ", "er ist Tischler"], ["أَنَا طَبَّاخٌ", "ich bin Koch"], ["هَلْ أَنْتَ خَبَّازٌ", "Bist du Bäcker?"]],
+      "tipp": {"titel": "Ein Muster für Berufe", "zeichen": "فَعَّالٌ",
+        "text": "Viele Berufe folgen demselben Muster: Schadda auf dem zweiten Buchstaben, danach ein langes ā. نَجَّارٌ liest man najjārun, ein Tischler, und خَبَّازٌ khabbāzun, ein Bäcker."}
+    },
+    {
+      "id": "s7-3", "titel": "Schadda und Sukun", "art": "vokale", "station": "كُرْسِيٌّ",
+      "woerter": [["كُرْسِيٌّ", "ein Stuhl"], ["أَلْمَانِيٌّ", "ein Deutscher"], ["تُرْكِيٌّ", "ein Türke"], ["مِصْرِيٌّ", "ein Ägypter"], ["عَرَبِيٌّ", "ein Araber"],
+        ["بَحْرِيٌّ", "zum Meer gehörig"], ["شَمْسِيٌّ", "zur Sonne gehörig"], ["يَوْمِيٌّ", "täglich"], ["مَدْرَسِيٌّ", "zur Schule gehörig"], ["مُسْتَعِدٌّ", "bereit"],
+        ["مُسْتَمِرٌّ", "andauernd"], ["أَنَا أَلْمَانِيٌّ", "Ich bin Deutscher."], ["هَلْ أَنْتَ تُرْكِيٌّ", "Bist du Türke?"], ["كِتَابٌ مَدْرَسِيٌّ", "ein Schulbuch"], ["هِيَ مِصْرِيَّةٌ", "Sie ist Ägypterin."]],
+      "tipp": {"titel": "Die Endung -iyyun", "zeichen": "ـِيٌّ",
+        "text": "Ein Yāʾ mit Schadda am Ende sagt, woher jemand kommt oder wozu etwas gehört: مِصْرِيٌّ liest man miṣriyyun, ein Ägypter. In diesen Wörtern stehen Sukun und Schadda oft nah beieinander, lies sie Silbe für Silbe."}
+    },
+    {
+      "id": "s7-4", "titel": "Zwei Schaddas", "art": "vokale", "station": "حُرِّيَّةٌ",
+      "woerter": [["حُرِّيَّةٌ", "Freiheit"], ["أَهَمِّيَّةٌ", "Wichtigkeit"], ["بُنِّيٌّ", "braun"], ["فِضِّيٌّ", "silbern"], ["فَنِّيٌّ", "künstlerisch"],
+        ["جَوِّيٌّ", "zur Luft gehörig"], ["بَرِّيٌّ", "wild, zum Land gehörig"], ["مَكِّيٌّ", "aus Mekka"], ["سُكَّرِيٌّ", "aus Zucker"], ["سُورَةٌ مَكِّيَّةٌ", "eine mekkanische Sure"],
+        ["خَاتَمٌ فِضِّيٌّ", "ein silberner Ring"], ["بَابٌ بُنِّيٌّ", "eine braune Tür"], ["بَرِيدٌ جَوِّيٌّ", "Luftpost"], ["أُمِّي مُعَلِّمَةٌ", "Meine Mutter ist Lehrerin."]],
+      "tipp": {"titel": "Zwei Schaddas in einem Wort", "zeichen": "حُرِّيَّةٌ",
+        "text": "Manche Wörter haben zwei Schaddas. Lies langsam Silbe für Silbe: حُرِّيَّةٌ ist ḥur, riy, ya, tun, Freiheit."}
+    },
+    {
+      "id": "s7-5", "titel": "Sonnenbuchstaben", "art": "vokale", "zeichen": "sun", "station": "الشَّمْسُ",
+      "woerter": [["الشَّمْسُ", "die Sonne"], ["النُّورُ", "das Licht"], ["الرَّجُلُ", "der Mann"], ["الدَّرْسُ", "die Lektion"], ["السَّلَامُ", "der Frieden"],
+        ["التُّفَّاحُ", "die Äpfel"], ["الزَّيْتُ", "das Öl"], ["الصَّيْفُ", "der Sommer"], ["الطَّعَامُ", "das Essen"], ["الذَّهَبُ", "das Gold"],
+        ["الثَّوْبُ", "das Gewand"], ["اللَّيْلُ", "die Nacht"], ["النَّهْرُ", "der Fluss"], ["الشَّمْسُ كَبِيرَةٌ", "Die Sonne ist groß."], ["السَّلَامُ عَلَيْكُمْ", "Friede sei mit euch."]],
+      "tipp": {"titel": "Sonne und Mond", "zeichen": "الشَّـ",
+        "text": "Vor 14 Buchstaben, den Sonnenbuchstaben, spricht man das Lām des Artikels nicht. Der Buchstabe danach trägt eine Schadda: الشَّمْسُ liest man ash-shamsu, die Sonne. Vor allen anderen, den Mondbuchstaben, bleibt das l hörbar: الْقَمَرُ al-qamaru, der Mond."}
+    }
+  ]
+}

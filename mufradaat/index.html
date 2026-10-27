@@ -275,9 +275,9 @@ details.rule{display:block;margin-top:12px}details.rule>ol,details.rule>p{margin
 /* Vokale und Tanwin: Zeichen, Silbentafel, Wörter mit Umschrift, Nachsprechen */
 .kzn>.ar{font-size:88px;line-height:1.3;color:var(--g)}.kwl{text-align:center;font-size:15px;color:var(--mute);line-height:1.45}.kwl .kgp{color:var(--g);font-weight:700}
 .kwr{font-size:56px;line-height:1.7;margin:10px 0 6px}.kgp{color:var(--g)}.kla small{display:block;font-size:14px;font-weight:400;color:var(--mute);margin-top:4px}
-.ktf{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;direction:rtl;margin-top:14px}.ktf.few{grid-template-columns:repeat(3,minmax(0,96px));justify-content:center;gap:10px}
+.ktf{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;direction:rtl;margin-top:14px}.ktf.few{grid-template-columns:repeat(3,minmax(0,96px));justify-content:center;gap:10px}.ktf.wd{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .kts{display:grid;justify-items:center;padding:2px 0 6px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);font:inherit}
-.kts .ar{font-size:26px;line-height:1.7}.ktf.few .kts .ar{font-size:44px}.kts small{font-size:11px;color:var(--mute);direction:ltr}.ktu{font-size:13px;line-height:1.5;text-align:center;margin-top:12px}
+.kts .ar{font-size:26px;line-height:1.7}.ktf.few .kts .ar{font-size:44px}.ktf.wd .kts .ar{font-size:34px}.ktf.wd .kts small{font-size:13px}.kts small{font-size:11px;color:var(--mute);direction:ltr}.ktu{font-size:13px;line-height:1.5;text-align:center;margin-top:12px}
 .ksp{margin-top:14px;display:grid;gap:8px;justify-items:center;text-align:center;padding:16px}.ksp .kgl{margin:4px 0}.ksh{font-size:13px;line-height:1.5}
 .ksr{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:6px}.ksr .btn{width:auto;margin:0;padding:10px 18px;display:inline-flex;align-items:center;gap:6px}
 .ksr .krec{background:var(--bad);color:var(--on)}.ksk{display:block;margin:10px auto 0}
@@ -1066,12 +1066,16 @@ function kTasksS(l,hear){ // Surenanfänge: vier vorstellen, dann lesen, hören 
   shuffle(su.filter(s=>kChars(s.t).length>=3)).sort((x,y)=>!!x.vorstellen-!!y.vorstellen).slice(0,3).forEach(s=>tail.push({t:"zerlegen",w:s.t,s}));
   return [...T,...shuffle(tail)];
 }
-// Vokale und Tanwin: Silben aus Buchstabe und Zeichen, Wörter mit Umschrift und Bedeutung
+// Vokale, Tanwin, lange Vokale, Sukun und Schadda: Silben aus Buchstabe und Zeichen, Wörter mit Umschrift und Bedeutung
 const TAM={i:"tam",c:"ة",n:"Tāʾ marbūṭa",s:"t"}; // Ta marbuta: kein eigener Buchstabe des Alphabets
-const KCH={...ALC,"أ":ALBY.hamza,"إ":ALBY.hamza,"ة":TAM};
+const KCH={...ALC,"أ":ALBY.hamza,"إ":ALBY.hamza,"ؤ":ALBY.hamza,"ئ":ALBY.hamza,"ة":TAM}; // Hamza auf Alif, Wāw und Yāʾ
 const VZ={a:"َ",i:"ِ",u:"ُ",an:"ً",in:"ٍ",un:"ٌ"},VZR=Object.fromEntries(Object.entries(VZ).map(([k,v])=>[v,k]));
-const TANW=["an","in","un"],VFAM={a:"an",i:"in",u:"un",an:"a",in:"i",un:"u"},VL={a:"a",i:"i",u:"u",an:"an",in:"in",un:"un"};
-const ZI={ // neue Zeichen: Name, Aussehen, Klang
+const SHORT=["a","i","u"],TANW=["an","in","un"],LONG=["aa","ii","uu"],VK=[...SHORT,...TANW,...LONG],kVs=zk=>VK.filter(v=>zk.includes(v));
+const VM={...VZ,aa:"َ",ii:"ِ",uu:"ُ"},MADD={aa:"ا",ii:"ي",uu:"و"}; // langer Vokal = kurzes Zeichen und Dehnungsbuchstabe
+const VL={a:"a",i:"i",u:"u",an:"an",in:"in",un:"un",aa:"ā",ii:"ī",uu:"ū"};
+const FAM={a:["aa","an"],i:["ii","in"],u:["uu","un"],aa:["a"],ii:["i"],uu:["u"],an:["a"],in:["i"],un:["u"]}; // leicht verwechselt: kurz, lang, mit Tanwin
+const WSIGN=["kl","dip","o","al","hz","sh","sun"]; // Zeichen, die man an Wörtern lernt statt an einer Silbentafel
+const ZI={ // neue Zeichen: Name, Aussehen, Klang (k ersetzt „klingt wie“), Hinweis; t = Hinweis unter der Tafel, tt = Titel der Wörtertafel
   a:{n:"Fatha",g:"ـَ",l:"a",h:"Ein schräger Strich über dem Buchstaben."},
   i:{n:"Kasra",g:"ـِ",l:"i",h:"Ein schräger Strich unter dem Buchstaben."},
   u:{n:"Damma",g:"ـُ",l:"u",h:"Ein kleines Wāw über dem Buchstaben."},
@@ -1079,33 +1083,53 @@ const ZI={ // neue Zeichen: Name, Aussehen, Klang
   an:{n:"Tanwin -an",g:"ـًا",l:"an",h:"Zwei Fatha-Striche, danach meist ein Alif, das man nicht spricht."},
   in:{n:"Tanwin -in",g:"ـٍ",l:"in",h:"Zwei Kasra-Striche unter dem Buchstaben."},
   un:{n:"Tanwin -un",g:"ـٌ",l:"un",h:"Zwei Damma, oft als Damma mit kleinem Haken geschrieben."},
-  ta:{n:"Ta marbuta",g:"ـة ة",l:"t",h:"Ein ه mit zwei Punkten. Es steht nur am Wortende und klingt mit Vokal wie t."}};
+  ta:{n:"Ta marbuta",g:"ـة ة",l:"t",h:"Ein ه mit zwei Punkten. Es steht nur am Wortende und klingt mit Vokal wie t."},
+  aa:{n:"Langes ā",d:"langem ā",g:"ـَا",l:"ā",h:"Fatha und danach ein Alif ohne eigenes Zeichen: Das a wird lang.",t:"Der Strich über dem Vokal zeigt, dass er lang ist."},
+  ii:{n:"Langes ī",d:"langem ī",g:"ـِي",l:"ī",h:"Kasra und danach ein Yāʾ ohne eigenes Zeichen: Das i wird lang.",t:"Der Strich über dem Vokal zeigt, dass er lang ist."},
+  uu:{n:"Langes ū",d:"langem ū",g:"ـُو",l:"ū",h:"Damma und danach ein Wāw ohne eigenes Zeichen: Das u wird lang.",t:"Der Strich über dem Vokal zeigt, dass er lang ist."},
+  kl:{n:"Kleines Alif und ى",g:"هٰـ ـَى",l:"ā",h:"Ein kleines Alif über dem Buchstaben oder ein ى ohne Punkte am Wortende. Beide klingen wie langes ā.",t:"Beide stehen für ein langes ā, in der Umschrift mit Strich.",tt:"Wörter mit kleinem Alif und ى"},
+  dip:{n:"aw und ay",g:"ـَوْ ـَيْ",l:"aw und ay",h:"Ein kleiner Kreis auf Wāw oder Yāʾ nach Fatha: Man gleitet vom a zum w oder y, wie in „Auto“ und „Ei“.",t:"aw klingt etwa wie au in Auto, ay wie ei in Ei."},
+  o:{n:"Sukun",g:"ـْ",k:"kein Vokal",h:"Ein kleiner Kreis über dem Buchstaben: Hier folgt kein Vokal, die Silbe ist zu Ende.",t:"Nach einem Buchstaben mit Sukun steht in der Umschrift kein Vokal."},
+  al:{n:"Artikel al-",g:"الْـ",l:"al-",h:"Alif und Lām mit Sukun vor einem Wort bedeuten „der, die, das“. Am Anfang spricht man das Alif wie a.",t:"In der Umschrift trennt ein Bindestrich den Artikel vom Wort.",tt:"Wörter mit Artikel"},
+  hz:{n:"Hamza auf Trägern",g:"ؤ ئ ء",l:"ʾ",h:"Das Hamza sitzt auch auf Wāw, auf Yāʾ ohne Punkte oder steht allein. Es bleibt derselbe kurze Stimmabsatz.",t:"ʾ steht in der Umschrift für das Hamza.",tt:"Wörter mit Hamza"},
+  sh:{n:"Schadda",g:"ـّ",k:"der Buchstabe klingt doppelt",h:"Ein kleines Zeichen wie ein w über dem Buchstaben: Man spricht ihn doppelt, etwa wie das mm in „im Meer“.",t:"In der Umschrift steht der Buchstabe doppelt."},
+  sun:{n:"Sonnenbuchstaben",g:"الشَّـ",k:"das l des Artikels fällt weg",h:"Vor 14 Buchstaben spricht man das l des Artikels nicht. Der Buchstabe danach trägt eine Schadda und klingt doppelt.",t:"Kein Sukun auf dem Lām, dafür eine Schadda auf dem nächsten Buchstaben.",tt:"Wörter mit Sonnenbuchstaben"}};
 const trL=a=>a.i==="tam"?"t":({jim:"j",kha:"kh",shin:"sh"})[a.i]||a.s; // Umschrift wie bei den Wörtern der App
-const kSyl=(c,v)=>{if(!v)return c;const b=c==="أ"||c==="إ"?(v==="i"||v==="in"?"إ":"أ"):c;return b+VZ[v]+(v==="an"&&!"ةأء".includes(b)?"ا":"")}; // -an mit stummem Alif, außer nach ة und Hamza
-function kUnits(w){ // Wort in Silben: Buchstabe mit seinem Zeichen, das stumme Alif nach -an gehört dazu
-  const U=[];
-  for(const c of w){const u=U[U.length-1];
+const kBase=(c,v)=>c==="أ"||c==="إ"?(["i","in","ii"].includes(v)?"إ":"أ"):c; // Hamza mit Kasra sitzt unter dem Alif
+const kAnA=b=>!"ةأء".includes(b); // -an mit stummem Alif, außer nach ة und Hamza
+const kSyl=(c,v)=>{if(!v)return c;const b=kBase(c,v);return b+VM[v]+(MADD[v]||(v==="an"&&kAnA(b)?"ا":""))};
+const MK=/[ً-ْٰ]/;
+function kUnits(w){ // Wort in Silben: Buchstabe mit Schadda und Zeichen, Dehnungsbuchstabe und stummes Alif gehören dazu. Artikel: wl = Alif, art = Lām, sil = stummes Lām
+  const U=[],ch=[...w];
+  ch.forEach((c,k)=>{const u=U[U.length-1],bare=!MK.test(ch[k+1]||"");
     if(c===" ")U.push({sp:true});
     else if(VZR[c]){if(u)u.v=VZR[c]}
     else if(c==="ْ"||c==="ّ"){if(u)u[c==="ْ"?"o":"sh"]=true}
+    else if(c==="ٰ"){if(u){u.v="aa";u.m=c}}
     else if(c==="ا"&&u&&u.v==="an")u.x=true;
-    else U.push({a:KCH[c]||null,c,v:""})}
+    else if(bare&&u&&!u.m&&(u.v==="a"&&"اى".includes(c)||u.v==="i"&&c==="ي"||u.v==="u"&&c==="و")){u.v+=u.v;u.m=c}
+    else if(c==="ا"&&bare&&(!u||u.sp)&&ch[k+1]==="ل")U.push({a:ALBY.alif,c,v:"",wl:true});
+    else U.push({a:KCH[c]||null,c,v:"",...(u&&u.wl?{art:true,sil:bare}:{})})});
   return U;
 }
-const kUw=u=>u.sp?" ":kSyl(u.c,u.v)+(u.sh?"ّ":"")+(u.o?"ْ":"");
+const kUw=u=>{if(u.sp)return " ";if(u.wl||u.sil)return u.c;const b=kBase(u.c,u.v),d=u.m==="ٰ"; // Reihenfolge wie in der Unicode-Normalform: Vokal, Schadda, Sukun, kleines Alif, dann Dehnungsbuchstabe
+  return b+(u.o||d?"":VM[u.v]||"")+(u.sh?"ّ":"")+(u.o?"ْ":"")+(d?u.m:u.m||"")+(u.v==="an"&&kAnA(b)?"ا":"")};
 const kJoin=U=>U.map(kUw).join("");
-const kTrU=U=>U.map((u,k)=>{if(u.sp)return " ";const p=U[k-1];let c=u.a?(u.a.i==="hamza"&&(!p||p.sp)?"":trL(u.a)):"";if(u.sh)c+=c;return c+(VL[u.v]||"")}); // das Hamza am Wortanfang schreibt man nicht
+const kTrU=U=>U.map((u,k)=>{if(u.sp)return " ";if(u.wl)return "a";if(u.sil)return "";const p=U[k-1]||{sp:true};
+  let c=u.a?(u.a.i==="hamza"&&(p.sp||p.art)?"":trL(u.a)):""; // das Hamza am Wortanfang und nach dem Artikel schreibt man nicht
+  if(u.sh)c=p.sil?c+"-"+c:c+c;else if(u.art)c+="-"; // aš-šamsu, al-qamaru
+  return c+(VL[u.v]||"")});
 const kTr=w=>kTrU(kUnits(w)).join("");
 const kZK=k=>KL.slice(0,k+1).filter(l=>l.art==="vokale"&&l.zeichen).map(l=>l.zeichen); // bis zu dieser Lektion eingeführte Zeichen
 const kWs=l=>(l.woerter||[]).map(([w,de])=>({w,de,lat:kTr(w)}));
 const kSy=(a,v)=>({a,v,t:kSyl(a.i==="hamza"?"أ":a.c,v),lat:(a.i==="hamza"?"ʾ":trL(a))+VL[v],k:a.i+"-"+v});
-const kSyOk=(a,v)=>a.i!=="alif"&&(a===TAM?TANW.includes(v):!(a.i==="hamza"&&TANW.includes(v))); // Ta marbuta nur mit Tanwin, Hamza mit Tanwin erst später
+const kSyOk=(a,v)=>a.i!=="alif"&&(a===TAM?TANW.includes(v):!(a.i==="hamza"&&(TANW.includes(v)||v==="aa"))); // Ta marbuta nur mit Tanwin, Hamza ohne Tanwin und ohne ā
 const kSylls=(zk,v)=>[...ALPHA,TAM].filter(a=>kSyOk(a,v)&&(a.i!=="hamza"||zk.includes("hamza"))&&(a!==TAM||zk.includes("ta"))).map(a=>kSy(a,v));
 const LATSIM=[["s","ṣ"],["d","ḍ"],["t","ṭ"],["z","ẓ"],["h","ḥ"],["ʿ","ʾ"],["dh","ẓ"]]; // in der Umschrift kaum zu unterscheiden
 const latNear=(a,b)=>trL(a)===trL(b)||LATSIM.some(g=>g.includes(trL(a))&&g.includes(trL(b)));
 function kSylD(y,zk){ // ähnliche Silben als Ablenker: anderes Zeichen auf demselben Buchstaben, dann ähnlich aussehende Buchstaben
-  const vs=zk.filter(z=>VZ[z]),a=y.a,fam=a===TAM?[ALBY.he]:[...dotPeers(a,ALPHA),...(AFAM.find(f=>f.includes(a.i))||[]).map(i=>ALBY[i])];
-  const c=[...(vs.includes(VFAM[y.v])?[VFAM[y.v]]:[]),...shuffle(vs.filter(v=>v!==y.v))].map(v=>[a,v]).concat(shuffle(fam).map(g=>[g,y.v]),shuffle([...ALPHA,TAM]).map(g=>[g,y.v]));
+  const vs=kVs(zk),a=y.a,fam=a===TAM?[ALBY.he]:[...dotPeers(a,ALPHA),...(AFAM.find(f=>f.includes(a.i))||[]).map(i=>ALBY[i])];
+  const c=[...(FAM[y.v]||[]).filter(v=>vs.includes(v)),...shuffle(vs.filter(v=>v!==y.v))].map(v=>[a,v]).concat(shuffle(fam).map(g=>[g,y.v]),shuffle([...ALPHA,TAM]).map(g=>[g,y.v]));
   const out=[],seen=new Set([y.t,y.lat]);
   for(const [g,v] of c){
     if(out.length>=3)break;
@@ -1113,63 +1137,83 @@ function kSylD(y,zk){ // ähnliche Silben als Ablenker: anderes Zeichen auf dems
     const s=kSy(g,v);if(!seen.has(s.t)&&!seen.has(s.lat)){seen.add(s.t);seen.add(s.lat);out.push(s)}}
   return out;
 }
-function kWVar(w,zk){ // falsch gelesene Fassungen mit bekannten Zeichen: andere Vokale, eine andere Endung oder ein Buchstabe mit anderen Punkten
-  const U=kUnits(w),ix=U.map((u,k)=>k).filter(k=>U[k].a&&U[k].v),out=new Set(),lat=new Set([kTr(w)]),vs=zk.filter(z=>VZ[z]);
-  const alt=u=>(TANW.includes(u.v)?[VFAM[u.v],...TANW]:["a","i","u"]).filter(v=>v!==u.v&&vs.includes(v)&&kSyOk(u.a,v));
+function kAlt(U,k,zk){ // andere Lesarten einer Silbe mit bekannten Zeichen: zuerst verwandter Vokal, Sukun und Schadda, dann andere Vokale
+  const u=U[k],p=U[k-1]||{sp:true},n=U[k+1]||{sp:true},out=[];
+  if(!u||u.sp||!u.a||u.wl||u.art||u.m==="ٰ"||u.m==="ى"||"ؤئء".includes(u.c))return out; // Artikel, kleines Alif, ى und Hamza-Träger bleiben, wie sie sind
+  let s=k;while(s>0&&!U[s-1].sp)s--;const al=U[s].wl; // mit Artikel nie Tanwin
+  const vs=kVs(zk).filter(v=>(n.sp&&!al||!TANW.includes(v))&&(kSyOk(u.a,v)||u.a===TAM&&SHORT.includes(v)&&zk.includes("al"))),V=v=>({...u,v,o:false,m:MADD[v]||""});
+  (FAM[u.v]||[]).filter(v=>vs.includes(v)).forEach(v=>out.push(V(v)));
+  if(!u.o&&!p.sp&&!p.o&&!p.art&&!n.o&&u.a!==TAM&&(zk.includes("o")||zk.includes("dip")&&"وي".includes(u.c)&&p.v==="a"))out.push({...u,v:"",o:true,sh:false,m:""});
+  if(zk.includes("sh")&&!p.sp&&!p.o&&!p.art&&!u.o&&u.a!==TAM&&u.a.i!=="hamza")out.push({...u,sh:!u.sh});
+  shuffle(vs).forEach(v=>out.push(V(v)));
+  const seen=new Set([kUw(u)]);return out.filter(x=>{const s=kUw(x);return !seen.has(s)&&seen.add(s)});
+}
+function kWVar(w,zk){ // falsch gelesene Fassungen mit bekannten Zeichen: andere Lesart einer oder zweier Silben, oder ein Buchstabe mit anderen Punkten
+  const U=kUnits(w),ix=U.map((u,k)=>k).filter(k=>kAlt(U,k,zk).length),out=new Set(),lat=new Set([kTr(w)]);
+  const fam=k=>{const u=U[k],p=U[k-1];return u.a&&!u.wl&&!u.art&&!(p&&p.art)&&u.a!==TAM&&u.a.i!=="hamza"&&(!u.o||zk.includes("o"))&&(DOTF.find(f=>f.includes(u.a.i))||AFAM.find(f=>f.includes(u.a.i)))}; // Sukun auf anderen Buchstaben als و und ي erst, wenn er eingeführt ist
+  const dx=U.map((u,k)=>k).filter(fam);
   for(let g=0;g<80&&out.size<3;g++){
-    const V=U.map(u=>({...u})),r=Math.random(),k=pick(ix),f=V[k].a&&(DOTF.find(f=>f.includes(V[k].a.i))||AFAM.find(f=>f.includes(V[k].a.i)));
-    if((r<.75||!f)&&ix.some(k=>alt(U[k]).length))(r<.3&&ix.length>1?shuffle(ix).slice(0,2):[k]).forEach(k=>{const o=alt(V[k]);if(o.length)V[k].v=pick(o)});
-    else if(!f)continue;
-    else{const b=ALBY[pick(f.filter(i=>i!==V[k].a.i&&i!=="alif"))];V[k].a=b;V[k].c=b.c}
-    const s=kJoin(V),t=kTrU(V).join("");if(s!==w&&!lat.has(t)&&!out.has(s)){out.add(s);lat.add(t)}}
+    const V=U.map(u=>({...u})),r=Math.random();
+    if(ix.length&&(r<.75||!dx.length))(r<.3&&ix.length>1?shuffle(ix).slice(0,2):[pick(ix)]).forEach(k=>{const o=kAlt(V,k,zk);if(o.length)V[k]=pick(o)});
+    else if(dx.length){const k=pick(dx),b=ALBY[pick(fam(k).filter(i=>i!==V[k].a.i&&i!=="alif"))];V[k]={...V[k],a:b,c:b.c}}
+    else break;
+    const s=kJoin(V),t=kTrU(V).join("");if(s!==w&&!lat.has(t)&&!out.has(s)&&kTr(s)===t){out.add(s);lat.add(t)}}
   return [...out];
 }
-function kGapOpts(U,g,zk){ // Silben für die Lücke: dasselbe Zeichen-Paar zuerst (a und -an), Tanwin nur am Wortende
-  const u=U[g],end=!U[g+1]||U[g+1].sp,vs=zk.filter(z=>VZ[z]&&(end||!TANW.includes(z)));
-  return [u.v,VFAM[u.v],...shuffle(vs)].filter((v,k,a)=>v&&vs.includes(v)&&a.indexOf(v)===k&&kSyOk(u.a,v)).slice(0,4).map(v=>kSyl(u.c,v));
+const kGapOpts=(U,g,zk)=>[kUw(U[g]),...kAlt(U,g,zk).map(kUw)].slice(0,4); // Silben für die Lücke: die richtige und verwandte Lesarten
+const kUZ=(U,k,z)=>{const u=U[k],p=U[k-1]||{sp:true};if(!u||u.sp||!u.a)return false; // trägt diese Silbe das Zeichen z?
+  return !!(z==="ta"?u.a===TAM:z==="hamza"?u.a.i==="hamza":z==="hz"?u.a.i==="hamza"&&!p.sp&&!p.art:z==="kl"?u.m==="ٰ"||u.m==="ى"
+    :z==="dip"?u.o&&"وي".includes(u.c)&&p.v==="a":z==="o"?u.o:z==="al"?u.wl:z==="sh"?u.sh:z==="sun"?u.sil:u.v===z)};
+function kGap(wo,z,zk){ // welche Silbe fehlt: bevorzugt eine mit dem neuen Zeichen (beim Artikel die Silbe danach), nur wo es mindestens zwei Möglichkeiten gibt
+  const U=kUnits(wo.w),ks=U.map((u,k)=>k).filter(k=>kAlt(U,k,zk).length),four=ks.filter(k=>kAlt(U,k,zk).length>=3); // am liebsten mit vier Antworten
+  const pz=k=>kUZ(U,k,z)||(z==="al"||z==="sun")&&U[k-1]&&U[k-1].art,c=[four.filter(pz),four,ks.filter(pz),ks].find(x=>x.length);
+  return c?pick(c):-1;
 }
-function kGap(wo,z,zk){ // welche Silbe fehlt: bevorzugt eine mit dem neuen Zeichen, nur wo es mindestens zwei Möglichkeiten gibt
-  const U=kUnits(wo.w),ks=U.map((u,k)=>k).filter(k=>U[k].a&&U[k].v&&kGapOpts(U,k,zk).length>1);
-  const pr=ks.filter(k=>z==="ta"?U[k].a===TAM:z==="hamza"?U[k].a.i==="hamza":U[k].v===z);
-  return ks.length?pick(pr.length?pr:ks):-1;
-}
-function kSbD(U,zk){ // falsche Silben für den Baukasten: anderes Zeichen auf demselben Buchstaben oder andere Punkte
-  const vs=zk.filter(z=>VZ[z]),have=new Set(U.map(kUw)),out=new Set(),n=U.length>3?3:2;
-  for(let g=0;g<60&&out.size<n;g++){
-    const u=pick(U),ov=vs.filter(v=>v!==u.v&&kSyOk(u.a,v)&&TANW.includes(v)===TANW.includes(u.v)),f=DOTF.find(f=>f.includes(u.a.i));let s=null;
-    if(ov.length&&(Math.random()<.65||!f))s=kSyl(u.c,pick(ov));
-    else if(f){const b=ALBY[pick(f.filter(i=>i!==u.a.i))];s=kSyl(b.c,u.v)}
+const kTiles=U=>U.reduce((T,u)=>{const s=kUw(u);if(u.art)T[T.length-1]+=s;else T.push(s);return T},[]); // Bausteine: Silben, der Artikel als ein Stück
+function kSbD(U,zk){ // falsche Silben für den Baukasten: andere Lesart derselben Silbe oder andere Punkte
+  const have=new Set(kTiles(U)),out=new Set(),n=U.length>3?3:2,ix=U.map((u,k)=>k).filter(k=>U[k].a&&!U[k].wl&&!U[k].art);
+  for(let g=0;g<60&&out.size<n&&ix.length;g++){
+    const k=pick(ix),u=U[k],o=kAlt(U,k,zk),f=!(U[k-1]&&U[k-1].art)&&u.a.i!=="hamza"&&(!u.o||zk.includes("o"))&&DOTF.find(f=>f.includes(u.a.i));let s=null;
+    if(o.length&&(Math.random()<.65||!f))s=kUw(pick(o));
+    else if(f){const b=ALBY[pick(f.filter(i=>i!==u.a.i))];s=kUw({...u,a:b,c:b.c})}
     if(s&&!have.has(s))out.add(s)}
   return [...out];
 }
-const kBauL=wo=>wo.w.includes(" ")?wo.w.split(" ").map(c=>({c,k:c})):kUnits(wo.w).map(u=>({c:kUw(u),k:kUw(u)})); // Sätze aus Wörtern, Wörter aus Silben
+const kBauL=wo=>(wo.w.includes(" ")?wo.w.split(" "):kTiles(kUnits(wo.w))).map(c=>({c,k:c})); // Sätze aus Wörtern, Wörter aus Silben
 const kBauD=(wo,zk)=>wo.w.includes(" ")?[...new Set(wo.w.split(" ").map(x=>kWVar(x,zk)[0]).filter(Boolean))]:kSbD(kUnits(wo.w),zk);
-const kHasZ=(wo,z)=>kUnits(wo.w).some(u=>u.a&&(z==="ta"?u.a===TAM:z==="hamza"?u.a.i==="hamza":u.v===z));
-function kTasksZ(l,hear){ // Vokale und Tanwin: Zeichen vorstellen, Silben lesen und hören, dann Wörter lesen, ergänzen, bauen und nachsprechen
-  const zk=kZK(l.k),z=l.zeichen,W=shuffle(kWs(l)).sort((x,y)=>z?kHasZ(y,z)-kHasZ(x,z):0),T=[],tail=[],hs=y=>!!AUD[y.t],hw=wo=>hear&&kHearT(wo.w);
+const kHasZ=(wo,z)=>{const U=kUnits(wo.w);return U.some((u,k)=>kUZ(U,k,z))};
+function kTasksZ(l,hear){ // Zeichen vorstellen (Silbentafel oder Beispielwörter), dann Wörter lesen, hören, ergänzen, bauen und nachsprechen
+  const zk=kZK(l.k),z=l.zeichen,ws=WSIGN.includes(z),W=shuffle(kWs(l)).sort((x,y)=>z?kHasZ(y,z)-kHasZ(x,z):0),T=[],tail=[],hs=y=>!!AUD[y.t],hw=wo=>hear&&kHearT(wo.w);
   const q=(t,y)=>({t,y,zk}),qw=(t,wo)=>({t,wo,zk});
   let p=0;const take=(f=()=>true)=>{for(let k=0;k<W.length;k++){const wo=W[p++%W.length];if(f(wo))return wo}return null}; // Wörter der Reihe nach, damit sich wenig wiederholt
   let fill=[];
-  if(z){
+  if(z&&!ws){
     const nw=z==="hamza"?["a","i","u"].map(v=>kSy(ALBY.hamza,v)):z==="ta"?["un","in","an"].map(v=>kSy(TAM,v)):kSylls(zk,z);
     const sel=shuffle(nw),at=k=>sel[k%sel.length];
     T.push({t:"neuz",z,wo:W.find(wo=>kHasZ(wo,z))||W[0]},{t:"tafel",z,sy:nw});
     T.push(q("silbe",at(0)),q("silbewahl",at(1)),q("silbe",at(2)),q(hs(at(3))?"silbehoeren":"silbewahl",at(3)));
-    const vv=TANW.includes(z)?[...zk.filter(v=>TANW.includes(v)),VFAM[z]]:zk.filter(v=>VZ[v]&&!TANW.includes(v)),lt=[];
+    const grp=TANW.includes(z)?TANW:LONG.includes(z)?LONG:null,vv=grp?[...zk.filter(v=>grp.includes(v)),FAM[z][0]]:zk.filter(v=>SHORT.includes(v)),lt=[]; // Paare: das neue Zeichen neben verwandten
     for(const y of sel)if(y.a.i!=="hamza"&&lt.length<Math.ceil(5/vv.length)&&!lt.some(a=>latNear(a,y.a)))lt.push(y.a);
     const set=z==="hamza"?[...nw,kSy(ALBY.he,"a"),kSy(ALBY.he,"u")]:z==="ta"?[...nw,kSy(ALBY.he,"un"),kSy(ALBY.he,"in")]
       :shuffle(lt.flatMap(a=>vv.map(v=>kSy(a,v)))).sort((x,y)=>(y.v===z)-(x.v===z)).slice(0,5);
     T.push({t:"paare",syl:true,set:shuffle(set).map(y=>({i:y.k,c:y.t,n:y.lat,sp:hs(y)?y.t:null}))});
     if(hs(at(0)))T.push({t:"sprechen",y:at(0)});
     fill=sel.slice(4);
+  }else if(z){ // Zeichen im Wort: Karte, Beispielwörter, später Wörter und Umschrift zuordnen
+    const ex=[],pw=[],one=wo=>!wo.w.includes(" ")&&kTiles(kUnits(wo.w)).length<=5;
+    for(const wo of W)if(ex.length<4&&kHasZ(wo,z)&&one(wo)&&!ex.some(x=>x.lat===wo.lat))ex.push(wo);
+    T.push({t:"neuz",z,wo:ex[0]||W[0]},{t:"tafel",z,wd:true,sy:ex.map(wo=>({t:wo.w,lat:wo.lat}))});
+    for(const wo of shuffle(W))if(pw.length<5&&one(wo)&&!pw.some(x=>x.lat===wo.lat))pw.push(wo);
+    if(pw.length>=3)tail.push({t:"paare",wd:true,set:pw.map((wo,k)=>({i:"w"+k,c:wo.w,n:wo.lat,sp:hw(wo)?wo.w:null}))});
   }
-  for(let k=0;k<(z?3:5);k++)tail.push(qw("wortlesen",take()));
+  const nr=!z?5:ws?4:3,ng=!z||ws?3:2;
+  for(let k=0;k<nr;k++)tail.push(qw("wortlesen",take()));
   for(let k=0;k<2;k++){const wo=take(hw);if(wo)tail.push(qw("worthoeren",wo))}
-  if(zk.filter(v=>VZ[v]).length>1)for(let k=0;k<(z?2:3);k++){const wo=take(wo=>kGap(wo,z,zk)>=0);if(wo)tail.push({...qw("luecke",wo),g:kGap(wo,z,zk)})}
-  for(let k=0;k<(z?2:3);k++){const wo=take(wo=>wo.w.includes(" ")||kUnits(wo.w).length<=5);if(wo)tail.push(qw("bau",wo))}
+  if(kVs(zk).length>1)for(let k=0;k<ng;k++){const wo=take(wo=>kGap(wo,z,zk)>=0);if(wo)tail.push({...qw("luecke",wo),g:kGap(wo,z,zk)})}
+  for(let k=0;k<ng;k++){const wo=take(wo=>wo.w.includes(" ")||kTiles(kUnits(wo.w)).length<=5);if(wo)tail.push(qw("bau",wo))}
   const sw=take(hw);if(sw)tail.push({t:"sprechen",wo:sw});
   const g=[...T,...tail].filter(x=>!KCARD.includes(x.t)).length; // bis 13 mit weiteren Silben auffüllen, zuerst aus früheren Lektionen
-  fill=[...shuffle(zk.filter(v=>VZ[v]&&v!==z).flatMap(v=>kSylls(zk,v))),...fill];
+  fill=[...shuffle(kVs(zk).filter(v=>v!==z).flatMap(v=>kSylls(zk,v))),...fill];
   for(let k=0;k<13-g&&fill.length;k++)tail.push(q(k%2?"silbewahl":"silbe",fill[k%fill.length]));
   return [...T,...shuffle(tail)];
 }
@@ -1264,13 +1308,13 @@ function klek(){
     $("#sp").onclick=()=>speak(s.sp);if(S.auto!==false)speak(s.sp);
   }else if(it.t==="neuz"){ // neues Zeichen: Aussehen, Klang, ein Wort damit
     const Z=ZI[it.z],wo=it.wo;
-    paint(top+`<p class="kq">Neues Zeichen</p><div class="card flash slide kzn"><div class="ar" lang="ar">${Z.g}</div><p><b>${Z.n}</b> · klingt wie ${Z.l}</p><p class="mute">${Z.h}</p>
+    paint(top+`<p class="kq">Neues Zeichen</p><div class="card flash slide kzn"><div class="ar" lang="ar">${Z.g}</div><p><b>${Z.n}</b> · ${Z.k||"klingt wie "+Z.l}</p><p class="mute">${Z.h}</p>
     ${wo?`<p class="kbsp">Im Wort: <span class="ar" lang="ar">${wo.w}</span></p><p class="kwl">${esc(wo.lat)} · ${esc(wo.de)}</p>`:""}${wo&&kHearT(wo.w)?sp("Wort anhören"):""}</div>${nx}`);
     if($("#sp"))$("#sp").onclick=()=>speak(wo.w);
-  }else if(it.t==="tafel"){ // alle Silben mit dem neuen Zeichen, mit Audiodatei zum Antippen
+  }else if(it.t==="tafel"){ // alle Silben mit dem neuen Zeichen oder Beispielwörter, mit Audiodatei zum Antippen
     const Z=ZI[it.z],au=it.sy.some(y=>AUD[y.t]),tg=au?"button":"span";
-    paint(top+`<p class="kq">Alle Silben mit ${Z.n}</p><div class="ktf ${it.sy.length<6?"few":""}">${it.sy.map((y,k)=>`<${tg} class="kts" ${au?`data-sy="${k}"`:""}><span class="ar" lang="ar">${y.t}</span><small>${esc(y.lat)}</small></${tg}>`).join("")}</div>
-    <p class="mute ktu">${au?"Tippe eine Silbe an, um sie zu hören. ":""}${it.z==="ta"?"":it.z==="hamza"?"ʾ steht in der Umschrift für das Hamza.":"In der Umschrift steht j für dsch, kh für ch, sh für sch, ʿ für ʿAyn und ʾ für Hamza."}</p>${nx}`);
+    paint(top+`<p class="kq">${it.wd?Z.tt||"Wörter mit "+Z.n:"Alle Silben mit "+(Z.d||Z.n)}</p><div class="ktf ${it.wd?"wd":it.sy.length<6?"few":""}">${it.sy.map((y,k)=>`<${tg} class="kts" ${au?`data-sy="${k}"`:""}><span class="ar" lang="ar">${y.t}</span><small>${esc(y.lat)}</small></${tg}>`).join("")}</div>
+    <p class="mute ktu">${au?`Tippe ${it.wd?"ein Wort":"eine Silbe"} an, um ${it.wd?"es":"sie"} zu hören. `:""}${Z.t!==undefined?Z.t:it.z==="ta"?"":it.z==="hamza"?"ʾ steht in der Umschrift für das Hamza.":"In der Umschrift steht j für dsch, kh für ch, sh für sch, ʿ für ʿAyn und ʾ für Hamza."}</p>${nx}`);
     document.querySelectorAll("[data-sy]").forEach(b=>b.onclick=()=>speak(it.sy[+b.dataset.sy].t));
   }else if(it.t==="sprechen"){ // nachsprechen: Vorbild hören, sich aufnehmen, vergleichen, ohne Bewertung
     const tx=it.y?it.y.t:it.wo.w,R=K.rec||(K.rec={st:"idle"});
@@ -1286,7 +1330,7 @@ function klek(){
     const P=K.ps=K.ps||{L:shuffle(it.set),R:shuffle(it.set),sel:null,done:[],bad:null,last:null,miss:0};
     const cell=(x,side)=>{const d=P.done.includes(x.i),s=P.sel&&P.sel.id===x.i&&P.sel.side===side,b=P.bad&&P.bad.includes(side+x.i);
       return `<button class="${side==="L"?"ar":""} ${d?"done":s?"sel":""} ${b?"bad":""} ${P.last===x.i?"just":""}" ${side==="L"?'lang="ar"':""} data-p="${side}${x.i}" ${d?"disabled":""}>${side==="L"?x.c:x.n}</button>`};
-    paint(top+`<p class="kq">${it.syl?"Ordne jeder Silbe ihre Umschrift zu":it.forms?"Ordne jeder Form ihren Buchstaben zu":"Ordne jedem Buchstaben seinen Namen zu"}</p><div class="pg kpg">${P.L.map((x,k)=>cell(x,"L")+cell(P.R[k],"R")).join("")}</div>
+    paint(top+`<p class="kq">${it.syl?"Ordne jeder Silbe ihre Umschrift zu":it.wd?"Ordne jedem Wort seine Umschrift zu":it.forms?"Ordne jeder Form ihren Buchstaben zu":"Ordne jedem Buchstaben seinen Namen zu"}</p><div class="pg kpg">${P.L.map((x,k)=>cell(x,"L")+cell(P.R[k],"R")).join("")}</div>
     ${done?`<div class="fb ok" role="status"><span>Alle zugeordnet</span><span class="xpf">+${K.fb.x} XP</span></div>`:""}${nx}`);
     if(!done)document.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{
       const side=b.dataset.p[0],id=b.dataset.p.slice(1);
@@ -1357,7 +1401,7 @@ function kEnd(){
   ${nx?`<button class="btn" data-kl="${nx.id}">Weiter: ${nxe.id!==l.e?"Etappe "+nx.e.toUpperCase()+", ":""}${esc(nx.titel)}</button><button class="btn alt" data-go="path">Zum Lernpfad</button>`:`<button class="btn" data-go="path">Zum Lernpfad</button>${l?"":`<button class="btn alt" data-krev="${K.e}">Noch eine Runde</button>`}`}`);
 }
 const kSm=l=>l.art==="verbinden"?(l.neu.length?l.neu.length+" Buchstaben verbinden":l.woerter.length+" Wörter lesen"):l.art==="suren"?l.suren.length+" Surenanfänge"
-  :l.art==="vokale"?(l.zeichen?"Neu: "+ZI[l.zeichen].n:l.woerter.length+" kurze Sätze"):kLet(l).length+" neue Buchstaben";
+  :l.art==="vokale"?(l.zeichen?"Neu: "+ZI[l.zeichen].n:l.woerter.length+(l.woerter.filter(w=>w[0].includes(" ")).length*2>l.woerter.length?" kurze Sätze":" Wörter lesen")):kLet(l).length+" neue Buchstaben";
 // Fußspuren statt Mittellinie: nur auf dem schon gegangenen Teil, alle 22 px ein Schritt, abwechselnd links und rechts, in der Farbe des Wegbelags.
 // Der Weg ist in Prozent gezeichnet, die Spuren in Pixeln, damit sie nicht verzerrt werden. Bei anderer Breite neu setzen.
 let FP=null;
@@ -2027,7 +2071,7 @@ loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v23"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v24"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>

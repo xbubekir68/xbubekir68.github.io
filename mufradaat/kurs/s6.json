@@ -1,0 +1,41 @@
+{
+  "id": "s6",
+  "ziel": {"art": "lesen", "ar": "مِنْ أَيْنَ أَنْتَ", "sp": "مِنْ أَيْنَ أَنْتَ", "de": "Woher kommst du?", "text": "Eine Frage lesen",
+    "geschafft": "Du kannst jetzt geschlossene Silben lesen, dazu den Artikel und das Hamza auf allen Trägern."},
+  "lektionen": [
+    {
+      "id": "s6-1", "titel": "Sukun", "art": "vokale", "zeichen": "o", "station": "قَلْبٌ",
+      "woerter": [["قَلْبٌ", "ein Herz"], ["كَلْبٌ", "ein Hund"], ["بَحْرٌ", "ein Meer"], ["شَمْسٌ", "eine Sonne"], ["نَهْرٌ", "ein Fluss"],
+        ["بِنْتٌ", "ein Mädchen"], ["أُخْتٌ", "eine Schwester"], ["خُبْزٌ", "Brot"], ["مِنْ", "von, aus"], ["عَنْ", "über"],
+        ["هَلْ", "Fragewort, ob"], ["قُلْ", "sag!"], ["كَمْ", "wie viel"], ["أَنْتَ", "du (zu einem Mann)"], ["أَنْتِ", "du (zu einer Frau)"],
+        ["هَلْ أَنْتَ بِخَيْرٍ", "Geht es dir gut?"], ["مِنْ أَيْنَ", "woher"]],
+      "tipp": {"titel": "Kein Vokal", "zeichen": "ـْ",
+        "text": "Der kleine Kreis heißt Sukun. Er sagt: Auf diesen Buchstaben folgt kein Vokal, die Silbe endet hier. قَلْبٌ liest man qalbun, ein Herz: qal und bun."}
+    },
+    {
+      "id": "s6-2", "titel": "Längere Wörter", "art": "vokale", "station": "مَدْرَسَةٌ",
+      "woerter": [["مَكْتَبٌ", "ein Büro"], ["مَسْجِدٌ", "eine Moschee"], ["مَدْرَسَةٌ", "eine Schule"], ["مَطْبَخٌ", "eine Küche"], ["مَلْعَبٌ", "ein Spielplatz"],
+        ["مَطْعَمٌ", "ein Restaurant"], ["مَكْتَبَةٌ", "eine Bibliothek"], ["مِفْتَاحٌ", "ein Schlüssel"], ["مِصْبَاحٌ", "eine Lampe"], ["تِلْمِيذٌ", "ein Schüler"],
+        ["يَكْتُبُ", "er schreibt"], ["يَذْهَبُ", "er geht"], ["يَشْرَبُ", "er trinkt"], ["يَلْعَبُ", "er spielt"], ["يَكْتُبُ بِقَلَمٍ", "er schreibt mit einem Stift"]],
+      "tipp": {"titel": "Silbe für Silbe", "zeichen": "مَدْ رَ سَةٌ",
+        "text": "Lange Wörter liest man in Silben. Ein Sukun schließt eine Silbe: مَدْرَسَةٌ zerfällt in mad, ra und satun, eine Schule. Viele Wörter für Orte beginnen mit مَـ, wie مَكْتَبٌ, ein Büro, und مَطْبَخٌ, eine Küche."}
+    },
+    {
+      "id": "s6-3", "titel": "Der Artikel al-", "art": "vokale", "zeichen": "al", "station": "الْقَمَرُ",
+      "woerter": [["الْقَمَرُ", "der Mond"], ["الْبَيْتُ", "das Haus"], ["الْبَابُ", "die Tür"], ["الْكِتَابُ", "das Buch"], ["الْوَلَدُ", "der Junge"],
+        ["الْيَوْمُ", "der Tag"], ["الْمَسْجِدُ", "die Moschee"], ["الْعَيْنُ", "das Auge"], ["الْفِيلُ", "der Elefant"], ["الْجَبَلُ", "der Berg"],
+        ["الْحِمَارُ", "der Esel"], ["الْخُبْزُ", "das Brot"], ["الْأَرْضُ", "die Erde"], ["الْمَدْرَسَةُ", "die Schule"], ["الْبَيْتُ كَبِيرٌ", "Das Haus ist groß."],
+        ["الْكِتَابُ جَمِيلٌ", "Das Buch ist schön."]],
+      "tipp": {"titel": "Der, die, das", "zeichen": "الْـ",
+        "text": "الْـ vor einem Wort heißt der, die oder das. Das Lām trägt ein Sukun, das Alif davor hat kein Zeichen und klingt am Anfang wie a: الْقَمَرُ liest man al-qamaru, der Mond. Mit Artikel steht am Ende nur ein einfacher Vokal, kein Tanwin."}
+    },
+    {
+      "id": "s6-4", "titel": "Hamza auf seinen Trägern", "art": "vokale", "zeichen": "hz", "station": "سُؤَالٌ",
+      "woerter": [["سُؤَالٌ", "eine Frage"], ["رَأْسٌ", "ein Kopf"], ["بِئْرٌ", "ein Brunnen"], ["ذِئْبٌ", "ein Wolf"], ["مُؤْمِنٌ", "ein Gläubiger"],
+        ["فُؤَادٌ", "ein Herz"], ["لُؤْلُؤٌ", "Perlen"], ["شَيْءٌ", "eine Sache"], ["مَاءٌ", "Wasser"], ["سَمَاءٌ", "ein Himmel"],
+        ["جَاءَ", "er kam"], ["يَسْأَلُ", "er fragt"], ["قَارِئٌ", "ein Leser"], ["هَادِئٌ", "ruhig"], ["الْمَاءُ بَارِدٌ", "Das Wasser ist kalt."]],
+      "tipp": {"titel": "Hamza hat mehrere Sitze", "zeichen": "أ ؤ ئ ء",
+        "text": "Das Hamza sitzt nicht nur auf dem Alif. Es steht auch auf einem Wāw (ؤ), auf einem Yāʾ ohne Punkte (ئ) oder ganz allein (ء). Der Laut bleibt derselbe kurze Stimmabsatz: سُؤَالٌ liest man suʾālun, eine Frage."}
+    }
+  ]
+}
