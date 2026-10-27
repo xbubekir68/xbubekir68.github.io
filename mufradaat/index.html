@@ -1141,9 +1141,12 @@ function kAlt(U,k,zk){ // andere Lesarten einer Silbe mit bekannten Zeichen: zue
   const u=U[k],p=U[k-1]||{sp:true},n=U[k+1]||{sp:true},out=[];
   if(!u||u.sp||!u.a||u.wl||u.art||u.m==="ٰ"||u.m==="ى"||"ؤئء".includes(u.c))return out; // Artikel, kleines Alif, ى und Hamza-Träger bleiben, wie sie sind
   let s=k;while(s>0&&!U[s-1].sp)s--;const al=U[s].wl; // mit Artikel nie Tanwin
-  const vs=kVs(zk).filter(v=>(n.sp&&!al||!TANW.includes(v))&&(kSyOk(u.a,v)||u.a===TAM&&SHORT.includes(v)&&zk.includes("al"))),V=v=>({...u,v,o:false,m:MADD[v]||""});
+  const mh=u.a.i==="hamza"&&!p.sp&&!p.art,nd=n.o&&"وي".includes(n.c); // Hamza im Wort; danach aw oder ay
+  const vs=kVs(zk).filter(v=>(n.sp&&!al||!TANW.includes(v))&&(kSyOk(u.a,v)||u.a===TAM&&SHORT.includes(v)&&zk.includes("al"))
+    &&(!mh||v==="a"||n.sp&&SHORT.includes(v)) // im Wort bleibt Hamza nur mit a auf dem Alif, am Wortende mit jedem kurzen Vokal
+    &&(!n.o||SHORT.includes(v)&&(!nd||(zk.includes("o")?v!==(n.c==="و"?"u":"i"):v==="a")))),V=v=>({...u,v,o:false,m:MADD[v]||""}); // vor Sukun nur kurz, vor aw und ay bleibt das a
   (FAM[u.v]||[]).filter(v=>vs.includes(v)).forEach(v=>out.push(V(v)));
-  if(!u.o&&!p.sp&&!p.o&&!p.art&&!n.o&&u.a!==TAM&&(zk.includes("o")||zk.includes("dip")&&"وي".includes(u.c)&&p.v==="a"))out.push({...u,v:"",o:true,sh:false,m:""});
+  if(!u.o&&!p.sp&&!p.o&&!p.art&&!n.o&&!n.sh&&(!p.m||n.sp)&&u.a!==TAM&&(zk.includes("o")||zk.includes("dip")&&"وي".includes(u.c)&&p.v==="a"))out.push({...u,v:"",o:true,sh:false,m:""});
   if(zk.includes("sh")&&!p.sp&&!p.o&&!p.art&&!u.o&&u.a!==TAM&&u.a.i!=="hamza")out.push({...u,sh:!u.sh});
   shuffle(vs).forEach(v=>out.push(V(v)));
   const seen=new Set([kUw(u)]);return out.filter(x=>{const s=kUw(x);return !seen.has(s)&&seen.add(s)});
@@ -1165,8 +1168,8 @@ const kUZ=(U,k,z)=>{const u=U[k],p=U[k-1]||{sp:true};if(!u||u.sp||!u.a)return fa
   return !!(z==="ta"?u.a===TAM:z==="hamza"?u.a.i==="hamza":z==="hz"?u.a.i==="hamza"&&!p.sp&&!p.art:z==="kl"?u.m==="ٰ"||u.m==="ى"
     :z==="dip"?u.o&&"وي".includes(u.c)&&p.v==="a":z==="o"?u.o:z==="al"?u.wl:z==="sh"?u.sh:z==="sun"?u.sil:u.v===z)};
 function kGap(wo,z,zk){ // welche Silbe fehlt: bevorzugt eine mit dem neuen Zeichen (beim Artikel die Silbe danach), nur wo es mindestens zwei Möglichkeiten gibt
-  const U=kUnits(wo.w),ks=U.map((u,k)=>k).filter(k=>kAlt(U,k,zk).length),four=ks.filter(k=>kAlt(U,k,zk).length>=3); // am liebsten mit vier Antworten
-  const pz=k=>kUZ(U,k,z)||(z==="al"||z==="sun")&&U[k-1]&&U[k-1].art,c=[four.filter(pz),four,ks.filter(pz),ks].find(x=>x.length);
+  const U=kUnits(wo.w),ks=U.map((u,k)=>k).filter(k=>kAlt(U,k,zk).length),n=k=>kAlt(U,k,zk).length,four=ks.filter(k=>n(k)>=3); // am liebsten mit vier Antworten, mit dem neuen Zeichen auch mit drei
+  const pz=k=>kUZ(U,k,z)||(z==="al"||z==="sun")&&U[k-1]&&U[k-1].art,c=[four.filter(pz),ks.filter(k=>pz(k)&&n(k)>=2),four,ks.filter(pz),ks].find(x=>x.length);
   return c?pick(c):-1;
 }
 const kTiles=U=>U.reduce((T,u)=>{const s=kUw(u);if(u.art)T[T.length-1]+=s;else T.push(s);return T},[]); // Bausteine: Silben, der Artikel als ein Stück

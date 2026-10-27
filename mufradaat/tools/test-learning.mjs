@@ -603,10 +603,14 @@ ok("Lesarten einer Silbe: Sukun und Schadda erst, wenn sie eingeführt sind",run
 ok("Lesarten: Artikel, kleines Alif, ى und Hamza-Träger bleiben, nach dem stummen Lām bleibt die Schadda, mit Artikel kein Tanwin",run(`(()=>{const z=kZK(KL.length-1),A=w=>kUnits(w).map((u,k,U)=>kAlt(U,k,z).length);
   return A("الْقَمَرُ").slice(0,2).join()==="0,0"&&A("هٰذَا")[0]===0&&A("عَلَى")[1]===0&&A("سُؤَالٌ")[1]===0&&kAlt(kUnits("الشَّمْسُ".normalize()),2,z).every(u=>u.sh)
     &&kAlt(kUnits("الْقَمَرُ"),4,z).every(u=>!TANW.includes(u.v))&&kAlt(kUnits("قَمَرٌ"),2,z).some(u=>u.v==="an")})()`));
+ok("Lesarten: kein Sukun vor Schadda, vor aw und ay bleibt das a, kein langer Vokal vor Sukun, Hamza im Wort bleibt auf dem Alif",run(`(()=>{const z=kZK(KL.length-1),z55=kZK(KL.find(l=>l.id==="s5-5").k),A=(w,k,zz)=>kAlt(kUnits(w),k,zz||z);
+  return !A("مُعَلِّمٌ".normalize(),1).some(u=>u.o)&&A("بَيْتٌ",0,z55).length===0&&A("بَيْتٌ",0).map(kUw).join()==="بُ"&&!A("قَلْبٌ",0).some(u=>u.m)
+    &&A("سَأَلَ",1).every(u=>u.o)&&["i","u"].every(v=>A("قَرَأَ",2).some(u=>u.v===v))})()`));
 const z5=JSON.parse(run(`JSON.stringify([false,true].flatMap(h=>KL.filter(l=>${E57}).map(l=>{ARV=h?true:null;const T=kGen(l,h),zk=kZK(l.k);
-  const known=t=>kUnits(t).every(u=>u.sp||!u.a||(!u.v||zk.includes(u.m==="ى"||u.m==="ٰ"?"kl":u.v))&&(!u.o||u.art||zk.includes("o")||zk.includes("dip")&&"وي".includes(u.c))&&(!u.sh||zk.includes("sh"))&&(!u.wl||zk.includes("al"))&&(!u.sil||zk.includes("sun"))&&(!"ؤئء".includes(u.c)||zk.includes("hz")));
+  const known=t=>kUnits(t).every((u,k,U)=>u.sp||!u.a||(!u.v||zk.includes(u.m==="ى"||u.m==="ٰ"?"kl":u.v))&&(!u.o||u.art||zk.includes("o")||zk.includes("dip")&&"وي".includes(u.c)&&(!k||U[k-1].v==="a"))&&(!u.sh||zk.includes("sh")&&!(U[k-1]||{}).o)&&(!u.wl||zk.includes("al"))&&(!u.sil||zk.includes("sun"))&&(!"ؤئء".includes(u.c)||zk.includes("hz")));
   let onlyKnown=true,ownW=true;
-  T.forEach(t=>{if(t.y&&!known(t.y.t))onlyKnown=false;if(t.wo&&!l.woerter.some(w=>w[0]===t.wo.w))ownW=false;if(KCHO.includes(t.t)){kOpts(t);if(t.opts.length<3||new Set(t.opts).size!==t.opts.length||!t.opts.every(known))onlyKnown=false}
+  T.forEach(t=>{if(t.y&&!known(t.y.t))onlyKnown=false;if(t.wo&&!l.woerter.some(w=>w[0]===t.wo.w))ownW=false;if(KCHO.includes(t.t)){kOpts(t);const W=t.t==="luecke"?t.opts.map(o=>kUnits(t.wo.w).map((u,k)=>k===t.g?o:kUw(u)).join("")):t.opts; // Lücke: Antwort im Wort prüfen
+      if(t.opts.length<3||new Set(t.opts).size!==t.opts.length||!W.every(known))onlyKnown=false}
     if(t.t==="bau"&&!t.bank)t.bank=kBauD(t.wo,t.zk);if(t.t==="bau"&&!t.bank.every(known))onlyKnown=false;if(t.t==="paare"&&t.wd&&!t.set.every(x=>l.woerter.some(w=>w[0]===x.c)))ownW=false});
   const tf=T.find(t=>t.t==="tafel")||{sy:[]},pa=T.find(t=>t.t==="paare")||{},lu=T.filter(t=>t.t==="luecke");
   return{id:l.id,h,g:T.filter(t=>!KCARD.includes(t.t)).length,tipp:T[0].t==="tipp",nz:T.filter(t=>t.t==="neuz").length,tf:tf.sy.length,wd:!!tf.wd,onlyKnown,ownW,
