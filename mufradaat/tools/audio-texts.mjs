@@ -2,7 +2,7 @@
 // Liefert pro Text eine feste ID, unter der die Audiodatei abgelegt wird.
 // Wörter: w/<wort-id>, Buchstaben: a/<buchstaben-id>, Sätze: s/<prüfsumme des Satzes>,
 // Texte aus den Kursdateien (Surenanfänge, Wörter mit Vokalzeichen, Ziele der Etappen): k/<prüfsumme des Textes>,
-// Silben (Buchstabe mit kurzem Vokal oder Tanwin): sb/<buchstaben-id>-<zeichen>, z. B. sb/ba-a für بَ, sb/tam-un für ةٌ.
+// Silben (Buchstabe mit kurzem Vokal, Tanwin oder langem Vokal): sb/<buchstaben-id>-<zeichen>, z. B. sb/ba-a für بَ, sb/tam-un für ةٌ, sb/ba-aa für بَا.
 import fs from "node:fs";
 import vm from "node:vm";
 import {fileURLToPath} from "node:url";
@@ -12,11 +12,14 @@ const pick=(h,n)=>{const m=h.match(new RegExp("const "+n+"=(\\[[\\s\\S]*?\\n?\\]
 // Kurze, stabile Prüfsumme (FNV-1a): ändert sich, wenn der Satz korrigiert wird
 export const hash=t=>{let h=0x811c9dc5;for(const c of t){h^=c.codePointAt(0);h=Math.imul(h,0x01000193)>>>0}return h.toString(16).padStart(8,"0")};
 // Silben wie in der App: jeder Buchstabe außer Alif mit Fatha, Kasra und Damma (Hamza auf dem Alif: أَ إِ أُ),
-// dann mit Tanwin -an (mit stummem Alif), -in und -un (ohne Hamza, dazu das Ta marbuta ة). Liefert [ID, Text, Umschrift].
+// dann mit Tanwin -an (mit stummem Alif), -in und -un (ohne Hamza, dazu das Ta marbuta ة),
+// dann lang mit ā, ī, ū (Fatha mit Alif, Kasra mit Yāʾ, Damma mit Wāw; Hamza nur mit ī und ū). Liefert [ID, Text, Umschrift].
 export function silben(A){
   const Z={a:"\u064e",i:"\u0650",u:"\u064f",an:"\u064b",in:"\u064d",un:"\u064c"},L=a=>({jim:"j",kha:"kh",shin:"sh"})[a[0]]||a[3],out=[];
   for(const v of ["a","i","u"])for(const a of A)if(a[0]!=="alif")out.push([a[0]+"-"+v,(a[0]==="hamza"?(v==="i"?"إ":"أ"):a[1])+Z[v],(a[0]==="hamza"?"ʾ":L(a))+v]);
   for(const v of ["an","in","un"]){for(const a of A)if(a[0]!=="alif"&&a[0]!=="hamza")out.push([a[0]+"-"+v,a[1]+Z[v]+(v==="an"?"ا":""),L(a)+v]);out.push(["tam-"+v,"ة"+Z[v],"t"+v])}
+  const D={aa:["\u064e","ا","ā"],ii:["\u0650","ي","ī"],uu:["\u064f","و","ū"]};
+  for(const v of ["aa","ii","uu"])for(const a of A)if(a[0]!=="alif"&&!(a[0]==="hamza"&&v==="aa"))out.push([a[0]+"-"+v,(a[0]==="hamza"?(v==="ii"?"إ":"أ"):a[1])+D[v][0]+D[v][1],(a[0]==="hamza"?"ʾ":L(a))+D[v][2]]);
   return out;
 }
 export function texts(){

@@ -10,9 +10,9 @@
         {"id": "s2", "titel": "Buchstaben verbinden", "ar": "وَصْلُ الْحُرُوفِ", "kurz": "Formen am Anfang, in der Mitte und am Ende, dazu die Surenanfänge", "datei": "s2.json"},
         {"id": "s3", "titel": "Kurze Vokale", "ar": "الْحَرَكَاتُ", "kurz": "Fatha, Kasra und Damma, erste Silben und Wörter", "datei": "s3.json"},
         {"id": "s4", "titel": "Tanwin", "ar": "التَّنْوِينُ", "kurz": "Endungen -an, -in, -un und das Ta marbuta", "datei": "s4.json"},
-        {"id": "s5", "titel": "Lange Vokale", "ar": "حُرُوفُ الْمَدِّ", "kurz": "ā, ī, ū, das kleine Alif, aw und ay"},
-        {"id": "s6", "titel": "Sukun", "ar": "السُّكُونُ", "kurz": "Geschlossene Silben und das Hamza auf seinen Trägern"},
-        {"id": "s7", "titel": "Schadda", "ar": "الشَّدَّةُ", "kurz": "Verdoppelte Buchstaben"},
+        {"id": "s5", "titel": "Lange Vokale", "ar": "حُرُوفُ الْمَدِّ", "kurz": "ā, ī, ū, das kleine Alif, aw und ay", "datei": "s5.json"},
+        {"id": "s6", "titel": "Sukun", "ar": "السُّكُونُ", "kurz": "Geschlossene Silben und das Hamza auf seinen Trägern", "datei": "s6.json"},
+        {"id": "s7", "titel": "Schadda", "ar": "الشَّدَّةُ", "kurz": "Verdoppelte Buchstaben", "datei": "s7.json"},
         {"id": "s8", "titel": "Alles zusammen", "ar": "الْقِرَاءَةُ", "kurz": "Lange Wörter, Zeichen der Koranschrift, lesen ohne Hilfen"}
       ]
     },

@@ -381,10 +381,10 @@ run(`startK(KL[0]);playK([])`);
 ok("eine abgeschlossene Lektion lässt sich wiederholen",run(`S.kp.d["s1-1"]`)===2&&/Geübt/.test(run(`app.innerHTML`)));
 // der neue Pfad
 run(`view="path";ui.hint=null;path()`);let kh=run(`app.innerHTML`);
-ok("Pfad zeigt die Stationen von S1 bis S4 (6, 7, 5 und 4)",(kh.match(/class="pn /g)||[]).length===22&&[["s1",6],["s2",7],["s3",5],["s4",4]].every(([e,n])=>(kh.match(new RegExp('data-kl="'+e+'-\\d"',"g"))||[]).length===n));
+ok("Pfad zeigt die Stationen von S1 bis S7 (6, 7, 5, 4, 5, 4 und 5)",(kh.match(/class="pn /g)||[]).length===36&&[["s1",6],["s2",7],["s3",5],["s4",4],["s5",5],["s6",4],["s7",5]].every(([e,n])=>(kh.match(new RegExp('data-kl="'+e+'-\\d"',"g"))||[]).length===n));
 ok("… erledigt, aktuell (Mim) und gesperrt",/pn abl done[^"]*" data-kl="s1-1"/.test(kh)&&/pn abl\s+cur[^"]*" data-kl="s1-2"/.test(kh)&&/pn abl lock[^"]*" data-kl="s1-3"/.test(kh),kh.match(/class="pn [^"]*" data-kl="s1-\d"/g));
 ok("… Ziel der Etappe mit allen 29 Buchstaben",/Ziel der Etappe/.test(kh)&&(kh.match(/<span class="[ku]">/g)||[]).length===29);
-ok("… Demnächst: S5 bis S8",(kh.match(/<li><span class="ar" lang="ar">/g)||[]).length===4&&/S5 · Lange Vokale/.test(kh)&&/S8 · Alles zusammen/.test(kh)&&!/<b>S4 · /.test(kh));
+ok("… Demnächst: nur noch S8",(kh.match(/<li><span class="ar" lang="ar">/g)||[]).length===1&&/S8 · Alles zusammen/.test(kh)&&!/<b>S7 · /.test(kh));
 ok("… Vorschau-Hinweis mit Weg zurück",/data-ko/.test(kh)&&/Vorschau/.test(kh));
 ok("… keine Buchnamen oder Verweise",!/Qaida|Noorani|Nuraniyya|Medina|Madina|Band [123]/i.test(kh+fs.readdirSync(kdir).map(n=>fs.readFileSync(path.join(kdir,n),"utf8")).join("")));
 run(`pHint('data-kl="s1-3"')`);
@@ -489,7 +489,7 @@ ok("Wiederholung S2: 12 Aufgaben aus geschafften Lektionen, ohne Karten, höchst
 run(`playK([])`);
 ok("… Ende: Runde beendet, nochmal üben bleibt in der Etappe",/Runde beendet/.test(run(`app.innerHTML`))&&/Wiederholung · Etappe S2/.test(run(`app.innerHTML`))&&/data-krev="s2"/.test(run(`app.innerHTML`)));
 run(`S.np=false;path()`);
-ok("bisheriger Pfad nennt die spielbaren Etappen",/Schon spielbar: „Die Buchstaben“, „Buchstaben verbinden“, „Kurze Vokale“ und „Tanwin“\./.test(run(`app.innerHTML`)));
+ok("bisheriger Pfad nennt die spielbaren Etappen",/Schon spielbar: „Die Buchstaben“, „Buchstaben verbinden“, „Kurze Vokale“, „Tanwin“, „Lange Vokale“, „Sukun“ und „Schadda“\./.test(run(`app.innerHTML`)));
 run(`S.np=true`);
 const {texts}=await import("./audio-texts.mjs");
 const at=texts().filter(t=>t.id.startsWith("k/"));
@@ -499,14 +499,14 @@ ok("Vorleseliste enthält alle 14 Surenanfänge",at.filter(t=>t.de.startsWith("S
 run(`S.kp={d:{}};S.alpha={};K=null;ARV=null;S.np=true;AUD={}`);
 const s2done=`S.kp={d:Object.fromEntries(KL.filter(l=>l.e==="s1"||l.e==="s2").map(l=>[l.id,1]))}`;
 ok("S3 hat 5 Lektionen, S4 hat 4, alle mit Vokalzeichen",run(`((a,b)=>a.length===5&&b.length===4&&[...a,...b].every(l=>l.art==="vokale"))(KL.filter(l=>l.e==="s3"),KL.filter(l=>l.e==="s4"))`));
-ok("neue Zeichen in dieser Reihenfolge: Fatha, Kasra, Damma, Hamza auf Alif, dann -an, -in, -un, Ta marbuta",run(`KL.filter(l=>l.art==="vokale").map(l=>l.zeichen||"-").join()`)==="a,i,u,hamza,-,an,in,un,ta",run(`KL.filter(l=>l.art==="vokale").map(l=>l.zeichen||"-").join()`));
+ok("neue Zeichen in dieser Reihenfolge: Fatha, Kasra, Damma, Hamza auf Alif, dann -an, -in, -un, Ta marbuta",run(`KL.filter(l=>l.e==="s3"||l.e==="s4").map(l=>l.zeichen||"-").join()`)==="a,i,u,hamza,-,an,in,un,ta",run(`KL.filter(l=>l.e==="s3"||l.e==="s4").map(l=>l.zeichen||"-").join()`));
 const TR={"كَتَبَ":"kataba","شَرِبَ":"shariba","كُتِبَ":"kutiba","أَكَلَ":"akala","سَأَلَ":"saʾala","قَرَأَ":"qaraʾa","إِبِلٌ":"ibilun","وَأَكَلَ":"waʾakala","قَلَمًا":"qalaman","بِقَلَمٍ":"biqalamin","شَجَرَةٌ":"shajaratun","شَجَرَةً":"shajaratan","سَمِعَ":"samiʿa","هُوَ سَمِعَ وَفَهِمَ":"huwa samiʿa wafahima","خَرَجَ":"kharaja","ذَهَبٌ":"dhahabun"};
 const trBad=Object.entries(TR).filter(([w,l])=>run(`kTr("${w}")`)!==l).map(([w])=>w+"→"+run(`kTr("${w}")`));
 ok("Umschrift: ein Laut je Buchstabe, Hamza am Wortanfang stumm, -an ohne Alif-Laut, ة als t",!trBad.length,trBad);
-ok("jedes Wort zerfällt in Silben und lässt sich daraus genau wieder zusammensetzen",run(`KL.filter(l=>l.art==="vokale").flatMap(l=>l.woerter.map(w=>w[0])).every(w=>kJoin(kUnits(w))===w&&kUnits(w).every(u=>u.sp||u.a&&u.v))`));
+ok("jedes Wort zerfällt in Silben und lässt sich daraus genau wieder zusammensetzen",run(`KL.filter(l=>l.e==="s3"||l.e==="s4").flatMap(l=>l.woerter.map(w=>w[0])).every(w=>kJoin(kUnits(w))===w&&kUnits(w).every(u=>u.sp||u.a&&u.v))`));
 ok("Silben: -an mit stummem Alif, aber nicht nach ة; Hamza mit Kasra unter dem Alif",run(`[kSyl("ب","an"),kSyl("ة","an"),kSy(ALBY.hamza,"i").t,kSy(ALBY.hamza,"a").lat,kSy(TAM,"un").lat].join("|")`)==="بًا|ةً|إِ|ʾa|tun");
 ok("Silbentafeln: 27 Silben je Vokal, Hamza erst ab seiner Lektion, Ta marbuta nur mit Tanwin",run(`[kSylls(["a"],"a").length,kSylls(["a","hamza"],"a").length,kSylls(["a","an"],"an").length,kSylls(["a","an","ta"],"an").length,kSylls(["a","ta"],"a").length].join()`)==="27,28,27,28,27");
-const zt=JSON.parse(run(`JSON.stringify([false,true].flatMap(h=>KL.filter(l=>l.art==="vokale").map(l=>{ARV=h?true:null;const T=kGen(l,h),zk=kZK(l.k),MK={"َ":"a","ِ":"i","ُ":"u","ً":"an","ٍ":"in","ٌ":"un"};
+const zt=JSON.parse(run(`JSON.stringify([false,true].flatMap(h=>KL.filter(l=>l.e==="s3"||l.e==="s4").map(l=>{ARV=h?true:null;const T=kGen(l,h),zk=kZK(l.k),MK={"َ":"a","ِ":"i","ُ":"u","ً":"an","ٍ":"in","ٌ":"un"};
   const known=t=>[...t].every(c=>!MK[c]||zk.includes(MK[c]))&&(!/[أإ]/.test(t)||zk.includes("hamza"))&&(!/ة/.test(t)||zk.includes("ta"));let onlyKnown=true,ownW=true;
   T.forEach(t=>{if(t.y&&!known(t.y.t))onlyKnown=false;if(t.wo&&!l.woerter.some(w=>w[0]===t.wo.w))ownW=false;if(KCHO.includes(t.t)){kOpts(t);if(!t.opts.every(known))onlyKnown=false}
     if(t.t==="bau"&&!t.bank)t.bank=kBauD(t.wo,t.zk);if(t.t==="bau"&&!t.bank.every(known))onlyKnown=false});
@@ -521,7 +521,7 @@ run(`AUD={"بَ":{f:"x"},"تَ":{f:"x"}};for(const y of kSylls(["a"],"a"))AUD[y.
 run(`ARV=null`);
 ok("mit Audiodateien der Silben: Silbe hören und Silbe nachsprechen kommen dazu",run(`(T=>T.some(t=>t.t==="silbehoeren")&&T.filter(t=>t.t==="sprechen"&&t.y).length===1&&T.find(t=>t.t==="paare").set.every(x=>x.sp))(kGen(KL.find(l=>l.id==="s3-1"),true))`));
 run(`AUD={}`);
-ok("Paare: Silben und Umschrift, keine doppelte Umschrift, das neue Zeichen ist dabei",run(`KL.filter(l=>l.art==="vokale"&&l.zeichen).every(l=>{for(let r=0;r<10;r++){const p=kGen(l,false).find(t=>t.t==="paare");if(!p||p.set.length!==5||new Set(p.set.map(x=>x.n)).size!==5||!p.syl)return false}return true})`));
+ok("Paare: Silben und Umschrift, keine doppelte Umschrift, das neue Zeichen ist dabei",run(`KL.filter(l=>l.art==="vokale"&&l.zeichen&&!WSIGN.includes(l.zeichen)).every(l=>{for(let r=0;r<10;r++){const p=kGen(l,false).find(t=>t.t==="paare");if(!p||p.set.length!==5||new Set(p.set.map(x=>x.n)).size!==5||!p.syl)return false}return true})`));
 ok("Wortvarianten: drei verschiedene Lesungen mit bekannten Zeichen für jedes Wort",run(`KL.filter(l=>l.art==="vokale").every(l=>l.woerter.every(([w])=>{for(let i=0;i<4;i++){const v=kWVar(w,kZK(l.k));if(v.length!==3||new Set(v.map(kTr)).size!==3||v.includes(w))return false}return true}))`));
 // Darstellung
 run(s2done+`;startK(KL.find(l=>l.id==="s3-2"))`);
@@ -570,7 +570,7 @@ zh=run(`app.innerHTML`);
 ok("alle Lektionen von S3 durchgespielt, Ende der Etappe mit Text und weiter zu S4",run(`KL.filter(l=>l.e==="s3").every(l=>S.kp.d[l.id]===1)`)&&/Etappe „Kurze Vokale“ geschafft/.test(zh)&&/Wörter mit kurzen Vokalen lesen/.test(zh)&&/Weiter: Etappe S4, Endung -an/.test(zh)&&/<span>هُوَ مَعَكَ<\/span>|<span>/.test(zh));
 for(const id of ["s4-1","s4-2","s4-3","s4-4"]){run(`startK(KL.find(l=>l.id==="${id}"));playK([])`)}
 zh=run(`app.innerHTML`);
-ok("alle Lektionen von S4 durchgespielt, danach ist die nächste Etappe in Arbeit",run(`KL.filter(l=>l.e==="s4").every(l=>S.kp.d[l.id]===1)`)&&/Etappe „Tanwin“ geschafft/.test(zh)&&/nächste Etappe ist in Arbeit/.test(zh));
+ok("alle Lektionen von S4 durchgespielt, weiter zu S5",run(`KL.filter(l=>l.e==="s4").every(l=>S.kp.d[l.id]===1)`)&&/Etappe „Tanwin“ geschafft/.test(zh)&&/Weiter: Etappe S5, Langes ā/.test(zh));
 run(`view="path";ui.hint=null;path()`);kh=run(`app.innerHTML`);
 ok("Pfad S3: Ziel mit Umschrift und Übersetzung, sobald die Etappe geschafft ist",/data-kz="s3"[^>]*>هُوَ سَمِعَ وَفَهِمَ/.test(kh)&&/huwa samiʿa wafahima<br>Er hörte und verstand\./.test(kh)&&/rasama waladun shajaratan biqalamin/.test(kh));
 run(`${s2done};path()`);kh=run(`app.innerHTML`);
@@ -580,8 +580,83 @@ ok("Wiederholung S3: 12 Aufgaben aus geschafften Lektionen, ohne Karten",run(`vi
 run(`playK([])`);
 ok("… Ende: Runde beendet",/Runde beendet/.test(run(`app.innerHTML`))&&/Wiederholung · Etappe S3/.test(run(`app.innerHTML`)));
 const sbT=texts().filter(t=>t.id.startsWith("sb/")),kw=new Set(texts().map(t=>t.text));
-ok("Vorleseliste: alle Silben (Vokale, Tanwin, Ta marbuta) und alle Wörter von S3 und S4",sbT.length===167&&kw.has("وَ")&&sbT.some(t=>t.id==="sb/tam-un"&&t.text==="ةٌ")&&sbT.some(t=>t.id==="sb/ba-an"&&t.text==="بًا")&&sbT.some(t=>t.id==="sb/hamza-i"&&t.text==="إِ")
+ok("Vorleseliste: alle Silben (Vokale, Tanwin, Ta marbuta, lange Vokale) und alle Wörter mit Vokalzeichen",sbT.length===247&&kw.has("وَ")&&sbT.some(t=>t.id==="sb/tam-un"&&t.text==="ةٌ")&&sbT.some(t=>t.id==="sb/ba-an"&&t.text==="بًا")&&sbT.some(t=>t.id==="sb/hamza-i"&&t.text==="إِ")
   &&Object.values(kfiles).flatMap(f=>f.lektionen).filter(l=>l.art==="vokale").every(l=>l.woerter.every(w=>kw.has(w[0])))&&kw.has("هُوَ سَمِعَ وَفَهِمَ"),sbT.length);
+
+// ---------- 13. Etappen S5 bis S7: lange Vokale, Sukun, Artikel, Hamza-Träger, Schadda ----------
+run(`S.kp={d:{}};S.alpha={};K=null;ARV=null;S.np=true;AUD={}`);
+const s4done=`S.kp={d:Object.fromEntries(KL.filter(l=>["s1","s2","s3","s4"].includes(l.e)).map(l=>[l.id,1]))}`,E57=`["s5","s6","s7"].includes(l.e)`;
+const N=x=>JSON.stringify(x).normalize("NFC"); // Vokal vor Schadda, wie in den Kursdateien
+ok("S5 hat 5 Lektionen, S6 hat 4, S7 hat 5, alle mit Vokalzeichen",run(`[5,4,5].every((n,k)=>(a=>a.length===n&&a.every(l=>l.art==="vokale"))(KL.filter(l=>l.e==="s"+(k+5))))`));
+ok("neue Zeichen: ā, ī, ū, kleines Alif und ى, aw und ay, dann Sukun, Artikel, Hamza-Träger, dann Schadda und Sonnenbuchstaben",run(`KL.filter(l=>${E57}).map(l=>l.zeichen||"-").join()`)==="aa,ii,uu,kl,dip,o,-,al,hz,sh,-,-,-,sun");
+const TR5={"هٰذَا":"hādhā","يَوْمٌ":"yawmun","الشَّمْسُ":"ash-shamsu","الْقَمَرُ":"al-qamaru","مِنْ أَيْنَ أَنْتَ":"min ayna anta","سُؤَالٌ":"suʾālun","شَيْءٌ":"shayʾun","مُعَلِّمٌ":"muʿallimun",
+  "عَلَى":"ʿalā","فِي":"fī","كُرْسِيٌّ":"kursiyyun","الْأَرْضُ":"al-arḍu","اللَّيْلُ":"al-laylu","حُرِّيَّةٌ":"ḥurriyyatun","هِيَ مِصْرِيَّةٌ":"hiya miṣriyyatun","عُيُونٌ":"ʿuyūnun","يَا صَدِيقِي":"yā ṣadīqī"};
+const tr5=Object.entries(TR5).filter(([w,l])=>run(`kTr(${N(w)})`)!==l).map(([w])=>w+"→"+run(`kTr(${N(w)})`));
+ok("Umschrift: langer Vokal mit Strich, Sukun ohne Vokal, Artikel mit Bindestrich, Sonnenbuchstabe und Schadda doppelt",!tr5.length,tr5);
+ok("jedes Wort von S5 bis S7 zerfällt in Silben und lässt sich daraus genau wieder zusammensetzen",run(`KL.filter(l=>${E57}).flatMap(l=>[l.station,...l.woerter.map(w=>w[0])]).every(w=>kJoin(kUnits(w))===w&&kUnits(w).every(u=>u.sp||u.a&&(u.v||u.o||u.wl||u.sil)))`));
+ok("Silben-Zerlegung: Artikel mit stummem Lām, Schadda, Sukun, Dehnung; Bausteine mit dem Artikel als einem Stück",
+  run(`JSON.stringify([kUnits("الشَّمْسُ".normalize()).map(u=>u.wl?"wl":u.sil?"sil":kUw(u)),kUnits("الْقَمَرُ").map(u=>u.wl?"wl":u.art?"art":kUw(u)),kTiles(kUnits("الْقَمَرُ")),kTiles(kUnits("كِتَابٌ")),kTiles(kUnits("هٰذَا"))])`)
+  ===N([["wl","sil","شَّ","مْ","سُ"],["wl","art","قَ","مَ","رُ"],["الْ","قَ","مَ","رُ"],["كِ","تَا","بٌ"],["هٰ","ذَا"]]));
+ok("Silben mit langem Vokal: Dehnungsbuchstabe dabei, Hamza nicht mit ā, Tafeln mit 27 und 28 Silben",run(`[kSyl("ب","aa"),kSyl("ب","ii"),kSyl("ب","uu"),kSy(ALBY.hamza,"ii").t,kSy(ALBY.ba,"uu").lat,kSylls(["aa","hamza","ta"],"aa").length,kSylls(["ii","hamza","ta"],"ii").length].join("|")`)==="بَا|بِي|بُو|إِي|bū|27|28");
+ok("Lesarten einer Silbe: Sukun und Schadda erst, wenn sie eingeführt sind",run(`(()=>{const U=kUnits("كَتَبَ"),s=z=>kAlt(U,1,z).map(kUw),a=s(["a","i","u"]),b=s(["a","i","u","o"]),c=s(["a","i","u","o","sh"]);
+  return !a.includes("تْ")&&b.includes("تْ")&&!b.some(x=>x.includes("ّ"))&&c.includes("تَّ".normalize())})()`));
+ok("Lesarten: Artikel, kleines Alif, ى und Hamza-Träger bleiben, nach dem stummen Lām bleibt die Schadda, mit Artikel kein Tanwin",run(`(()=>{const z=kZK(KL.length-1),A=w=>kUnits(w).map((u,k,U)=>kAlt(U,k,z).length);
+  return A("الْقَمَرُ").slice(0,2).join()==="0,0"&&A("هٰذَا")[0]===0&&A("عَلَى")[1]===0&&A("سُؤَالٌ")[1]===0&&kAlt(kUnits("الشَّمْسُ".normalize()),2,z).every(u=>u.sh)
+    &&kAlt(kUnits("الْقَمَرُ"),4,z).every(u=>!TANW.includes(u.v))&&kAlt(kUnits("قَمَرٌ"),2,z).some(u=>u.v==="an")})()`));
+ok("Lesarten: kein Sukun vor Schadda, vor aw und ay bleibt das a, kein langer Vokal vor Sukun, Hamza im Wort bleibt auf dem Alif",run(`(()=>{const z=kZK(KL.length-1),z55=kZK(KL.find(l=>l.id==="s5-5").k),A=(w,k,zz)=>kAlt(kUnits(w),k,zz||z);
+  return !A("مُعَلِّمٌ".normalize(),1).some(u=>u.o)&&A("بَيْتٌ",0,z55).length===0&&A("بَيْتٌ",0).map(kUw).join()==="بُ"&&!A("قَلْبٌ",0).some(u=>u.m)
+    &&A("سَأَلَ",1).every(u=>u.o)&&["i","u"].every(v=>A("قَرَأَ",2).some(u=>u.v===v))})()`));
+const z5=JSON.parse(run(`JSON.stringify([false,true].flatMap(h=>KL.filter(l=>${E57}).map(l=>{ARV=h?true:null;const T=kGen(l,h),zk=kZK(l.k);
+  const known=t=>kUnits(t).every((u,k,U)=>u.sp||!u.a||(!u.v||zk.includes(u.m==="ى"||u.m==="ٰ"?"kl":u.v))&&(!u.o||u.art||zk.includes("o")||zk.includes("dip")&&"وي".includes(u.c)&&(!k||U[k-1].v==="a"))&&(!u.sh||zk.includes("sh")&&!(U[k-1]||{}).o)&&(!u.wl||zk.includes("al"))&&(!u.sil||zk.includes("sun"))&&(!"ؤئء".includes(u.c)||zk.includes("hz")));
+  let onlyKnown=true,ownW=true;
+  T.forEach(t=>{if(t.y&&!known(t.y.t))onlyKnown=false;if(t.wo&&!l.woerter.some(w=>w[0]===t.wo.w))ownW=false;if(KCHO.includes(t.t)){kOpts(t);const W=t.t==="luecke"?t.opts.map(o=>kUnits(t.wo.w).map((u,k)=>k===t.g?o:kUw(u)).join("")):t.opts; // Lücke: Antwort im Wort prüfen
+      if(t.opts.length<3||new Set(t.opts).size!==t.opts.length||!W.every(known))onlyKnown=false}
+    if(t.t==="bau"&&!t.bank)t.bank=kBauD(t.wo,t.zk);if(t.t==="bau"&&!t.bank.every(known))onlyKnown=false;if(t.t==="paare"&&t.wd&&!t.set.every(x=>l.woerter.some(w=>w[0]===x.c)))ownW=false});
+  const tf=T.find(t=>t.t==="tafel")||{sy:[]},pa=T.find(t=>t.t==="paare")||{},lu=T.filter(t=>t.t==="luecke");
+  return{id:l.id,h,g:T.filter(t=>!KCARD.includes(t.t)).length,tipp:T[0].t==="tipp",nz:T.filter(t=>t.t==="neuz").length,tf:tf.sy.length,wd:!!tf.wd,onlyKnown,ownW,
+    kinds:[...new Set(T.map(t=>t.t))],pw:!!pa.wd,pn:(pa.set||[]).length,sp:T.filter(t=>t.t==="sprechen").length,lu:lu.length,
+    zg:lu.filter(t=>{const U=kUnits(t.wo.w);return kUZ(U,t.g,l.zeichen)||U[t.g-1]&&U[t.g-1].art}).length}})))`));
+ok("S5–S7: jede Lektion 12 bis 16 bewertete Aufgaben, mit und ohne Stimme",z5.every(x=>x.g>=12&&x.g<=16),z5.map(x=>x.id+":"+x.g));
+ok("S5–S7: Tipp zuerst; lange Vokale mit Silbentafel, Zeichen im Wort mit vier Beispielwörtern",z5.every(x=>x.tipp&&x.nz===(["s6-2","s7-2","s7-3","s7-4"].includes(x.id)?0:1))
+  &&z5.filter(x=>!x.h).map(x=>x.tf+(x.wd?"w":"")).join()==="27,28,28,4w,4w,4w,0,4w,4w,4w,0,0,0,4w",z5.filter(x=>!x.h).map(x=>x.tf+(x.wd?"w":"")).join());
+ok("S5–S7: Aufgaben und Antworten nutzen nur schon eingeführte Zeichen, mindestens drei verschiedene Antworten",z5.every(x=>x.onlyKnown),z5.filter(x=>!x.onlyKnown).map(x=>x.id));
+ok("S5–S7: Wörter stammen aus der eigenen Lektion",z5.every(x=>x.ownW),z5.filter(x=>!x.ownW).map(x=>x.id));
+ok("S5–S7: lesen, Lücke, bauen; Hören und Nachsprechen nur mit sicherer Stimme",z5.every(x=>x.kinds.includes("wortlesen")&&x.kinds.includes("bau")&&x.lu>=2&&x.kinds.includes("worthoeren")===x.h&&x.sp===(x.h?1:0)));
+ok("S5–S7: Zeichen im Wort: Wörter und Umschrift zuordnen; die Lücke trifft meist das neue Zeichen",z5.filter(x=>["s5-4","s5-5","s6-1","s6-3","s6-4","s7-1","s7-5"].includes(x.id)).every(x=>x.pw&&x.pn===5)
+  &&z5.filter(x=>!["s6-2","s7-2","s7-3","s7-4","s5-4","s6-4"].includes(x.id)).every(x=>x.zg>=1),z5.map(x=>x.id+":"+x.pn+"/"+x.zg)); // kleines Alif, ى und Hamza-Sitze sind nie die Lücke: لَا und لَى klingen gleich
+// Darstellung
+run(s4done+`;${["s5","s6"].map(e=>`KL.filter(l=>l.e==="${e}").forEach(l=>S.kp.d[l.id]=1)`).join(";")};startK(KL.find(l=>l.id==="s7-1"))`);
+let h5=kShow(`{t:"neuz",z:"o",wo:{w:"قَلْبٌ",de:"ein Herz",lat:"qalbun"}}`);
+ok("Zeichen-Karte Sukun: Name und „kein Vokal“ statt Klang",/<b>Sukun<\/b> · kein Vokal/.test(h5)&&/qalbun · ein Herz/.test(h5));
+h5=kShow(`{t:"tafel",z:"al",wd:true,sy:["الْقَمَرُ","الْبَيْتُ"].map(w=>({t:w,lat:kTr(w)}))}`);
+ok("Wörtertafel: eigener Titel, Wörter mit Umschrift, Hinweis zum Bindestrich",/Wörter mit Artikel/.test(h5)&&/class="ktf wd"/.test(h5)&&/<small>al-qamaru<\/small>/.test(h5)&&/Bindestrich/.test(h5));
+h5=kShow(`{t:"paare",wd:true,set:[{i:"w0",c:"قَلْبٌ",n:"qalbun",sp:null},{i:"w1",c:"كَلْبٌ",n:"kalbun",sp:null}]}`);
+ok("Wörter zuordnen: Wort und Umschrift",/Ordne jedem Wort seine Umschrift zu/.test(h5)&&/data-p="Lw0"/.test(h5)&&/>kalbun<\/button>/.test(h5));
+const mu=N("مُعَلِّمٌ");
+h5=kShow(`{t:"luecke",wo:{w:${mu},de:"ein Lehrer",lat:kTr(${mu})},g:2,zk:kZK(K.l.k)}`);
+ok("Lücke mit Schadda: Buchstabe ohne Zeichen, Umschrift zeigt den doppelten Laut, verwandte Lesarten zur Wahl",/مُعَ<span class="kgp">ل<\/span>مٌ/.test(h5)&&/muʿa<b class="kgp">lli<\/b>mun/.test(h5)
+  &&run(`(o=>o.length===4&&o.includes("لِّ".normalize())&&o.includes("لِ"))(K.T[K.n].opts)`),run(`K.T[K.n].opts`));
+h5=kShow(`{t:"bau",wo:{w:"الْقَمَرُ",de:"der Mond",lat:"al-qamaru"},zk:kZK(K.l.k)}`);
+ok("Bauen mit Artikel: der Artikel ist ein Baustein",/Tippe die 4 Silben/.test(h5)&&run(`K.T[K.n].bank.some(x=>x.c==="الْ")&&K.T[K.n].bank.length>=6`));
+ok("Stationslabel: neues Zeichen oder „Wörter lesen“",run(`["s5-1","s6-2","s6-3","s7-3"].map(i=>kSm(KL.find(l=>l.id===i))).join("|")`)==="Neu: Langes ā|15 Wörter lesen|Neu: Artikel al-|15 Wörter lesen");
+// Durchspielen
+run(`K=null;S.xp=0;${s4done}`);
+for(const id of ["s5-1","s5-2","s5-3","s5-4","s5-5"])run(`startK(KL.find(l=>l.id==="${id}"));playK([])`);
+h5=run(`app.innerHTML`);
+ok("S5 durchgespielt: Etappe geschafft, weiter zu S6",run(`KL.filter(l=>l.e==="s5").every(l=>S.kp.d[l.id]===1)`)&&/Etappe „Lange Vokale“ geschafft/.test(h5)&&/Weiter: Etappe S6, Sukun/.test(h5));
+for(const id of ["s6-1","s6-2","s6-3","s6-4"])run(`startK(KL.find(l=>l.id==="${id}"));playK([])`);
+h5=run(`app.innerHTML`);
+ok("S6 durchgespielt: Etappe geschafft, weiter zu S7",run(`KL.filter(l=>l.e==="s6").every(l=>S.kp.d[l.id]===1)`)&&/Etappe „Sukun“ geschafft/.test(h5)&&/Weiter: Etappe S7, Schadda/.test(h5));
+for(const id of ["s7-1","s7-2","s7-3","s7-4","s7-5"])run(`startK(KL.find(l=>l.id==="${id}"));playK([])`);
+h5=run(`app.innerHTML`);
+ok("S7 durchgespielt: Etappe geschafft, danach ist die nächste Etappe in Arbeit",run(`KL.filter(l=>l.e==="s7").every(l=>S.kp.d[l.id]===1)`)&&/Etappe „Schadda“ geschafft/.test(h5)&&/nächste Etappe ist in Arbeit/.test(h5));
+run(`view="path";ui.hint=null;path()`);kh=run(`app.innerHTML`);
+ok("Pfad: Ziele von S5 bis S7 mit Umschrift und Übersetzung",/hādhā yawmun jamīlun yā ṣadīqī<br>Das ist ein schöner Tag, mein Freund\./.test(kh)&&/min ayna anta<br>Woher kommst du\?/.test(kh)&&/as-salāmu ʿalaykum yā muʿallimu<br>Friede sei mit euch, Lehrer!/.test(kh));
+run(`S.kp.d={...S.kp.d};for(const l of KL.filter(l=>l.e==="s6"&&l.id!=="s6-1"))delete S.kp.d[l.id];startK(null,"s6")`);
+ok("Wiederholung S6: 12 Aufgaben nur aus geschafften Lektionen, ohne Karten",run(`view==="klek"&&K.T.length===12&&K.T.every(t=>!KCARD.includes(t.t))&&K.T.every(t=>!t.wo||KL.find(l=>l.id==="s6-1").woerter.some(w=>w[0]===t.wo.w))`));
+const sb5=new Map(texts().filter(t=>t.id.startsWith("sb/")).map(t=>[t.id,t.text]));
+ok("Vorleseliste: lange Silben (ā ohne Hamza), alle Wörter und Ziele von S5 bis S7",sb5.get("sb/ba-aa")==="بَا"&&sb5.get("sb/hamza-ii")==="إِي"&&sb5.get("sb/ya-uu")==="يُو"&&!sb5.has("sb/hamza-aa")
+  &&["s5","s6","s7"].every(e=>kfiles[e].lektionen.every(l=>l.woerter.every(w=>kw.has(w[0])))&&kw.has(kfiles[e].ziel.sp)));
 
 console.log("\n"+pass+" OK, "+fail+" FAIL");
 process.exit(fail?1:0);
