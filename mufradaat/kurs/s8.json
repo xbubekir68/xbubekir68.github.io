@@ -1,0 +1,65 @@
+{
+  "id": "s8",
+  "ziel": {"art": "lesen", "ar": "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ", "de": "Im Namen Allahs, des Allerbarmers, des Barmherzigen", "text": "Die Basmala in Koranschrift lesen",
+    "geschafft": "Du kannst jetzt alle Zeichen lesen, auch die Schrift des Korans."},
+  "lektionen": [
+    {
+      "id": "s8-1", "titel": "Lange Wörter", "art": "vokale", "station": "مُسْتَقْبَلٌ",
+      "woerter": [["مُسْتَقْبَلٌ", "Zukunft"], ["مُوَظَّفٌ", "ein Angestellter"], ["مُدَرِّسَةٌ", "eine Lehrerin"], ["مُتَرْجِمٌ", "ein Übersetzer"], ["مُمْتَازٌ", "ausgezeichnet"],
+        ["مَشْغُولٌ", "beschäftigt"], ["مَفْتُوحٌ", "offen"], ["مَكْتُوبٌ", "geschrieben"], ["سَيَّارَاتٌ", "Autos"], ["دَابَّةٌ", "ein Tier"],
+        ["مَادَّةٌ", "ein Stoff, ein Schulfach"], ["خَاصٌّ", "besonders, privat"], ["عَامٌّ", "allgemein"], ["حَارٌّ", "heiß"], ["شَابٌّ", "ein junger Mann"],
+        ["جَادٌّ", "ernsthaft"], ["الْجَوُّ حَارٌّ", "das Wetter ist heiß"], ["هٰذِهِ دَابَّةٌ", "das ist ein Tier"], ["أَنَا مَشْغُولٌ", "ich bin beschäftigt"], ["الْبَابُ مَفْتُوحٌ", "die Tür ist offen"]],
+      "tipp": {"titel": "Alles auf einmal", "zeichen": "مُسْتَقْبَلٌ",
+        "text": "Jetzt kommen alle Zeichen zusammen. Lies lange Wörter Silbe für Silbe: مُسْ تَقْ بَ لٌ. So wird aus مُسْتَقْبَلٌ mustaqbalun, die Zukunft. Lange Vokale und Schadda zusammen kennst du schon: دَابَّةٌ ist dābbatun, ein Tier."}
+    },
+    {
+      "id": "s8-2", "titel": "Verbundenes Alif", "art": "vokale", "zeichen": "wa", "station": "وَالْقَمَرُ",
+      "woerter": [["فِي الْبَيْتِ", "im Haus"], ["فِي الْمَسْجِدِ", "in der Moschee"], ["فِي الصَّيْفِ", "im Sommer"],
+        ["عَلَى الْأَرْضِ", "auf dem Boden"], ["إِلَى الْمَدْرَسَةِ", "zur Schule"], ["مِنَ الْبَيْتِ", "aus dem Haus"],
+        ["وَالْقَمَرُ", "und der Mond"], ["وَالشَّمْسُ", "und die Sonne"], ["بِالْقَلَمِ", "mit dem Stift"],
+        ["بِسْمِ اللّٰهِ", "im Namen Allahs"], ["الْحَمْدُ لِلّٰهِ", "Lob sei Allah"], ["الْوَلَدُ فِي الْبَيْتِ", "der Junge ist im Haus"],
+        ["ذَهَبْتُ إِلَى السُّوقِ", "ich ging zum Markt"]],
+      "tipp": {"titel": "Das Alif, das man überliest", "zeichen": "فِي الْبَيْتِ",
+        "text": "Steht der Artikel mitten im Satz, spricht man sein Alif nicht. Man liest vom Wort davor direkt weiter: فِي الْبَيْتِ ist fi l-bayti, im Haus. Das lange ī von فِي wird dabei kurz. Auch nach وَ und بِ bleibt das Alif stumm: وَالْقَمَرُ ist wal-qamaru, und der Mond."}
+    },
+    {
+      "id": "s8-3", "titel": "Madda", "art": "vokale", "zeichen": "md", "station": "آيَةٌ",
+      "woerter": [["آيَةٌ", "ein Zeichen, ein Vers"], ["آخِرٌ", "ein letzter"], ["آمَنَ", "er glaubte"], ["آكُلُ", "ich esse"], ["آلَةٌ", "ein Gerät"],
+        ["آدَمُ", "Adam"], ["الْآنَ", "jetzt"], ["الْقُرْآنُ", "der Koran"], ["مِرْآةٌ", "ein Spiegel"], ["آبَاءٌ", "Väter"],
+        ["آسِفٌ", "traurig, es tut mir leid"], ["أَنَا آسِفٌ", "es tut mir leid"], ["هٰذِهِ آيَةٌ", "das ist ein Vers"], ["أَيْنَ الْمِرْآةُ", "Wo ist der Spiegel?"], ["الْقُرْآنُ كِتَابٌ", "der Koran ist ein Buch"],
+        ["آكُلُ الْآنَ", "ich esse jetzt"]],
+      "tipp": {"titel": "Hamza und langes ā in einem", "zeichen": "آ",
+        "text": "Die Welle über dem Alif heißt Madda. آ steht für Hamza mit langem ā. آيَةٌ liest man āyatun, ein Vers, und الْقُرْآنُ al-qurʾānu, der Koran."}
+    },
+    {
+      "id": "s8-4", "titel": "Koranschrift", "art": "vokale", "zeichen": "q", "station": "ٱلۡحَمۡدُ",
+      "woerter": [["ٱلۡحَمۡدُ", "das Lob"], ["ٱلَّذِى", "derjenige, der"], ["بِسۡمِ ٱللَّهِ", "im Namen Allahs"],
+        ["رَبِّ ٱلۡعَٰلَمِينَ", "dem Herrn der Welten"], ["فِى ٱلۡأَرۡضِ", "auf der Erde"], ["ٱلۡحَمۡدُ لِلَّهِ رَبِّ ٱلۡعَٰلَمِينَ", "Lob sei Allah, dem Herrn der Welten"],
+        ["ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ", "dem Allerbarmer, dem Barmherzigen"], ["مَٰلِكِ يَوۡمِ ٱلدِّينِ", "dem Herrscher am Tag des Gerichts"], ["إِيَّاكَ نَعۡبُدُ وَإِيَّاكَ نَسۡتَعِينُ", "Dir dienen wir, und dich bitten wir um Hilfe"],
+        ["ٱهۡدِنَا ٱلصِّرَٰطَ ٱلۡمُسۡتَقِيمَ", "Leite uns den geraden Weg"], ["صِرَٰطَ ٱلَّذِينَ أَنۡعَمۡتَ عَلَيۡهِمۡ", "den Weg derer, denen du Gnade erwiesen hast"], ["قُلۡ هُوَ ٱللَّهُ أَحَدٌ", "Sag: Er ist Allah, ein Einziger"],
+        ["ٱللَّهُ ٱلصَّمَدُ", "Allah, der Beständige"], ["لَمۡ يَلِدۡ وَلَمۡ يُولَدۡ", "Er zeugt nicht und wurde nicht gezeugt"]],
+      "tipp": {"titel": "Die Schrift des Korans", "zeichen": "ٱلۡحَمۡدُ",
+        "text": "Der Koran ist in einer eigenen Schreibweise gedruckt. Die Laute sind dieselben, nur manche Zeichen sehen anders aus. Hier liest du Verse aus der ersten Sure und aus kurzen Suren. Koranverse liest die App nicht mit einer Computerstimme vor."}
+    },
+    {
+      "id": "s8-5", "titel": "Kleine Zeichen im Koran", "art": "vokale", "zeichen": "qk", "station": "عَلَىٰ",
+      "woerter": [["عَلَىٰ", "auf, über"], ["ٱلصَّلَوٰةَ", "das Gebet"], ["لَهُۥ", "ihm, für ihn"],
+        ["بِهِۦ", "mit ihm"], ["قَالُوا۟", "sie sagten"], ["ءَامَنُوا۟", "sie glaubten"],
+        ["وَلَا ٱلضَّآلِّينَ", "und nicht der Irregehenden"], ["مِن شَرِّ مَا خَلَقَ", "vor dem Übel dessen, was er erschaffen hat"], ["قُلۡ أَعُوذُ بِرَبِّ ٱلنَّاسِ", "Sag: Ich suche Zuflucht beim Herrn der Menschen"],
+        ["مَلِكِ ٱلنَّاسِ", "dem König der Menschen"], ["إِلَٰهِ ٱلنَّاسِ", "dem Gott der Menschen"], ["مِن شَرِّ ٱلۡوَسۡوَاسِ ٱلۡخَنَّاسِ", "vor dem Übel des Einflüsterers, der sich zurückzieht"],
+        ["ٱلَّذِى يُوَسۡوِسُ فِى صُدُورِ ٱلنَّاسِ", "der in die Brust der Menschen einflüstert"], ["مِنَ ٱلۡجِنَّةِ وَٱلنَّاسِ", "von den Dschinn und den Menschen"], ["خَتَمَ ٱللَّهُ عَلَىٰ قُلُوبِهِمۡ", "Allah hat ihre Herzen versiegelt"],
+        ["إِلَّا بِإِذۡنِهِۦ", "außer mit seiner Erlaubnis"]],
+      "tipp": {"titel": "Kleine Zeichen über der Zeile", "zeichen": "لَهُۥ",
+        "text": "Kleine Buchstaben und Zeichen sagen dir, wo ein Vokal lang wird und welcher Buchstabe stumm bleibt. لَهُۥ liest man lahū, mit langem ū, und قَالُوا۟ qālū, ohne das Alif am Ende."}
+    },
+    {
+      "id": "s8-6", "titel": "Pausenzeichen", "art": "vokale", "zeichen": "pz", "station": "قِفْ",
+      "woerter": [["إِنَّمَا يَسۡتَجِيبُ ٱلَّذِينَ يَسۡمَعُونَۘ", "Nur die, die zuhören, folgen dem Ruf"], ["ٱلَّذِينَ تَتَوَفَّىٰهُمُ ٱلۡمَلَٰٓئِكَةُ طَيِّبِينَۙ", "die die Engel in gutem Zustand abberufen"], ["خَتَمَ ٱللَّهُ عَلَىٰ قُلُوبِهِمۡ وَعَلَىٰ سَمۡعِهِمۡۖ", "Allah hat ihre Herzen und ihr Gehör versiegelt"],
+        ["مَا فِى ٱلسَّمَٰوَٰتِ وَمَا فِى ٱلۡأَرۡضِۗ", "was in den Himmeln und was auf der Erde ist"], ["ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَىُّ ٱلۡقَيُّومُۚ", "Allah, es gibt keinen Gott außer ihm, dem Lebendigen, dem Beständigen"], ["ذَٰلِكَ ٱلۡكِتَٰبُ لَا رَيۡبَۛ فِيهِۛ", "Dies ist das Buch, an dem kein Zweifel ist"],
+        ["يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ وَمَا خَلۡفَهُمۡۖ", "Er weiß, was vor ihnen und was hinter ihnen liegt"], ["إِلَّا بِمَا شَآءَۚ", "außer was er will"]],
+      "tipp": {"titel": "Wo man anhält", "zeichen": "ۘ ۚ ۖ",
+        "text": "Im Koran stehen über dem Text kleine Pausenzeichen. Sie sagen, ob man hier anhalten muss, darf oder besser weiterliest. Einen eigenen Laut haben sie nicht."}
+    },
+    {"id": "s8-7", "titel": "Abschlusstest", "art": "test", "station": "النَّجَاحُ"}
+  ]
+}

@@ -10,6 +10,8 @@ export const APP=fileURLToPath(new URL("..",import.meta.url));
 const html=()=>fs.readFileSync(APP+"index.html","utf8");
 const pick=(h,n)=>{const m=h.match(new RegExp("const "+n+"=(\\[[\\s\\S]*?\\n?\\]);\\s*\\n"));if(!m)throw new Error(n+" nicht in index.html gefunden");return vm.runInNewContext(m[1])};
 // Kurze, stabile Prüfsumme (FNV-1a): ändert sich, wenn der Satz korrigiert wird
+export const QZ=["q","qk","pz"]; // Lektionen zur Koranschrift
+export const QX=/[ٱ\u06e1\u06e5\u06e6\u06df\u06d6-\u06db]|[ىو]\u0670|\u064e\u0670/; // Text in Koranschrift (wie in der App)
 export const hash=t=>{let h=0x811c9dc5;for(const c of t){h^=c.codePointAt(0);h=Math.imul(h,0x01000193)>>>0}return h.toString(16).padStart(8,"0")};
 // Silben wie in der App: jeder Buchstabe außer Alif mit Fatha, Kasra und Damma (Hamza auf dem Alif: أَ إِ أُ),
 // dann mit Tanwin -an (mit stummem Alif), -in und -un (ohne Hamza, dazu das Ta marbuta ة),
@@ -35,7 +37,7 @@ export function texts(){
   for(const e of idx.stufen.flatMap(s=>s.etappen).filter(e=>e.datei)){
     const d=JSON.parse(fs.readFileSync(K+e.datei,"utf8"));
     for(const l of d.lektionen)for(const x of l.suren||[])add("k/"+hash(x.sp),x.sp,"Surenanfang "+x.t);
-    for(const l of d.lektionen)if(l.art==="vokale")for(const [w,de] of l.woerter)add("k/"+hash(w),w,de);
+    for(const l of d.lektionen)if(l.art==="vokale"&&!QZ.includes(l.zeichen))for(const [w,de] of l.woerter)if(!QX.test(w))add("k/"+hash(w),w,de); // Koranschrift liest keine Computerstimme vor
     if(d.ziel&&d.ziel.sp)add("k/"+hash(d.ziel.sp),d.ziel.sp,"Ziel der Etappe "+e.id.toUpperCase());
   }
   return [...out.values()];
