@@ -1,13 +1,17 @@
-// xbubekir: persönliche KI im Browser. Denkt mit Claude (Anthropic-API, eigener Schlüssel), speichert alles nur auf diesem Gerät.
-import Anthropic from "./vendor/anthropic.js";
+// xbubekir: persönliche KI im Browser. Denkt mit Gemini von Google (kostenlos) oder Claude von Anthropic,
+// jeweils mit dem eigenen API-Schlüssel des Nutzers; alles bleibt auf diesem Gerät.
 
-// web: Websuch-Werkzeug des Modells (null = keine Websuche); fb: serverseitiger Ersatz bei Ablehnung durch Sicherheitsfilter
+// p: Anbieter; web: Websuch-Werkzeug (nur Claude); fb: serverseitiger Ersatz bei Ablehnung durch Sicherheitsfilter
 const MODELS={
-  "claude-opus-5-5":{name:"Claude Opus 5.5",hint:"am klügsten",price:"4 $ / 20 $",web:"web_search_20260209",fb:true},
-  "claude-sonnet-5-5":{name:"Claude Sonnet 5.5",hint:"schneller, günstiger",price:"2 $ / 10 $",web:"web_search_20260209",fb:true},
-  "claude-haiku-5-5":{name:"Claude Haiku 5.5",hint:"am günstigsten",price:"0,10 $ / 0,50 $",web:null,fb:false},
+  "gemini-3.8-flash":{p:"gemini",name:"Gemini 3.8 Flash",hint:"am klügsten"},
+  "gemini-3.5-flash-lite":{p:"gemini",name:"Gemini 3.5 Flash-Lite",hint:"am schnellsten, mehr Nachrichten pro Tag"},
+  "claude-opus-5-5":{p:"claude",name:"Claude Opus 5.5",hint:"am klügsten",price:"4 $ / 20 $",web:"web_search_20260209",fb:true},
+  "claude-sonnet-5-5":{p:"claude",name:"Claude Sonnet 5.5",hint:"schneller, günstiger",price:"2 $ / 10 $",web:"web_search_20260209",fb:true},
+  "claude-haiku-5-5":{p:"claude",name:"Claude Haiku 5.5",hint:"am günstigsten",price:"0,10 $ / 0,50 $",web:null,fb:false},
 };
-const DEF="claude-opus-5-5",MAX_TOKENS=64000;
+const PROV={gemini:{name:"Gemini",by:"Google",def:"gemini-3.8-flash"},claude:{name:"Claude",by:"Anthropic",def:"claude-opus-5-5"}};
+const MAX_TOKENS=64000,LEVEL={low:"LOW",medium:"MEDIUM",high:"HIGH"};
+const G_REFUSE=new Set(["SAFETY","RECITATION","BLOCKLIST","PROHIBITED_CONTENT","SPII","LANGUAGE"]);
 const NOTES={
   stop:"Angehalten.",
   cut:"Die Antwort wurde abgeschnitten, weil sie zu lang wurde.",
@@ -25,10 +29,12 @@ const log=$("#log"),inp=$("#inp"),bSend=$("#bSend"),dSet=$("#dSet"),dChats=$("#d
 
 // ---------- Einstellungen (klein, daher localStorage) ----------
 const SK="xb.settings";
-const S={key:"",name:"",about:"",style:"",model:DEF,effort:"medium",web:true};
+const S={provider:"gemini",gkey:"",ckey:"",name:"",about:"",style:"",model:PROV.gemini.def,effort:"medium",web:true};
 try{Object.assign(S,JSON.parse(localStorage.getItem(SK)||"{}"))}catch{}
-if(!MODELS[S.model])S.model=DEF;
+if(!PROV[S.provider])S.provider="gemini";
+if(MODELS[S.model]?.p!==S.provider)S.model=PROV[S.provider].def;
 function saveS(){try{localStorage.setItem(SK,JSON.stringify(S))}catch{}}
+const keyOf=p=>p==="gemini"?S.gkey:S.ckey;
 
 // ---------- Chats (können groß werden, daher IndexedDB; ohne IndexedDB nur im Speicher) ----------
 const DB=(()=>{
@@ -39,13 +45,22 @@ const DB=(()=>{
   return{all:()=>tx("readonly",s=>s.getAll()),put:safe(c=>tx("readwrite",s=>s.put(c))),del:safe(id=>tx("readwrite",s=>s.delete(id))),clear:safe(()=>tx("readwrite",s=>s.clear()))};
 })();
 
-let chats=[],cur=null,busy=false,stream=null,copies=[];
+let chats=[],cur=null,busy=false,stopFn=null,copies=[];
+const provOf=c=>c.provider||MODELS[c.model]?.p||"claude";
 
-// ---------- Claude ----------
-let _client,_ck;
-function client(){if(_ck!==S.key){_client=new Anthropic({apiKey:S.key,dangerouslyAllowBrowser:true});_ck=S.key}return _client} // Schlüssel des Nutzers, nur auf seinem Gerät
+// ---------- SDKs (offizielle Bibliotheken, lokal gebündelt, erst bei Bedarf geladen) ----------
+const SDK={};
+async function sdk(p){return SDK[p]||(SDK[p]=p==="gemini"?await import("./vendor/genai.js"):(await import("./vendor/anthropic.js")).default)}
+const clients={};
+async function client(p){ // Schlüssel des Nutzers, nur auf seinem Gerät
+  const key=keyOf(p),c=clients[p];
+  if(c&&c.key===key)return c.api;
+  const lib=await sdk(p);
+  const api=p==="gemini"?new lib.GoogleGenAI({apiKey:key}):new lib({apiKey:key,dangerouslyAllowBrowser:true});
+  clients[p]={key,api};return api;
+}
 
-function systemPrompt(web){
+function systemPrompt(p,web){
   const d=new Date().toLocaleDateString("de-DE",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
   let s=`Du bist xbubekir, eine persönliche KI. Du arbeitest für genau eine Person und begleitest sie bei allem, was ansteht: Fragen beantworten, Texte schreiben, Dinge erklären, planen, lernen, nachdenken.
 
@@ -53,7 +68,7 @@ So bist du:
 - Du duzt die Person und antwortest in der Sprache, in der sie dir schreibt.
 - Du bist direkt, ehrlich und freundlich, ohne Floskeln. Kurze Fragen bekommen kurze Antworten; ausführlich wirst du nur, wenn die Aufgabe es braucht.
 - Wenn du etwas nicht weißt oder dir unsicher bist, sagst du das, statt zu raten.
-- Fragt dich jemand, wer du bist: Du bist xbubekir. Technisch läufst du auf Claude, einem KI-Modell von Anthropic. Das sagst du offen, wenn danach gefragt wird.
+- Fragt dich jemand, wer du bist: Du bist xbubekir. Technisch läufst du auf ${PROV[p].name}, einem KI-Modell von ${PROV[p].by}. Das sagst du offen, wenn danach gefragt wird.
 - Deine Antworten werden als Markdown angezeigt: Listen, **fett**, Tabellen und Codeblöcke funktionieren.
 
 Dieses Gespräch hat am ${d} begonnen.`;
@@ -64,16 +79,86 @@ Dieses Gespräch hat am ${d} begonnen.`;
   return s;
 }
 
-// System-Prompt, Werkzeuge und Modell werden beim Anlegen festgehalten: Sie müssen für alle Runden eines Chats gleich bleiben,
-// sonst verwirft die API die gespeicherten Denkblöcke früherer Antworten (und der Prompt-Cache greift nicht mehr).
+// Anbieter, Modell, System-Prompt und Werkzeuge werden beim Anlegen festgehalten: Sie müssen für alle Runden eines Chats
+// gleich bleiben, sonst verwirft die API die gespeicherten Denkblöcke früherer Antworten (und der Prompt-Cache greift nicht).
 function newChat(){
-  const model=MODELS[S.model]?S.model:DEF,M=MODELS[model],web=S.web&&!!M.web;
+  const p=S.provider,model=MODELS[S.model]?.p===p?S.model:PROV[p].def,M=MODELS[model],web=S.web&&!!M.web;
   const tz=Intl.DateTimeFormat().resolvedOptions().timeZone;
-  return{id:crypto.randomUUID?.()||Date.now()+"-"+Math.random().toString(36).slice(2),title:"",created:Date.now(),updated:Date.now(),model,
-    system:systemPrompt(web),tools:web?[{type:M.web,name:"web_search",max_uses:5,user_location:{type:"approximate",...(tz?{timezone:tz}:{})}}]:[],msgs:[]};
+  return{id:crypto.randomUUID?.()||Date.now()+"-"+Math.random().toString(36).slice(2),title:"",created:Date.now(),updated:Date.now(),provider:p,model,
+    system:systemPrompt(p,web),tools:web?[{type:M.web,name:"web_search",max_uses:5,user_location:{type:"approximate",...(tz?{timezone:tz}:{})}}]:[],msgs:[]};
 }
 
-function params(c){
+async function send(){
+  const text=inp.value.trim();
+  if(busy||!text)return;
+  if(!keyOf(cur?provOf(cur):S.provider)){openSettings();return}
+  if(!cur)cur=newChat();
+  if(!chats.includes(cur))chats.unshift(cur);
+  if(!cur.title)cur.title=text.replace(/\s+/g," ").slice(0,60);
+  const um={role:"user",content:text};
+  cur.msgs.push(um);
+  inp.value="";grow();
+  store(cur);render();
+  await run(cur,um);
+}
+
+async function run(c,um){
+  setBusy(true);
+  log.querySelector(".err")?.remove();
+  log.insertAdjacentHTML("beforeend",'<div class="msg a" id="live" aria-busy="true"><p class="tool wait">xbubekir denkt nach …</p></div>');
+  toBottom(true);
+  const live=$("#live"),p=provOf(c);
+  let err=null;
+  try{await(p==="gemini"?askGemini:askClaude)(c,um,live)}
+  catch(e){err=e;undo(c,um)}
+  stopFn=null;
+  if(c.msgs.length)store(c);else forget(c);
+  setBusy(false);
+  if(c===cur)render();
+  if(err)showError(err,p);
+}
+
+// ---------- Gemini ----------
+// Antwortstücke zusammenfügen; die Denk-Signatur (kommt oft in einem leeren Stück am Ende) bleibt am Teil, zu dem sie gehört
+function addPart(parts,p){
+  const last=parts.at(-1);
+  if(p.text!==undefined&&last?.text!==undefined&&!!last.thought===!!p.thought&&!last.thoughtSignature){
+    last.text+=p.text;if(p.thoughtSignature)last.thoughtSignature=p.thoughtSignature;return;
+  }
+  parts.push({...p});
+}
+const geminiBlocks=parts=>parts.filter(p=>p.text).map(p=>p.thought?{type:"thinking",thinking:p.text}:{type:"text",text:p.text});
+
+async function askGemini(c,um,live){
+  const ai=await client("gemini"),ctl=new AbortController(),parts=[],start=c.msgs.indexOf(um);
+  let fin="",blocked="";
+  stopFn=()=>ctl.abort();
+  try{
+    const res=await ai.models.generateContentStream({model:c.model,
+      contents:c.msgs.filter(m=>!m.skip).map(m=>m.role==="user"?{role:"user",parts:[{text:m.content}]}:{role:"model",parts:m.content}),
+      config:{systemInstruction:c.system,thinkingConfig:{includeThoughts:true,thinkingLevel:LEVEL[S.effort]},abortSignal:ctl.signal}});
+    for await(const ch of res){
+      if(ch.promptFeedback?.blockReason)blocked=ch.promptFeedback.blockReason;
+      const cand=ch.candidates?.[0];
+      if(!cand)continue;
+      for(const p of cand.content?.parts||[])addPart(parts,p);
+      if(cand.finishReason)fin=cand.finishReason;
+      paint(live,geminiBlocks(parts));
+    }
+  }catch(e){if(!ctl.signal.aborted)throw e}
+  if(ctl.signal.aborted){ // Stopp gedrückt: bisherigen Text behalten (ohne Gedanken)
+    const txt=parts.filter(p=>p.text&&!p.thought).map(p=>({text:p.text}));
+    if(txt.length)c.msgs.push({role:"assistant",content:txt,note:"stop"});
+    else undo(c,um);
+    return;
+  }
+  if(blocked||G_REFUSE.has(fin)){refuse(c,um,start);return}
+  if(!parts.some(p=>p.text&&!p.thought))throw new Error("Gemini hat keine Antwort geschickt"+(fin?` (${fin})`:"")+".");
+  c.msgs.push({role:"assistant",content:JSON.parse(JSON.stringify(parts)),...(fin==="MAX_TOKENS"?{note:"cut"}:{})});
+}
+
+// ---------- Claude ----------
+function claudeParams(c){
   const p={model:c.model,max_tokens:MAX_TOKENS,system:c.system,
     messages:c.msgs.filter(m=>!m.skip).map(m=>({role:m.role,content:m.content})),
     thinking:{type:"adaptive",display:"summarized"},output_config:{effort:S.effort},cache_control:{type:"ephemeral"}};
@@ -91,76 +176,67 @@ function replay(content){
   return JSON.parse(JSON.stringify(out));
 }
 
-async function send(){
-  const text=inp.value.trim();
-  if(busy||!text)return;
-  if(!S.key){openSettings();return}
-  if(!cur)cur=newChat();
-  if(!chats.includes(cur))chats.unshift(cur);
-  if(!cur.title)cur.title=text.replace(/\s+/g," ").slice(0,60);
-  const um={role:"user",content:text};
-  cur.msgs.push(um);
-  inp.value="";grow();
-  store(cur);render();
-  await run(cur,um);
-}
-
-async function run(c,um){
-  setBusy(true);
-  log.querySelector(".err")?.remove();
-  log.insertAdjacentHTML("beforeend",'<div class="msg a" id="live" aria-busy="true"><p class="tool wait">xbubekir denkt nach …</p></div>');
-  toBottom(true);
-  const live=$("#live"),start=c.msgs.indexOf(um);
-  let prev=[],err=null,rounds=0;
+async function askClaude(c,um,live){
+  const api=await client("claude"),A=SDK.claude,start=c.msgs.indexOf(um);
+  let prev=[],rounds=0,stream=null;
   try{
     for(;;){
-      stream=client().beta.messages.stream(params(c));
+      stream=api.beta.messages.stream(claudeParams(c));
+      stopFn=()=>stream.abort();
       for await(const _ of stream)paint(live,prev.concat(stream.currentMessage?.content||[]));
       const msg=await stream.finalMessage();
-      if(msg.stop_reason==="refusal"){ // auch das Ersatzmodell hat abgelehnt: Teilantwort verwerfen, Frage aus dem Verlauf nehmen
-        for(const m of c.msgs.slice(start))m.skip=true;
-        um.note="refusal";break;
-      }
+      if(msg.stop_reason==="refusal"){refuse(c,um,start);break} // auch das Ersatzmodell hat abgelehnt
       const content=replay(msg.content);
       c.msgs.push({role:"assistant",content,...(msg.stop_reason==="max_tokens"?{note:"cut"}:{})});
       if(msg.stop_reason==="pause_turn"&&++rounds<5){prev=prev.concat(content);continue} // lange Websuche: einfach weiterlaufen lassen
       break;
     }
   }catch(e){
-    if(e instanceof Anthropic.APIUserAbortError){ // Stopp gedrückt: bisherigen Text behalten (ohne Denkblöcke, die wären unvollständig)
-      const part=(stream.currentMessage?.content||[]).filter(b=>b.type==="text"&&b.text).map(b=>({type:"text",text:b.text}));
-      if(part.length)c.msgs.push({role:"assistant",content:part,note:"stop"});
-      else if(c.msgs.at(-1)===um)undo(c,um);
-    }else{err=e;undo(c,um)}
+    if(!(e instanceof A.APIUserAbortError))throw e;
+    // Stopp gedrückt: bisherigen Text behalten (ohne Denkblöcke, die wären unvollständig)
+    const part=(stream.currentMessage?.content||[]).filter(b=>b.type==="text"&&b.text).map(b=>({type:"text",text:b.text}));
+    if(part.length)c.msgs.push({role:"assistant",content:part,note:"stop"});
+    else if(c.msgs.at(-1)===um)undo(c,um);
   }
-  stream=null;
-  if(c.msgs.length)store(c);else forget(c);
-  setBusy(false);
-  if(c===cur)render();
-  if(err)showError(err);
 }
 
+// Abgelehnte Runde: Teilantwort verwerfen und die Frage aus dem weiteren Verlauf nehmen (nur das Ende des Verlaufs)
+function refuse(c,um,start){for(const m of c.msgs.slice(start))m.skip=true;um.note="refusal"}
 // Fehlgeschlagene Runde ganz entfernen (nur das Ende des Verlaufs) und die Nachricht zurück ins Eingabefeld legen
 function undo(c,um){
-  c.msgs.splice(c.msgs.indexOf(um));
+  const i=c.msgs.indexOf(um);if(i<0)return;
+  c.msgs.splice(i);
   if(c===cur&&!inp.value.trim()){inp.value=um.content;grow()}
 }
 
-function errText(e){
-  const msg=e.error?.error?.message||e.message||String(e);
-  if(e instanceof Anthropic.AuthenticationError)return"Der API-Schlüssel wurde abgelehnt. Prüf ihn in den Einstellungen.";
-  if(e instanceof Anthropic.PermissionDeniedError)return"Dein Schlüssel darf dieses Modell nicht nutzen: "+msg;
-  if(e instanceof Anthropic.NotFoundError)return"Das Modell wurde nicht gefunden. Wähl in den Einstellungen ein anderes.";
-  if(e instanceof Anthropic.RateLimitError)return"Gerade zu viele Anfragen. Warte einen Moment und schick die Nachricht nochmal.";
-  if(e instanceof Anthropic.BadRequestError)return"Anthropic hat die Anfrage abgelehnt: "+msg;
-  if(e instanceof Anthropic.InternalServerError)return"Claude ist gerade überlastet oder hatte einen Fehler. Versuch es gleich nochmal.";
-  if(e instanceof Anthropic.APIConnectionError)return"Keine Verbindung zu Anthropic. Bist du online?";
-  if(e instanceof Anthropic.APIError)return`Fehler ${e.status??""}: ${msg}`;
+function errText(e,p){
+  if(p==="gemini"){
+    let msg=e?.message||String(e);
+    try{msg=JSON.parse(msg.slice(msg.indexOf("{"))).error.message||msg}catch{}
+    const s=e?.status;
+    if(s===429)return"Das Gratis-Kontingent ist gerade aufgebraucht. Warte eine Minute und versuch es nochmal. Ist das Tageslimit erreicht, geht es nach Mitternacht kalifornischer Zeit weiter (in Deutschland morgens um 8 oder 9 Uhr). Mit Gemini Flash-Lite (Einstellungen) sind mehr Nachrichten pro Tag drin.";
+    if(s===401||s===403)return"Der Gemini-Schlüssel wurde abgelehnt. Prüf ihn in den Einstellungen.";
+    if(s===404)return"Das Modell wurde nicht gefunden. Wähl in den Einstellungen ein anderes.";
+    if(s===400)return"Google hat die Anfrage abgelehnt: "+msg;
+    if(s>=500)return"Gemini ist gerade überlastet. Versuch es gleich nochmal.";
+    if(e instanceof TypeError)return"Keine Verbindung zu Google. Bist du online?";
+    return"Unerwarteter Fehler: "+msg;
+  }
+  const A=SDK.claude,msg=e?.error?.error?.message||e?.message||String(e);
+  if(!A)return"Unerwarteter Fehler: "+msg;
+  if(e instanceof A.AuthenticationError)return"Der Anthropic-Schlüssel wurde abgelehnt. Prüf ihn in den Einstellungen.";
+  if(e instanceof A.PermissionDeniedError)return"Dein Schlüssel darf dieses Modell nicht nutzen: "+msg;
+  if(e instanceof A.NotFoundError)return"Das Modell wurde nicht gefunden. Wähl in den Einstellungen ein anderes.";
+  if(e instanceof A.RateLimitError)return"Gerade zu viele Anfragen. Warte einen Moment und schick die Nachricht nochmal.";
+  if(e instanceof A.BadRequestError)return"Anthropic hat die Anfrage abgelehnt: "+msg;
+  if(e instanceof A.InternalServerError)return"Claude ist gerade überlastet oder hatte einen Fehler. Versuch es gleich nochmal.";
+  if(e instanceof A.APIConnectionError)return"Keine Verbindung zu Anthropic. Bist du online?";
+  if(e instanceof A.APIError)return`Fehler ${e.status??""}: ${msg}`;
   return"Unerwarteter Fehler: "+msg;
 }
-function showError(e){
+function showError(e,p){
   console.error(e);
-  log.insertAdjacentHTML("beforeend",`<p class="err" role="alert">${esc(errText(e))} Deine Nachricht steht wieder im Eingabefeld.</p>`);
+  log.insertAdjacentHTML("beforeend",`<p class="err" role="alert">${esc(errText(e,p))} Deine Nachricht steht wieder im Eingabefeld.</p>`);
   toBottom(true);
 }
 
@@ -256,12 +332,12 @@ function viewBlocks(blocks,live){
 }
 
 function chatHTML(c){
-  let h="";const M=c.msgs;copies=[];
+  let h="";const M=c.msgs,gem=provOf(c)==="gemini";copies=[];
   for(let i=0;i<M.length;){
     const m=M[i];
     if(m.role==="user"){h+=`<div class="msg u"><div class="bub">${esc(m.content)}</div></div>`;if(m.note)h+=`<p class="note">${NOTES[m.note]}</p>`;i++;continue}
     const blocks=[];let note="";
-    for(;i<M.length&&M[i].role==="assistant";i++)if(!M[i].skip){blocks.push(...M[i].content);if(M[i].note)note=M[i].note} // Fortsetzungen (pause_turn) zusammen zeigen
+    for(;i<M.length&&M[i].role==="assistant";i++)if(!M[i].skip){blocks.push(...(gem?geminiBlocks(M[i].content):M[i].content));if(M[i].note)note=M[i].note} // Fortsetzungen (pause_turn) zusammen zeigen
     if(!blocks.length)continue;
     const n=copies.push(blocks.filter(b=>b.type==="text").map(b=>b.text).join("").trim())-1;
     h+=`<div class="msg a">${viewBlocks(blocks,false)}${note?`<p class="note">${NOTES[note]}</p>`:""}<div class="acts-a"><button class="mini" type="button" data-copy="${n}">Kopieren</button></div></div>`;
@@ -274,20 +350,38 @@ function helloHTML(){
   return`<div class="hello"><img src="icons/icon-192.png" alt=""><h2>Hallo${n?", "+esc(n):""}!</h2><p>Ich bin xbubekir, deine persönliche KI. Frag mich etwas, lass mich etwas schreiben oder erklären.</p></div>`;
 }
 function setupHTML(){
-  return`<section class="setup" aria-labelledby="suH"><img src="icons/icon-192.png" alt=""><h2 id="suH">Willkommen bei xbubekir</h2>
-<p>xbubekir ist deine persönliche KI. Das Denken übernimmt Claude von Anthropic. Dafür brauchst du einmalig einen eigenen API-Schlüssel:</p>
+  const gem=S.provider==="gemini";
+  const steps=gem
+    ?`<p>xbubekir ist deine persönliche KI. Das Denken übernimmt Gemini von Google, kostenlos. Dafür brauchst du einmalig einen eigenen API-Schlüssel:</p>
+<ol><li>${link("https://aistudio.google.com/apikey","aistudio.google.com/apikey")} öffnen und mit deinem Google-Konto anmelden.</li>
+<li>„API-Schlüssel erstellen“ („Create API key“) antippen.</li>
+<li>Den Schlüssel kopieren und hier einfügen.</li></ol>`
+    :`<p>xbubekir ist deine persönliche KI. Das Denken übernimmt Claude von Anthropic. Dafür brauchst du einmalig einen eigenen API-Schlüssel:</p>
 <ol><li>Auf ${link("https://platform.claude.com/","platform.claude.com")} anmelden und unter „Billing“ etwas Guthaben aufladen.</li>
 <li>Unter „API Keys“ einen neuen Schlüssel erstellen.</li>
-<li>Den Schlüssel (beginnt mit <code>sk-ant-</code>) hier einfügen.</li></ol>
-<label for="suKey">API-Schlüssel</label>
-<div class="keyrow"><input class="f" id="suKey" type="password" autocomplete="off" spellcheck="false" placeholder="sk-ant-…"><button class="btn" type="button" id="suGo">Los geht’s</button></div>
-<p class="hint">Der Schlüssel bleibt nur auf diesem Gerät und wird nur an api.anthropic.com geschickt. Abgerechnet wird nach Nutzung über dein Anthropic-Konto. Setz dir dort am besten ein monatliches Limit.</p>
-<p class="status" id="suMsg" role="status"></p></section>`;
+<li>Den Schlüssel (beginnt mit <code>sk-ant-</code>) hier einfügen.</li></ol>`;
+  const hint=gem
+    ?"Kostenlos, solange du bei Google keine Zahlungsmethode hinterlegst. Dafür begrenzt Google, wie viele Nachrichten du pro Minute und pro Tag schicken kannst. In der Gratis-Stufe darf Google deine Nachrichten lesen und zur Verbesserung seiner Produkte nutzen, außer du wohnst in der EU, der Schweiz oder Großbritannien. Der Schlüssel bleibt nur auf diesem Gerät."
+    :"Der Schlüssel bleibt nur auf diesem Gerät und wird nur an api.anthropic.com geschickt. Abgerechnet wird nach Nutzung über dein Anthropic-Konto. Setz dir dort am besten ein monatliches Limit.";
+  return`<section class="setup" aria-labelledby="suH"><img src="icons/icon-192.png" alt=""><h2 id="suH">Willkommen bei xbubekir</h2>
+${steps}
+<label for="suKey">${gem?"Gemini-API-Schlüssel":"Anthropic-API-Schlüssel"}</label>
+<div class="keyrow"><input class="f" id="suKey" type="password" autocomplete="off" spellcheck="false" placeholder="${gem?"Schlüssel einfügen":"sk-ant-…"}"><button class="btn" type="button" id="suGo">Los geht’s</button></div>
+<p class="hint">${hint}</p>
+<p class="status" id="suMsg" role="status"></p>
+<p class="hint"><button class="linkbtn" type="button" id="suSwitch">${gem?"Lieber Claude von Anthropic nutzen (kostenpflichtig)":"Lieber Gemini von Google nutzen (kostenlos)"}</button></p></section>`;
 }
 
 function render(){
-  document.body.classList.toggle("nokey",!S.key);
-  if(!S.key){log.innerHTML=setupHTML();$("#suGo").onclick=()=>checkKey($("#suKey").value,$("#suMsg"),$("#suGo")).then(ok=>{if(ok){render();inp.focus()}});$("#suKey").onkeydown=e=>{if(e.key==="Enter")$("#suGo").click()};return}
+  const ready=!!keyOf(S.provider);
+  document.body.classList.toggle("nokey",!ready);
+  if(!ready){
+    log.innerHTML=setupHTML();
+    $("#suGo").onclick=()=>checkKey(S.provider,$("#suKey").value,$("#suMsg"),$("#suGo")).then(ok=>{if(ok){saveS();render();inp.focus()}});
+    $("#suKey").onkeydown=e=>{if(e.key==="Enter")$("#suGo").click()};
+    $("#suSwitch").onclick=()=>{S.provider=S.provider==="gemini"?"claude":"gemini";S.model=PROV[S.provider].def;saveS();cur=null;render()};
+    return;
+  }
   const st=log.scrollTop,stick=nearBottom();
   log.innerHTML=cur&&cur.msgs.length?chatHTML(cur):helloHTML();
   log.scrollTop=st;if(stick)toBottom(true);
@@ -324,45 +418,65 @@ function renderList(){
 }
 
 // ---------- Einstellungen ----------
+function fillModels(){ // Modellauswahl passend zum gewählten Anbieter
+  const p=$("#sProv").value,sel=$("#sModel"),was=sel.value;
+  sel.innerHTML=Object.entries(MODELS).filter(([,M])=>M.p===p).map(([id,M])=>`<option value="${id}">${M.name.replace(/^(Claude|Gemini) /,"")} – ${M.hint}</option>`).join("");
+  sel.value=MODELS[was]?.p===p?was:PROV[p].def;
+  $("#kGemini").hidden=p!=="gemini";$("#kClaude").hidden=p!=="claude";
+  costHint();
+}
 function costHint(){
   const M=MODELS[$("#sModel").value];
   $("#sWeb").disabled=!M.web;
-  $("#costHint").textContent=`${M.name} kostet ${M.price} pro Million Tokens, also Wortteile (Eingabe / Ausgabe). Eine normale Nachricht kostet damit meist ein paar Cent oder weniger, jede Websuche etwa einen Cent extra.${M.web?"":" Mit diesem Modell gibt es keine Websuche."}`;
+  $("#costHint").textContent=M.p==="gemini"
+    ?"Kostenlos. Google begrenzt dafür die Nachrichten pro Minute und pro Tag; die genauen Grenzen zeigt AI Studio. Das Tageslimit setzt sich um Mitternacht kalifornischer Zeit zurück. Flash-Lite erlaubt mehr Nachrichten. Eine Websuche gibt es mit Gemini hier nicht."
+    :`${M.name} kostet ${M.price} pro Million Tokens, also Wortteile (Eingabe / Ausgabe). Eine normale Nachricht kostet damit meist ein paar Cent oder weniger, jede Websuche etwa einen Cent extra.${M.web?"":" Mit diesem Modell gibt es keine Websuche."}`;
 }
 function openSettings(){
-  $("#sKey").value=S.key;$("#sKey").type="password";$("#bEye").textContent="Zeigen";$("#bEye").setAttribute("aria-pressed","false");
+  for(const[id,v]of[["sGKey",S.gkey],["sCKey",S.ckey]]){const k=$("#"+id);k.value=v;k.type="password"}
+  document.querySelectorAll(".eye").forEach(b=>{b.textContent="Zeigen";b.setAttribute("aria-pressed","false")});
   $("#sName").value=S.name;$("#sAbout").value=S.about;$("#sStyle").value=S.style;
-  $("#sModel").value=S.model;$("#sEffort").value=S.effort;$("#sWeb").checked=S.web;
-  $("#setMsg").textContent="";costHint();
+  $("#sProv").value=S.provider;$("#sModel").value=S.model;fillModels();
+  $("#sEffort").value=S.effort;$("#sWeb").checked=S.web;
+  $("#setMsg").textContent="";
   dSet.showModal();
 }
-async function checkKey(key,msgEl,btn){ // Schlüssel einmal kostenlos prüfen (Modellabfrage), bevor er gespeichert wird
+async function checkKey(p,key,msgEl,btn){ // Schlüssel einmal kostenlos prüfen (Modellabfrage), bevor er gespeichert wird
   key=key.trim();
   msgEl.className="status";
   if(!key){msgEl.textContent="Bitte füg deinen Schlüssel ein.";msgEl.classList.add("bad");return false}
   btn.disabled=true;msgEl.textContent="Prüfe den Schlüssel …";
+  const keep=()=>{if(p==="gemini")S.gkey=key;else S.ckey=key;saveS()};
   try{
-    await new Anthropic({apiKey:key,dangerouslyAllowBrowser:true}).models.retrieve(S.model);
-    S.key=key;saveS();msgEl.textContent="Schlüssel funktioniert.";return true;
+    const lib=await sdk(p);
+    if(p==="gemini")await new lib.GoogleGenAI({apiKey:key}).models.get({model:PROV.gemini.def});
+    else await new lib({apiKey:key,dangerouslyAllowBrowser:true}).models.retrieve(PROV.claude.def);
+    keep();msgEl.textContent="Schlüssel funktioniert.";return true;
   }catch(e){
-    if(e instanceof Anthropic.AuthenticationError||e instanceof Anthropic.PermissionDeniedError){msgEl.textContent=errText(e);msgEl.classList.add("bad");return false}
-    S.key=key;saveS();msgEl.textContent="Konnte den Schlüssel gerade nicht prüfen, er ist trotzdem gespeichert.";return true;
+    const bad=p==="gemini"?[400,401,403].includes(e?.status):e instanceof SDK.claude?.AuthenticationError||e instanceof SDK.claude?.PermissionDeniedError;
+    if(bad){msgEl.textContent=p==="gemini"?"Google hat den Schlüssel abgelehnt. Prüf, ob du ihn vollständig kopiert hast.":errText(e,p);msgEl.classList.add("bad");return false}
+    keep();msgEl.textContent="Konnte den Schlüssel gerade nicht prüfen, er ist trotzdem gespeichert.";return true;
   }finally{btn.disabled=false}
 }
 
 $("#fSet").addEventListener("submit",async e=>{
   e.preventDefault();
   S.name=$("#sName").value;S.about=$("#sAbout").value;S.style=$("#sStyle").value;
-  S.model=$("#sModel").value;S.effort=$("#sEffort").value;S.web=$("#sWeb").checked;saveS();
-  const key=$("#sKey").value.trim();
-  if(key!==S.key&&!await checkKey(key,$("#setMsg"),$("#bSave")))return;
+  if($("#sProv").value!==S.provider&&!busy)cur=null; // anderer Anbieter: gleich mit einem neuen Chat weitermachen
+  S.provider=$("#sProv").value;S.model=$("#sModel").value;S.effort=$("#sEffort").value;S.web=$("#sWeb").checked;saveS();
+  for(const[p,id]of[["gemini","sGKey"],["claude","sCKey"]]){
+    const key=$("#"+id).value.trim();
+    if(key===keyOf(p))continue;
+    if(!key){if(p==="gemini")S.gkey="";else S.ckey="";saveS();continue}
+    if(!await checkKey(p,key,$("#setMsg"),$("#bSave")))return;
+  }
   dSet.close();if(!busy)render();
 });
-$("#sModel").innerHTML=Object.entries(MODELS).map(([id,M])=>`<option value="${id}">${M.name.replace("Claude ","")} – ${M.hint}</option>`).join("");
+$("#sProv").addEventListener("change",fillModels);
 $("#sModel").addEventListener("change",costHint);
-$("#bEye").addEventListener("click",()=>{const k=$("#sKey"),show=k.type==="password";k.type=show?"text":"password";$("#bEye").textContent=show?"Verbergen":"Zeigen";$("#bEye").setAttribute("aria-pressed",String(show))});
+document.querySelectorAll(".eye").forEach(b=>b.addEventListener("click",()=>{const k=$("#"+b.dataset.for),show=k.type==="password";k.type=show?"text":"password";b.textContent=show?"Verbergen":"Zeigen";b.setAttribute("aria-pressed",String(show))}));
 $("#bWipeChats").addEventListener("click",()=>{if(busy||!confirm("Wirklich alle Chats auf diesem Gerät löschen?"))return;chats=[];cur=null;DB.clear();dSet.close();render()});
-$("#bWipeKey").addEventListener("click",()=>{if(busy||!confirm("API-Schlüssel von diesem Gerät entfernen?"))return;S.key="";saveS();dSet.close();render()});
+$("#bWipeKey").addEventListener("click",()=>{if(busy||!confirm("Alle API-Schlüssel von diesem Gerät entfernen?"))return;S.gkey="";S.ckey="";saveS();dSet.close();render()});
 
 // ---------- Bedienung ----------
 document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>b.closest("dialog").close()));
@@ -380,7 +494,7 @@ log.addEventListener("click",e=>{
   const b=e.target.closest("[data-copy]");if(!b)return;
   navigator.clipboard?.writeText(copies[b.dataset.copy]).then(()=>{b.textContent="Kopiert";setTimeout(()=>b.textContent="Kopieren",1500)},()=>{});
 });
-$("#composer").addEventListener("submit",e=>{e.preventDefault();if(busy)stream?.abort();else send()});
+$("#composer").addEventListener("submit",e=>{e.preventDefault();if(busy)stopFn?.();else send()});
 const desk=matchMedia("(hover:hover) and (pointer:fine)"); // am Rechner schickt Enter ab, am Handy macht Enter eine neue Zeile
 inp.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing&&desk.matches){e.preventDefault();send()}});
 inp.addEventListener("input",grow);
@@ -388,5 +502,5 @@ inp.addEventListener("input",grow);
 setBusy(false);
 try{chats=(await DB.all()).sort((a,b)=>b.updated-a.updated)}catch{chats=[]}
 render();
-if(S.key&&desk.matches)inp.focus();
+if(keyOf(S.provider)&&desk.matches)inp.focus();
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});

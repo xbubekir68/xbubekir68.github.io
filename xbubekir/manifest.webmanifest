@@ -1,7 +1,7 @@
 {
   "name": "xbubekir – deine persönliche KI",
   "short_name": "xbubekir",
-  "description": "Deine persönliche KI, angetrieben von Claude.",
+  "description": "Deine persönliche KI.",
   "lang": "de",
   "dir": "ltr",
   "start_url": "./",

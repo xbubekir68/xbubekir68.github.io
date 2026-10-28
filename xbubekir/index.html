@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>xbubekir</title>
-<meta name="description" content="xbubekir – deine persönliche KI, angetrieben von Claude.">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://api.anthropic.com; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
+<meta name="description" content="xbubekir – deine persönliche KI.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://generativelanguage.googleapis.com https://api.anthropic.com; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#c4410c">
 <link rel="manifest" href="manifest.webmanifest">
@@ -99,6 +99,8 @@ textarea.f{resize:vertical;line-height:1.45}
 .keyrow .f{flex:1;min-width:0;font-family:var(--mono);font-size:15px}
 .keyrow button:not(.btn){flex:none;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:0 12px;font-size:14px}
 .hint{font-size:13px;color:var(--mute);margin:6px 0 0}
+.hint a{color:var(--acc)}
+.linkbtn{border:0;background:none;padding:0;color:var(--acc);text-decoration:underline;font-size:inherit}
 .status{min-height:1.4em;font-size:14px;margin:12px 0 0}
 .status.bad{color:var(--bad)}
 dialog{border:0;border-radius:18px;padding:0;background:var(--card);color:var(--ink);width:min(560px,calc(100% - 24px));max-height:calc(100dvh - 24px)}
@@ -158,10 +160,23 @@ label.chk{display:flex;align-items:center;gap:10px;font-weight:500;font-size:15p
   <form id="fSet" class="dbody" method="dialog">
     <div class="dh"><h2 id="setH">Einstellungen</h2><button class="ib" type="button" data-close aria-label="Schließen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
     <fieldset>
-      <legend>Zugang</legend>
-      <label for="sKey">Anthropic-API-Schlüssel</label>
-      <div class="keyrow"><input class="f" id="sKey" type="password" autocomplete="off" spellcheck="false" placeholder="sk-ant-…"><button type="button" id="bEye" aria-pressed="false">Zeigen</button></div>
-      <p class="hint">Bleibt nur auf diesem Gerät gespeichert und wird nur an api.anthropic.com geschickt.</p>
+      <legend>KI-Anbieter</legend>
+      <label for="sProv">Wer denkt für xbubekir?</label>
+      <select class="f" id="sProv">
+        <option value="gemini">Google Gemini – kostenlos</option>
+        <option value="claude">Anthropic Claude – kostenpflichtig</option>
+      </select>
+      <div id="kGemini">
+        <label for="sGKey">Gemini-API-Schlüssel</label>
+        <div class="keyrow"><input class="f" id="sGKey" type="password" autocomplete="off" spellcheck="false"><button type="button" class="eye" data-for="sGKey" aria-pressed="false">Zeigen</button></div>
+        <p class="hint">Kostenlos erstellen auf <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer">aistudio.google.com/apikey</a>.</p>
+      </div>
+      <div id="kClaude" hidden>
+        <label for="sCKey">Anthropic-API-Schlüssel</label>
+        <div class="keyrow"><input class="f" id="sCKey" type="password" autocomplete="off" spellcheck="false" placeholder="sk-ant-…"><button type="button" class="eye" data-for="sCKey" aria-pressed="false">Zeigen</button></div>
+        <p class="hint">Erstellen auf <a href="https://platform.claude.com/" target="_blank" rel="noopener noreferrer">platform.claude.com</a>, dafür ist Guthaben nötig.</p>
+      </div>
+      <p class="hint">Schlüssel bleiben nur auf diesem Gerät und gehen nur an den jeweiligen Anbieter.</p>
     </fieldset>
     <fieldset>
       <legend>Über dich</legend>
@@ -185,7 +200,7 @@ label.chk{display:flex;align-items:center;gap:10px;font-weight:500;font-size:15p
       <label class="chk"><input type="checkbox" id="sWeb"> Darf im Internet suchen</label>
       <p class="hint" id="costHint"></p>
     </fieldset>
-    <p class="hint">Name, „Über dich“, Antwortstil, Modell und Websuche gelten ab dem nächsten neuen Chat. Laufende Chats behalten ihre Einstellungen, damit xbubekir den Faden nicht verliert. Die Denktiefe gilt sofort.</p>
+    <p class="hint">Name, „Über dich“, Antwortstil, Modell und Websuche gelten ab dem nächsten neuen Chat. Beim Wechsel des Anbieters beginnt gleich ein neuer Chat. Laufende Chats behalten ihre Einstellungen, damit xbubekir den Faden nicht verliert. Die Denktiefe gilt sofort.</p>
     <p class="status" id="setMsg" role="status"></p>
     <div class="dacts"><button type="button" class="btn alt" data-close>Abbrechen</button><button type="submit" class="btn" id="bSave">Speichern</button></div>
     <details class="danger">
