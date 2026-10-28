@@ -13,7 +13,7 @@
         {"id": "s5", "titel": "Lange Vokale", "ar": "حُرُوفُ الْمَدِّ", "kurz": "ā, ī, ū, das kleine Alif, aw und ay", "datei": "s5.json"},
         {"id": "s6", "titel": "Sukun", "ar": "السُّكُونُ", "kurz": "Geschlossene Silben und das Hamza auf seinen Trägern", "datei": "s6.json"},
         {"id": "s7", "titel": "Schadda", "ar": "الشَّدَّةُ", "kurz": "Verdoppelte Buchstaben", "datei": "s7.json"},
-        {"id": "s8", "titel": "Alles zusammen", "ar": "الْقِرَاءَةُ", "kurz": "Lange Wörter, Zeichen der Koranschrift, lesen ohne Hilfen"}
+        {"id": "s8", "titel": "Alles zusammen", "ar": "الْقِرَاءَةُ", "kurz": "Lange Wörter, Madda, verbundenes Alif und Koranschrift", "datei": "s8.json"}
       ]
     },
     {

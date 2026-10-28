@@ -1,5 +1,5 @@
 // Mufradaat Service Worker: App-Hülle offline, Anmeldung/Sync nie aus dem Cache.
-const V="mfr-v24",AC="mfr-audio",SHELL=["./","index.html","manifest.webmanifest","icons/icon-192.png","icons/icon-512.png","icons/favicon-64.png","icons/icon-180.png","fonts/noto-naskh-arabic-500.woff2","fonts/noto-naskh-arabic-700.woff2","brand/mufradaat.webp","vendor/supabase.js","kurs/kurs.json","kurs/s1.json","kurs/s2.json","kurs/s3.json","kurs/s4.json","kurs/s5.json","kurs/s6.json","kurs/s7.json"];
+const V="mfr-v25",AC="mfr-audio",SHELL=["./","index.html","manifest.webmanifest","icons/icon-192.png","icons/icon-512.png","icons/favicon-64.png","icons/icon-180.png","fonts/noto-naskh-arabic-500.woff2","fonts/noto-naskh-arabic-700.woff2","brand/mufradaat.webp","vendor/supabase.js","kurs/kurs.json","kurs/s1.json","kurs/s2.json","kurs/s3.json","kurs/s4.json","kurs/s5.json","kurs/s6.json","kurs/s7.json","kurs/s8.json"];
 self.addEventListener("install",e=>{
   e.waitUntil(caches.open(V).then(c=>Promise.all(SHELL.map(u=>c.add(u).catch(()=>{})))).then(()=>self.skipWaiting()));
 });

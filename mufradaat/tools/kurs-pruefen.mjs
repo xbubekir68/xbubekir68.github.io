@@ -9,23 +9,27 @@
 //   suren:      suren[] = {t: Surenanfang, sp: Text zum Vorlesen, vorstellen: true bei den vorgestellten}
 //   vokale:     zeichen = das neue Zeichen der Lektion (a, i, u = Fatha, Kasra, Damma; hamza = Hamza auf Alif; an, in, un = Tanwin;
 //               ta = Ta marbuta; aa, ii, uu = langes ā, ī, ū; kl = kleines Alif und ى; dip = aw und ay; o = Sukun; al = Artikel al-;
-//               hz = Hamza auf Wāw, Yāʾ oder allein; sh = Schadda; sun = Sonnenbuchstaben), fehlt bei reinen Übungslektionen.
+//               hz = Hamza auf Wāw, Yāʾ oder allein; sh = Schadda; sun = Sonnenbuchstaben; md = Madda آ; wa = verbundenes Alif mitten im Satz
+//               und nach وَ, بِ, فَ, كَ; q = Koranschrift: ٱ, Sukun ۡ, Fatha mit kleinem Alif, ى nach Kasra, Allāh ohne Alif; qk = kleine Zeichen im Koran:
+//               ىٰ und وٰ, ۥ und ۦ, Dehnungszeichen ٓ, stummer Buchstabe ۟, Buchstabe ohne Zeichen am Wortende; pz = Pausenzeichen ۘ ۙ ۖ ۗ ۚ ۛ am Wortende),
+//               fehlt bei reinen Übungslektionen.
 //               woerter[] = [Wort oder kurzer Satz mit allen Vokalzeichen, Bedeutung]. Jeder Buchstabe trägt genau ein schon
 //               eingeführtes Zeichen (Vokal, Tanwin oder Sukun, dazu vielleicht Schadda), in der Unicode-Normalform (Vokal vor Schadda).
 //               Ohne eigenes Zeichen stehen nur: Alif, Yāʾ und Wāw als Dehnung nach Fatha, Kasra und Damma, ى am Wortende,
 //               das stumme Alif nach -an (nicht nach ة und Hamza) und der Artikel ال am Wortanfang (mit Sukun auf dem Lām, vor
 //               Sonnenbuchstaben ohne, dann mit Schadda auf dem nächsten Buchstaben). Tanwin nur am Wortende und nie mit Artikel.
-// Ziele: alle-buchstaben (alle 29 eingeführt) oder lesen {ar, sp, de}: ein Text, den man am Ende der Etappe lesen kann
+//   test:       Abschlusstest der Stufe, ohne eigene Wörter, als letzte Lektion der letzten Etappe einer Stufe.
+// Ziele: alle-buchstaben (alle 29 eingeführt) oder lesen {ar, sp, de}: ein Text, den man am Ende der Etappe lesen kann (in Koranschrift ohne sp)
 // (de = Übersetzung, nur bei Texten mit Vokalzeichen; die Umschrift erzeugt die App).
 // Neue Etappen-Dateien gehören auch in die Offline-Liste SHELL in sw.js.
 import fs from "node:fs";
 import vm from "node:vm";
 import {fileURLToPath} from "node:url";
 const APP=fileURLToPath(new URL("..",import.meta.url)),KURS=APP+"kurs/";
-const ARTEN=["buchstaben","verbinden","suren","vokale"],ZIELE=["alle-buchstaben","lesen"];
-const ZEICHEN_ARTEN=["a","i","u","hamza","an","in","un","ta","aa","ii","uu","kl","dip","o","al","hz","sh","sun"],TANW=["an","in","un"],VZ={"\u064e":"a","\u0650":"i","\u064f":"u","\u064b":"an","\u064d":"in","\u064c":"un"};
+const ARTEN=["buchstaben","verbinden","suren","vokale","test"],ZIELE=["alle-buchstaben","lesen"];
+const ZEICHEN_ARTEN=["a","i","u","hamza","an","in","un","ta","aa","ii","uu","kl","dip","o","al","hz","sh","sun","md","wa","q","qk","pz"],TANW=["an","in","un"],VZ={"\u064e":"a","\u0650":"i","\u064f":"u","\u064b":"an","\u064d":"in","\u064c":"un"};
 const AR=/^[؀-ۿݐ-ݿ ]+$/; // nur arabische Zeichen und Leerzeichen
-const MK=/[\u064b-\u0652\u0670]/,SONNE=new Set(["ta","tha","dal","dhal","ra","zay","sin","shin","sad","dad","tah","zah","lam","nun"]); // Zeichen über und unter Buchstaben; Sonnenbuchstaben
+const MK=/[\u064b-\u0652\u0670\u06e1]/,QP="\u06d6\u06d7\u06d8\u06d9\u06da\u06db",QX=/[ٱ\u06e1\u06e5\u06e6\u06df\u06d6-\u06db]|[ىو]\u0670|\u064e\u0670/,SONNE=new Set(["ta","tha","dal","dhal","ra","zay","sin","shin","sad","dad","tah","zah","lam","nun"]); // Zeichen über und unter Buchstaben; Sonnenbuchstaben
 const txt=v=>typeof v==="string"&&v.trim().length>0;
 const ZEICHEN=/[\u064b-\u065f\u0670\u0640 ]/g; // Vokal- und Lesezeichen, Dehnungsstrich, Leerzeichen
 
@@ -46,49 +50,72 @@ export function pruefen(){
       if(!formen.has(a[0])&&a[0]!=="hamza")f(`${lw}: ${was} „${t}“ enthält ${a[2]}, dessen verbundene Formen noch nicht eingeführt sind`);r.push(a)}
     return r};
   const zk=new Map(); // eingeführte Zeichen → Lektion
-  const einheiten=w=>{ // ein Wort in Silben wie in der App: Buchstabe mit Zeichen, Dehnungsbuchstabe, stummes Alif nach -an, Artikel (wl = Alif, sil = stummes Lām)
-    const ch=[...w],U=[];
+  const einheiten=(w,erstes)=>{ // ein Wort in Silben wie in der App: Buchstabe mit Zeichen, Dehnungsbuchstabe, stummes Alif nach -an, Artikel (wl = Alif, sil = stummes Lām)
+    const ch=[...w],U=[]; // Koranschrift wie kUnits: q = Sukun ۡ, vd = Fatha mit kleinem Alif, mx = Dehnungszeichen, z = stummer Buchstabe, na = Wasla ohne Artikel, pz = Pausenzeichen
+    const artL=j=>ch[j]==="ل"&&(ch[j+1]==="ْ"||ch[j+1]==="ۡ"||!!ch[j+1]&&!MK.test(ch[j+1])||!U.length&&ch.slice(j+1,j+3).includes("\u0651")); // auch الَّذِي am Wortanfang: das Lām des Artikels mit Schadda
     for(let k=0;k<ch.length;k++){
-      const c=ch[k],u=U[U.length-1],bare=!MK.test(ch[k+1]||"");
-      if(c==="\u0651"){if(!u||u.wl||u.sil||u.sh||u.m)return{err:"Schadda an falscher Stelle"};u.sh=true}
-      else if(VZ[c]||c==="\u0652"||c==="\u0670"){if(!u||u.wl||u.sil||u.v||u.o||u.m)return{err:"zwei Zeichen auf einem Buchstaben oder ein Zeichen an falscher Stelle"};
-        if(c==="\u0652")u.o=true;else if(c==="\u0670"){u.v="aa";u.m=c}else u.v=VZ[c]}
+      const c=ch[k],u=U[U.length-1],bare=!MK.test(ch[k+1]||""),pre=U.length===1&&"وفبك".includes(u.c)&&["a","i"].includes(u.v)&&!u.sh;
+      if(c==="ّ"){if(!u||u.wl||u.sil||u.sh||u.m)return{err:"Schadda an falscher Stelle"};u.sh=true}
+      else if(VZ[c]||c==="ْ"||c==="ۡ"||c==="ٰ"){
+        if(c==="ٰ"&&u&&u.v==="a"&&!u.m&&!u.o){u.v="aa";u.m=c;u.vd=true;continue} // Koranschrift: Fatha mit kleinem Alif
+        if(!u||u.wl||u.sil||u.v||u.o||u.m)return{err:"zwei Zeichen auf einem Buchstaben oder ein Zeichen an falscher Stelle"};
+        if(c==="ْ"||c==="ۡ"){u.o=true;u.q=c==="ۡ"}else if(c==="ٰ"){u.v="aa";u.m=c}else u.v=VZ[c]}
+      else if(c==="ٓ"){if(!u||!(u.m||u.md))return{err:"das Dehnungszeichen steht nur über einem langen Vokal"};u.mx=true}
+      else if(c==="ۥ"||c==="ۦ"){if(!u||u.c!=="ه"||u.m||u.v!==(c==="ۥ"?"u":"i"))return{err:"kleines Wāw nur nach هُ, kleines Yāʾ nur nach هِ"};u.v+=u.v;u.m=c}
+      else if(c==="۟"){if(!u)return{err:"die kleine Null steht über einem Buchstaben"};if(u.m&&"اوي".includes(u.m)){u.v=u.v[0];u.m+=c}else{if(u.v||u.o)return{err:"ein stummer Buchstabe trägt keinen Vokal"};u.z=true}}
+      else if(QP.includes(c)){if(!u||u.sp||ch[k+1]&&ch[k+1]!==" ")return{err:"Pausenzeichen stehen am Wortende"};u.pz=c}
+      else if((c==="ى"||c==="و")&&ch[k+1]==="ٰ"&&u&&u.v==="a"&&!u.m){u.v="aa";u.m=c+"ٰ";k++}
+      else if(c==="آ"&&u&&u.v==="a"&&!u.m&&!u.o){u.v="aa";u.m=c;u.mx=true}
+      else if(c==="آ")U.push({c,a:AB.hamza,v:"aa",md:true});
       else if(c==="ا"&&u&&u.v==="an"&&!u.x&&bare)u.x=true;
-      else if(bare&&u&&!u.m&&!u.x&&(u.v==="a"&&(c==="ا"||c==="ى")||u.v==="i"&&c==="ي"||u.v==="u"&&c==="و")){u.v+=u.v;u.m=c}
-      else if(c==="ا"&&!U.length&&ch[k+1]==="ل"&&bare)U.push({c,wl:true});
-      else if(c==="ل"&&u&&u.wl&&bare)U.push({c,sil:true,art:true});
-      else{const a=AC[c]||("أإؤئ".includes(c)?AB.hamza:c==="ة"?["tam","ة","Tāʾ marbūṭa"]:null);
-        if(!a)return{err:`„${c}“ ist hier kein Buchstabe oder steht an falscher Stelle`};U.push({c,a,v:"",art:!!(u&&u.wl)})}
+      else if((c==="ا"&&bare||c==="ٱ")&&(!U.length||pre)&&artL(k+1))U.push({c,wl:true,mitte:!erstes||pre});
+      else if(c==="ٱ")U.push({c,wl:true,na:true,mitte:!erstes||U.length>0});
+      else if(c==="ل"&&u&&u.wl&&!u.na&&bare)U.push({c,sil:true,art:true});
+      else if(bare&&u&&!u.m&&!u.x&&(u.v==="a"&&(c==="ا"||c==="ى")||u.v==="i"&&(c==="ي"||c==="ى")||u.v==="u"&&c==="و")){u.v+=u.v;u.m=c}
+      else{const a=AC[c]||("أإؤئء".includes(c)?AB.hamza:c==="ة"?["tam","ة","Tāʾ marbūṭa"]:c==="ى"?AB.ya:null);
+        if(!a)return{err:`„${c}“ ist hier kein Buchstabe oder steht an falscher Stelle`};U.push({c,a,v:"",art:!!(u&&u.wl&&!u.na)})}
     }
+    U.forEach((u,k)=>{const p=U[k-1],n=U[k+1];if(u.c==="ل"&&u.sh&&(u.v==="a"&&!u.m||u.m==="ٰ")&&p&&p.c==="ل"&&n&&n.c==="ه"&&!n.o){u.ia=!u.m;u.v="aa"}}); // Allāh
     return{U};
   };
+  const blank=u=>!!u.a&&!u.v&&!u.o&&!u.z; // Buchstabe ohne Zeichen (Koranschrift)
   const traegt=(U,z)=>U.some((u,k)=>{const p=U[k-1]||{}; // trägt das Wort das Zeichen z? (wie kUZ in der App)
-    return z==="ta"?u.c==="ة":z==="hamza"?"أإ".includes(u.c):z==="hz"?!!u.a&&u.a[0]==="hamza"&&k>0&&!p.art:z==="kl"?u.m==="ى"||u.m==="\u0670"
-      :z==="dip"?!!u.o&&"وي".includes(u.c)&&p.v==="a":z==="o"?!!u.o:z==="al"?!!u.wl:z==="sh"?!!u.sh:z==="sun"?!!u.sil:u.v===z&&(z!=="aa"||u.m==="ا")});
+    return z==="ta"?u.c==="ة":z==="hamza"?"أإ".includes(u.c):z==="hz"?!!u.a&&u.a[0]==="hamza"&&k>0&&!p.art&&!u.md:z==="kl"?u.m==="ى"||u.m==="ٰ"
+      :z==="dip"?!!u.o&&"وي".includes(u.c)&&p.v==="a":z==="o"?!!u.o:z==="al"?!!u.wl:z==="sh"?!!u.sh:z==="sun"?!!u.sil:z==="md"?!!u.md:z==="wa"?!!u.wl&&u.mitte
+      :z==="q"?u.c==="ٱ"||!!u.q||!!u.vd||!!u.ia||u.m==="ى"&&u.v==="ii":z==="qk"?!!u.mx||!!u.z||/[ۥۦ۟]|[ىو]ٰ/.test(u.m||"")||blank(u)&&!u.wl&&!u.sil
+      :z==="pz"?!!u.pz:u.v===z&&(z!=="aa"||u.m==="ا")});
   const vokal=(t,lw,was)=>{ // Text mit Vokalzeichen: jeder Buchstabe trägt ein schon eingeführtes Zeichen; liefert die Silben jedes Wortes
     if(!txt(t)||!AR.test(t)){f(`${lw}: ${was} „${t}“ ist kein arabischer Text`);return null}
-    const F=m=>f(`${lw}: ${was} „${t}“${m}`),hat=z=>zk.has(z),out=[];
+    const F=m=>f(`${lw}: ${was} „${t}“${m}`),hat=z=>zk.has(z),out=[],ws=t.split(" ");
     if(t!==t.normalize("NFC")){F(": Zeichen nicht in Unicode-Reihenfolge (Vokal vor Schadda)");return null}
-    for(const w of t.split(" ")){
+    for(let wi=0;wi<ws.length;wi++){const w=ws[wi];
       if(!w){F(": doppeltes Leerzeichen oder Leerzeichen am Rand");return null}
-      const {U,err}=einheiten(w);if(err){F(": "+err);return null}
+      const {U,err}=einheiten(w,!wi);if(err){F(": "+err);return null}
       for(let k=0;k<U.length;k++){const u=U[k],p=U[k-1],n=U[k+1];
-        if(u.wl){if(!hat("al")){F(": der Artikel al- ist noch nicht eingeführt");return null}continue}
+        if(u.wl){if(!u.na&&!hat("al")){F(": der Artikel al- ist noch nicht eingeführt");return null}
+          if(u.c==="ٱ"&&!hat("q")){F(": das Alif mit Wasla (ٱ) gehört zur Koranschrift, die noch nicht dran war");return null}
+          if(u.mitte&&!hat("wa")){F(": das verbundene Alif mitten im Satz oder nach وَ, بِ ist noch nicht eingeführt");return null}
+          if(u.mitte&&!k){const v=out[out.length-1],e=v[v.length-1];if(e.o||TANW.includes(e.v)||blank(e)){F(": vor dem verbundenen Alif endet das Wort davor mit einem Vokal");return null}}
+          continue}
         if(u.sil){if(!hat("sun")){F(": Sonnenbuchstaben sind noch nicht eingeführt");return null}
           if(!n||!n.a||!SONNE.has(n.a[0])||!n.sh){F(": nach dem stummen Lām folgt ein Sonnenbuchstabe mit Schadda");return null}continue}
         const a=u.a,c=u.c,tm=c==="ة",hz=c==="أ"||c==="إ";
+        if(u.md){if(!hat("md")){F(": die Madda (آ) ist noch nicht eingeführt");return null}continue}
+        if(u.z){if(!hat("qk")){F(": der stumme Buchstabe (kleine Null) ist noch nicht eingeführt");return null}continue}
         if(a[0]==="alif"){F(": ein Alif ohne Zeichen steht nur nach -an, als langes ā oder im Artikel");return null}
-        if(hz&&!hat("hamza")||tm&&!hat("ta")||"ؤئء".includes(c)&&!hat("hz")){F(` enthält ${c}, das noch nicht eingeführt ist`);return null}
+        if(hz&&!hat("hamza")||tm&&!hat("ta")||"ؤئء".includes(c)&&!hat("hz")||c==="ى"&&!hat("q")){F(` enthält ${c}, das noch nicht eingeführt ist`);return null}
         if(!hz&&!tm&&a[0]!=="hamza"&&!formen.has(a[0]))F(` enthält ${a[2]}, dessen verbundene Formen noch nicht eingeführt sind`);
-        if(!u.v&&!u.o){F(`: ${c} hat kein Vokalzeichen`);return null}
-        const nz=u.m==="ى"||u.m==="\u0670"?"kl":u.v;
+        if(!u.v&&!u.o){if(!hat("qk")||n||wi===ws.length-1){F(`: ${c} hat kein Vokalzeichen`);return null}continue} // Koranschrift: ohne Zeichen nur am Wortende vor dem nächsten Wort
+        const q=u.q||u.vd||u.ia||u.m==="ى"&&u.v==="ii",qk=u.mx||/[ۥۦ۟]|[ىو]ٰ/.test(u.m||"");
+        if(q&&!hat("q")||qk&&!hat("qk")||u.pz&&!hat("pz")){F(`: ${u.pz?"Pausenzeichen sind":"dieses Zeichen der Koranschrift ist"} noch nicht eingeführt`);return null}
+        const nz=u.m==="ى"||u.m==="ٰ"?"kl":u.v;
         if(u.v&&!hat(nz)){F(` nutzt ${nz}, das noch nicht eingeführt ist`);return null}
         if(u.o){
           if(!k){F(": Sukun steht nie auf dem ersten Buchstaben");return null}
           if(p.o){F(": zwei Sukun hintereinander");return null}
           if(!u.art&&!hat("o")&&!(hat("dip")&&"وي".includes(c)&&p.v==="a")){F(": Sukun ist hier noch nicht eingeführt");return null}}
-        if(u.art&&!u.o){F(": das Lām des Artikels trägt Sukun");return null}
-        if(u.art&&n&&n.a&&SONNE.has(n.a[0])){F(": vor einem Sonnenbuchstaben trägt das Lām kein Sukun, der Buchstabe danach eine Schadda");return null}
+        if(u.art&&!u.o&&!u.sh){F(": das Lām des Artikels trägt Sukun");return null}
+        if(u.art&&!u.sh&&n&&n.a&&SONNE.has(n.a[0])){F(": vor einem Sonnenbuchstaben trägt das Lām kein Sukun, der Buchstabe danach eine Schadda");return null}
         if(u.sh){if(!hat("sh")){F(": Schadda ist noch nicht eingeführt");return null}if(!k||p.o){F(": Schadda steht nicht auf dem ersten Buchstaben und nicht nach Sukun");return null}}
         const iv=["i","in","ii"].includes(u.v);
         if(c==="إ"&&!iv||c==="أ"&&iv)F(": Hamza mit Kasra steht unter dem Alif (إ), sonst darüber (أ)");
@@ -97,7 +124,7 @@ export function pruefen(){
           if(!TANW.includes(u.v)&&!(hat("al")&&["a","i","u"].includes(u.v))){F(hat("al")?": ة steht mit Tanwin oder einem kurzen Vokal":": ة steht hier nur mit Tanwin");return null}}
         if(TANW.includes(u.v)){
           if(n){F(": Tanwin steht nur am Wortende");return null}
-          if(U[0].wl){F(": mit Artikel steht kein Tanwin");return null}
+          if(U.some(x=>x.wl&&!x.na)){F(": mit Artikel steht kein Tanwin");return null}
           if(u.v==="an"&&!u.x&&!"ةأء".includes(c)){F(": nach -an fehlt das stumme Alif");return null}
           if(u.x&&"ةأء".includes(c)){F(`: nach ${c} steht kein stummes Alif`);return null}}
       }
@@ -169,6 +196,11 @@ export function pruefen(){
           if(ZEICHEN_ARTEN.includes(l.zeichen)&&mit<W.length/2)f(`${lw}: weniger als die Hälfte der Wörter nutzt das neue Zeichen`);
           if(l.station!==undefined&&txt(l.station))vokal(l.station,lw,"Station");
         }
+        if(l.art==="test"){ // Abschlusstest: Aufgaben aus allen Etappen der Stufe, steht als letzte Lektion der Stufe
+          if(l.woerter||l.neu||l.suren)f(`${lw}: ein Test hat keine eigenen Wörter`);
+          if(l!==d.lektionen[d.lektionen.length-1]||e!==st.etappen[st.etappen.length-1])f(`${lw}: der Abschlusstest steht am Ende der Stufe`);
+          if(l.station!==undefined&&txt(l.station))vokal(l.station,lw,"Station");
+        }
         if(l.station!==undefined&&(!txt(l.station)||!AR.test(l.station)))f(`${lw}: Station ist kein arabischer Text`);
         if(l.tipp){
           if(!txt(l.tipp.titel)||!txt(l.tipp.text)||!txt(l.tipp.zeichen))f(`${lw}: Tipp unvollständig`);
@@ -180,7 +212,8 @@ export function pruefen(){
         if(d.ziel.geschafft!==undefined&&!txt(d.ziel.geschafft))f(`${wo}: Ziel-Text „geschafft“ ist leer`);
         if(d.ziel.art==="lesen"&&d.ziel.de!==undefined){vokal(d.ziel.ar,wo+", Ziel","Zieltext");if(!txt(d.ziel.de))f(`${wo}: Ziel ohne Übersetzung`)}
         else if(d.ziel.art==="lesen")buchst(d.ziel.ar,wo+", Ziel","Zieltext",true);
-        if(d.ziel.art==="lesen"){if(!txt(d.ziel.sp)||!AR.test(d.ziel.sp))f(`${wo}: Ziel ohne arabischen Vorlesetext`)}
+        if(d.ziel.art==="lesen"&&!QX.test(d.ziel.ar)){if(!txt(d.ziel.sp)||!AR.test(d.ziel.sp))f(`${wo}: Ziel ohne arabischen Vorlesetext`)} // Koranschrift liest keine Computerstimme vor
+        if(d.ziel.art==="lesen"&&QX.test(d.ziel.ar)&&d.ziel.sp!==undefined)f(`${wo}: Ziel in Koranschrift ohne Vorlesetext („sp“ weglassen)`);
         if(d.ziel.art==="alle-buchstaben"){const fehlt=ALPHA.filter(a=>!eingef.has(a[0])).map(a=>a[0]);if(fehlt.length)f(`${wo}: Ziel „alle Buchstaben“, aber es fehlen ${fehlt.join(", ")}`)}
       }
     }

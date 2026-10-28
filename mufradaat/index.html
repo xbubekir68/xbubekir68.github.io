@@ -150,7 +150,7 @@ nav[hidden]{display:none}
 .pn .nd{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;border:3px solid var(--ac,var(--g));background:var(--card);color:var(--ac,var(--g));overflow:hidden}.pn .nd .ar{font-size:17px;line-height:1;padding-top:5px;white-space:nowrap}
 .pn .lb{position:absolute;top:50%;transform:translateY(-50%);width:140px;display:grid;gap:2px;text-align:left}.pn .lb.l{right:calc(100% + 10px);text-align:right}.pn .lb.r{left:calc(100% + 10px)}
 .pn b{font-size:15px;line-height:1.2}.pn small{font-size:12px;color:var(--mute)}.pn small .ar{font-size:15px}.pn .hint,.sgn .hint{display:block;color:var(--g);font-weight:600;margin-top:2px}
-.pn.abl .nd .ar{font-size:22px}
+.pn.abl .nd .ar{font-size:22px}.pn.abl .nd .ar.lng{font-size:17px}
 .askip{margin-top:12px}.askip .btn{margin-top:10px}.askip p{margin-top:4px}.note{margin-top:12px;border-color:var(--g);background:var(--gl)}.note p{font-size:14px;line-height:1.45}
 details.rule{display:block;margin-top:12px}details.rule>ol,details.rule>p{margin-top:10px}details.rule summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between}details.rule summary::-webkit-details-marker{display:none}details.rule summary::after{content:"+";font-size:20px;color:var(--mute);line-height:1}details.rule[open] summary::after{content:"–"}details.rule[open] summary{margin-bottom:8px}
 .pn.done .nd{background:var(--g);color:var(--on)}.pn.cur .nd{width:76px;height:76px;border:0;box-shadow:0 0 0 6px var(--gl)}.pn.cur .nd img{width:100%;height:100%}.pn.cur .lb.r{left:calc(100% + 18px)}.pn.cur .lb.l{right:calc(100% + 18px)}.pn.cur b{font-size:16px}
@@ -162,6 +162,9 @@ details.rule{display:block;margin-top:12px}details.rule>ol,details.rule>p{margin
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .ths{--rb:#232b26;--re:#3b463f;--ac:#d1bd94;--fp:#837f6a}:root:not([data-theme="light"]) .th0{--rb:#4a3d27;--re:transparent;--ac:#e0b86e;--fp:#ac9465}:root:not([data-theme="light"]) .th1{--rb:#e9eef5;--re:#5d82b0;--ac:#93b7e6;--fp:#5f7ea4}:root:not([data-theme="light"]) .th2{--rb:#7e4a36;--re:#a0654c;--ac:#eba183;--fp:#e4aa94}:root:not([data-theme="light"]) .th3{--rb:#7a5d1f;--re:#a57c22;--ac:#efbd5c;--fp:#e5c17b}:root:not([data-theme="light"]) .th4{--rb:#3d5f80;--re:transparent;--ac:#bba5f2;--fp:#b0c0d1}:root:not([data-theme="light"]) .th5{--rb:#3a4148;--re:#c9cdd1;--ac:#b0c0ca;--fp:#94999d}:root:not([data-theme="light"]) .th6{--rb:#5b4930;--re:#4f8a3c;--ac:#95d277;--fp:#94b177}:root:not([data-theme="light"]) .th7{--rb:#25335a;--re:transparent;--ac:#ffd77a;--fp:#8c8a86}:root:not([data-theme="light"]) .th8{--rb:#8f3a28;--re:#2a1813;--ac:#f0907a;--fp:#d4aba0}:root:not([data-theme="light"]) .th9{--rb:#4b4438;--re:transparent;--ac:#d3bd95;--fp:#ab9d84}:root:not([data-theme="light"]) .pth .bed.th4.c0{--rb:#8a4848}:root:not([data-theme="light"]) .pth .bed.th4.c1{--rb:#8a6b2c}:root:not([data-theme="light"]) .pth .bed.th4.c2{--rb:#4c7444}:root:not([data-theme="light"]) .pth .bed.th4.c3{--rb:#3d5f80}:root:not([data-theme="light"]) .pth .bed.th4.c4{--rb:#644a87}}
 :root[data-theme="dark"] .ths{--rb:#232b26;--re:#3b463f;--ac:#d1bd94;--fp:#837f6a}:root[data-theme="dark"] .th0{--rb:#4a3d27;--re:transparent;--ac:#e0b86e;--fp:#ac9465}:root[data-theme="dark"] .th1{--rb:#e9eef5;--re:#5d82b0;--ac:#93b7e6;--fp:#5f7ea4}:root[data-theme="dark"] .th2{--rb:#7e4a36;--re:#a0654c;--ac:#eba183;--fp:#e4aa94}:root[data-theme="dark"] .th3{--rb:#7a5d1f;--re:#a57c22;--ac:#efbd5c;--fp:#e5c17b}:root[data-theme="dark"] .th4{--rb:#3d5f80;--re:transparent;--ac:#bba5f2;--fp:#b0c0d1}:root[data-theme="dark"] .th5{--rb:#3a4148;--re:#c9cdd1;--ac:#b0c0ca;--fp:#94999d}:root[data-theme="dark"] .th6{--rb:#5b4930;--re:#4f8a3c;--ac:#95d277;--fp:#94b177}:root[data-theme="dark"] .th7{--rb:#25335a;--re:transparent;--ac:#ffd77a;--fp:#8c8a86}:root[data-theme="dark"] .th8{--rb:#8f3a28;--re:#2a1813;--ac:#f0907a;--fp:#d4aba0}:root[data-theme="dark"] .th9{--rb:#4b4438;--re:transparent;--ac:#d3bd95;--fp:#ab9d84}:root[data-theme="dark"] .pth .bed.th4.c0{--rb:#8a4848}:root[data-theme="dark"] .pth .bed.th4.c1{--rb:#8a6b2c}:root[data-theme="dark"] .pth .bed.th4.c2{--rb:#4c7444}:root[data-theme="dark"] .pth .bed.th4.c3{--rb:#3d5f80}:root[data-theme="dark"] .pth .bed.th4.c4{--rb:#644a87}
 .sbt{display:grid;gap:0;justify-items:center;border:0;border-radius:14px;background:var(--gl);color:var(--g);font-weight:600;font-size:14px;padding:6px 14px;min-height:44px}.sbt .ar{display:none}.sbt small{font-weight:400}.sbt.lock{background:var(--bg);color:var(--mute)}
+.pth .kjp{position:relative;z-index:1;white-space:nowrap;margin-top:8px}
+.kwt .lnk{display:block;margin:8px auto 0}
+.rule>.lnk{margin:4px 0 0 2px}
 .st{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;white-space:nowrap;background:var(--line);color:var(--mute)}.st.s{background:#f3e6c4;color:#6b5210}.st.l{background:var(--gl);color:var(--g)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .st.s{background:#3a3217;color:#e8c970}}:root[data-theme="dark"] .st.s{background:#3a3217;color:#e8c970}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn.alt{color:var(--g2)}}:root[data-theme="dark"] .btn.alt{color:var(--g2)}
@@ -274,7 +277,13 @@ details.rule{display:block;margin-top:12px}details.rule>ol,details.rule>p{margin
 .kzl .sent{font-size:44px;line-height:1.6;margin:2px 0}.kzl .sent.lng{font-size:34px}
 /* Vokale und Tanwin: Zeichen, Silbentafel, Wörter mit Umschrift, Nachsprechen */
 .kzn>.ar{font-size:88px;line-height:1.3;color:var(--g)}.kwl{text-align:center;font-size:15px;color:var(--mute);line-height:1.45}.kwl .kgp{color:var(--g);font-weight:700}
-.kwr{font-size:56px;line-height:1.7;margin:10px 0 6px}.kgp{color:var(--g)}.kla small{display:block;font-size:14px;font-weight:400;color:var(--mute);margin-top:4px}
+.kwr{font-size:56px;line-height:1.7;margin:10px 0 6px}
+.kwr.klg{font-size:36px;line-height:2}
+.kqg{font-size:80px;line-height:1.5}
+.kqn .kbsp .ar{font-size:30px;line-height:1.9}.kqn .mute .ar{font-size:1.4em;line-height:1}
+.kzn>.ar.up,.kqg.up{font-size:72px;line-height:1.1;padding-top:.8em} /* Pausenzeichen stehen hoch über der Zeile */
+.ksok{color:var(--g);font-weight:600}
+.ksh .ar{font-size:20px;color:var(--ink)}.kgp{color:var(--g)}.kla small{display:block;font-size:14px;font-weight:400;color:var(--mute);margin-top:4px}
 .ktf{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;direction:rtl;margin-top:14px}.ktf.few{grid-template-columns:repeat(3,minmax(0,96px));justify-content:center;gap:10px}.ktf.wd{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .kts{display:grid;justify-items:center;padding:2px 0 6px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);font:inherit}
 .kts .ar{font-size:26px;line-height:1.7}.ktf.few .kts .ar{font-size:44px}.ktf.wd .kts .ar{font-size:34px}.ktf.wd .kts small{font-size:13px}.kts small{font-size:11px;color:var(--mute);direction:ltr}.ktu{font-size:13px;line-height:1.5;text-align:center;margin-top:12px}
@@ -988,10 +997,11 @@ function aEnd(){
 
 // ===== Neuer Lernpfad (Vorschau): Kurs aus kurs/*.json =====
 // Läuft neben dem bisherigen Pfad, bis Stufe 1 fertig ist (S.np schaltet um). Stand: S.kp.d[Lektions-ID] = wie oft abgeschlossen.
-let KURS=null,KE={},KL=[]; // Übersicht (false = Laden fehlgeschlagen), geladene Etappen, alle Lektionen in Kursreihenfolge
+let KURS=null,KE={},KL=[],QTX=new Set(); // Übersicht (false = Laden fehlgeschlagen), geladene Etappen, alle Lektionen in Kursreihenfolge, Korantexte
 function kursSet(idx,files){
   KURS=idx;KE=files||{};KL=[];
   idx.stufen.forEach(st=>st.etappen.forEach(e=>{const f=KE[e.id];if(f)f.lektionen.forEach((l,li)=>KL.push({...l,e:e.id,li,k:KL.length}))}));
+  QTX=new Set(KL.filter(l=>QZ.includes(l.zeichen)).flatMap(l=>l.woerter.map(w=>w[0])));
 }
 function loadKurs(){
   const j=u=>fetch("kurs/"+u).then(r=>{if(!r.ok)throw r.status;return r.json()});
@@ -1039,9 +1049,11 @@ const kChars=w=>[...w.replace(/[ً-ٰٟـ ]/g,"")].map(c=>ALC[c]); // Buchstaben
 const posOf=a=>a.i==="hamza"?[]:a.nj?["f"]:["b","m","f"]; // Stellen, an denen der Buchstabe eine eigene verbundene Form hat
 const POSN={b:"am Anfang",m:"in der Mitte",f:"am Ende",i:"allein"};
 const kLesung=t=>kChars(t).map(a=>a.n.replace(/ʾ$/,"")).join(" "); // Surenanfang: Buchstabe für Buchstabe, das Hamza am Namensende fällt weg
-const kHearT=t=>!!AUD[t]||ARV===true; // Höraufgabe nur, wenn der Text sicher vorgelesen werden kann
-const KCARD=["neu","tipp","neuform","neusure","neuz","tafel","sprechen"]; // Karten zum Kennenlernen und Nachsprechen, ohne Bewertung
-const KCHO=["formsuche","bauen","sure","surehoeren","silbe","silbewahl","silbehoeren","wortlesen","worthoeren","luecke"]; // Aufgaben mit Antworten als Text
+const kHearT=t=>!!AUD[t]||ARV===true&&!kQT(t); // Höraufgabe nur, wenn der Text sicher vorgelesen werden kann; Koranschrift nur mit Aufnahme
+const kQT=t=>QX.test(t)||QTX.has(t); // Text in Koranschrift: an den Zeichen erkennbar oder aus einer Lektion zur Koranschrift
+const kSayOk=t=>!!t&&(!kQT(t)||!!AUD[t]);
+const KCARD=["neu","tipp","neuform","neusure","neuz","neuq","tafel","sprechen"]; // Karten zum Kennenlernen und Nachsprechen, ohne Bewertung
+const KCHO=["formsuche","bauen","sure","surehoeren","silbe","silbewahl","silbehoeren","wortlesen","worthoeren","luecke","qbed"]; // Aufgaben mit Antworten als Text
 function kTasksV(l){
   const nw=kLet(l),forms=nw.filter(a=>posOf(a).length),W=shuffle(l.woerter),T=[],tail=[],fm=a=>({t:"form",a,pos:pick(posOf(a))});
   for(let c=0;c<nw.length;c+=2){const ch=nw.slice(c,c+2);
@@ -1068,13 +1080,13 @@ function kTasksS(l,hear){ // Surenanfänge: vier vorstellen, dann lesen, hören 
 }
 // Vokale, Tanwin, lange Vokale, Sukun und Schadda: Silben aus Buchstabe und Zeichen, Wörter mit Umschrift und Bedeutung
 const TAM={i:"tam",c:"ة",n:"Tāʾ marbūṭa",s:"t"}; // Ta marbuta: kein eigener Buchstabe des Alphabets
-const KCH={...ALC,"أ":ALBY.hamza,"إ":ALBY.hamza,"ؤ":ALBY.hamza,"ئ":ALBY.hamza,"ة":TAM}; // Hamza auf Alif, Wāw und Yāʾ
+const KCH={...ALC,"أ":ALBY.hamza,"إ":ALBY.hamza,"ؤ":ALBY.hamza,"ئ":ALBY.hamza,"ة":TAM,"ى":ALBY.ya}; // Hamza auf Alif, Wāw und Yāʾ; ى mit Vokal (Koranschrift: ٱلۡحَىُّ)
 const VZ={a:"َ",i:"ِ",u:"ُ",an:"ً",in:"ٍ",un:"ٌ"},VZR=Object.fromEntries(Object.entries(VZ).map(([k,v])=>[v,k]));
 const SHORT=["a","i","u"],TANW=["an","in","un"],LONG=["aa","ii","uu"],VK=[...SHORT,...TANW,...LONG],kVs=zk=>VK.filter(v=>zk.includes(v));
 const VM={...VZ,aa:"َ",ii:"ِ",uu:"ُ"},MADD={aa:"ا",ii:"ي",uu:"و"}; // langer Vokal = kurzes Zeichen und Dehnungsbuchstabe
 const VL={a:"a",i:"i",u:"u",an:"an",in:"in",un:"un",aa:"ā",ii:"ī",uu:"ū"};
 const FAM={a:["aa","an"],i:["ii","in"],u:["uu","un"],aa:["a"],ii:["i"],uu:["u"],an:["a"],in:["i"],un:["u"]}; // leicht verwechselt: kurz, lang, mit Tanwin
-const WSIGN=["kl","dip","o","al","hz","sh","sun"]; // Zeichen, die man an Wörtern lernt statt an einer Silbentafel
+const WSIGN=["kl","dip","o","al","hz","sh","sun","md","wa"],QZ=["q","qk","pz"]; // Zeichen, die man an Wörtern lernt statt an einer Silbentafel; Zeichen der Koranschrift
 const ZI={ // neue Zeichen: Name, Aussehen, Klang (k ersetzt „klingt wie“), Hinweis; t = Hinweis unter der Tafel, tt = Titel der Wörtertafel
   a:{n:"Fatha",g:"ـَ",l:"a",h:"Ein schräger Strich über dem Buchstaben."},
   i:{n:"Kasra",g:"ـِ",l:"i",h:"Ein schräger Strich unter dem Buchstaben."},
@@ -1093,33 +1105,53 @@ const ZI={ // neue Zeichen: Name, Aussehen, Klang (k ersetzt „klingt wie“), 
   al:{n:"Artikel al-",g:"الْـ",l:"al-",h:"Alif und Lām mit Sukun vor einem Wort bedeuten „der, die, das“. Am Anfang spricht man das Alif wie a.",t:"In der Umschrift trennt ein Bindestrich den Artikel vom Wort.",tt:"Wörter mit Artikel"},
   hz:{n:"Hamza auf Trägern",g:"ؤ ئ ء",l:"ʾ",h:"Das Hamza sitzt auch auf Wāw, auf Yāʾ ohne Punkte oder steht allein. Es bleibt derselbe kurze Stimmabsatz.",t:"ʾ steht in der Umschrift für das Hamza.",tt:"Wörter mit Hamza"},
   sh:{n:"Schadda",g:"ـّ",k:"der Buchstabe klingt doppelt",h:"Ein kleines Zeichen wie ein w über dem Buchstaben: Man spricht ihn doppelt, etwa wie das mm in „im Meer“.",t:"In der Umschrift steht der Buchstabe doppelt."},
-  sun:{n:"Sonnenbuchstaben",g:"الشَّـ",k:"das l des Artikels fällt weg",h:"Vor 14 Buchstaben spricht man das l des Artikels nicht. Der Buchstabe danach trägt eine Schadda und klingt doppelt.",t:"Kein Sukun auf dem Lām, dafür eine Schadda auf dem nächsten Buchstaben.",tt:"Wörter mit Sonnenbuchstaben"}};
+  sun:{n:"Sonnenbuchstaben",g:"الشَّـ",k:"das l des Artikels fällt weg",h:"Vor 14 Buchstaben spricht man das l des Artikels nicht. Der Buchstabe danach trägt eine Schadda und klingt doppelt.",t:"Kein Sukun auf dem Lām, dafür eine Schadda auf dem nächsten Buchstaben.",tt:"Wörter mit Sonnenbuchstaben"},
+  md:{n:"Madda",g:"آ",l:"ʾā",h:"Eine Welle über dem Alif: Hamza und langes ā in einem Zeichen. آ steht für أَا, das man so nie schreibt.",t:"Am Wortanfang schreibt man das Hamza in der Umschrift nicht, sonst steht ʾā.",tt:"Wörter mit Madda"},
+  wa:{n:"Verbundenes Alif",g:"فِي الْـ",k:"das Alif des Artikels bleibt stumm",h:"Mitten im Satz und nach وَ, بِ, فَ spricht man das Alif des Artikels nicht. Man liest vom Wort davor direkt zum l weiter. Ein langer Vokal davor wird dabei kurz.",t:"In der Umschrift fällt das a des Artikels weg: fi l-bayti, wal-qamaru.",tt:"Lesen ohne das Alif"},
+  q:{n:"Koranschrift",g:"ٱ ـۡ ـَٰ",k:"dieselben Laute, andere Zeichen",h:"Im Koran sehen manche Zeichen anders aus: ein Alif mit kleinem ص, ein Sukun wie ein kleiner Bogen und Fatha mit kleinem Alif.",t:"Die Umschrift zeigt, was man spricht, nicht jeden Buchstaben."},
+  qk:{n:"Kleine Zeichen im Koran",g:"ـۥ ـٓ ـ۟",k:"sie zeigen, was man spricht",h:"Kleine Buchstaben und Zeichen über der Zeile sagen, wo ein Vokal lang wird und welcher Buchstabe stumm bleibt.",t:"Die Umschrift zeigt, was man spricht, nicht jeden Buchstaben."},
+  pz:{n:"Pausenzeichen",g:"ۘ ۚ ۖ",k:"wo man Luft holen darf",h:"Kleine Zeichen über dem Text zeigen im Koran, wo man beim Lesen anhält und wo man weiterliest.",t:"Pausenzeichen haben keinen eigenen Laut."}};
 const trL=a=>a.i==="tam"?"t":({jim:"j",kha:"kh",shin:"sh"})[a.i]||a.s; // Umschrift wie bei den Wörtern der App
 const kBase=(c,v)=>c==="أ"||c==="إ"?(["i","in","ii"].includes(v)?"إ":"أ"):c; // Hamza mit Kasra sitzt unter dem Alif
 const kAnA=b=>!"ةأء".includes(b); // -an mit stummem Alif, außer nach ة und Hamza
 const kSyl=(c,v)=>{if(!v)return c;const b=kBase(c,v);return b+VM[v]+(MADD[v]||(v==="an"&&kAnA(b)?"ا":""))};
-const MK=/[ً-ْٰ]/;
+const MK=/[ً-ْٰۡ]/,QP="ۖۗۘۙۚۛ"; // Zeichen auf dem Buchstaben (auch das Sukun der Koranschrift ۡ); Pausenzeichen der Koranschrift
+const kArtL=(ch,j,ws)=>ch[j]==="ل"&&(ch[j+1]==="ْ"||ch[j+1]==="ۡ"||!!ch[j+1]&&!MK.test(ch[j+1])&&!VZR[ch[j+1]]||ws&&ch.slice(j+1,j+3).includes("ّ")); // Lām des Artikels: mit Sukun, ohne Zeichen vor einem Sonnenbuchstaben oder am Wortanfang mit Schadda (الَّذِي)
 function kUnits(w){ // Wort in Silben: Buchstabe mit Schadda und Zeichen, Dehnungsbuchstabe und stummes Alif gehören dazu. Artikel: wl = Alif, art = Lām, sil = stummes Lām
-  const U=[],ch=[...w];
-  ch.forEach((c,k)=>{const u=U[U.length-1],bare=!MK.test(ch[k+1]||"");
+  const U=[],ch=[...w]; // Koranschrift: q = Sukun als ۡ, vd = Fatha mit kleinem Alif, mx = Dehnungszeichen, z = stummer Buchstabe, na = Wasla ohne Artikel, pz = Pausenzeichen
+  for(let k=0;k<ch.length;k++){const c=ch[k],u=U[U.length-1],bare=!MK.test(ch[k+1]||""),ws=!u||u.sp,pre=u&&!u.sp&&(U.length===1||U[U.length-2].sp)&&"وفبك".includes(u.c)&&SHORT.includes(u.v)&&!u.sh;
     if(c===" ")U.push({sp:true});
     else if(VZR[c]){if(u)u.v=VZR[c]}
-    else if(c==="ْ"||c==="ّ"){if(u)u[c==="ْ"?"o":"sh"]=true}
-    else if(c==="ٰ"){if(u){u.v="aa";u.m=c}}
+    else if(c==="ْ"||c==="ۡ"){if(u){u.o=true;if(c==="ۡ")u.q=true}}
+    else if(c==="ّ"){if(u)u.sh=true}
+    else if(c==="ٰ"){if(u){if(u.v==="a")u.vd=true;u.v="aa";u.m=c}}
+    else if(c==="ٓ"){if(u)u.mx=true}
+    else if(c==="ۥ"||c==="ۦ"){if(u&&(u.v==="u"||u.v==="i")){u.v+=u.v;u.m=c}} // kleines Wāw und Yāʾ nach هُ und هِ: langer Vokal
+    else if(c==="۟"){if(u){if(u.m&&"اوي".includes(u.m)){u.v=u.v[0];u.m+=c}else u.z=true}} // Null darüber: der Buchstabe bleibt stumm
+    else if(QP.includes(c)){if(u)u.pz=c}
+    else if((c==="ى"||c==="و")&&ch[k+1]==="ٰ"&&u&&u.v==="a"&&!u.m){u.v="aa";u.m=c+"ٰ";k++} // عَلَىٰ, ٱلصَّلَوٰةَ: ى oder و mit kleinem Alif ist langes ā
+    else if(c==="آ"&&u&&!u.sp&&u.v==="a"&&!u.m&&!u.o){u.v="aa";u.m=c;u.mx=true} // ٱلضَّآلِّينَ: Alif mit Dehnungszeichen nach Fatha
+    else if(c==="آ")U.push({a:ALBY.hamza,c,v:"aa",md:true}); // Madda: Hamza mit langem ā
     else if(c==="ا"&&u&&u.v==="an")u.x=true;
-    else if(bare&&u&&!u.m&&(u.v==="a"&&"اى".includes(c)||u.v==="i"&&c==="ي"||u.v==="u"&&c==="و")){u.v+=u.v;u.m=c}
-    else if(c==="ا"&&bare&&(!u||u.sp)&&ch[k+1]==="ل")U.push({a:ALBY.alif,c,v:"",wl:true});
-    else U.push({a:KCH[c]||null,c,v:"",...(u&&u.wl?{art:true,sil:bare}:{})})});
+    else if((c==="ا"&&bare||c==="ٱ")&&(ws||pre)&&kArtL(ch,k+1,ws))U.push({a:ALBY.alif,c,v:"",wl:true}); // Artikel, auch nach وَ فَ بِ كَ
+    else if(c==="ٱ")U.push({a:ALBY.alif,c,v:"",wl:true,na:true}); // Wasla ohne Artikel: ٱهۡدِنَا
+    else if(bare&&u&&!u.m&&(u.v==="a"&&"اى".includes(c)||u.v==="i"&&"يى".includes(c)||u.v==="u"&&c==="و")){u.v+=u.v;u.m=c}
+    else U.push({a:KCH[c]||null,c,v:"",...(u&&u.wl&&!u.na?{art:true,sil:bare}:{})})}
+  U.forEach((u,k)=>{const p=U[k-1],n=U[k+1];if(u.c==="ل"&&u.sh&&(u.v==="a"&&!u.m||u.m==="ٰ")&&p&&p.c==="ل"&&n&&n.c==="ه"&&!n.o){u.v="aa";u.ia=true}}); // Allāh: langes ā, im Koran ohne Alif
   return U;
 }
-const kUw=u=>{if(u.sp)return " ";if(u.wl||u.sil)return u.c;const b=kBase(u.c,u.v),d=u.m==="ٰ"; // Reihenfolge wie in der Unicode-Normalform: Vokal, Schadda, Sukun, kleines Alif, dann Dehnungsbuchstabe
-  return b+(u.o||d?"":VM[u.v]||"")+(u.sh?"ّ":"")+(u.o?"ْ":"")+(d?u.m:u.m||"")+(u.v==="an"&&kAnA(b)?"ا":"")};
+const kUw=u=>{if(u.sp)return " ";if(u.wl||u.sil)return u.c;if(u.md)return u.c+(u.pz||"");const b=kBase(u.c,u.v),d=u.m==="ٰ"&&!u.vd; // Reihenfolge wie in der Unicode-Normalform: Vokal, Schadda, Sukun, kleines Alif, dann Dehnungsbuchstabe
+  return b+(u.o||d?"":VM[u.v]||"")+(u.sh?"ّ":"")+(u.o?(u.q?"ۡ":"ْ"):"")+(u.m||"")+(u.v==="an"&&kAnA(b)?"ا":"")+(u.mx&&u.m!=="آ"?"ٓ":"")+(u.z?"۟":"")+(u.pz||"")};
 const kJoin=U=>U.map(kUw).join("");
-const kTrU=U=>U.map((u,k)=>{if(u.sp)return " ";if(u.wl)return "a";if(u.sil)return "";const p=U[k-1]||{sp:true};
+const kTrU=(U,nv)=>U.map((u,k)=>{if(u.sp)return " ";const p=U[k-1]||{sp:true},n=U[k+1],s0=U.slice(0,k).every(x=>x.sp); // nv: so, wie es ein Anfänger liest, der das verbundene Alif mitspricht
+  if(u.wl)return s0||nv&&p.sp?(u.na?"i":"a"):""; // Alif des Artikels und Wasla: nur am Textanfang gesprochen
+  if(u.sil||u.z)return "";
   let c=u.a?(u.a.i==="hamza"&&(p.sp||p.art)?"":trL(u.a)):""; // das Hamza am Wortanfang und nach dem Artikel schreibt man nicht
-  if(u.sh)c=p.sil?c+"-"+c:c+c;else if(u.art)c+="-"; // aš-šamsu, al-qamaru
-  return c+(VL[u.v]||"")});
+  if(u.sh)c=p.sil&&!u.ia?c+"-"+c:c+c;else if(u.art)c+="-"; // aš-šamsu, al-qamaru, aber allāhu
+  const sv=!nv&&n&&n.sp&&U[k+2]&&U[k+2].wl&&LONG.includes(u.v); // vor dem verbundenen Alif wird ein langer Vokal kurz: fi l-bayti
+  return c+(VL[sv?u.v[0]:u.v]||"")});
 const kTr=w=>kTrU(kUnits(w)).join("");
+const QX=/[ٱۡۥۦ۟ۖ-ۛ]|[ىو]ٰ|َٰ/; // Text in Koranschrift: wird nicht von einer Computerstimme vorgelesen
 const kZK=k=>KL.slice(0,k+1).filter(l=>l.art==="vokale"&&l.zeichen).map(l=>l.zeichen); // bis zu dieser Lektion eingeführte Zeichen
 const kWs=l=>(l.woerter||[]).map(([w,de])=>({w,de,lat:kTr(w)}));
 const kSy=(a,v)=>({a,v,t:kSyl(a.i==="hamza"?"أ":a.c,v),lat:(a.i==="hamza"?"ʾ":trL(a))+VL[v],k:a.i+"-"+v});
@@ -1139,7 +1171,8 @@ function kSylD(y,zk){ // ähnliche Silben als Ablenker: anderes Zeichen auf dems
 }
 function kAlt(U,k,zk){ // andere Lesarten einer Silbe mit bekannten Zeichen: zuerst verwandter Vokal, Sukun und Schadda, dann andere Vokale
   const u=U[k],p=U[k-1]||{sp:true},n=U[k+1]||{sp:true},out=[];
-  if(!u||u.sp||!u.a||u.wl||u.art||u.m==="ٰ"||u.m==="ى"||"ؤئء".includes(u.c))return out; // Artikel, kleines Alif, ى und Hamza-Träger bleiben, wie sie sind
+  if(!u||u.sp||!u.a||u.wl||u.art||u.md||u.ia||u.z||u.mx||u.pz||u.q||u.m&&!"اوي".includes(u.m)||"ؤئءى".includes(u.c))return out; // Artikel, kleines Alif, ى, Hamza-Träger, Madda und Zeichen der Koranschrift bleiben, wie sie sind
+  if(n.wl||n.md||n.sp&&U[k+2]&&U[k+2].wl)return out; // vor dem verbundenen Alif und vor آ bleibt die Silbe: sonst entstünde eine unmögliche Schreibung oder derselbe Klang
   let s=k;while(s>0&&!U[s-1].sp)s--;const al=U[s].wl; // mit Artikel nie Tanwin
   const mh=u.a.i==="hamza"&&!p.sp&&!p.art,nd=n.o&&"وي".includes(n.c); // Hamza im Wort; danach aw oder ay
   const vs=kVs(zk).filter(v=>(n.sp&&!al||!TANW.includes(v))&&(kSyOk(u.a,v)||u.a===TAM&&SHORT.includes(v)&&zk.includes("al"))
@@ -1166,7 +1199,8 @@ function kWVar(w,zk){ // falsch gelesene Fassungen mit bekannten Zeichen: andere
 const kGapOpts=(U,g,zk)=>[kUw(U[g]),...kAlt(U,g,zk).map(kUw)].slice(0,4); // Silben für die Lücke: die richtige und verwandte Lesarten
 const kUZ=(U,k,z)=>{const u=U[k],p=U[k-1]||{sp:true};if(!u||u.sp||!u.a)return false; // trägt diese Silbe das Zeichen z?
   return !!(z==="ta"?u.a===TAM:z==="hamza"?u.a.i==="hamza":z==="hz"?u.a.i==="hamza"&&!p.sp&&!p.art:z==="kl"?u.m==="ٰ"||u.m==="ى"
-    :z==="dip"?u.o&&"وي".includes(u.c)&&p.v==="a":z==="o"?u.o:z==="al"?u.wl:z==="sh"?u.sh:z==="sun"?u.sil:u.v===z)};
+    :z==="dip"?u.o&&"وي".includes(u.c)&&p.v==="a":z==="o"?u.o:z==="al"?u.wl:z==="sh"?u.sh:z==="sun"?u.sil:z==="md"?u.md:z==="wa"?u.wl&&k>0
+    :z==="q"?u.c==="ٱ"||u.q||u.vd||u.ia||u.m==="ى"&&u.v==="ii":z==="qk"?u.mx||u.z||/[ۥۦ]|[ىو]ٰ|۟/.test(u.m||"")||u.a&&!u.v&&!u.o&&!u.wl&&!u.sil&&!u.art:z==="pz"?!!u.pz:u.v===z)};
 function kGap(wo,z,zk){ // welche Silbe fehlt: bevorzugt eine mit dem neuen Zeichen (beim Artikel die Silbe danach), nur wo es mindestens zwei Möglichkeiten gibt
   const U=kUnits(wo.w),ks=U.map((u,k)=>k).filter(k=>kAlt(U,k,zk).length),n=k=>kAlt(U,k,zk).length,four=ks.filter(k=>n(k)>=3); // am liebsten mit vier Antworten, mit dem neuen Zeichen auch mit drei
   const pz=k=>kUZ(U,k,z)||(z==="al"||z==="sun")&&U[k-1]&&U[k-1].art,c=[four.filter(pz),ks.filter(k=>pz(k)&&n(k)>=2),four,ks.filter(pz),ks].find(x=>x.length);
@@ -1214,20 +1248,65 @@ function kTasksZ(l,hear){ // Zeichen vorstellen (Silbentafel oder Beispielwörte
   for(let k=0;k<2;k++){const wo=take(hw);if(wo)tail.push(qw("worthoeren",wo))}
   if(kVs(zk).length>1)for(let k=0;k<ng;k++){const wo=take(wo=>kGap(wo,z,zk)>=0);if(wo)tail.push({...qw("luecke",wo),g:kGap(wo,z,zk)})}
   for(let k=0;k<ng;k++){const wo=take(wo=>wo.w.includes(" ")||kTiles(kUnits(wo.w)).length<=5);if(wo)tail.push(qw("bau",wo))}
-  const sw=take(hw);if(sw)tail.push({t:"sprechen",wo:sw});
+  const sr=l.e==="s8",sw=take(wo=>hw(wo)||sr&&kSrUse());if(sw)tail.push({t:"sprechen",wo:sw,sr}); // ab Etappe 8 mit Spracherkennung
   const g=[...T,...tail].filter(x=>!KCARD.includes(x.t)).length; // bis 13 mit weiteren Silben auffüllen, zuerst aus früheren Lektionen
   fill=[...shuffle(kVs(zk).filter(v=>v!==z).flatMap(v=>kSylls(zk,v))),...fill];
   for(let k=0;k<13-g&&fill.length;k++)tail.push(q(k%2?"silbewahl":"silbe",fill[k%fill.length]));
   return [...T,...shuffle(tail)];
 }
+// Zeichen der Koranschrift: z = Lektion, g = Aussehen, n = Name, b = Bedeutung (Antwort auf „Was bedeutet das Zeichen?“), h = Erklärung, f = trägt die Silbe das Zeichen?
+const kBare=u=>!!u.a&&!u.v&&!u.o&&!u.wl&&!u.sil&&!u.art&&!u.z; // Buchstabe ganz ohne Zeichen
+const QS=[
+  {i:"ws",z:"q",g:"ٱ",n:"Wasla",b:"Alif, das man im Satz nicht spricht",h:"Ein Alif mit kleinem ص darüber. Man spricht es nur, wenn der Text damit beginnt. Mitten im Satz liest man darüber hinweg, wie beim verbundenen Alif.",f:(u,k)=>u.c==="ٱ"&&k>0},
+  {i:"sk",z:"q",g:"ـۡ",n:"Sukun im Koran",b:"kein Vokal",h:"Im Koran sieht das Sukun aus wie ein kleiner Bogen. Es bedeutet dasselbe: Nach diesem Buchstaben kommt kein Vokal.",f:u=>u.q},
+  {i:"fd",z:"q",g:"ـَٰ",n:"Fatha mit kleinem Alif",b:"langes ā",h:"Über dem Buchstaben stehen Fatha und ein kleines Alif. Das a wird lang, auch ohne Alif in der Zeile.",f:u=>u.vd},
+  {i:"yk",z:"q",g:"ـِى",n:"ى nach Kasra",b:"langes ī",h:"Im Koran steht nach Kasra oft ى ohne Punkte. Es klingt dann wie ي, als langes ī.",f:u=>u.m==="ى"&&u.v==="ii"},
+  {i:"al",z:"q",g:"ٱللَّه",n:"Der Name Allāh",b:"Allāh mit langem ā",h:"Im Namen Allāh steht kein Alif für das lange ā. Man spricht es trotzdem lang.",f:u=>u.ia},
+  {i:"ya",z:"qk",g:"ـَىٰ ـَوٰ",n:"ى und و mit kleinem Alif",b:"langes ā, ى oder و stumm",h:"Ein kleines Alif auf ى oder و: Man liest ein langes ā. Das ى oder و selbst spricht man nicht.",f:u=>/[ىو]ٰ/.test(u.m||"")},
+  {i:"hw",z:"qk",g:"ـهُۥ ـهِۦ",n:"Kleines Wāw und Yāʾ",b:"langes ū oder ī",h:"Ein kleines و nach هُ oder ein kleines ي nach هِ: Der Vokal wird lang, hū oder hī.",f:u=>u.m==="ۥ"||u.m==="ۦ"},
+  {i:"mx",z:"qk",g:"ـٓ",n:"Dehnungszeichen",b:"den langen Vokal länger ziehen",h:"Eine Welle über einem langen Vokal: Man zieht ihn länger als sonst. Wie lang genau, gehört zum Tajwid.",f:u=>u.mx},
+  {i:"z0",z:"qk",g:"ـ۟",n:"Stummer Buchstabe",b:"Buchstabe, den man nicht spricht",h:"Eine kleine Null über einem Buchstaben: Er steht da, aber man spricht ihn nicht.",f:u=>u.z||/۟/.test(u.m||"")},
+  {i:"nb",z:"qk",g:"مِن",n:"Buchstabe ohne Zeichen",b:"kein Vokal, wie mit Sukun",h:"Steht auf einem Buchstaben gar kein Zeichen, hat er keinen Vokal. Man liest ihn wie mit Sukun.",f:kBare},
+  {i:"pm",z:"pz",g:"ـۘ",n:"Kleines Mīm",b:"Hier anhalten",h:"Ein kleines م über dem Text: Hier hält man an. Liest man weiter, kann sich der Sinn ändern.",f:u=>u.pz==="ۘ"},
+  {i:"pl",z:"pz",g:"ـۙ",n:"Kleines Lā",b:"Hier nicht anhalten",h:"Ein kleines لا: Hier hält man nicht an, sondern liest weiter.",f:u=>u.pz==="ۙ"},
+  {i:"ps",z:"pz",g:"ـۖ",n:"Ṣalā",b:"Weiterlesen ist besser",h:"Die kleinen Buchstaben صلى: Anhalten ist erlaubt, weiterlesen ist besser.",f:u=>u.pz==="ۖ"},
+  {i:"pq",z:"pz",g:"ـۗ",n:"Qalā",b:"Anhalten ist besser",h:"Die kleinen Buchstaben قلى: Weiterlesen ist erlaubt, anhalten ist besser.",f:u=>u.pz==="ۗ"},
+  {i:"pj",z:"pz",g:"ـۚ",n:"Kleines Jīm",b:"Anhalten und weiterlesen, beides gut",h:"Ein kleines ج: Man darf anhalten oder weiterlesen, beides ist gut.",f:u=>u.pz==="ۚ"},
+  {i:"pd",z:"pz",g:"ـۛ",n:"Drei Punkte",b:"An einer der beiden Stellen anhalten",h:"Drei Punkte stehen immer zweimal kurz hintereinander. Man hält an einer der beiden Stellen an, nicht an beiden.",f:u=>u.pz==="ۛ"}];
+const kQHas=(w,x)=>kUnits(w).some((u,k)=>x.f(u,k));
+function kQVar(w){ // typische Lesefehler: verbundenes Alif gesprochen, kleines Alif oder kleines Wāw übersehen, Buchstabe ohne Zeichen mit Vokal, stummer Buchstabe gesprochen
+  const U=kUnits(w),t=kTrU(U).join(""),out=new Set([kTrU(U,true).join("")]);
+  const f=g=>{const V=U.map(u=>({...u}));let h=false;V.forEach((u,k)=>{if(g(u,k,V))h=true});if(h)out.add(kTrU(V).join(""))};
+  f(u=>{if(u.vd||u.ia||u.m==="ۥ"||u.m==="ۦ"||/[ىو]ٰ/.test(u.m||"")){u.v=u.v[0];return true}});
+  f((u,k,V)=>{if(kBare(u)&&V[k+1]&&V[k+1].sp){u.v="a";return true}});
+  f(u=>{if(u.z&&u.a&&u.a.i==="alif"){u.z=false;u.a=null;u.v="aa";return true}});
+  f(u=>{if(u.m==="ى"&&u.v==="ii"){u.v="aa";return true}});
+  f(u=>{if(u.sh&&!u.ia){u.sh=false;return true}}); // Schadda übersehen
+  f((u,k)=>{if(u.wl&&!k){u.na=!u.na;return true}}); // Alif am Anfang mit falschem Vokal
+  out.delete(t);return [...out].filter(x=>x.trim());
+}
+function kTasksQ(l,hear){ // Koranschrift: je zwei Zeichen vorstellen, gleich abfragen und lesen, dann Texte lesen und zuordnen
+  const S=QS.filter(x=>x.z===l.zeichen),W=shuffle(kWs(l)),zk=kZK(l.k),T=[{t:"neuz",z:l.zeichen,wo:null}],tail=[],used=new Set();
+  const has=x=>W.filter(wo=>kQHas(wo.w,x)),short=a=>[...a].sort((x,y)=>x.w.length-y.w.length);
+  const rd=wo=>{used.add(wo.w);return{t:"wortlesen",wo,zk}};
+  for(let c=0;c<S.length;c+=2){const ch=S.slice(c,c+2);
+    ch.forEach(x=>T.push({t:"neuq",q:x,wo:short(has(x))[0]||null}));
+    ch.forEach((x,k)=>{const r=has(x).filter(wo=>!used.has(wo.w));T.push(k&&r.length?rd(r[0]):{t:"qbed",q:x,wo:short(has(x))[0]||null})})}
+  shuffle(S).slice(0,Math.min(3,S.length)).forEach(x=>tail.push({t:"qbed",q:x,wo:null}));
+  W.filter(wo=>!used.has(wo.w)).sort((x,y)=>y.w.length-x.w.length).slice(0,4).forEach(wo=>tail.push(rd(wo)));
+  const pw=short(W).slice(0,8).filter((wo,k,a)=>a.findIndex(x=>x.lat===wo.lat)===k).slice(0,4);
+  if(pw.length>=3)tail.push({t:"paare",wd:true,set:shuffle(pw).map((wo,k)=>({i:"w"+k,c:wo.w,n:wo.lat,sp:null}))});
+  const sw=pick(W.filter(wo=>!wo.w.includes(" ")||wo.w.split(" ").length<=4));if(sw)tail.push({t:"sprechen",wo:sw,sr:true});
+  return [...T,...shuffle(tail)];
+}
 function kGen(l,hear){
-  const T=l.art==="verbinden"?kTasksV(l):l.art==="suren"?kTasksS(l,hear):l.art==="vokale"?kTasksZ(l,hear):kTasks(kLet(l),kKnown(l.k),hear);
+  const T=l.art==="test"?kTasksT(l,hear):l.art==="verbinden"?kTasksV(l):l.art==="suren"?kTasksS(l,hear):l.art==="vokale"&&QZ.includes(l.zeichen)?kTasksQ(l,hear):l.art==="vokale"?kTasksZ(l,hear):kTasks(kLet(l),kKnown(l.k),hear);
   if(l.tipp)T.unshift({t:"tipp",p:l.tipp});return T;
 }
 const kRevOk=e=>e==="s1"?kLearnt().length>=4:KL.some(l=>l.e===e&&kDone(l.id));
 function kRevE(e,hear){ // Wiederholung einer Etappe: gemischte Aufgaben aus den geschafften Lektionen, höchstens einmal zuordnen
   if(e==="s1")return kRevTasks(kLearnt(),hear);
-  const pool=shuffle(KL.filter(l=>l.e===e&&kDone(l.id)).flatMap(l=>kGen(l,hear)).filter(x=>!KCARD.includes(x.t))),pr=pool.find(x=>x.t==="paare");
+  const pool=shuffle(KL.filter(l=>l.e===e&&kDone(l.id)&&l.art!=="test").flatMap(l=>kGen(l,hear)).filter(x=>!KCARD.includes(x.t))),pr=pool.find(x=>x.t==="paare");
   const T=pool.filter(x=>x.t!=="paare").slice(0,pr?11:12);if(pr)T.splice(Math.min(5,T.length),0,pr);return T;
 }
 function kVariants(w){ // falsch zusammengesetzt: Punkte vertauscht, Reihenfolge verdreht oder ein Buchstabe ersetzt
@@ -1250,7 +1329,9 @@ function kOpts(it){ // vier Antworten als Text, it.ok = Index der richtigen
     r=aform(a,p);o=[...(a.nj?[]:[aform(a,p==="f"?pick(["b","m"]):"f")]),...kDistr(a,kn,28).filter(x=>posOf(x).includes(p)).map(x=>aform(x,p))]} // dazu derselbe Buchstabe an anderer Stelle, außer bei den Einzelgängern
   else if(it.t==="bauen"){r=it.w;o=kVariants(it.w)}
   else if(it.y){r=it.t==="silbe"?it.y.lat:it.y.t;o=kSylD(it.y,it.zk).map(x=>it.t==="silbe"?x.lat:x.t)}
-  else if(it.t==="wortlesen"||it.t==="worthoeren"){r=it.t==="wortlesen"?it.wo.lat:it.wo.w;o=kWVar(it.wo.w,it.zk).map(x=>it.t==="wortlesen"?kTr(x):x)}
+  else if(it.t==="wortlesen"){r=it.wo.lat;o=[...kQVar(it.wo.w),...kWVar(it.wo.w,it.zk).map(kTr)]} // zuerst typische Lesefehler: verbundenes Alif gesprochen, kleine Zeichen übersehen
+  else if(it.t==="worthoeren"){r=it.wo.w;o=kWVar(it.wo.w,it.zk)}
+  else if(it.t==="qbed"){r=it.q.b;o=[...shuffle(QS.filter(x=>x.z===it.q.z)),...shuffle(QS.filter(x=>x.z!==it.q.z))].map(x=>x.b)}
   else if(it.t==="luecke"){const U=kUnits(it.wo.w);r=kUw(U[it.g]);o=kGapOpts(U,it.g,it.zk)}
   else{const sim=kSimilar(it.s,it.pool);r=it.t==="sure"?it.s.lesung:it.s.t;o=sim.map(x=>it.t==="sure"?x.lesung:x.t)}
   it.opts=shuffle([r,...[...new Set(o)].filter(x=>x!==r).slice(0,3)]);it.ok=it.opts.indexOf(r);
@@ -1273,25 +1354,100 @@ async function kRec(){ // höchstens 5 Sekunden, danach wird die eigene Aufnahme
     m.start();R.st="rec";klek();setTimeout(()=>{if(MREC===m)kRecStop()},5000);
   }catch(e){R.st="err";MICNO=true;klek()}
 }
+// Spracherkennung ab Etappe 8: Der Browser schickt die Stimme an seinen Dienst. Die App vergleicht nur das Gerüst der Wörter, ohne Vokalzeichen, Alif und Hamza.
+const SRC=window.SpeechRecognition||window.webkitSpeechRecognition;let SRI=null,SRNO=false;
+const kSrUse=()=>!!SRC&&S.srOk!==false&&!SRNO&&Date.now()>SPAUSE;
+const srSk=t=>t.normalize("NFC").replace(/[ً-ٰٟۖ-ۭـ]/g,"").replace(/[اٱأإآء]/g,"").replace(/ى/g,"ي").replace(/ة/g,"ه").replace(/ؤ/g,"و").replace(/ئ/g,"ي").replace(/[^ء-ي]/g,"");
+const lev=(a,b)=>{const d=[...Array(b.length+1).keys()];for(let i=1;i<=a.length;i++){let p=d[0];d[0]=i;for(let j=1;j<=b.length;j++){const t=d[j];d[j]=Math.min(d[j]+1,d[j-1]+1,p+(a[i-1]===b[j-1]?0:1));p=t}}return d[b.length]};
+const srMatch=(alts,tx)=>{const w=srSk(tx);return alts.some(a=>lev(srSk(a),w)<=Math.max(1,Math.round(w.length/6)))}; // etwa ein Buchstabe Abweichung auf sechs
+function kSrStop(soft){try{if(SRI){if(soft)SRI.stop();else{SRI.onresult=SRI.onerror=SRI.onend=null;SRI.abort();SRI=null}}}catch(e){SRI=null}} // soft: zu Ende hören lassen, sonst abbrechen
+function kSr(tx){
+  const R=K.sr;R.heard="";
+  try{
+    const r=new SRC();SRI=r;r.lang="ar-SA";r.maxAlternatives=5;r.interimResults=false;r.continuous=false;
+    r.onresult=e=>{const a=[...e.results[0]].map(x=>x.transcript).filter(Boolean);if(!a.length)return;R.heard=a[0];R.st=srMatch(a,tx)?"ok":"no";if(R.st==="ok"){sfx("good",1);vib(10)}};
+    r.onerror=e=>{R.st=e.error==="not-allowed"||e.error==="service-not-allowed"||e.error==="language-not-supported"?"err":"none"};
+    r.onend=()=>{if(SRI===r)SRI=null;if(R.st==="listen")R.st="none";if(R.st==="err"){SRNO=true;toast("Die Spracherkennung ist nicht verfügbar. Du kannst dich stattdessen aufnehmen.");K.sr=null}if(view==="klek"&&K&&(K.sr===R||!K.sr))klek()};
+    r.start();R.st="listen";klek();
+  }catch(e){SRNO=true;K.sr=null;klek()}
+}
 function startK(l,e){ // l = Lektion; ohne l: Wiederholung der Etappe e
   const hear=canSpeak();let T;e=l?l.e:e||"s1";
   if(l)T=kGen(l,hear);
   else{if(!kRevOk(e)){toast(e==="s1"?"Schließe erst die erste Lektion ab.":"Schließe erst die erste Lektion dieser Etappe ab.");return go("path")}T=kRevE(e,hear)}
-  K={l,e,T,n:0,graded:T.filter(x=>!KCARD.includes(x.t)).length,first:0,miss:0,xp:0,fb:null,picked:null,ps:null,sel:[],rec:null,fin:false};
+  K={l,e,T,n:0,graded:T.filter(x=>!KCARD.includes(x.t)).length,first:0,miss:0,xp:0,fb:null,picked:null,ps:null,sel:[],rec:null,fin:false,test:l&&l.art==="test"?{kind:"ab",need:Math.ceil(T.length*.8),res:[]}:null};
   view="klek";render();
 }
-function kAns(ok){ // Bewertung: Fehler kommen am Ende noch einmal, es gibt keine Herzen
-  const it=K.T[K.n],a=it.a;S.alpha=S.alpha||{};K.fb={ok};
+// Tests: keine Karten, kein Zuordnen, keine zweite Runde. Abschlusstest der Stufe (20 Aufgaben, 16 richtig), Sprungtest vor einer gesperrten Etappe (10 Aufgaben, 8 richtig),
+// Einstufungstest: Blöcke mit 4 Aufgaben aus einer Etappe, ab 3 richtigen sitzt sie. Er sucht wie bei einer Halbierung die erste Etappe, die noch nicht sitzt.
+const kTestable=x=>!KCARD.includes(x.t)&&x.t!=="paare";
+const kKey=x=>[x.t,x.a&&x.a.i,x.wo&&x.wo.w,x.y&&x.y.t,x.s&&x.s.t,x.w,x.q&&x.q.i].join("|");
+function kPool(ls,n,hear){ // n Aufgaben aus diesen Lektionen, reihum aus verschiedenen
+  const L=shuffle(ls.filter(l=>l.art!=="test")),out=[],seen=new Set();
+  const ok3=x=>!KCHO.includes(x.t)||x.t==="formsuche"||(kOpts(x),x.opts.length>=3); // im Test nur Aufgaben mit mindestens drei Antworten (Formsuche hat immer vier)
+  for(let g=0;out.length<n&&g<n*4&&L.length;g++){const l=L[g%L.length],c=shuffle(kGen(l,hear).filter(kTestable)).find(x=>!seen.has(kKey(x))&&ok3(x));if(c){seen.add(kKey(c));out.push({...c,src:l.id})}}
+  return out;
+}
+const kStE=st=>st.etappen.filter(e=>KE[e.id]); // Etappen einer Stufe mit Inhalt
+const kStOf=e=>KURS.stufen.find(st=>st.etappen.some(x=>x.id===e));
+function kTasksT(l,hear){ // Abschlusstest: aus jeder Etappe der Stufe etwas, aus den späteren etwas mehr
+  const E=kStE(kStOf(l.e)),n=20,b=Math.floor(n/E.length),T=[];
+  E.forEach((e,k)=>T.push(...kPool(KL.filter(x=>x.e===e.id),b+(k>=E.length-n%E.length?1:0),hear)));
+  return shuffle(T);
+}
+function kWBlock(t,hear){const E=kStE(KURS.stufen[0]);t.mid=Math.floor((t.lo+t.hi)/2);t.start=K?K.T.length:0;return kPool(KL.filter(l=>l.e===E[t.mid].id),4,hear)}
+function kWNext(){ // Einstufung: Block auswerten, nächsten Block anhängen oder fertig
+  const t=K.test,ok=t.res.slice(t.start).filter(Boolean).length;
+  if(ok>=3)t.lo=t.mid+1;else t.hi=t.mid-1;
+  if(t.lo>t.hi)return false;
+  const B=kWBlock(t,canSpeak());if(!B.length)return false;K.T.push(...B);K.graded+=B.length;return true;
+}
+function startKT(kind,e){
+  const hear=canSpeak(),t={kind,res:[]};let T;
+  if(kind==="sprung"){const f=KL.find(l=>l.e===e);T=kPool(KL.filter(l=>l.k<f.k&&!kDone(l.id)),10,hear);t.need=8;t.to=e}
+  else{t.lo=0;t.hi=kStE(KURS.stufen[0]).length-1;K=null;T=kWBlock(t,hear)}
+  if(!T.length)return go("path");
+  K={l:null,e:e||"s1",T,n:0,graded:T.length,first:0,miss:0,xp:0,fb:null,picked:null,ps:null,sel:[],rec:null,fin:false,test:t};
+  view="klek";render();
+}
+const kMark=f=>{KL.filter(f).forEach(l=>{if(!kDone(l.id))kp().d[l.id]=1})}; // Lektionen als geschafft zählen, ohne Wiederholungen hochzuzählen
+function kEndT(){
+  const t=K.test,ok=t.res.filter(Boolean).length,n=t.res.length,E=kStE(KURS.stufen[0]);
+  if(!K.fin){K.fin=true;
+    if(t.kind==="wissen"){t.pass=true;t.at=E[Math.min(t.lo,E.length-1)];const f=KL.find(l=>l.e===t.at.id),lst=t.lo>=E.length;
+      kMark(l=>l.e===t.at.id?lst&&l.art!=="test":E.findIndex(e=>e.id===l.e)<t.lo&&E.findIndex(e=>e.id===l.e)>=0);S.wt={e:t.lo,d:today()};t.go=kCur()}
+    else{t.pass=ok>=t.need;
+      if(t.pass&&t.kind==="ab")kp().d[K.l.id]=(kp().d[K.l.id]||0)+1;
+      if(t.pass&&t.kind==="sprung"){const f=KL.find(l=>l.e===t.to);kMark(l=>l.k<f.k);t.go=f}}
+    S.st.kurs=(S.st.kurs||0)+1;K.bonus=t.pass?10:0;K.xp+=K.bonus;if(K.bonus)addXP(K.bonus);else save();
+    if(t.pass&&t.kind!=="wissen")confetti();if(t.pass)sfx("win")}
+  const sc=`<div class="tiles"><div class="card"><p class="mute">Richtig</p><b>${ok} / ${n}</b>${t.need?`<span class="mute">nötig: ${t.need}</span>`:""}</div><div class="card"><p class="mute">XP verdient</p><b>+${K.xp}</b>${K.bonus?`<span class="mute">davon ${K.bonus} Bonus</span>`:""}</div></div>`;
+  const nxt=l=>l?`<button class="btn" data-kl="${l.id}">Weiter: Etappe ${l.e.toUpperCase()}, ${esc(l.titel)}</button>`:"";
+  let h;
+  if(t.kind==="ab"){const st=kStOf(K.l.e),zl=KE[K.l.e]&&KE[K.l.e].ziel,nx=KL[K.l.k+1];
+    h=t.pass?`<h1>Stufe ${st.id} geschafft</h1><p class="mute">Abschlusstest bestanden</p></div>${sc}<div class="card note" role="status"><p><b>${esc(st.titel)}: geschafft.</b> ${zl&&zl.geschafft?esc(zl.geschafft):""}${nx?"":" Die nächste Stufe ist in Arbeit."}</p></div>${nx?nxt(nx):""}<button class="btn ${nx?"alt":""}" data-go="path">Zum Lernpfad</button>`
+      :`<h1>Noch nicht bestanden</h1><p class="mute">Abschlusstest · ${esc(st.titel)}</p></div>${sc}<div class="card note"><p>Für den Abschluss brauchst du ${t.need} richtige Antworten. Übe die Etappen mit „Alle üben“ und versuch es dann noch einmal.</p></div><button class="btn" data-kl="${K.l.id}">Nochmal versuchen</button><button class="btn alt" data-go="path">Zum Lernpfad</button>`}
+  else if(t.kind==="sprung"){const et=kEtap(t.to);
+    h=t.pass?`<h1>Test bestanden</h1><p class="mute">Sprung zu Etappe ${t.to.toUpperCase()} · ${esc(et.titel)}</p></div>${sc}<div class="card note" role="status"><p>Die Lektionen davor zählen jetzt als geschafft. Du kannst sie jederzeit wiederholen.</p></div>${nxt(t.go)}<button class="btn alt" data-go="path">Zum Lernpfad</button>`
+      :`<h1>Noch nicht ganz</h1><p class="mute">Sprung zu Etappe ${t.to.toUpperCase()} · ${esc(et.titel)}</p></div>${sc}<div class="card note"><p>Zum Springen brauchst du ${t.need} richtige Antworten. Lerne die Etappen davor, dann klappt es.</p></div>${nxt(kCur())}<button class="btn alt" data-go="path">Zum Lernpfad</button>`}
+  else{const all=t.lo>=E.length;
+    h=`<h1>Einstufung fertig</h1><p class="mute">${t.lo?all?"Du kannst schon alles aus Stufe 1 lesen.":`Etappe ${E.slice(0,t.lo).map(e=>e.id.toUpperCase()).join(", ")} ${t.lo>1?"sitzen":"sitzt"} schon.`:"Du fängst am besten von vorn an."}</p></div>${sc}
+    <div class="card note" role="status"><p>${all?"Es fehlt nur noch der Abschlusstest der Stufe.":t.lo?`Du startest bei <b>Etappe ${t.at.id.toUpperCase()} · ${esc(t.at.titel)}</b>. Was davor kommt, zählt als geschafft.`:"Du startest bei den Buchstaben. Keine Sorge, das geht schnell."}</p></div>${nxt(t.go)}<button class="btn alt" data-go="path">Zum Lernpfad</button>`}
+  paint(`<div style="text-align:center;margin-top:20px">${h}`);
+}
+function kAns(ok){ // Bewertung: Fehler kommen am Ende noch einmal (außer im Test), es gibt keine Herzen
+  const it=K.T[K.n],a=it.a;S.alpha=S.alpha||{};K.fb={ok};if(K.test)K.test.res.push(ok);
   if(ok){if(a)S.alpha[a.i]=Math.min(5,aCnt(a.i)+1);const x=it.rep?1:3;K.xp+=x;K.fb.x=x;if(!it.rep)K.first++;sfx("good",Math.min(6,K.first));vib(10);addXP(x)}
-  else{if(a)S.alpha[a.i]=Math.max(0,aCnt(a.i)-1);K.miss++;K.T.push({...it,rep:true,opts:null,bank:null});sfx("bad");vib([40,30,40]);save()}
+  else{if(a)S.alpha[a.i]=Math.max(0,aCnt(a.i)-1);K.miss++;if(!K.test)K.T.push({...it,rep:true,opts:null,bank:null});sfx("bad");vib([40,30,40]);save()}
 }
 function klek(){
-  if(K.n>=K.T.length)return kEnd();
+  if(K.n>=K.T.length&&!(K.test&&K.test.kind==="wissen"&&!K.fin&&kWNext()))return kEnd();
   const it=K.T[K.n],a=it.a,s=it.s,done=K.fb!==null,p=K.picked;
-  if(it.t==="sprechen"&&!K.rec&&!kSpOk()){K.n++;return klek()} // ohne Mikrofon oder gerade pausiert
-  const top=`<div class="top">${xbtn("path","Lektion beenden")}<div class="bar"><i style="width:${Math.round(K.n/K.T.length*100)}%"></i></div></div>${it.rep?'<p class="mute kre">Noch einmal</p>':""}`;
+  if(it.t==="sprechen"&&!K.rec&&!(it.sr&&kSrUse())&&(!kSpOk()||it.sr&&!kHearT(it.wo.w))){K.n++;return klek()} // ohne Mikrofon oder gerade pausiert; ohne Spracherkennung nur mit Vorbild
+  const top=`<div class="top">${xbtn("path",K.test?"Test beenden":"Lektion beenden")}<div class="bar"><i style="width:${Math.round(K.n/(K.test&&K.test.kind==="wissen"?Math.max(K.T.length,12):K.T.length)*100)}%"></i></div></div>${it.rep?'<p class="mute kre">Noch einmal</p>':K.test?`<p class="mute kre">${K.test.kind==="wissen"?"Einstufung":"Test"} · Aufgabe ${K.n+1}${K.test.kind==="wissen"?"":" von "+K.T.length}</p>`:""}`;
   const nx=`<button class="btn" id="nx" ${done||KCARD.includes(it.t)?"":"disabled"}>Weiter</button>`;
-  const fb=h=>done?`<div class="fb ${K.fb.ok?"ok":"no"}" role="status"><span>${K.fb.ok?"Richtig":"Richtig ist"}: ${h}${K.fb.ok?"":". Das kommt am Ende noch einmal."}</span>${K.fb.ok?`<span class="xpf">+${K.fb.x} XP</span>`:""}</div>`:"";
+  const again=K.test?"":". Das kommt am Ende noch einmal."; // im Test gibt es keine zweite Runde
+  const fb=h=>done?`<div class="fb ${K.fb.ok?"ok":"no"}" role="status"><span>${K.fb.ok?"Richtig":"Richtig ist"}: ${h}${K.fb.ok?"":again}</span>${K.fb.ok?`<span class="xpf">+${K.fb.x} XP</span>`:""}</div>`:"";
   const sp=t=>`<button class="btn alt" id="sp" style="width:auto;padding:10px 22px">${ic("speaker",18)} ${t}</button>`;
   if(it.t==="tipp"){
     paint(top+`<p class="kq">Gut zu wissen</p><div class="card ktip"><div class="ar" lang="ar">${it.p.zeichen}</div><h2>${esc(it.p.titel)}</h2><p>${arIn(it.p.text)}</p></div>${nx}`);
@@ -1314,11 +1470,31 @@ function klek(){
     paint(top+`<p class="kq">Neues Zeichen</p><div class="card flash slide kzn"><div class="ar" lang="ar">${Z.g}</div><p><b>${Z.n}</b> · ${Z.k||"klingt wie "+Z.l}</p><p class="mute">${Z.h}</p>
     ${wo?`<p class="kbsp">Im Wort: <span class="ar" lang="ar">${wo.w}</span></p><p class="kwl">${esc(wo.lat)} · ${esc(wo.de)}</p>`:""}${wo&&kHearT(wo.w)?sp("Wort anhören"):""}</div>${nx}`);
     if($("#sp"))$("#sp").onclick=()=>speak(wo.w);
+  }else if(it.t==="neuq"){ // Zeichen der Koranschrift oder Pausenzeichen: Aussehen, Bedeutung, ein Beispiel aus der Lektion
+    const x=it.q,wo=it.wo;
+    paint(top+`<p class="kq">${x.z==="pz"?"Neues Pausenzeichen":"Zeichen der Koranschrift"}</p><div class="card flash slide kzn kqn"><div class="ar${x.z==="pz"?" up":""}" lang="ar">${x.g}</div><p><b>${x.n}</b> · ${esc(x.b)}</p><p class="mute">${arIn(x.h)}</p>
+    ${wo?`<p class="kbsp">Im Text: <span class="ar" lang="ar">${wo.w}</span></p><p class="kwl">${esc(wo.lat)} · ${esc(wo.de)}</p>`:""}</div>${nx}`);
   }else if(it.t==="tafel"){ // alle Silben mit dem neuen Zeichen oder Beispielwörter, mit Audiodatei zum Antippen
     const Z=ZI[it.z],au=it.sy.some(y=>AUD[y.t]),tg=au?"button":"span";
     paint(top+`<p class="kq">${it.wd?Z.tt||"Wörter mit "+Z.n:"Alle Silben mit "+(Z.d||Z.n)}</p><div class="ktf ${it.wd?"wd":it.sy.length<6?"few":""}">${it.sy.map((y,k)=>`<${tg} class="kts" ${au?`data-sy="${k}"`:""}><span class="ar" lang="ar">${y.t}</span><small>${esc(y.lat)}</small></${tg}>`).join("")}</div>
     <p class="mute ktu">${au?`Tippe ${it.wd?"ein Wort":"eine Silbe"} an, um ${it.wd?"es":"sie"} zu hören. `:""}${Z.t!==undefined?Z.t:it.z==="ta"?"":it.z==="hamza"?"ʾ steht in der Umschrift für das Hamza.":"In der Umschrift steht j für dsch, kh für ch, sh für sch, ʿ für ʿAyn und ʾ für Hamza."}</p>${nx}`);
     document.querySelectorAll("[data-sy]").forEach(b=>b.onclick=()=>speak(it.sy[+b.dataset.sy].t));
+  }else if(it.t==="sprechen"&&it.sr&&kSrUse()){ // vorlesen mit Spracherkennung: erst zustimmen, dann liest man den Text ohne Umschrift, ohne Bewertung
+    const wo=it.wo,tx=wo.w,R=K.sr||(K.sr={st:"idle"}),hv=kHearT(tx),seen=R.st==="ok"||R.st==="no";
+    if(S.srOk===undefined){
+      paint(top+`<p class="kq">Lies laut vor</p><div class="card ksp slide"><div class="ar kgl kwr" lang="ar">${tx}</div>
+      <p class="ksh">Ab jetzt kann die Spracherkennung deines Browsers zuhören und sagen, ob du richtig liest. Dafür schickt der Browser deine Stimme an seinen Hersteller, bei Chrome zum Beispiel an Google. Die App selbst speichert nichts davon.</p>
+      <div class="ksr"><button class="btn" id="sry">Einverstanden</button><button class="btn alt" id="srn">Lieber ohne</button></div></div>${nx}`);
+      $("#sry").onclick=()=>{S.srOk=true;save();klek()};$("#srn").onclick=()=>{S.srOk=false;save();K.sr=null;klek()};
+    }else{
+      const msg={idle:"Tippe auf Vorlesen und lies den Text laut.",listen:"Ich höre zu …",ok:"Gut gelesen.",no:"Das klang anders. Versuch es noch einmal oder geh weiter.",none:"Ich habe nichts gehört. Versuch es noch einmal."}[R.st];
+      paint(top+`<p class="kq">Lies laut vor</p><div class="card ksp slide"><div class="ar kgl kwr${tx.length>24?" klg":""}" lang="ar">${tx}</div>${seen?`<p class="kwl">${esc(wo.lat)} · ${esc(wo.de)}</p>`:`<p class="kwl mute">${esc(wo.de)}</p>`}
+      <div class="ksr">${hv&&seen?`<button class="btn alt" id="sp">${ic("speaker",18)} Vorbild</button>`:""}<button class="btn ${R.st==="listen"?"krec":"alt"}" id="srb">${ic(R.st==="listen"?"stop":"mic",18)} ${R.st==="listen"?"Stopp":seen?"Nochmal":"Vorlesen"}</button></div>
+      <p class="mute ksh ${R.st==="ok"?"ksok":""}" role="status">${msg}${R.heard&&seen?`<br>Erkannt: <span class="ar" lang="ar">${esc(R.heard)}</span>`:""}</p></div>${nx}<button class="lnk ksk" id="nsp">Gerade nicht sprechen</button>`);
+      if($("#sp"))$("#sp").onclick=()=>speak(tx);
+      $("#srb").onclick=()=>{if(R.st==="listen")kSrStop(true);else kSr(tx)};
+      $("#nsp").onclick=()=>{SPAUSE=Date.now()+15*60e3;kSrStop();toast("Sprechübungen pausieren für 15 Minuten.");$("#nx").click()};
+    }
   }else if(it.t==="sprechen"){ // nachsprechen: Vorbild hören, sich aufnehmen, vergleichen, ohne Bewertung
     const tx=it.y?it.y.t:it.wo.w,R=K.rec||(K.rec={st:"idle"});
     const msg={idle:"Hör dir das Vorbild an, dann nimm dich auf. Die Aufnahme bleibt auf deinem Gerät.",rec:"Ich höre zu …",done:"Vergleiche deine Aufnahme mit dem Vorbild.",err:"Das Mikrofon ist nicht verfügbar. Sprich einfach laut mit."}[R.st];
@@ -1349,25 +1525,27 @@ function klek(){
     <div class="sb ${done?(K.fb.ok?"ok":"no"):""}" aria-label="${bau?"Deine Auswahl":"Deine Buchstaben"}" aria-live="polite">${K.sel.length?K.sel.map(u=>`<button class="tk" lang="ar" data-rm="${u}" ${done?"disabled":""}>${it.bank[u].c}</button>`).join(""):`<span class="mute sbh">Tippe die ${L.length} ${unit} der Reihe nach an, von rechts nach links</span>`}</div>
     ${bad?`<p class="mute kzr">Richtig ist:</p><div class="sb ok kzs" aria-label="Richtige Reihenfolge">${L.map(x=>`<span class="tk" lang="ar">${x.c}</span>`).join("")}</div>` // Lösung in derselben Richtung wie die eigene Antwort
       :`<div class="sbk" aria-label="${unit} zur Auswahl">${it.bank.map(x=>`<button class="tk" lang="ar" data-add="${x.u}" ${x.n?`aria-label="${x.n}"`:""} ${used.has(x.u)||done?"disabled":""}>${x.c}</button>`).join("")}</div>`}
-    ${done?(bad?`<div class="fb no" role="status"><span>Nicht ganz. Das kommt am Ende noch einmal.</span></div>`:fb(bau?`<span class="ar kfa" lang="ar">${wo.w}</span> ${esc(wo.lat)} · ${esc(wo.de)}`:`<span class="ar kfa" lang="ar">${it.w}</span>`))+nx:`<button class="btn" id="chk" ${K.sel.length===L.length?"":"disabled"}>Prüfen</button>`}`);
+    ${done?(bad?`<div class="fb no" role="status"><span>Nicht ganz.${K.test?"":" Das kommt am Ende noch einmal."}</span></div>`:fb(bau?`<span class="ar kfa" lang="ar">${wo.w}</span> ${esc(wo.lat)} · ${esc(wo.de)}`:`<span class="ar kfa" lang="ar">${it.w}</span>`))+nx:`<button class="btn" id="chk" ${K.sel.length===L.length?"":"disabled"}>Prüfen</button>`}`);
     if(!done){
       document.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>{if(K.sel.length<L.length){K.sel.push(+b.dataset.add);sfx("tap")}klek()});
       document.querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>{K.sel=K.sel.filter(u=>u!==+b.dataset.rm);sfx("tap");klek()});
-      $("#chk").onclick=()=>{kAns(K.sel.map(u=>it.bank[u].k).join()===L.map(x=>x.k).join());if(bau)speakLater(wo.w);else if(s)speakLater(s.sp);klek()}}
+      $("#chk").onclick=()=>{kAns(K.sel.map(u=>it.bank[u].k).join()===L.map(x=>x.k).join());if(bau&&kSayOk(wo.w))speakLater(wo.w);else if(s)speakLater(s.sp);klek()}}
   }else if(KCHO.includes(it.t)){ // eine von bis zu vier Antworten, als Text
     if(!it.opts)kOpts(it);
-    const y=it.y,wo=it.wo,lat=["sure","silbe","wortlesen"].includes(it.t),right=it.opts[it.ok],hr=/hoeren$/.test(it.t),say=y?y.t:wo?wo.w:s&&s.sp,U=it.t==="luecke"&&kUnits(wo.w);
+    const y=it.y,wo=it.wo,lat=["sure","silbe","wortlesen","qbed"].includes(it.t),right=it.opts[it.ok],hr=/hoeren$/.test(it.t),say=y?y.t:wo?wo.w:s&&s.sp,U=it.t==="luecke"&&kUnits(wo.w);
     const prompt={formsuche:`Wie sieht <b>${a&&a.n}</b> ${POSN[it.pos]} aus?`,bauen:"Welches Wort entsteht aus diesen Buchstaben?",sure:"Wie liest man diesen Surenanfang?",surehoeren:"Welchen Surenanfang hörst du?",
-      silbe:"Wie liest man diese Silbe?",silbewahl:"Welche Silbe liest man so?",silbehoeren:"Welche Silbe hörst du?",wortlesen:wo&&wo.w.includes(" ")?"Wie liest man das?":"Wie liest man dieses Wort?",worthoeren:"Was hörst du?",luecke:"Welche Silbe fehlt?"}[it.t];
+      silbe:"Wie liest man diese Silbe?",silbewahl:"Welche Silbe liest man so?",silbehoeren:"Welche Silbe hörst du?",wortlesen:wo&&wo.w.includes(" ")?"Wie liest man das?":"Wie liest man dieses Wort?",worthoeren:"Was hörst du?",luecke:"Welche Silbe fehlt?",qbed:"Was bedeutet dieses Zeichen?"}[it.t];
     const stage=it.t==="bauen"?`<div class="ar kbt" lang="ar">${kChars(it.w).map(x=>x.c).join(" + ")}</div>`:it.t==="sure"?`<div class="ar kgl ksu" lang="ar">${s.t}</div>`
-      :it.t==="silbe"?`<div class="ar kgl" lang="ar">${y.t}</div>`:it.t==="silbewahl"?`<p class="klaut kla">„${esc(y.lat)}“</p>`:it.t==="wortlesen"?`<div class="ar kgl kwr" lang="ar">${wo.w}</div>`
+      :it.t==="silbe"?`<div class="ar kgl" lang="ar">${y.t}</div>`:it.t==="silbewahl"?`<p class="klaut kla">„${esc(y.lat)}“</p>`:it.t==="wortlesen"?`<div class="ar kgl kwr${wo.w.length>24?" klg":""}" lang="ar">${wo.w}</div>`
+      :it.t==="qbed"?`<div class="ar kgl kqg${it.q.z==="pz"?" up":""}" lang="ar">${it.q.g}</div>${wo?`<p class="kbsp"><span class="ar" lang="ar">${wo.w}</span></p>`:""}`
       :it.t==="luecke"?`<div class="ar kgl kwr" lang="ar">${U.map((u,k)=>k===it.g?`<span class="kgp">${u.a.i==="hamza"?"ا":u.c}</span>`:kUw(u)).join("")}</div><p class="kwl">${kTrU(U).map((x,k)=>k===it.g?`<b class="kgp">${esc(x)}</b>`:esc(x)).join("")} · ${esc(wo.de)}</p>` // Lücke: Buchstabe ohne Zeichen, Umschrift verrät den Klang
       :hr?`<div style="text-align:center;margin:14px 0"><button class="btn alt" id="rp" style="width:auto;padding:14px 26px">${ic("speaker",22)} Nochmal hören</button></div>`:"";
     const opt=(o,k)=>`<button class="opt ${lat?"":"ar"} ${done?(k===it.ok?"ok":k===p?"no":""):""}" ${lat?"":'lang="ar"'} data-o="${k}" ${done?"disabled":""}>${esc(o)}</button>`;
     const fbt=it.t==="formsuche"?`<span class="ar kfa" lang="ar">${right}</span> ${a.n} ${POSN[it.pos]}`:it.t==="bauen"?`<span class="ar kfa" lang="ar">${right}</span>`
+      :it.t==="qbed"?`<span class="ar kfa" lang="ar">${it.q.g}</span> ${esc(it.q.n)}: ${esc(it.q.b)}`
       :y?`<span class="ar kfa" lang="ar">${y.t}</span> ${esc(y.lat)}`:wo?`<span class="ar kfa" lang="ar">${wo.w}</span> ${esc(wo.lat)} · ${esc(wo.de)}`:`<span class="ar kfa" lang="ar">${s.t}</span> ${esc(s.lesung)}`;
     paint(top+`<p class="kq">${prompt}</p>${stage}<div class="${lat?"ksl":"og kog"}">${it.opts.map(opt).join("")}</div>${fb(fbt)}${nx}`);
-    const sayOk=say&&(!y||AUD[say]); // Silben nur mit Audiodatei, die Gerätestimme liest einzelne Silben nicht sicher
+    const sayOk=it.t!=="qbed"&&kSayOk(say)&&(!y||AUD[say]); // Silben nur mit Audiodatei, die Gerätestimme liest einzelne Silben nicht sicher; Koranschrift nur mit Aufnahme
     if(hr){$("#rp").onclick=()=>speak(say);if(!done)speak(say)}
     if(!done)document.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{K.picked=+b.dataset.o;kAns(K.picked===it.ok);if(sayOk&&(!hr||!K.fb.ok))speakLater(say);klek()});
   }else{ // ein Buchstabe: Name, Zeichen, Laut, Hören, Punkte, Form im Wort, verbindet sich nicht
@@ -1378,19 +1556,20 @@ function klek(){
     const stage=byName?`<div class="ar kgl" lang="ar">${g}</div>${it.t==="form"?`<p class="kpos mute">${POSN[it.pos]} eines Wortes</p>`:""}`:it.t==="hoeren"?`<div style="text-align:center;margin:14px 0"><button class="btn alt" id="rp" style="width:auto;padding:14px 26px">${ic("speaker",22)} Nochmal hören</button></div>`:it.t==="laut"?`<p class="klaut">„${a.h}“</p>`:"";
     const opt=o=>`<button class="opt ${byName?"":"ar"} ${done?(o===a?"ok":o.i===p?"no":""):""}" ${byName?"":'lang="ar"'} data-o="${o.i}" ${done?"disabled":""}>${byName?o.n:o.c}</button>`;
     const ex=it.t==="form"?", "+POSN[it.pos]:it.t==="einzel"?", verbindet sich nie mit dem folgenden":"";
-    const fbh=done?`<div class="fb ${K.fb.ok?"ok":"no"}" role="status"><span>${K.fb.ok?"Richtig":"Richtig ist"}: <span class="ar kfa" lang="ar">${g}</span> ${a.n} (${a.s})${ex}${K.fb.ok?"":". Er kommt am Ende noch einmal."}</span>${K.fb.ok?`<span class="xpf">+${K.fb.x} XP</span>`:""}</div>`:"";
+    const fbh=done?`<div class="fb ${K.fb.ok?"ok":"no"}" role="status"><span>${K.fb.ok?"Richtig":"Richtig ist"}: <span class="ar kfa" lang="ar">${g}</span> ${a.n} (${a.s})${ex}${K.fb.ok?"":K.test?"":". Er kommt am Ende noch einmal."}</span>${K.fb.ok?`<span class="xpf">+${K.fb.x} XP</span>`:""}</div>`:"";
     paint(top+`<p class="kq">${prompt}</p>${stage}<div class="${byName?"":"og kog"}">${it.opts.map(opt).join("")}</div>${fbh}${nx}`);
     if(it.t==="hoeren"){$("#rp").onclick=()=>speak(a.sp);if(!done)speak(a.sp)}
     if(!done)document.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{K.picked=b.dataset.o;kAns(K.picked===a.i);if(it.t!=="hoeren"||!K.fb.ok)speakLater(a.sp);klek()});
   }
-  if($("#nx"))$("#nx").onclick=()=>{kRecStop();K.n++;K.fb=null;K.picked=null;K.ps=null;K.sel=[];K.rec=null;sfx("tap");klek()};
+  if($("#nx"))$("#nx").onclick=()=>{kRecStop();kSrStop();K.n++;K.fb=null;K.picked=null;K.ps=null;K.sel=[];K.rec=null;K.sr=null;sfx("tap");klek()};
 }
-const kKnownAll=()=>K&&K.l?[...kKnown(K.l.k),...(K.l.art==="buchstaben"?kLet(K.l):[])]:kLearnt();
+const kKnownAll=()=>K&&K.test?ALPHA:K&&K.l?[...kKnown(K.l.k),...(K.l.art==="buchstaben"?kLet(K.l):[])]:kLearnt(); // im Test alle Buchstaben als Ablenker
 function kSum(l){ // was die Lektion gebracht hat: Buchstaben, gelesene Wörter oder Surenanfänge
   const ws=l.art==="verbinden"?l.woerter:l.art==="suren"?l.suren.map(s=>s.t):l.art==="vokale"?l.woerter.map(w=>w[0]):null;
   return ws?`<div class="ar klet kws" lang="ar">${ws.slice(0,6).map(w=>`<span>${w}</span>`).join("")}</div>`:`<div class="ar klet" lang="ar">${kLet(l).map(a=>a.c).join(" ")}</div>`;
 }
 function kEnd(){
+  if(K.test)return kEndT();
   const l=K.l,nx=l&&KL[l.k+1];
   if(!K.fin){K.fin=true;K.newDone=l&&!kDone(l.id);
     if(l)kp().d[l.id]=(kp().d[l.id]||0)+1;
@@ -1403,7 +1582,7 @@ function kEnd(){
   ${etDone?`<div class="card note" role="status"><p><b>Etappe „${esc(et.titel)}“ geschafft.</b> ${zl&&zl.geschafft?esc(zl.geschafft):""}${nx?"":" Die nächste Etappe ist in Arbeit."}</p></div>`:""}
   ${nx?`<button class="btn" data-kl="${nx.id}">Weiter: ${nxe.id!==l.e?"Etappe "+nx.e.toUpperCase()+", ":""}${esc(nx.titel)}</button><button class="btn alt" data-go="path">Zum Lernpfad</button>`:`<button class="btn" data-go="path">Zum Lernpfad</button>${l?"":`<button class="btn alt" data-krev="${K.e}">Noch eine Runde</button>`}`}`);
 }
-const kSm=l=>l.art==="verbinden"?(l.neu.length?l.neu.length+" Buchstaben verbinden":l.woerter.length+" Wörter lesen"):l.art==="suren"?l.suren.length+" Surenanfänge"
+const kSm=l=>l.art==="test"?"20 Aufgaben aus der ganzen Stufe":l.art==="verbinden"?(l.neu.length?l.neu.length+" Buchstaben verbinden":l.woerter.length+" Wörter lesen"):l.art==="suren"?l.suren.length+" Surenanfänge"
   :l.art==="vokale"?(l.zeichen?"Neu: "+ZI[l.zeichen].n:l.woerter.length+(l.woerter.filter(w=>w[0].includes(" ")).length*2>l.woerter.length?" kurze Sätze":" Wörter lesen")):kLet(l).length+" neue Buchstaben";
 // Fußspuren statt Mittellinie: nur auf dem schon gegangenen Teil, alle 22 px ein Schritt, abwechselnd links und rechts, in der Farbe des Wegbelags.
 // Der Weg ist in Prozent gezeichnet, die Spuren in Pixeln, damit sie nicht verzerrt werden. Bei anderer Breite neu setzen.
@@ -1428,12 +1607,13 @@ function kpath(){
   const bend=s=>{i=0;amp=18+(s*5)%9;fr=[1.15,.8,1.4,.95,1.25][(s+5)%5];ph=s*1.7};
   KURS.stufen.forEach(st=>st.etappen.forEach((e,ei)=>{
     const f=KE[e.id];if(!f){soon.push({...e,st});return}
-    const ls=KL.filter(l=>l.e===e.id);th=e.id==="s1"?"ths":"th"+(ei%10);
-    bands.push({y,th,h:`<div class="pgr" style="top:0"><span class="ar ut" lang="ar">${e.ar}</span><b>Etappe ${e.id.toUpperCase()} · ${esc(e.titel)}</b><small>${ls.length} Lektionen · ${esc(e.kurz)}</small></div>`});y+=140;br=true;bend(ei-1);
+    const ls=KL.filter(l=>l.e===e.id),jp=ls.length&&kLocked(ls[0]);th=e.id==="s1"?"ths":"th"+(ei%10);
+    bands.push({y,th,h:`<div class="pgr" style="top:0"><span class="ar ut" lang="ar">${e.ar}</span><b>Etappe ${e.id.toUpperCase()} · ${esc(e.titel)}</b><small>${ls.length} Lektionen · ${esc(e.kurz)}</small>${jp?`<button class="sbt kjp ${th}" data-kj="${e.id}" aria-label="Mit einem Test bis Etappe ${e.id.toUpperCase()} springen">Hierher springen<small>Test mit 10 Aufgaben</small></button>`:""}</div>`}); // gesperrte Etappe: mit einem Test überspringen
+    y+=jp?196:140;br=true;bend(ei-1);
     ls.forEach(l=>{const lock=kLocked(l),dn=kDone(l.id),c=l===cur&&!dn,attr=`data-kl="${l.id}"`,x=Math.max(24,Math.min(76,50+amp*Math.sin(i*fr+ph))),pv=KL[l.k-1];i++;
       pts.push({x,y:y+32,dn,brk:br,th});br=false;
       const sm=lock?(pv.e!==l.e?"nach Etappe "+pv.e.toUpperCase():"nach Lektion "+(pv.li+1)):dn?"geschafft":kSm(l);
-      nodes.push(`<button class="pn abl ${lock?"lock":dn?"done":""} ${c?"cur":""} ${th}" ${attr} style="left:${x.toFixed(1)}%;top:${y}px" aria-label="Lektion ${l.li+1}: ${esc(l.titel)}, ${lock?"gesperrt":dn?"geschafft":"offen"}"><span class="nd">${c?'<img src="icons/favicon-64.png" alt="">':dn?ic("check",24):`<span class="ar" lang="ar">${l.station||kLet(l).slice(0,2).map(a=>a.c).join(" ")}</span>`}</span><span class="lb ${x>50?"l":"r"}"><b>${esc(l.titel)}</b><small>${sm}</small>${lock&&hint===attr?`<small class="hint" role="status">Schließe erst „${esc(pv.titel)}“ ab.</small>`:""}</span></button>`);
+      nodes.push(`<button class="pn abl ${lock?"lock":dn?"done":""} ${c?"cur":""} ${th}" ${attr} style="left:${x.toFixed(1)}%;top:${y}px" aria-label="Lektion ${l.li+1}: ${esc(l.titel)}, ${lock?"gesperrt":dn?"geschafft":"offen"}"><span class="nd">${c?'<img src="icons/favicon-64.png" alt="">':dn?ic("check",24):`<span class="ar${l.station&&l.station.replace(/[ً-ٰۖ-ۭ]/g,"").length>5?" lng":""}" lang="ar">${l.station||kLet(l).slice(0,2).map(a=>a.c).join(" ")}</span>`}</span><span class="lb ${x>50?"l":"r"}"><b>${esc(l.titel)}</b><small>${sm}</small>${lock&&hint===attr?`<small class="hint" role="status">Schließe erst „${esc(pv.titel)}“ ab.</small>`:""}</span></button>`);
       y+=P});
     if(f.ziel&&f.ziel.art==="alle-buchstaben"){ // Ziel der Etappe: alle Buchstaben, gelernte färben sich grün
       const lt=new Set(kLearnt().map(a=>a.i)),sure=ALPHA.filter(a=>aCnt(a.i)>=3).length,can=lt.size>=4,all=lt.size===ALPHA.length;
@@ -1447,9 +1627,9 @@ function kpath(){
       const dl=ls.filter(l=>kDone(l.id)).length,all=dl===ls.length;
       pts.push({x:50,y:y+14,dn:false,brk:br,th});br=false;
       nodes.push(`<div class="sgn kzl ${all?"all":""} ${th}" style="top:${y}px"><span class="eta">Ziel der Etappe</span>
-        <button class="sent ar ${f.ziel.ar.split(" ").length>3?"lng":""}" lang="ar" data-kz="${e.id}" aria-label="Ziel anhören">${f.ziel.ar}</button>
+        <button class="sent ar ${f.ziel.ar.split(" ").length>3?"lng":""}" lang="ar" ${f.ziel.sp?`data-kz="${e.id}" aria-label="Ziel anhören"`:'tabindex="-1"'}>${f.ziel.ar}</button>
         <span class="de">${all?(f.ziel.de?`${esc(kTr(f.ziel.ar))}<br>${esc(f.ziel.de)}`:esc(kLesung(f.ziel.ar))):esc(f.ziel.text)}</span><small>${all?"Geschafft: "+esc(f.ziel.text):dl+" von "+ls.length+" Lektionen geschafft"}</small>
-        <span class="row" style="justify-content:center;gap:14px;margin-top:8px"><button class="lnk" data-kz="${e.id}">${ic("speaker",16)} Anhören</button><button class="sbt ${dl?"":"lock"}" data-krev="${e.id}" aria-label="Diese Etappe üben${dl?"":", noch gesperrt"}">Alle üben<small>${dl?dl+(dl>1?" Lektionen":" Lektion"):"nach Lektion 1"}</small></button></span></div>`);
+        <span class="row" style="justify-content:center;gap:14px;margin-top:8px">${f.ziel.sp?`<button class="lnk" data-kz="${e.id}">${ic("speaker",16)} Anhören</button>`:""}<button class="sbt ${dl?"":"lock"}" data-krev="${e.id}" aria-label="Diese Etappe üben${dl?"":", noch gesperrt"}">Alle üben<small>${dl?dl+(dl>1?" Lektionen":" Lektion"):"nach Lektion 1"}</small></button></span></div>`);
       y+=f.ziel.de?280:236}
   }));
   const seg=pts.slice(1).map((b,k)=>{if(b.brk)return null;const a=pts[k],m=(a.y+b.y)/2;return{d:`M${a.x.toFixed(1)} ${a.y} C${a.x.toFixed(1)} ${m} ${b.x.toFixed(1)} ${m} ${b.x.toFixed(1)} ${b.y}`,th:a.th,k}}).filter(Boolean);
@@ -1458,10 +1638,12 @@ function kpath(){
   const land=bands.map((b,n)=>`<div class="ub ${b.th}" style="top:${b.y+4}px;height:${(n+1<bands.length?bands[n+1].y:y)-b.y-8}px">${b.h}</div>`).join("");
   const dn=KL.filter(l=>kDone(l.id)).length,st1=KURS.stufen[0];
   paint(`<h1>Lernpfad</h1><p class="mute">Stufe ${st1.id} · ${esc(st1.titel)} · ${dn} von ${KL.length} Lektionen geschafft</p>
-  <div class="card note kpv"><p><b>Vorschau.</b> So sieht der neue Lernpfad aus. Er wächst Etappe für Etappe und ersetzt den bisherigen, sobald Stufe 1 fertig ist.</p>${off}</div>
-  <details class="card rule"><summary><b>So funktioniert der Lernpfad</b></summary><ol><li><i>1</i><span>Stufe 1 bringt dir das <b>Lesen</b> bei, von den Buchstaben bis zu ganzen Wörtern. Danach lernst du in Stufe 2 die Sprache.</span></li><li><i>2</i><span>Jede <b>Lektion</b> mischt kurze Aufgaben: kennenlernen, erkennen, hören, zuordnen und Wörter in Buchstaben zerlegen.</span></li><li><i>3</i><span>Fehler kommen am Ende der Lektion noch einmal, bis sie sitzen. Danach öffnet sich die nächste Lektion.</span></li></ol></details>
+  <div class="card note kpv"><p><b>Vorschau.</b> Stufe 1 ist komplett. Der neue Lernpfad ersetzt den bisherigen, sobald die ersten Lektionen von Stufe 2 dazukommen.</p>${off}</div>
+  ${!dn&&!S.wt?`<div class="card askip kwt"><b>Kannst du schon etwas lesen?</b><p class="mute">Ein kurzer Einstufungstest zeigt, wo du einsteigst. Was du schon kannst, zählt dann als geschafft.</p><button class="btn" data-kt="wissen">Einstufungstest starten</button><button class="lnk" data-kt="nein">Ich fange von vorn an</button></div>`:""}
+  <details class="card rule"><summary><b>So funktioniert der Lernpfad</b></summary><ol><li><i>1</i><span>Stufe 1 bringt dir das <b>Lesen</b> bei, von den Buchstaben bis zur Schrift des Korans. Danach lernst du in Stufe 2 die Sprache.</span></li><li><i>2</i><span>Jede <b>Lektion</b> mischt kurze Aufgaben: kennenlernen, erkennen, hören, zuordnen und Wörter in Buchstaben zerlegen.</span></li><li><i>3</i><span>Fehler kommen am Ende der Lektion noch einmal, bis sie sitzen. Danach öffnet sich die nächste Lektion.</span></li><li><i>4</i><span>Du kannst schon etwas? Vor jeder gesperrten Etappe springst du mit einem <b>Test</b> weiter.</span></li></ol><button class="lnk" data-kt="wissen">Einstufungstest machen</button></details>
   <div class="pth" style="height:${y}px">${land}${road}${nodes.join("")}</div>
-  ${soon.length?`<div class="card ksoon"><b>Demnächst</b><p class="mute">Diese Etappen entstehen gerade.</p><ol>${soon.map(e=>`<li><span class="ar" lang="ar">${e.ar}</span><span><b>${e.id.toUpperCase()} · ${esc(e.titel)}</b><small>${esc(e.kurz||"")}</small></span></li>`).join("")}</ol>${KURS.stufen.slice(1).map(s=>`<p class="mute">Danach: Stufe ${s.id} · ${esc(s.titel)}</p>`).join("")}</div>`:""}`);
+  ${soon.length?`<div class="card ksoon"><b>Demnächst</b><p class="mute">Diese Etappen entstehen gerade.</p><ol>${soon.map(e=>`<li><span class="ar" lang="ar">${e.ar}</span><span><b>${e.id.toUpperCase()} · ${esc(e.titel)}</b><small>${esc(e.kurz||"")}</small></span></li>`).join("")}</ol>${KURS.stufen.slice(1).map(s=>`<p class="mute">Danach: Stufe ${s.id} · ${esc(s.titel)}</p>`).join("")}</div>`
+    :KURS.stufen.some(s=>!kStE(s).length)?`<div class="card ksoon"><b>Demnächst</b>${KURS.stufen.filter(s=>!kStE(s).length).map(s=>`<p class="mute">Stufe ${s.id} · ${esc(s.titel)} entsteht gerade: Wörter, Sätze und Grammatik, Lektion für Lektion.</p>`).join("")}</div>`:""}`);
   fpDraw();
   if(ui.keep){ui.keep=false;return}
   const c=$(".pn.cur");if(c&&dn)requestAnimationFrame(()=>c.scrollIntoView({block:"center"}));
@@ -1491,7 +1673,9 @@ document.addEventListener("click",e=>{
   const kl=e.target.closest("[data-kl]");
   if(kl){const l=KL.find(x=>x.id===kl.dataset.kl);sfx("tap");if(!l)return;if(kLocked(l))return pHint(`data-kl="${l.id}"`);return startK(l)}
   const kr=e.target.closest("[data-krev]");if(kr){sfx("tap");return startK(null,kr.dataset.krev||"s1")}
-  const kz=e.target.closest("[data-kz]");if(kz){const f=KE[kz.dataset.kz];if(f&&f.ziel)speak(f.ziel.sp);return}
+  const kj=e.target.closest("[data-kj]");if(kj){sfx("tap");return startKT("sprung",kj.dataset.kj)}
+  const kt=e.target.closest("[data-kt]");if(kt){sfx("tap");if(kt.dataset.kt==="nein"){S.wt={skip:true,d:today()};save();return go("path")}return startKT("wissen")}
+  const kz=e.target.closest("[data-kz]");if(kz){const f=KE[kz.dataset.kz];if(f&&f.ziel&&f.ziel.sp)speak(f.ziel.sp);return}
   const kn=e.target.closest("[data-kn],[data-ko]");if(kn){S.np=kn.hasAttribute("data-kn");save();sfx("tap");return go("path")}
   const gl=e.target.closest("[data-goal]");if(gl)return speak(SENT[+gl.dataset.goal].ar);
   const sa=e.target.closest("[data-sat]");
@@ -1881,7 +2065,7 @@ function settings(){
   $("#lg").onclick=()=>go("legal");$("#au").onclick=()=>{S.auto=S.auto===false;save();settings()};
   if($("#ex"))$("#ex").onclick=exportData;
   if($("#dl")){let a2=false;$("#dl").onclick=()=>{if(!a2){a2=true;$("#dl").lastChild.textContent="Nochmal tippen: alles wird gelöscht";return}deleteAccount()}}
-  let arm=false;$("#rs").onclick=()=>{if(!arm){arm=true;$("#rs").lastChild.textContent="Nochmal tippen zum Löschen";return}S.seen=[];S.seenDay="";S.xp=0;S.xpDays={};S.badges=[];S.st={perfect:0,rounds:0,goals:0,pairs:0,blitz:0,mix:0,sent:0};S.alpha={};S.aok="";S.kp={d:{}};S.sent={};S.days={};S.fav=[];S.box={};S.due={};S.ef={};S.streak=0;S.last="";S.epoch=Date.now();save();settings()};
+  let arm=false;$("#rs").onclick=()=>{if(!arm){arm=true;$("#rs").lastChild.textContent="Nochmal tippen zum Löschen";return}S.seen=[];S.seenDay="";S.xp=0;S.xpDays={};S.badges=[];S.st={perfect:0,rounds:0,goals:0,pairs:0,blitz:0,mix:0,sent:0};S.alpha={};S.aok="";S.kp={d:{}};S.wt=null;S.sent={};S.days={};S.fav=[];S.box={};S.due={};S.ef={};S.streak=0;S.last="";S.epoch=Date.now();save();settings()};
 }
 setInterval(()=>{try{const hm=new Date().toTimeString().slice(0,5);if(S.rem&&hm===S.time&&S.notified!==today()&&Notification.permission==="granted"){S.notified=today();save();new Notification("Mufradaat",{body:"Zeit für deine arabischen Vokabeln!"})}}catch(e){}},20000);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -1988,6 +2172,7 @@ function legal(){
   sec("Was gespeichert wird",`<b>Ohne Konto (Gast):</b> Lernstand und Einstellungen liegen nur in deinem Browser (lokaler Speicher) und werden nicht übertragen.<br><b>Mit Konto:</b> deine E-Mail-Adresse, dein Passwort (nur als Hash), dein Lernstand (z. B. Wörter, XP, Serie, Abzeichen), deine Einstellungen und der Zeitpunkt der letzten Änderung.`)+
   sec("Dienstleister",`<b>Supabase</b> (Anmeldung und Datenbank), Serverstandort: ${miss(LEGAL.region)}.<br><b>GitHub Pages</b> liefert diese Seite aus. Beim Aufruf verarbeitet GitHub technisch notwendige Verbindungsdaten wie deine IP-Adresse.<br>${EXT?"Die Programmbibliothek für die Anmeldung wird von <b>jsDelivr</b> geladen, dabei wird deine IP-Adresse an diesen Dienst übertragen.":"Schriften und Programmteile werden von dieser Seite selbst ausgeliefert."}`)+
   sec("Sprachausgabe","Die Aussprache nutzt die Sprachausgabe deines Geräts. Manche Browser (z. B. Chrome) greifen dafür auf Online-Dienste des Herstellers zurück, dabei kann das gesprochene Wort übertragen werden.")+
+  sec("Mikrofon und Spracherkennung","Beim Nachsprechen nimmst du dich mit dem Mikrofon auf. Die Aufnahme bleibt auf deinem Gerät und wird nicht gespeichert. Ab Etappe 8 kann zusätzlich die Spracherkennung deines Browsers zuhören, aber nur, wenn du vorher zustimmst. Dabei schickt der Browser deine Stimme an den Dienst seines Herstellers (bei Chrome an Google, bei Safari an Apple), der Text daraus kommt zurück und wird nur auf deinem Gerät verglichen. Die App selbst speichert davon nichts.")+
   sec("Cookies und lokaler Speicher","Es gibt keine Werbe- oder Analyse-Cookies und kein Tracking. Der lokale Speicher deines Browsers dient nur der Anmeldung und dem Lernstand und ist dafür technisch notwendig.")+
   sec("Deine Rechte","<b>Auskunft und Export:</b> Einstellungen → „Meine Daten exportieren“.<br><b>Löschung:</b> Einstellungen → „Konto löschen“ entfernt dein Konto und deinen Lernstand dauerhaft.<br>Du kannst außerdem Berichtigung, Einschränkung der Verarbeitung und Widerspruch verlangen und dich bei einer Datenschutz-Aufsichtsbehörde beschweren.")+
   sec("Speicherdauer","Deine Daten bleiben gespeichert, bis du dein Konto löschst.")+
@@ -2074,7 +2259,7 @@ loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v24"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v25"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>

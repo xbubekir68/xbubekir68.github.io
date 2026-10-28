@@ -10,6 +10,8 @@ const store={},mk=()=>({innerHTML:"",style:{},querySelector:()=>null,scrollLeft:
 const el=mk(),doc={querySelector:()=>el,querySelectorAll:()=>[],addEventListener(){},createElement:()=>mk(),body:{appendChild(){}},documentElement:{removeAttribute(){},setAttribute(){}}};
 const ctx={document:doc,localStorage:{getItem:k=>store[k]??null,setItem:(k,v)=>store[k]=v,removeItem:k=>delete store[k]},sessionStorage:{getItem(){return null},setItem(){}},
  matchMedia:()=>({matches:true}),setTimeout:(f)=>0,clearTimeout(){},setInterval:()=>1,clearInterval(){},requestAnimationFrame(f){},console,Notification:{permission:"denied"},addEventListener(){},navigator:{},crypto:{},SpeechSynthesisUtterance:function(){},speechSynthesis:{cancel(){},speak(){}},scrollTo(){}};
+// Spracherkennung zum Testen: merkt sich die letzte Erkennung, die Tests lösen Ergebnis und Ende selbst aus
+ctx.webkitSpeechRecognition=function(){ctx.SRLAST=this;this.start=()=>{this.started=true};this.stop=()=>{};this.abort=()=>{this.aborted=true}};
 ctx.window=ctx;vm.createContext(ctx);
 const run=c=>vm.runInContext(c,ctx);
 run(code);run(`U="gast";loadS();`);
@@ -311,7 +313,7 @@ r=JSON.parse(run(`JSON.stringify(mergeS({epoch:0,box:{},due:{},aok:""},{epoch:0,
 ok("Merge: übersprungen auf einem Gerät gilt überall",r.aok==="skip",r.aok);
 r=JSON.parse(run(`JSON.stringify(mergeS({epoch:0,box:{},due:{},aok:"done"},{epoch:0,box:{},due:{}}))`));
 ok("Merge: erledigt bleibt erledigt",r.aok==="done",r.aok);
-ok("Zurücksetzen löscht auch den Abschnitt und den neuen Lernpfad",/S\.aok="";S\.kp=\{d:\{\}\};S\.sent=\{\}/.test(fileSrc));
+ok("Zurücksetzen löscht auch den Abschnitt, den neuen Lernpfad und die Einstufung",/S\.aok="";S\.kp=\{d:\{\}\};S\.wt=null;S\.sent=\{\}/.test(fileSrc));
 // Satzrunde aus dem Pfad
 run(`S.box={};S.due={};S.sent={};S.aok="skip";LES.forEach(l=>l.w.forEach(id=>{S.box[id]=1;S.due[id]=Date.now()+864e5}));startSatz(1)`);
 ok("Satzrunde aus dem Pfad: zuerst Sätze dieser Einheit",run(`Z.u===1&&Z.back==="path"&&Z.items.length===6&&Z.items.every(it=>it.s.st===1)`),run(`JSON.stringify(Z.items.map(it=>it.s.st))`));
@@ -381,10 +383,10 @@ run(`startK(KL[0]);playK([])`);
 ok("eine abgeschlossene Lektion lässt sich wiederholen",run(`S.kp.d["s1-1"]`)===2&&/Geübt/.test(run(`app.innerHTML`)));
 // der neue Pfad
 run(`view="path";ui.hint=null;path()`);let kh=run(`app.innerHTML`);
-ok("Pfad zeigt die Stationen von S1 bis S7 (6, 7, 5, 4, 5, 4 und 5)",(kh.match(/class="pn /g)||[]).length===36&&[["s1",6],["s2",7],["s3",5],["s4",4],["s5",5],["s6",4],["s7",5]].every(([e,n])=>(kh.match(new RegExp('data-kl="'+e+'-\\d"',"g"))||[]).length===n));
+ok("Pfad zeigt die Stationen von S1 bis S8 (6, 7, 5, 4, 5, 4, 5 und 7)",(kh.match(/class="pn /g)||[]).length===43&&[["s1",6],["s2",7],["s3",5],["s4",4],["s5",5],["s6",4],["s7",5],["s8",7]].every(([e,n])=>(kh.match(new RegExp('data-kl="'+e+'-\\d"',"g"))||[]).length===n));
 ok("… erledigt, aktuell (Mim) und gesperrt",/pn abl done[^"]*" data-kl="s1-1"/.test(kh)&&/pn abl\s+cur[^"]*" data-kl="s1-2"/.test(kh)&&/pn abl lock[^"]*" data-kl="s1-3"/.test(kh),kh.match(/class="pn [^"]*" data-kl="s1-\d"/g));
 ok("… Ziel der Etappe mit allen 29 Buchstaben",/Ziel der Etappe/.test(kh)&&(kh.match(/<span class="[ku]">/g)||[]).length===29);
-ok("… Demnächst: nur noch S8",(kh.match(/<li><span class="ar" lang="ar">/g)||[]).length===1&&/S8 · Alles zusammen/.test(kh)&&!/<b>S7 · /.test(kh));
+ok("… Demnächst: Stufe 2, alle Etappen von Stufe 1 sind da",!/<li><span class="ar" lang="ar">/.test(kh)&&/Stufe 2 · Sprache lernen entsteht gerade/.test(kh));
 ok("… Vorschau-Hinweis mit Weg zurück",/data-ko/.test(kh)&&/Vorschau/.test(kh));
 ok("… keine Buchnamen oder Verweise",!/Qaida|Noorani|Nuraniyya|Medina|Madina|Band [123]/i.test(kh+fs.readdirSync(kdir).map(n=>fs.readFileSync(path.join(kdir,n),"utf8")).join("")));
 run(`pHint('data-kl="s1-3"')`);
@@ -489,7 +491,7 @@ ok("Wiederholung S2: 12 Aufgaben aus geschafften Lektionen, ohne Karten, höchst
 run(`playK([])`);
 ok("… Ende: Runde beendet, nochmal üben bleibt in der Etappe",/Runde beendet/.test(run(`app.innerHTML`))&&/Wiederholung · Etappe S2/.test(run(`app.innerHTML`))&&/data-krev="s2"/.test(run(`app.innerHTML`)));
 run(`S.np=false;path()`);
-ok("bisheriger Pfad nennt die spielbaren Etappen",/Schon spielbar: „Die Buchstaben“, „Buchstaben verbinden“, „Kurze Vokale“, „Tanwin“, „Lange Vokale“, „Sukun“ und „Schadda“\./.test(run(`app.innerHTML`)));
+ok("bisheriger Pfad nennt die spielbaren Etappen",/Schon spielbar: „Die Buchstaben“, „Buchstaben verbinden“, „Kurze Vokale“, „Tanwin“, „Lange Vokale“, „Sukun“, „Schadda“ und „Alles zusammen“\./.test(run(`app.innerHTML`)));
 run(`S.np=true`);
 const {texts}=await import("./audio-texts.mjs");
 const at=texts().filter(t=>t.id.startsWith("k/"));
@@ -521,8 +523,8 @@ run(`AUD={"بَ":{f:"x"},"تَ":{f:"x"}};for(const y of kSylls(["a"],"a"))AUD[y.
 run(`ARV=null`);
 ok("mit Audiodateien der Silben: Silbe hören und Silbe nachsprechen kommen dazu",run(`(T=>T.some(t=>t.t==="silbehoeren")&&T.filter(t=>t.t==="sprechen"&&t.y).length===1&&T.find(t=>t.t==="paare").set.every(x=>x.sp))(kGen(KL.find(l=>l.id==="s3-1"),true))`));
 run(`AUD={}`);
-ok("Paare: Silben und Umschrift, keine doppelte Umschrift, das neue Zeichen ist dabei",run(`KL.filter(l=>l.art==="vokale"&&l.zeichen&&!WSIGN.includes(l.zeichen)).every(l=>{for(let r=0;r<10;r++){const p=kGen(l,false).find(t=>t.t==="paare");if(!p||p.set.length!==5||new Set(p.set.map(x=>x.n)).size!==5||!p.syl)return false}return true})`));
-ok("Wortvarianten: drei verschiedene Lesungen mit bekannten Zeichen für jedes Wort",run(`KL.filter(l=>l.art==="vokale").every(l=>l.woerter.every(([w])=>{for(let i=0;i<4;i++){const v=kWVar(w,kZK(l.k));if(v.length!==3||new Set(v.map(kTr)).size!==3||v.includes(w))return false}return true}))`));
+ok("Paare: Silben und Umschrift, keine doppelte Umschrift, das neue Zeichen ist dabei",run(`KL.filter(l=>l.art==="vokale"&&l.zeichen&&!WSIGN.includes(l.zeichen)&&!QZ.includes(l.zeichen)).every(l=>{for(let r=0;r<10;r++){const p=kGen(l,false).find(t=>t.t==="paare");if(!p||p.set.length!==5||new Set(p.set.map(x=>x.n)).size!==5||!p.syl)return false}return true})`));
+ok("Wortvarianten: drei verschiedene Lesungen mit bekannten Zeichen für jedes Wort",run(`KL.filter(l=>l.art==="vokale"&&!QZ.includes(l.zeichen)).every(l=>l.woerter.every(([w])=>{for(let i=0;i<4;i++){const v=kWVar(w,kZK(l.k));if(v.length!==3||new Set(v.map(kTr)).size!==3||v.includes(w))return false}return true}))`));
 // Darstellung
 run(s2done+`;startK(KL.find(l=>l.id==="s3-2"))`);
 let zh=kShow(`{t:"neuz",z:"i",wo:kWs(K.l)[0]}`);
@@ -581,7 +583,7 @@ run(`playK([])`);
 ok("… Ende: Runde beendet",/Runde beendet/.test(run(`app.innerHTML`))&&/Wiederholung · Etappe S3/.test(run(`app.innerHTML`)));
 const sbT=texts().filter(t=>t.id.startsWith("sb/")),kw=new Set(texts().map(t=>t.text));
 ok("Vorleseliste: alle Silben (Vokale, Tanwin, Ta marbuta, lange Vokale) und alle Wörter mit Vokalzeichen",sbT.length===247&&kw.has("وَ")&&sbT.some(t=>t.id==="sb/tam-un"&&t.text==="ةٌ")&&sbT.some(t=>t.id==="sb/ba-an"&&t.text==="بًا")&&sbT.some(t=>t.id==="sb/hamza-i"&&t.text==="إِ")
-  &&Object.values(kfiles).flatMap(f=>f.lektionen).filter(l=>l.art==="vokale").every(l=>l.woerter.every(w=>kw.has(w[0])))&&kw.has("هُوَ سَمِعَ وَفَهِمَ"),sbT.length);
+  &&Object.values(kfiles).flatMap(f=>f.lektionen).filter(l=>l.art==="vokale"&&!["q","qk","pz"].includes(l.zeichen)).every(l=>l.woerter.every(w=>kw.has(w[0])))&&kw.has("هُوَ سَمِعَ وَفَهِمَ"),sbT.length);
 
 // ---------- 13. Etappen S5 bis S7: lange Vokale, Sukun, Artikel, Hamza-Träger, Schadda ----------
 run(`S.kp={d:{}};S.alpha={};K=null;ARV=null;S.np=true;AUD={}`);
@@ -649,7 +651,7 @@ h5=run(`app.innerHTML`);
 ok("S6 durchgespielt: Etappe geschafft, weiter zu S7",run(`KL.filter(l=>l.e==="s6").every(l=>S.kp.d[l.id]===1)`)&&/Etappe „Sukun“ geschafft/.test(h5)&&/Weiter: Etappe S7, Schadda/.test(h5));
 for(const id of ["s7-1","s7-2","s7-3","s7-4","s7-5"])run(`startK(KL.find(l=>l.id==="${id}"));playK([])`);
 h5=run(`app.innerHTML`);
-ok("S7 durchgespielt: Etappe geschafft, danach ist die nächste Etappe in Arbeit",run(`KL.filter(l=>l.e==="s7").every(l=>S.kp.d[l.id]===1)`)&&/Etappe „Schadda“ geschafft/.test(h5)&&/nächste Etappe ist in Arbeit/.test(h5));
+ok("S7 durchgespielt: Etappe geschafft, weiter zu S8",run(`KL.filter(l=>l.e==="s7").every(l=>S.kp.d[l.id]===1)`)&&/Etappe „Schadda“ geschafft/.test(h5)&&/Weiter: Etappe S8, Lange Wörter/.test(h5));
 run(`view="path";ui.hint=null;path()`);kh=run(`app.innerHTML`);
 ok("Pfad: Ziele von S5 bis S7 mit Umschrift und Übersetzung",/hādhā yawmun jamīlun yā ṣadīqī<br>Das ist ein schöner Tag, mein Freund\./.test(kh)&&/min ayna anta<br>Woher kommst du\?/.test(kh)&&/as-salāmu ʿalaykum yā muʿallimu<br>Friede sei mit euch, Lehrer!/.test(kh));
 run(`S.kp.d={...S.kp.d};for(const l of KL.filter(l=>l.e==="s6"&&l.id!=="s6-1"))delete S.kp.d[l.id];startK(null,"s6")`);
@@ -657,6 +659,92 @@ ok("Wiederholung S6: 12 Aufgaben nur aus geschafften Lektionen, ohne Karten",run
 const sb5=new Map(texts().filter(t=>t.id.startsWith("sb/")).map(t=>[t.id,t.text]));
 ok("Vorleseliste: lange Silben (ā ohne Hamza), alle Wörter und Ziele von S5 bis S7",sb5.get("sb/ba-aa")==="بَا"&&sb5.get("sb/hamza-ii")==="إِي"&&sb5.get("sb/ya-uu")==="يُو"&&!sb5.has("sb/hamza-aa")
   &&["s5","s6","s7"].every(e=>kfiles[e].lektionen.every(l=>l.woerter.every(w=>kw.has(w[0])))&&kw.has(kfiles[e].ziel.sp)));
+
+// ---------- 14. Etappe S8: lange Wörter, verbundenes Alif, Madda, Koranschrift, Pausenzeichen; Tests; Spracherkennung ----------
+run(`S.kp={d:{}};S.alpha={};K=null;ARV=null;S.np=true;AUD={};delete S.srOk;delete S.wt`);
+const s7done=`S.kp={d:Object.fromEntries(KL.filter(l=>l.e!=="s8").map(l=>[l.id,1]))}`;
+ok("S8: Übung, verbundenes Alif, Madda, Koranschrift, kleine Zeichen, Pausenzeichen, Abschlusstest",run(`KL.filter(l=>l.e==="s8").map(l=>l.zeichen||l.art).join()`)==="vokale,wa,md,q,qk,pz,test");
+const TR8={"فِي الْبَيْتِ":"fi l-bayti","وَالْقَمَرُ":"wal-qamaru","وَالشَّمْسُ":"wash-shamsu","بِسْمِ اللّٰهِ":"bismi llāhi","الْحَمْدُ لِلّٰهِ":"al-ḥamdu lillāhi","عَلَى الْأَرْضِ":"ʿala l-arḍi",
+  "آيَةٌ":"āyatun","الْقُرْآنُ":"al-qurʾānu","مِرْآةٌ":"mirʾātun","الْآنَ":"al-āna","وَالِدٌ":"wālidun",
+  "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ":"bismi llāhi r-raḥmāni r-raḥīmi","ٱهۡدِنَا ٱلصِّرَٰطَ ٱلۡمُسۡتَقِيمَ":"ihdina ṣ-ṣirāṭa l-mustaqīma","ٱلَّذِى":"alladhī","عَلَىٰ":"ʿalā","ٱلصَّلَوٰةَ":"aṣ-ṣalāta",
+  "لَهُۥ":"lahū","بِهِۦ":"bihī","قَالُوا۟":"qālū","وَلَا ٱلضَّآلِّينَ":"wala ḍ-ḍāllīna","مِن شَرِّ مَا خَلَقَ":"min sharri mā khalaqa","ذَٰلِكَ ٱلۡكِتَٰبُ لَا رَيۡبَۛ فِيهِۛ":"dhālika l-kitābu lā rayba fīhi",
+  "ٱلۡحَىُّ":"al-ḥayyu","فِى ٱلسَّمَٰوَٰتِ":"fi s-samāwāti"};
+const tr8=Object.entries(TR8).filter(([w,l])=>run(`kTr(${N(w)})`)!==l).map(([w])=>w+"→"+run(`kTr(${N(w)})`));
+ok("Umschrift S8: Alif im Satz stumm, langer Vokal davor kurz, Madda, Koranschrift mit Wasla, kleinem Alif, kleinem Wāw, stummem Alif und Pausenzeichen",!tr8.length,tr8);
+ok("jeder Text von S8 zerfällt in Silben und lässt sich genau wieder zusammensetzen",run(`KL.filter(l=>l.e==="s8"&&l.woerter).flatMap(l=>[l.station,...l.woerter.map(w=>w[0])]).every(w=>kJoin(kUnits(w))===w)`));
+ok("Koranschrift: keine Computerstimme, keine Höraufgaben, Vorlesen nur mit Spracherkennung",run(`ARV=true;(r=>{ARV=null;return r})(KL.filter(l=>QZ.includes(l.zeichen)).every(l=>l.woerter.every(w=>kQT(w[0])&&!kHearT(w[0]))&&kGen(l,true).every(t=>!/hoeren$/.test(t.t)&&(t.t!=="sprechen"||t.sr))))`)
+  &&run(`!kQT("فِي الْبَيْتِ")&&!kQT("هٰذَا")&&!kQT("الْقُرْآنُ")`));
+const z8=JSON.parse(run(`JSON.stringify([false,true].flatMap(h=>KL.filter(l=>l.e==="s8"&&l.art!=="test").map(l=>{ARV=h?true:null;const T=kGen(l,h);let ok4=true,own=true,typ=true;
+  T.forEach(t=>{if(KCHO.includes(t.t)){kOpts(t);if(t.opts.length!==4||new Set(t.opts).size!==4||t.opts[t.ok]!==(t.t==="qbed"?t.q.b:t.t==="wortlesen"?t.wo.lat:t.opts[t.ok]))ok4=false;
+      if(t.t==="wortlesen"&&kUnits(t.wo.w).some((u,k)=>u.wl&&k>0&&U0(t.wo.w)[k-1].sp)&&!t.opts.includes(kTrU(kUnits(t.wo.w),true).join("")))typ=false}
+    if(t.wo&&!l.woerter.some(w=>w[0]===t.wo.w))own=false});
+  const Q=QS.filter(x=>x.z===l.zeichen);
+  return{id:l.id,h,g:T.filter(t=>!KCARD.includes(t.t)).length,kinds:[...new Set(T.map(t=>t.t))],ok4,own,typ,
+    neuq:Q.every(x=>T.some(t=>t.t==="neuq"&&t.q===x)),qa:Q.every(x=>T.some(t=>t.t==="qbed"&&t.q===x)||T.some(t=>t.t==="wortlesen"&&kQHas(t.wo.w,x))),ex:T.filter(t=>t.t==="neuq").every(t=>!t.wo||kQHas(t.wo.w,t.q))}})))`.replace("U0(","kUnits(")));
+ok("S8: jede Lektion 12 bis 16 bewertete Aufgaben, mit und ohne Stimme",z8.every(x=>x.g>=12&&x.g<=16),z8.map(x=>x.id+":"+x.g));
+ok("S8: vier verschiedene Antworten, die richtige dabei; Texte aus der eigenen Lektion",z8.every(x=>x.ok4&&x.own),z8.filter(x=>!x.ok4||!x.own).map(x=>x.id));
+ok("verbundenes Alif: unter den Antworten steht die Lesung mit gesprochenem Alif",z8.every(x=>x.typ));
+ok("Koranschrift und Pausenzeichen: jedes Zeichen vorgestellt, mit passendem Beispiel, dann abgefragt oder gelesen",z8.filter(x=>["s8-4","s8-5","s8-6"].includes(x.id)).every(x=>x.neuq&&x.qa&&x.ex&&x.kinds.includes("paare")&&x.kinds.includes("wortlesen")&&x.kinds.includes("qbed")));
+ok("Übung, verbundenes Alif und Madda: lesen, Lücke, bauen, hören nur mit Stimme",z8.filter(x=>["s8-1","s8-2","s8-3"].includes(x.id)).every(x=>x.kinds.includes("wortlesen")&&x.kinds.includes("luecke")&&x.kinds.includes("bau")&&x.kinds.includes("worthoeren")===x.h));
+run(`K=null;${s7done};startK(KL.find(l=>l.id==="s8-4"))`);
+let h8=kShow(`{t:"neuq",q:QS.find(x=>x.i==="ws"),wo:kWs(K.l).find(w=>w.w.includes(" ")&&kQHas(w.w,QS.find(x=>x.i==="ws")))}`);
+ok("Karte Koranschrift: Zeichen, Name, Bedeutung, Beispiel mit Umschrift",/Zeichen der Koranschrift/.test(h8)&&/>ٱ<\/div>/.test(h8)&&/<b>Wasla<\/b> · Alif, das man im Satz nicht spricht/.test(h8)&&/Im Text:/.test(h8)&&/bismi llāhi · im Namen Allahs| l-/.test(h8));
+h8=kShow(`{t:"qbed",q:QS.find(x=>x.i==="yk"),wo:null}`);
+ok("Was bedeutet das Zeichen: vier Bedeutungen als Text",/Was bedeutet dieses Zeichen\?/.test(h8)&&(h8.match(/class="opt /g)||[]).length===4&&/>langes ī</.test(h8));
+run(`K.picked=K.T[K.n].opts.findIndex((o,k)=>k!==K.T[K.n].ok);kAns(false);klek()`);
+ok("… falsch: richtige Bedeutung mit Zeichen und Name",/Richtig ist: <span class="ar kfa" lang="ar">ـِى<\/span> ى nach Kasra: langes ī\. Das kommt am Ende noch einmal\./.test(run(`app.innerHTML`)));
+const at8=texts().filter(t=>t.id.startsWith("k/"));
+ok("Vorleseliste: Wörter aus S8, aber keine Korantexte",at8.some(t=>t.text==="فِي الْبَيْتِ")&&at8.some(t=>t.text==="آيَةٌ")&&!at8.some(t=>/[ٱۡۥۦ۟]/.test(t.text)),at8.filter(t=>/[ٱۡ]/.test(t.text)).map(t=>t.text));
+// Spracherkennung
+ok("Spracherkennung: Vergleich ohne Zeichen, Alif und Hamza, kleine Abweichung zählt als richtig",run(`srMatch(["الحمد لله رب العالمين"],${N("ٱلۡحَمۡدُ لِلَّهِ رَبِّ ٱلۡعَٰلَمِينَ")})&&srMatch(["في البيت"],${N("فِي الْبَيْتِ")})&&!srMatch(["في المسجد"],${N("فِي الْبَيْتِ")})&&srMatch(["الصلاة"],${N("ٱلصَّلَوٰةَ")})&&srMatch(["xx","مالك يوم الدين"],${N("مَٰلِكِ يَوۡمِ ٱلدِّينِ")})`));
+run(`SPAUSE=0;SRNO=false`);
+h8=kShow(`{t:"sprechen",wo:kWs(K.l).find(w=>w.w===${N("ٱلۡحَمۡدُ")}),sr:true}`);
+ok("Vorlesen in S8: erst fragen, ob die Stimme an den Browser-Dienst darf",/Lies laut vor/.test(h8)&&/an seinen Hersteller/.test(h8)&&/id="sry"/.test(h8)&&/id="srn"/.test(h8)&&/id="nx" >Weiter/.test(h8));
+run(`S.srOk=true;klek()`);h8=run(`app.innerHTML`);
+ok("… zugestimmt: Text ohne Umschrift, Knopf Vorlesen, kein Vorbild für Koranschrift",/id="srb"[^>]*>[\s\S]*?Vorlesen/.test(h8)&&!/al-ḥamdu/.test(h8)&&!/id="sp"/.test(h8)&&/das Lob/.test(h8));
+run(`kSr(K.T[K.n].wo.w)`);
+ok("… hört zu",run(`SRLAST.started&&SRLAST.lang==="ar-SA"&&K.sr.st==="listen"`)&&/Ich höre zu/.test(run(`app.innerHTML`)));
+run(`SRLAST.onresult({results:[[{transcript:"الحمد"}]]});SRLAST.onend()`);h8=run(`app.innerHTML`);
+ok("… richtig gelesen: „Gut gelesen“, jetzt mit Umschrift und dem Erkannten",/Gut gelesen/.test(h8)&&/al-ḥamdu/.test(h8)&&/Erkannt: <span class="ar" lang="ar">الحمد<\/span>/.test(h8)&&/Nochmal/.test(h8));
+run(`kSr(K.T[K.n].wo.w);SRLAST.onresult({results:[[{transcript:"المسجد"}]]});SRLAST.onend()`);
+ok("… anders gelesen: Hinweis, nochmal versuchen, keine Bewertung",/Das klang anders/.test(run(`app.innerHTML`))&&run(`K.T[K.n].t==="sprechen"&&KCARD.includes("sprechen")`));
+run(`kSr(K.T[K.n].wo.w);SRLAST.onerror({error:"not-allowed"});SRLAST.onend()`);
+ok("… Spracherkennung verweigert: kein Vorlesen mehr, Karte für Koranschrift fällt weg",run(`SRNO===true&&!kSrUse()&&K.T[K.n].t!=="sprechen"`));
+run(`SRNO=false`);
+// Abschlusstest
+function playT(right){let g=0;while(run(`view==="klek"&&!K.fin`)&&g++<200){run(`(it=>{if(!KCARD.includes(it.t)&&it.t!=="paare")kAns(${right}(it))})(K.T[K.n]);K.n++;K.fb=null;K.picked=null;klek()`)}}
+run(`K=null;${s7done};for(const l of KL.filter(l=>l.e==="s8"&&l.art!=="test"))S.kp.d[l.id]=1;S.xp=0;startK(KL.find(l=>l.id==="s8-7"))`);
+ok("Abschlusstest: 20 Aufgaben aus allen 8 Etappen, ohne Karten und Zuordnen, 16 zum Bestehen",run(`K.test.kind==="ab"&&K.test.need===16&&K.T.length===20&&K.T.every(kTestable)&&new Set(K.T.map(t=>KL.find(l=>l.id===t.src).e)).size===8`));
+ok("… Aufgabe zeigt „Test · Aufgabe 1 von 20“",/Test · Aufgabe 1 von 20/.test(run(`app.innerHTML`)));
+run(`globalThis.bad=new Set([0,3,7,11,15]);(it=>{if(it.t==="paare")return;kAns(false)})(K.T[K.n]);klek()`);
+ok("… Fehler kommen nicht noch einmal",run(`K.T.length===20`)&&!/am Ende noch einmal/.test(run(`app.innerHTML`)));
+run(`K.n++;K.fb=null;klek()`);playT(`(it=>![3,7,11,15].includes(K.n))`);h8=run(`app.innerHTML`);
+ok("… 15 von 20: nicht bestanden, Lektion bleibt offen, nochmal versuchen",/Noch nicht bestanden/.test(h8)&&/15 \/ 20/.test(h8)&&/data-kl="s8-7"/.test(h8)&&run(`!kDone("s8-7")`));
+run(`startK(KL.find(l=>l.id==="s8-7"))`);playT(`(it=>![1,2,3,4].includes(K.n))`);h8=run(`app.innerHTML`);
+ok("… 16 von 20: Stufe 1 geschafft",/Stufe 1 geschafft/.test(h8)&&/16 \/ 20/.test(h8)&&run(`kDone("s8-7")`)&&/Die nächste Stufe ist in Arbeit/.test(h8));
+// Sprungtest und Einstufung im Pfad
+run(`S.kp={d:{}};delete S.wt;K=null;view="path";ui.hint=null;path()`);kh=run(`app.innerHTML`);
+ok("Pfad: gesperrte Etappen S2 bis S8 mit „Hierher springen“, Einstufungstest am Anfang",(kh.match(/data-kj="s\d"/g)||[]).length===7&&!/data-kj="s1"/.test(kh)&&/Kannst du schon etwas lesen\?/.test(kh)&&/data-kt="wissen"/.test(kh));
+ok("Pfad: Ziel S8 in Koranschrift ohne Anhören",/ٱلرَّحۡمَٰنِ/.test(kh)&&!/data-kz="s8"/.test(kh));
+run(`startKT("sprung","s5")`);
+ok("Sprungtest: 10 Aufgaben aus den Etappen davor, 8 zum Bestehen",run(`K.test.kind==="sprung"&&K.test.need===8&&K.T.length===10&&K.T.every(t=>["s1","s2","s3","s4"].includes(KL.find(l=>l.id===t.src).e))`));
+playT(`(it=>K.n>2)`);h8=run(`app.innerHTML`);
+ok("… 7 von 10: nicht gesprungen, weiter bei der aktuellen Lektion",/Noch nicht ganz/.test(h8)&&run(`!Object.keys(S.kp.d).length`)&&/data-kl="s1-1"/.test(h8));
+run(`startKT("sprung","s5")`);playT(`(it=>K.n>1)`);h8=run(`app.innerHTML`);
+ok("… 8 von 10: alles vor S5 zählt als geschafft, weiter mit S5",/Test bestanden/.test(h8)&&run(`KL.filter(l=>l.k<KL.find(l=>l.e==="s5").k).every(l=>kDone(l.id))&&kCur().id==="s5-1"`)&&/Weiter: Etappe S5, Langes ā/.test(h8));
+const knows=n=>`(it=>["s1","s2","s3","s4","s5","s6","s7","s8"].indexOf(KL.find(l=>l.id===it.src).e)<${n})`;
+run(`S.kp={d:{}};startKT("wissen")`);
+ok("Einstufung: beginnt mit 4 Aufgaben aus der Mitte (S4)",run(`K.test.kind==="wissen"&&K.T.length===4&&K.T.every(t=>KL.find(l=>l.id===t.src).e==="s4")`));
+playT(knows(5));h8=run(`app.innerHTML`);
+ok("Einstufung: wer S1 bis S5 kann, startet bei S6, davor zählt alles als geschafft",/Einstufung fertig/.test(h8)&&/Etappe S6 · Sukun/.test(h8)&&run(`kCur().id==="s6-1"&&S.wt.e===5&&KL.filter(l=>l.k<KL.find(l=>l.e==="s6").k).every(l=>kDone(l.id))`)&&run(`K.T.length<=16`));
+run(`S.kp={d:{}};startKT("wissen")`);playT(knows(0));
+ok("Einstufung: wer nichts kann, beginnt von vorn",/von vorn/.test(run(`app.innerHTML`))&&run(`kCur().id==="s1-1"&&!Object.keys(S.kp.d).length`));
+run(`S.kp={d:{}};startKT("wissen")`);playT(knows(8));
+ok("Einstufung: wer alles kann, hat nur noch den Abschlusstest vor sich",run(`kCur().id==="s8-7"&&!kDone("s8-7")`)&&/nur noch der Abschlusstest/.test(run(`app.innerHTML`)));
+run(`view="path";path()`);
+ok("Pfad: nach der Einstufung keine Einstufungskarte mehr, im Hinweis bleibt sie wählbar",!/Kannst du schon etwas lesen\?/.test(run(`app.innerHTML`))&&/Einstufungstest machen/.test(run(`app.innerHTML`)));
+run(`legal()`);
+ok("Datenschutz nennt Mikrofon und Spracherkennung",/Spracherkennung/.test(run(`app.innerHTML`))&&/bleibt auf deinem Gerät/.test(run(`app.innerHTML`)));
 
 console.log("\n"+pass+" OK, "+fail+" FAIL");
 process.exit(fail?1:0);
