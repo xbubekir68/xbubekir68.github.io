@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>xbubekir</title>
 <meta name="description" content="xbubekir – deine persönliche KI.">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://ydasoikczdjjdtdarrpx.supabase.co https://generativelanguage.googleapis.com https://api.anthropic.com; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://huggingface.co https://*.huggingface.co https://*.hf.co https://raw.githubusercontent.com https://ydasoikczdjjdtdarrpx.supabase.co https://generativelanguage.googleapis.com https://api.anthropic.com; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#c4410c">
 <link rel="manifest" href="manifest.webmanifest">
@@ -165,7 +165,9 @@ label.chk{display:flex;align-items:center;gap:10px;font-weight:500;font-size:15p
       <select class="f" id="sProv">
         <option value="gemini">Google Gemini – kostenlos</option>
         <option value="claude">Anthropic Claude – kostenpflichtig</option>
+        <option value="eigen">Eigene xbubekir-KI – im Browser, kostenlos</option>
       </select>
+      <p class="hint" id="kEigen" hidden>Kein Schlüssel und kein Konto nötig. Läuft komplett auf diesem Gerät.</p>
       <div id="kGemini">
         <label for="sGMode">Zugang zu Gemini</label>
         <select class="f" id="sGMode">
