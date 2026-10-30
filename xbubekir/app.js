@@ -214,13 +214,14 @@ function errText(e,p){
     let msg=e?.message||String(e);
     try{msg=JSON.parse(msg.slice(msg.indexOf("{"))).error.message||msg}catch{}
     const s=e?.status;
-    if(s===429)return"Das Gratis-Kontingent ist gerade aufgebraucht. Warte eine Minute und versuch es nochmal. Ist das Tageslimit erreicht, geht es nach Mitternacht kalifornischer Zeit weiter (in Deutschland morgens um 8 oder 9 Uhr). Mit Gemini Flash-Lite (Einstellungen) sind mehr Nachrichten pro Tag drin.";
-    if(s===401||s===403)return"Der Gemini-Schlüssel wurde abgelehnt. Prüf ihn in den Einstellungen.";
-    if(s===404)return"Das Modell wurde nicht gefunden. Wähl in den Einstellungen ein anderes.";
-    if(s===400)return"Google hat die Anfrage abgelehnt: "+msg;
-    if(s>=500)return"Gemini ist gerade überlastet. Versuch es gleich nochmal.";
-    if(e instanceof TypeError)return"Keine Verbindung zu Google. Bist du online?";
-    return"Unerwarteter Fehler: "+msg;
+    if(e instanceof TypeError&&!s)return"Keine Verbindung zu Google. Bist du online?";
+    const why=s===429?"Das Gratis-Kontingent ist gerade aufgebraucht. Warte eine Minute und versuch es nochmal. Ist das Tageslimit erreicht, geht es nach Mitternacht kalifornischer Zeit weiter (in Deutschland morgens um 8 oder 9 Uhr). Mit Gemini Flash-Lite (Einstellungen) sind mehr Nachrichten pro Tag drin."
+      :s===401||s===403?"Der Gemini-Schlüssel wurde abgelehnt. Prüf ihn in den Einstellungen."
+      :s===404?"Das Modell wurde nicht gefunden. Wähl in den Einstellungen ein anderes."
+      :s===400?"Google hat die Anfrage abgelehnt."
+      :s>=500?"Gemini ist gerade überlastet. Versuch es gleich nochmal."
+      :"Unerwarteter Fehler.";
+    return`${why} Meldung von Google${s?` (${s})`:""}: „${msg}“`; // Originaltext hilft bei der Fehlersuche
   }
   const A=SDK.claude,msg=e?.error?.error?.message||e?.message||String(e);
   if(!A)return"Unerwarteter Fehler: "+msg;
