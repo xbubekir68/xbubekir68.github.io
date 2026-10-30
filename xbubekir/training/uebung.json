@@ -1,0 +1,175 @@
+{
+  "_info": "Handgeschriebene Übungsgespräche für Mufradaat Pro. Pro Lektion (Titel wie in LES_RAW) einige Gespräche: u = Lernender, a = xbubekir mit ar (Arabisch mit Harakat), tr (Umschrift), de (Deutsch), q (Rückfrage/Hinweis auf Deutsch). Alle ar-Zeilen gehen vor dem Training an Muttersprachler (review.mjs).",
+  "lessons": {
+    "Hallo sagen": [
+      [{"u": "مَرْحَبًا"},
+       {"a": {"ar": "مَرْحَبًا! كَيْفَ حَالُكَ؟", "tr": "marḥaban! kayfa ḥāluka?", "de": "Hallo! Wie geht es dir?", "q": "Antworte mit „Mir geht es gut“."}},
+       {"u": "أَنَا بِخَيْرٍ"},
+       {"a": {"ar": "الْحَمْدُ لِلَّهِ! أَنَا بِخَيْرٍ أَيْضًا.", "tr": "al-ḥamdu lillāh! anā bi-khayrin ayḍan.", "de": "Gott sei Dank! Mir geht es auch gut.", "q": "Wie sagst du „Mein Name ist …“?"}},
+       {"u": "اِسْمِي سَارَة"},
+       {"a": {"ar": "أَهْلًا وَسَهْلًا!", "tr": "ahlan wa-sahlan!", "de": "Herzlich willkommen!", "q": "Verabschiede dich jetzt auf Arabisch."}},
+       {"u": "مَعَ السَّلَامَةِ"},
+       {"a": {"ar": "مَعَ السَّلَامَةِ!", "tr": "maʿa s-salāmah!", "de": "Auf Wiedersehen!", "q": "Super gemacht! Noch eine Runde?"}}],
+      [{"u": "Fang du an."},
+       {"a": {"ar": "صَبَاحُ الْخَيْرِ!", "tr": "ṣabāḥu l-khayr!", "de": "Guten Morgen!", "q": "Antworte auch mit „Guten Morgen“."}},
+       {"u": "sabah al khayr"},
+       {"a": {"ar": "كَيْفَ حَالُكَ؟", "tr": "kayfa ḥāluka?", "de": "Wie geht es dir?", "q": "Richtig! In arabischer Schrift: صَبَاحُ الْخَيْرِ. Jetzt beantworte meine Frage."}},
+       {"u": "ana bikhayr"},
+       {"a": {"ar": "الْحَمْدُ لِلَّهِ.", "tr": "al-ḥamdu lillāh.", "de": "Gott sei Dank.", "q": "Sehr gut! In arabischer Schrift: أَنَا بِخَيْرٍ. Wie sagst du am Abend „Guten Abend“?"}},
+       {"u": "مَسَاءُ الْخَيْرِ"},
+       {"a": {"ar": "مَسَاءُ الْخَيْرِ!", "tr": "masāʾu l-khayr!", "de": "Guten Abend!", "q": "Perfekt. Du kannst jetzt grüßen wie ein Profi."}}]
+    ],
+    "Höflichkeit": [
+      [{"u": "Wie sage ich danke?"},
+       {"a": {"ar": "شُكْرًا", "tr": "shukran", "de": "Danke", "q": "Und was antwortet man darauf? Probier es!"}},
+       {"u": "afwan"},
+       {"a": {"ar": "عَفْوًا", "tr": "ʿafwan", "de": "Gern geschehen", "q": "Richtig! Wie sagst du „Bitte“, wenn du etwas möchtest?"}},
+       {"u": "مِنْ فَضْلِكَ"},
+       {"a": {"ar": "نَعَمْ!", "tr": "naʿam!", "de": "Ja!", "q": "Genau, مِنْ فَضْلِكَ (min faḍlika) heißt „Bitte“. Wie sagst du „Es tut mir leid“?"}},
+       {"u": "آسِفٌ"},
+       {"a": {"ar": "شُكْرًا!", "tr": "shukran!", "de": "Danke!", "q": "Richtig, آسِفٌ (āsifun) heißt „Es tut mir leid“. Du kennst jetzt die wichtigsten höflichen Wörter."}}],
+      [{"u": "Frag mich etwas."},
+       {"a": {"ar": "هَلْ أَنْتَ بِخَيْرٍ؟", "tr": "hal anta bi-khayrin?", "de": "Geht es dir gut?", "q": "Antworte mit Ja und „Gott sei Dank“."}},
+       {"u": "نَعَمْ، الْحَمْدُ لِلَّهِ"},
+       {"a": {"ar": "الْحَمْدُ لِلَّهِ!", "tr": "al-ḥamdu lillāh!", "de": "Gott sei Dank!", "q": "Sehr schön. Wie sagst du „So Gott will“?"}},
+       {"u": "inshallah"},
+       {"a": {"ar": "إِنْ شَاءَ اللَّهُ", "tr": "in shāʾa llāh", "de": "So Gott will", "q": "Richtig! So schreibt man es auf Arabisch. Man sagt es bei Plänen für die Zukunft."}}]
+    ],
+    "Zahlen 1–10": [
+      [{"u": "Lass uns zählen."},
+       {"a": {"ar": "وَاحِد، اِثْنَان، ثَلَاثَة …", "tr": "wāḥid, ithnān, thalātha …", "de": "eins, zwei, drei …", "q": "Mach weiter: Was kommt nach ثَلَاثَة?"}},
+       {"u": "أَرْبَعَة"},
+       {"a": {"ar": "نَعَمْ! أَرْبَعَة، خَمْسَة، سِتَّة …", "tr": "naʿam! arbaʿa, khamsa, sitta …", "de": "Ja! vier, fünf, sechs …", "q": "Was kommt nach سِتَّة?"}},
+       {"u": "sab'a"},
+       {"a": {"ar": "نَعَمْ، سَبْعَة!", "tr": "naʿam, sabʿa!", "de": "Ja, sieben!", "q": "Und wie heißt zehn?"}},
+       {"u": "عَشَرَة"},
+       {"a": {"ar": "مُمْتَاز!", "tr": "mumtāz!", "de": "Ausgezeichnet!", "q": "Du kannst bis zehn zählen. Möchtest du rückwärts üben?"}}],
+      [{"u": "Frag mich eine Zahl ab."},
+       {"a": {"ar": "خَمْسَة", "tr": "khamsa", "de": "Welche Zahl ist das?", "q": "Antworte auf Deutsch."}},
+       {"u": "fünf"},
+       {"a": {"ar": "نَعَمْ، خَمْسَة.", "tr": "naʿam, khamsa.", "de": "Ja, fünf.", "q": "Richtig! Nächste: Was heißt ثَمَانِيَة?"}},
+       {"u": "neun"},
+       {"a": {"ar": "لَا.", "tr": "lā.", "de": "Nein.", "q": "Fast! ثَمَانِيَة (thamāniya) ist acht. Neun heißt تِسْعَة (tisʿa). Noch eine?"}}]
+    ],
+    "Farben": [
+      [{"u": "Gib mir einen Satz mit einer Farbe."},
+       {"a": {"ar": "الْبَحْرُ أَزْرَقُ.", "tr": "al-baḥru azraqu.", "de": "Das Meer ist blau.", "q": "Welche Farbe ist أَزْرَقُ?"}},
+       {"u": "blau"},
+       {"a": {"ar": "نَعَمْ! الْقَمِيصُ أَبْيَضُ.", "tr": "naʿam! al-qamīṣu abyaḍu.", "de": "Ja! Das Hemd ist weiß.", "q": "Wie sagst du „schwarz“?"}},
+       {"u": "أَسْوَد"},
+       {"a": {"ar": "صَحِيحٌ! هَذَا كَلْبٌ أَسْوَدُ.", "tr": "ṣaḥīḥun! hādhā kalbun aswadu.", "de": "Richtig! Das ist ein schwarzer Hund.", "q": "Tipp: Die Farbe steht im Arabischen nach dem Wort. Wie heißt „rot“?"}}]
+    ],
+    "Familie": [
+      [{"u": "Lass uns über Familie reden."},
+       {"a": {"ar": "هَذَا أَبِي، وَهَذِهِ أُمِّي.", "tr": "hādhā abī, wa-hādhihi ummī.", "de": "Das ist mein Vater, und das ist meine Mutter.", "q": "Wie sagst du „Das ist mein Bruder“?"}},
+       {"u": "هَذَا أَخِي"},
+       {"a": {"ar": "صَحِيحٌ! هَلْ عِنْدَكَ أُخْتٌ؟", "tr": "ṣaḥīḥun! hal ʿindaka ukhtun?", "de": "Richtig! Hast du eine Schwester?", "q": "Antworte mit Ja oder Nein."}},
+       {"u": "نَعَمْ"},
+       {"a": {"ar": "جَمِيلٌ! الْعَائِلَةُ مُهِمَّةٌ.", "tr": "jamīlun! al-ʿāʾilatu muhimmatun.", "de": "Schön! Die Familie ist wichtig.", "q": "Wie heißt „Tochter“ auf Arabisch?"}}]
+    ],
+    "Essen": [
+      [{"u": "Ich habe Hunger."},
+       {"a": {"ar": "هَلْ تُرِيدُ خُبْزًا أَوْ أَرُزًّا؟", "tr": "hal turīdu khubzan aw aruzzan?", "de": "Möchtest du Brot oder Reis?", "q": "Antworte mit einem der beiden Wörter."}},
+       {"u": "خُبْزًا"},
+       {"a": {"ar": "تَفَضَّلْ، هَذَا خُبْزٌ.", "tr": "tafaḍḍal, hādhā khubzun.", "de": "Bitte schön, das ist Brot.", "q": "Was sagst du jetzt?"}},
+       {"u": "شُكْرًا"},
+       {"a": {"ar": "عَفْوًا! هَلْ تُرِيدُ شَايًا؟", "tr": "ʿafwan! hal turīdu shāyan?", "de": "Gern geschehen! Möchtest du Tee?", "q": "Antworte mit Ja oder Nein."}},
+       {"u": "نَعَمْ"},
+       {"a": {"ar": "تَفَضَّلْ! الشَّايُ حَارٌّ.", "tr": "tafaḍḍal! ash-shāyu ḥārrun.", "de": "Bitte schön! Der Tee ist heiß.", "q": "Vorsicht, heiß! Wie heißt „Wasser“?"}}]
+    ],
+    "Im Haus": [
+      [{"u": "Zeig mir dein Haus."},
+       {"a": {"ar": "الْبَيْتُ جَمِيلٌ. هَذَا الْبَابُ.", "tr": "al-baytu jamīlun. hādhā l-bābu.", "de": "Das Haus ist schön. Das ist die Tür.", "q": "Frag mich auf Arabisch: Wo ist die Küche?"}},
+       {"u": "أَيْنَ الْمَطْبَخُ؟"},
+       {"a": {"ar": "الْمَطْبَخُ هُنَا.", "tr": "al-maṭbakhu hunā.", "de": "Die Küche ist hier.", "q": "Gut gefragt! Und wo ist der Garten? Frag mich."}},
+       {"u": "ayna al hadiqa"},
+       {"a": {"ar": "الْحَدِيقَةُ هُنَاكَ.", "tr": "al-ḥadīqatu hunāka.", "de": "Der Garten ist dort.", "q": "Richtig gefragt! Auf Arabisch: أَيْنَ الْحَدِيقَةُ؟"}}]
+    ],
+    "Schule": [
+      [{"u": "Frag mich etwas über die Schule."},
+       {"a": {"ar": "هَلْ أَنْتَ طَالِبٌ؟", "tr": "hal anta ṭālibun?", "de": "Bist du Schüler?", "q": "Antworte mit einem ganzen Satz."}},
+       {"u": "نَعَمْ، أَنَا طَالِبٌ"},
+       {"a": {"ar": "جَيِّدٌ! أَيْنَ الْقَلَمُ؟", "tr": "jayyidun! ayna l-qalamu?", "de": "Gut! Wo ist der Stift?", "q": "Antworte: Der Stift ist auf dem Tisch."}},
+       {"u": "الْقَلَمُ عَلَى الطَّاوِلَةِ"},
+       {"a": {"ar": "صَحِيحٌ! الْقَلَمُ عَلَى الطَّاوِلَةِ.", "tr": "ṣaḥīḥun! al-qalamu ʿalā ṭ-ṭāwilati.", "de": "Richtig! Der Stift ist auf dem Tisch.", "q": "Super, sogar mit der richtigen Endung nach عَلَى. Wie heißt „Heft“?"}}]
+    ],
+    "Unterwegs": [
+      [{"u": "Ich bin am Bahnhof."},
+       {"a": {"ar": "أَيْنَ الْمَحَطَّةُ؟", "tr": "ayna l-maḥaṭṭatu?", "de": "Wo ist der Bahnhof?", "q": "Antworte: Der Bahnhof ist nah."}},
+       {"u": "الْمَحَطَّةُ قَرِيبَةٌ"},
+       {"a": {"ar": "شُكْرًا! هَلْ عِنْدَكَ تَذْكَرَةٌ؟", "tr": "shukran! hal ʿindaka tadhkaratun?", "de": "Danke! Hast du eine Fahrkarte?", "q": "Antworte mit Ja oder Nein."}},
+       {"u": "لَا"},
+       {"a": {"ar": "اِشْتَرِ تَذْكَرَةً مِنْ فَضْلِكَ.", "tr": "ishtari tadhkaratan min faḍlika.", "de": "Kauf bitte eine Fahrkarte.", "q": "Wie heißt „Zug“ auf Arabisch?"}}]
+    ],
+    "In der Stadt": [
+      [{"u": "Ich suche eine Moschee."},
+       {"a": {"ar": "الْمَسْجِدُ هُنَاكَ.", "tr": "al-masjidu hunāka.", "de": "Die Moschee ist dort.", "q": "Frag mich jetzt nach dem Restaurant."}},
+       {"u": "أَيْنَ الْمَطْعَمُ؟"},
+       {"a": {"ar": "الْمَطْعَمُ قَرِيبٌ.", "tr": "al-maṭʿamu qarībun.", "de": "Das Restaurant ist nah.", "q": "Sehr gut gefragt! Und wie fragst du nach dem Hotel?"}},
+       {"u": "ayna al funduq"},
+       {"a": {"ar": "الْفُنْدُقُ بَعِيدٌ.", "tr": "al-funduqu baʿīdun.", "de": "Das Hotel ist weit weg.", "q": "Richtig gefragt! Auf Arabisch: أَيْنَ الْفُنْدُقُ؟"}}]
+    ],
+    "Wetter & Himmel": [
+      [{"u": "Wie ist das Wetter?"},
+       {"a": {"ar": "الْيَوْمُ بَارِدٌ.", "tr": "al-yawmu bāridun.", "de": "Heute ist es kalt.", "q": "Wie sagst du „Die Sonne ist schön“?"}},
+       {"u": "الشَّمْسُ جَمِيلَةٌ"},
+       {"a": {"ar": "صَحِيحٌ! الشَّمْسُ جَمِيلَةٌ.", "tr": "ṣaḥīḥun! ash-shamsu jamīlatun.", "de": "Richtig! Die Sonne ist schön.", "q": "Gut gemerkt: شَمْس ist weiblich, darum جَمِيلَةٌ. Wie heißt „Regen“?"}}]
+    ],
+    "Tiere 1": [
+      [{"u": "Lass uns über Tiere reden."},
+       {"a": {"ar": "هَذَا كَلْبٌ صَغِيرٌ.", "tr": "hādhā kalbun ṣaghīrun.", "de": "Das ist ein kleiner Hund.", "q": "Wie sagst du „Der Löwe ist groß“?"}},
+       {"u": "الْأَسَدُ كَبِيرٌ"},
+       {"a": {"ar": "صَحِيحٌ! الْجَمَلُ فِي الصَّحْرَاءِ.", "tr": "ṣaḥīḥun! al-jamalu fī ṣ-ṣaḥrāʾi.", "de": "Richtig! Das Kamel ist in der Wüste.", "q": "Wie heißt „Katze“ auf Arabisch?"}},
+       {"u": "قِطَّة"},
+       {"a": {"ar": "نَعَمْ! هَذِهِ قِطَّةٌ.", "tr": "naʿam! hādhihi qiṭṭatun.", "de": "Ja! Das ist eine Katze.", "q": "Beachte: قِطَّة ist weiblich, darum هَذِهِ. Noch ein Tier?"}}]
+    ],
+    "Pronomen": [
+      [{"u": "Üben wir ich, du, er, sie."},
+       {"a": {"ar": "أَنَا طَالِبٌ. هُوَ مُعَلِّمٌ.", "tr": "anā ṭālibun. huwa muʿallimun.", "de": "Ich bin Schüler. Er ist Lehrer.", "q": "Wie sagst du „Sie ist Ärztin“?"}},
+       {"u": "هِيَ طَبِيبَةٌ"},
+       {"a": {"ar": "صَحِيحٌ! نَحْنُ طُلَّابٌ.", "tr": "ṣaḥīḥun! naḥnu ṭullābun.", "de": "Richtig! Wir sind Schüler.", "q": "Frag mich jetzt: Bist du Schüler? (an einen Mann)"}},
+       {"u": "هَلْ أَنْتَ طَالِبٌ؟"},
+       {"a": {"ar": "لَا، أَنَا لَسْتُ طَالِبًا.", "tr": "lā, anā lastu ṭāliban.", "de": "Nein, ich bin kein Schüler.", "q": "Perfekt gefragt! (لَسْتُ = ich bin nicht)"}}]
+    ],
+    "Fragewörter": [
+      [{"u": "Stell mir Fragen."},
+       {"a": {"ar": "مَا اسْمُكَ؟", "tr": "mā smuka?", "de": "Wie heißt du?", "q": "Antworte mit اِسْمِي …"}},
+       {"u": "اِسْمِي أَحْمَد"},
+       {"a": {"ar": "أَهْلًا! مِنْ أَيْنَ أَنْتَ؟", "tr": "ahlan! min ayna anta?", "de": "Hallo! Woher kommst du?", "q": "Antworte mit أَنَا مِنْ … (ich komme aus …)."}},
+       {"u": "أَنَا مِنْ أَلْمَانِيَا"},
+       {"a": {"ar": "أَهْلًا وَسَهْلًا!", "tr": "ahlan wa-sahlan!", "de": "Herzlich willkommen!", "q": "Sehr gut! Welches Fragewort heißt „wo“?"}}]
+    ],
+    "Verben 2": [
+      [{"u": "Frag mich, was ich gegessen habe."},
+       {"a": {"ar": "مَاذَا أَكَلْتَ الْيَوْمَ؟", "tr": "mādhā akalta l-yawma?", "de": "Was hast du heute gegessen?", "q": "Antworte mit أَكَلْتُ … (ich habe … gegessen)."}},
+       {"u": "أَكَلْتُ خُبْزًا"},
+       {"a": {"ar": "جَيِّدٌ! أَنَا أَكَلْتُ أَرُزًّا وَلَحْمًا.", "tr": "jayyidun! anā akaltu aruzzan wa-laḥman.", "de": "Gut! Ich habe Reis und Fleisch gegessen.", "q": "Und was hast du getrunken? Antworte mit شَرِبْتُ …"}},
+       {"u": "شَرِبْتُ شَايًا"},
+       {"a": {"ar": "صَحِيحٌ! شَرِبْتُ شَايًا.", "tr": "ṣaḥīḥun! sharibtu shāyan.", "de": "Richtig! Ich habe Tee getrunken.", "q": "Super, sogar mit Tanwin am Ende (شَايًا). Weiter?"}}]
+    ],
+    "Eigenschaften 1": [
+      [{"u": "Üben wir groß und klein."},
+       {"a": {"ar": "هَلِ الْبَيْتُ كَبِيرٌ؟", "tr": "hali l-baytu kabīrun?", "de": "Ist das Haus groß?", "q": "Antworte mit Ja und einem ganzen Satz."}},
+       {"u": "نَعَمْ، الْبَيْتُ كَبِيرٌ"},
+       {"a": {"ar": "صَحِيحٌ! وَالسَّيَّارَةُ جَدِيدَةٌ.", "tr": "ṣaḥīḥun! wa-s-sayyāratu jadīdatun.", "de": "Richtig! Und das Auto ist neu.", "q": "Warum heißt es جَدِيدَةٌ und nicht جَدِيدٌ?"}},
+       {"u": "weil Auto weiblich ist"},
+       {"a": {"ar": "أَحْسَنْتَ!", "tr": "aḥsanta!", "de": "Gut gemacht!", "q": "Genau: سَيَّارَة endet auf ة und ist weiblich, also bekommt auch das Adjektiv ة."}}]
+    ],
+    "Gefühle & Zustand": [
+      [{"u": "Frag mich, wie ich mich fühle."},
+       {"a": {"ar": "هَلْ أَنْتَ جَائِعٌ؟", "tr": "hal anta jāʾiʿun?", "de": "Bist du hungrig?", "q": "Antworte mit einem ganzen Satz."}},
+       {"u": "لَا، أَنَا مُتْعَبٌ"},
+       {"a": {"ar": "نَمْ قَلِيلًا!", "tr": "nam qalīlan!", "de": "Schlaf ein bisschen!", "q": "Gut gesagt, أَنَا مُتْعَبٌ heißt „Ich bin müde“. Wie sagst du „Ich bin glücklich“?"}},
+       {"u": "أَنَا سَعِيدٌ"},
+       {"a": {"ar": "الْحَمْدُ لِلَّهِ!", "tr": "al-ḥamdu lillāh!", "de": "Gott sei Dank!", "q": "Richtig! Das Gegenteil von سَعِيد ist حَزِين (traurig)."}}]
+    ],
+    "Berufe": [
+      [{"u": "Frag mich nach Berufen."},
+       {"a": {"ar": "مَا عَمَلُ أَبِيكَ؟", "tr": "mā ʿamalu abīka?", "de": "Was ist der Beruf deines Vaters?", "q": "Antworte mit أَبِي … (mein Vater ist …)."}},
+       {"u": "أَبِي طَبِيبٌ"},
+       {"a": {"ar": "جَمِيلٌ! وَأُمُّكَ؟", "tr": "jamīlun! wa-ummuka?", "de": "Schön! Und deine Mutter?", "q": "Tipp: Bei einer Frau bekommt der Beruf ة, zum Beispiel طَبِيبَةٌ."}},
+       {"u": "أُمِّي مُعَلِّمَةٌ"},
+       {"a": {"ar": "أَحْسَنْتَ!", "tr": "aḥsanta!", "de": "Gut gemacht!", "q": "Perfekt, مُعَلِّمَةٌ ist die weibliche Form von مُعَلِّم."}}]
+    ]
+  }
+}
