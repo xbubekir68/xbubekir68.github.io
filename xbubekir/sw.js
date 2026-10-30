@@ -1,5 +1,5 @@
 // xbubekir Service Worker: App-Hülle offline, Anfragen an Server, Google und Anthropic nie aus dem Cache.
-const V="xb-v3",SHELL=["./","index.html","app.js","manifest.webmanifest","vendor/genai.js","vendor/supabase.js","vendor/anthropic.js","icons/icon-192.png","icons/icon-512.png","icons/favicon-64.png","icons/icon-180.png"];
+const V="xb-v4",SHELL=["./","index.html","app.js","manifest.webmanifest","vendor/genai.js","vendor/supabase.js","vendor/anthropic.js","icons/icon-192.png","icons/icon-512.png","icons/favicon-64.png","icons/icon-180.png"];
 self.addEventListener("install",e=>{
   e.waitUntil(caches.open(V).then(c=>Promise.all(SHELL.map(u=>c.add(u).catch(()=>{})))).then(()=>self.skipWaiting()));
 });

@@ -1,5 +1,5 @@
-// xbubekir: persönliche KI im Browser. Denkt mit Gemini von Google (kostenlos) oder Claude von Anthropic,
-// jeweils mit dem eigenen API-Schlüssel des Nutzers; alles bleibt auf diesem Gerät.
+// xbubekir: persönliche KI im Browser. Denkt mit Gemini von Google (kostenlos), Claude von Anthropic (eigener Schlüssel)
+// oder mit der eigenen xbubekir-KI, die komplett auf dem Gerät läuft (WebLLM); Chats bleiben auf diesem Gerät.
 
 // p: Anbieter; web: Websuch-Werkzeug (nur Claude); fb: serverseitiger Ersatz bei Ablehnung durch Sicherheitsfilter
 const MODELS={
@@ -8,8 +8,14 @@ const MODELS={
   "claude-opus-5-5":{p:"claude",name:"Claude Opus 5.5",hint:"am klügsten",price:"4 $ / 20 $",web:"web_search_20260209",fb:true},
   "claude-sonnet-5-5":{p:"claude",name:"Claude Sonnet 5.5",hint:"schneller, günstiger",price:"2 $ / 10 $",web:"web_search_20260209",fb:true},
   "claude-haiku-5-5":{p:"claude",name:"Claude Haiku 5.5",hint:"am günstigsten",price:"0,10 $ / 0,50 $",web:null,fb:false},
+  "xbubekir-qwen3-1.7b":{p:"eigen",name:"xbubekir-KI",hint:"Qwen3 1,7B, nachtrainiert"},
 };
-const PROV={gemini:{name:"Gemini",by:"Google",def:"gemini-3.8-flash"},claude:{name:"Claude",by:"Anthropic",def:"claude-opus-5-5"}};
+const PROV={gemini:{name:"Gemini",by:"Google",def:"gemini-3.8-flash"},claude:{name:"Claude",by:"Anthropic",def:"claude-opus-5-5"},eigen:{name:"xbubekir-KI",by:"xbubekir",def:"xbubekir-qwen3-1.7b"}};
+// Eigene KI: nachtrainiertes Qwen3-1.7B (xbubekir/training), läuft per WebLLM im Browser. Die Browser-Bibliothek (wasm) ist die fertige
+// von WebLLM für Qwen3-1.7B, weil sich beim Nachtrainieren nur die Gewichte ändern. System-Prompt wie im Training (persona.json).
+const LOCAL={model:"https://huggingface.co/xbubekir/xbubekir-qwen3-1.7b-q4f16_1-MLC",id:"xbubekir-qwen3-1.7b-q4f16_1-MLC",base:"Qwen3-1.7B-q4f16_1-MLC",
+  system:"Du bist xbubekir, eine persönliche KI, die direkt im Browser läuft. Du duzt, antwortest in der Sprache der Person, direkt, ehrlich und freundlich, ohne Floskeln. Kurze Fragen bekommen kurze Antworten. Wenn du etwas nicht weißt, sagst du das.",
+  maxChars:6000}; // Verlauf grob kürzen, damit er ins Kontextfenster (4096 Tokens) passt
 // Eigener Server (Supabase-Projekt „xbubekir“, getrennt von Mufradaat): hält den Gemini-Schlüssel, nur der Besitzer hat Zugang
 const SB_URL="https://ydasoikczdjjdtdarrpx.supabase.co",SB_KEY="sb_publishable_hsk2OROaXkk_cJAR0sxkhA_2EdjhIiN",SB_FN=SB_URL+"/functions/v1/gemini";
 const MAX_TOKENS=64000,LEVEL={low:"LOW",medium:"MEDIUM",high:"HIGH"};
@@ -37,7 +43,7 @@ if(!PROV[S.provider])S.provider="gemini";
 if(MODELS[S.model]?.p!==S.provider)S.model=PROV[S.provider].def;
 function saveS(){try{localStorage.setItem(SK,JSON.stringify(S))}catch{}}
 // Gemini entweder über das eigene Konto (Server hält den Schlüssel) oder mit eigenem Schlüssel im Browser
-const keyOf=p=>p==="gemini"?(S.gmode==="konto"?(session?"konto":""):S.gkey):S.ckey;
+const keyOf=p=>p==="eigen"?"lokal":p==="gemini"?(S.gmode==="konto"?(session?"konto":""):S.gkey):S.ckey;
 
 // ---------- Chats (können groß werden, daher IndexedDB; ohne IndexedDB nur im Speicher) ----------
 const DB=(()=>{
@@ -73,6 +79,13 @@ async function client(p){ // Schlüssel des Nutzers, nur auf seinem Gerät
 }
 
 function systemPrompt(p,web){
+  if(p==="eigen"){ // kurz halten wie im Training, das kleine Modell hat wenig Kontext
+    let s=LOCAL.system;
+    if(S.name.trim())s+=` Die Person heißt ${S.name.trim()}.`;
+    if(S.about.trim())s+=`\n\nÜber die Person: ${S.about.trim()}`;
+    if(S.style.trim())s+=`\n\nSo möchte die Person, dass du antwortest: ${S.style.trim()}`;
+    return s;
+  }
   const d=new Date().toLocaleDateString("de-DE",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
   let s=`Du bist xbubekir, eine persönliche KI. Du arbeitest für genau eine Person und begleitest sie bei allem, was ansteht: Fragen beantworten, Texte schreiben, Dinge erklären, planen, lernen, nachdenken.
 
@@ -121,13 +134,13 @@ async function run(c,um){
   toBottom(true);
   const live=$("#live"),p=provOf(c);
   let err=null;
-  try{await(p==="gemini"?askGemini:askClaude)(c,um,live)}
+  try{await({gemini:askGemini,claude:askClaude,eigen:askLocal}[p])(c,um,live)}
   catch(e){err=e;undo(c,um)}
   stopFn=null;
   if(c.msgs.length)store(c);else forget(c);
   setBusy(false);
   if(c===cur)render();
-  if(err)showError(err,p);
+  if(err&&!err.cancel)showError(err,p);
 }
 
 // ---------- Gemini ----------
@@ -167,6 +180,42 @@ async function askGemini(c,um,live){
   if(blocked||G_REFUSE.has(fin)){refuse(c,um,start);return}
   if(!parts.some(p=>p.text&&!p.thought))throw new Error("Gemini hat keine Antwort geschickt"+(fin?` (${fin})`:"")+".");
   c.msgs.push({role:"assistant",content:JSON.parse(JSON.stringify(parts)),...(fin==="MAX_TOKENS"?{note:"cut"}:{})});
+}
+
+// ---------- Eigene KI im Browser (WebLLM) ----------
+let engineP=null,loadEl=null;
+const clean=t=>t.replace(/<think>[\s\S]*?(<\/think>|$)/g,"").trim(); // falls das Modell doch „nachdenkt“, nicht anzeigen
+function localEngine(){
+  if(!navigator.gpu)throw Object.assign(new Error("Dieses Gerät oder dieser Browser kann die eigene xbubekir-KI nicht ausführen (WebGPU fehlt). Nimm ein aktuelles Chrome, Edge oder Safari, oder wähl in den Einstellungen Gemini."),{local:true});
+  if(!engineP){
+    if(!S.localOk&&!confirm("Die eigene xbubekir-KI lädt beim ersten Start etwa 1 GB herunter, am besten im WLAN. Danach bleibt sie auf diesem Gerät gespeichert. Jetzt laden?"))
+      throw Object.assign(new Error("Download abgebrochen."),{cancel:true});
+    S.localOk=true;saveS();
+    engineP=(async()=>{
+      const w=await import("./vendor/webllm.js");
+      const base=w.prebuiltAppConfig.model_list.find(m=>m.model_id===LOCAL.base);
+      return w.CreateMLCEngine(LOCAL.id,{appConfig:{...w.prebuiltAppConfig,model_list:[{...base,model:LOCAL.model,model_id:LOCAL.id}]},
+        initProgressCallback:r=>{if(loadEl?.isConnected)loadEl.innerHTML=`<p class="tool wait">xbubekir-KI wird geladen … ${Math.round((r.progress||0)*100)} %</p>`}});
+    })();
+    engineP.catch(()=>{engineP=null}); // nach einem Fehler beim nächsten Mal neu versuchen
+  }
+  return engineP;
+}
+async function askLocal(c,um,live){
+  loadEl=live;
+  const eng=await localEngine();
+  loadEl=null;
+  live.innerHTML='<p class="tool wait">xbubekir denkt nach …</p>';
+  const hist=[];let n=0; // jüngste Nachrichten zuerst, bis das Kontextfenster ungefähr voll ist
+  for(const m of c.msgs.filter(m=>!m.skip).reverse()){n+=m.content.length;if(n>LOCAL.maxChars&&hist.length)break;hist.unshift({role:m.role,content:m.content})}
+  if(hist[0]?.role==="assistant")hist.shift();
+  let txt="",stopped=false;
+  stopFn=()=>{stopped=true;eng.interruptGenerate()};
+  const chunks=await eng.chat.completions.create({messages:[{role:"system",content:c.system},...hist],stream:true,temperature:0.7,max_tokens:1024,extra_body:{enable_thinking:false}});
+  for await(const ch of chunks){txt+=ch.choices[0]?.delta?.content||"";paint(live,[{type:"text",text:clean(txt)}])}
+  txt=clean(txt);
+  if(!txt){if(stopped){undo(c,um);return}throw new Error("Die xbubekir-KI hat keine Antwort geschrieben.")}
+  c.msgs.push({role:"assistant",content:txt,...(stopped?{note:"stop"}:{})});
 }
 
 // ---------- Claude ----------
@@ -222,6 +271,7 @@ function undo(c,um){
 }
 
 function errText(e,p){
+  if(p==="eigen")return e?.local?e.message:`Die xbubekir-KI konnte nicht antworten. Meldung: „${e?.message||e}“`;
   if(p==="gemini"){
     let msg=e?.message||String(e);
     try{msg=JSON.parse(msg.slice(msg.indexOf("{"))).error.message||msg}catch{}
@@ -345,12 +395,13 @@ function viewBlocks(blocks,live){
 }
 
 function chatHTML(c){
-  let h="";const M=c.msgs,gem=provOf(c)==="gemini";copies=[];
+  let h="";const M=c.msgs,p=provOf(c);copies=[];
+  const toBlocks=m=>p==="gemini"?geminiBlocks(m.content):p==="eigen"?[{type:"text",text:m.content}]:m.content;
   for(let i=0;i<M.length;){
     const m=M[i];
     if(m.role==="user"){h+=`<div class="msg u"><div class="bub">${esc(m.content)}</div></div>`;if(m.note)h+=`<p class="note">${NOTES[m.note]}</p>`;i++;continue}
     const blocks=[];let note="";
-    for(;i<M.length&&M[i].role==="assistant";i++)if(!M[i].skip){blocks.push(...(gem?geminiBlocks(M[i].content):M[i].content));if(M[i].note)note=M[i].note} // Fortsetzungen (pause_turn) zusammen zeigen
+    for(;i<M.length&&M[i].role==="assistant";i++)if(!M[i].skip){blocks.push(...toBlocks(M[i]));if(M[i].note)note=M[i].note} // Fortsetzungen (pause_turn) zusammen zeigen
     if(!blocks.length)continue;
     const n=copies.push(blocks.filter(b=>b.type==="text").map(b=>b.text).join("").trim())-1;
     h+=`<div class="msg a">${viewBlocks(blocks,false)}${note?`<p class="note">${NOTES[note]}</p>`:""}<div class="acts-a"><button class="mini" type="button" data-copy="${n}">Kopieren</button></div></div>`;
@@ -464,7 +515,7 @@ function fillModels(){ // Modellauswahl passend zum gewählten Anbieter
   const p=$("#sProv").value,sel=$("#sModel"),was=sel.value;
   sel.innerHTML=Object.entries(MODELS).filter(([,M])=>M.p===p).map(([id,M])=>`<option value="${id}">${M.name.replace(/^(Claude|Gemini) /,"")} – ${M.hint}</option>`).join("");
   sel.value=MODELS[was]?.p===p?was:PROV[p].def;
-  $("#kGemini").hidden=p!=="gemini";$("#kClaude").hidden=p!=="claude";
+  $("#kGemini").hidden=p!=="gemini";$("#kClaude").hidden=p!=="claude";$("#kEigen").hidden=p!=="eigen";
   const konto=$("#sGMode").value==="konto";
   $("#kKonto").hidden=!konto;$("#kGKey").hidden=konto;
   $("#kontoInfo").textContent=session?`Angemeldet als ${session.user.email}.`:"Nicht angemeldet. Nach dem Speichern erscheint die Anmeldung.";
@@ -474,7 +525,9 @@ function fillModels(){ // Modellauswahl passend zum gewählten Anbieter
 function costHint(){
   const M=MODELS[$("#sModel").value];
   $("#sWeb").disabled=!M.web;
-  $("#costHint").textContent=M.p==="gemini"
+  $("#costHint").textContent=M.p==="eigen"
+    ?"Kostenlos und ohne Konto: Die eigene xbubekir-KI läuft komplett auf diesem Gerät, nichts wird an einen Server geschickt. Beim ersten Start etwa 1 GB Download. Sie ist kleiner als Gemini und irrt sich öfter, eine Websuche gibt es nicht."
+    :M.p==="gemini"
     ?"Kostenlos. Google begrenzt dafür die Nachrichten pro Minute und pro Tag; die genauen Grenzen zeigt AI Studio. Das Tageslimit setzt sich um Mitternacht kalifornischer Zeit zurück. Flash-Lite erlaubt mehr Nachrichten. Eine Websuche gibt es mit Gemini hier nicht."
     :`${M.name} kostet ${M.price} pro Million Tokens, also Wortteile (Eingabe / Ausgabe). Eine normale Nachricht kostet damit meist ein paar Cent oder weniger, jede Websuche etwa einen Cent extra.${M.web?"":" Mit diesem Modell gibt es keine Websuche."}`;
 }
