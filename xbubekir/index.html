@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>xbubekir</title>
 <meta name="description" content="xbubekir – deine persönliche KI.">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://generativelanguage.googleapis.com https://api.anthropic.com; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://ydasoikczdjjdtdarrpx.supabase.co https://generativelanguage.googleapis.com https://api.anthropic.com; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#c4410c">
 <link rel="manifest" href="manifest.webmanifest">
@@ -167,9 +167,20 @@ label.chk{display:flex;align-items:center;gap:10px;font-weight:500;font-size:15p
         <option value="claude">Anthropic Claude – kostenpflichtig</option>
       </select>
       <div id="kGemini">
-        <label for="sGKey">Gemini-API-Schlüssel</label>
-        <div class="keyrow"><input class="f" id="sGKey" type="password" autocomplete="off" spellcheck="false"><button type="button" class="eye" data-for="sGKey" aria-pressed="false">Zeigen</button></div>
-        <p class="hint">Kostenlos erstellen auf <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer">aistudio.google.com/apikey</a>.</p>
+        <label for="sGMode">Zugang zu Gemini</label>
+        <select class="f" id="sGMode">
+          <option value="konto">Über mein xbubekir-Konto (kein Schlüssel nötig)</option>
+          <option value="key">Mit eigenem Gemini-Schlüssel</option>
+        </select>
+        <div id="kKonto">
+          <p class="hint" id="kontoInfo"></p>
+          <button type="button" class="linkbtn hint" id="bLogout">Abmelden</button>
+        </div>
+        <div id="kGKey" hidden>
+          <label for="sGKey">Gemini-API-Schlüssel</label>
+          <div class="keyrow"><input class="f" id="sGKey" type="password" autocomplete="off" spellcheck="false"><button type="button" class="eye" data-for="sGKey" aria-pressed="false">Zeigen</button></div>
+          <p class="hint">Kostenlos erstellen auf <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer">aistudio.google.com/apikey</a>.</p>
+        </div>
       </div>
       <div id="kClaude" hidden>
         <label for="sCKey">Anthropic-API-Schlüssel</label>

@@ -10,6 +10,8 @@ const MODELS={
   "claude-haiku-5-5":{p:"claude",name:"Claude Haiku 5.5",hint:"am günstigsten",price:"0,10 $ / 0,50 $",web:null,fb:false},
 };
 const PROV={gemini:{name:"Gemini",by:"Google",def:"gemini-3.8-flash"},claude:{name:"Claude",by:"Anthropic",def:"claude-opus-5-5"}};
+// Eigener Server (Supabase-Projekt „xbubekir“, getrennt von Mufradaat): hält den Gemini-Schlüssel, nur der Besitzer hat Zugang
+const SB_URL="https://ydasoikczdjjdtdarrpx.supabase.co",SB_KEY="sb_publishable_hsk2OROaXkk_cJAR0sxkhA_2EdjhIiN",SB_FN=SB_URL+"/functions/v1/gemini";
 const MAX_TOKENS=64000,LEVEL={low:"LOW",medium:"MEDIUM",high:"HIGH"};
 const G_REFUSE=new Set(["SAFETY","RECITATION","BLOCKLIST","PROHIBITED_CONTENT","SPII","LANGUAGE"]);
 const NOTES={
@@ -29,12 +31,13 @@ const log=$("#log"),inp=$("#inp"),bSend=$("#bSend"),dSet=$("#dSet"),dChats=$("#d
 
 // ---------- Einstellungen (klein, daher localStorage) ----------
 const SK="xb.settings";
-const S={provider:"gemini",gkey:"",ckey:"",name:"",about:"",style:"",model:PROV.gemini.def,effort:"medium",web:true};
+const S={provider:"gemini",gmode:"konto",gkey:"",ckey:"",name:"",about:"",style:"",model:PROV.gemini.def,effort:"low",web:true};
 try{Object.assign(S,JSON.parse(localStorage.getItem(SK)||"{}"))}catch{}
 if(!PROV[S.provider])S.provider="gemini";
 if(MODELS[S.model]?.p!==S.provider)S.model=PROV[S.provider].def;
 function saveS(){try{localStorage.setItem(SK,JSON.stringify(S))}catch{}}
-const keyOf=p=>p==="gemini"?S.gkey:S.ckey;
+// Gemini entweder über das eigene Konto (Server hält den Schlüssel) oder mit eigenem Schlüssel im Browser
+const keyOf=p=>p==="gemini"?(S.gmode==="konto"?(session?"konto":""):S.gkey):S.ckey;
 
 // ---------- Chats (können groß werden, daher IndexedDB; ohne IndexedDB nur im Speicher) ----------
 const DB=(()=>{
@@ -45,7 +48,11 @@ const DB=(()=>{
   return{all:()=>tx("readonly",s=>s.getAll()),put:safe(c=>tx("readwrite",s=>s.put(c))),del:safe(id=>tx("readwrite",s=>s.delete(id))),clear:safe(()=>tx("readwrite",s=>s.clear()))};
 })();
 
-let chats=[],cur=null,busy=false,stopFn=null,copies=[];
+let chats=[],cur=null,busy=false,stopFn=null,copies=[],sb=null,session=null;
+async function auth(){ // Supabase-Anmeldung, erst bei Bedarf geladen
+  if(!sb){const{createClient}=await import("./vendor/supabase.js");sb=createClient(SB_URL,SB_KEY);sb.auth.onAuthStateChange((_e,s)=>{session=s})}
+  return sb.auth;
+}
 const provOf=c=>c.provider||MODELS[c.model]?.p||"claude";
 
 // ---------- SDKs (offizielle Bibliotheken, lokal gebündelt, erst bei Bedarf geladen) ----------
@@ -53,6 +60,11 @@ const SDK={};
 async function sdk(p){return SDK[p]||(SDK[p]=p==="gemini"?await import("./vendor/genai.js"):(await import("./vendor/anthropic.js")).default)}
 const clients={};
 async function client(p){ // Schlüssel des Nutzers, nur auf seinem Gerät
+  if(p==="gemini"&&S.gmode==="konto"){ // Anfragen gehen an den eigenen Server, der den Schlüssel ergänzt
+    const lib=await sdk(p),{data}=await(await auth()).getSession();
+    if(!data.session)throw Object.assign(new Error("Nicht angemeldet."),{status:401});
+    return new lib.GoogleGenAI({apiKey:"xbubekir-server",httpOptions:{baseUrl:SB_FN,headers:{Authorization:"Bearer "+data.session.access_token}}});
+  }
   const key=keyOf(p),c=clients[p];
   if(c&&c.key===key)return c.api;
   const lib=await sdk(p);
@@ -216,12 +228,12 @@ function errText(e,p){
     const s=e?.status;
     if(e instanceof TypeError&&!s)return"Keine Verbindung zu Google. Bist du online?";
     const why=s===429?"Das Gratis-Kontingent ist gerade aufgebraucht. Warte eine Minute und versuch es nochmal. Ist das Tageslimit erreicht, geht es nach Mitternacht kalifornischer Zeit weiter (in Deutschland morgens um 8 oder 9 Uhr). Mit Gemini Flash-Lite (Einstellungen) sind mehr Nachrichten pro Tag drin."
-      :s===401||s===403?"Der Gemini-Schlüssel wurde abgelehnt. Prüf ihn in den Einstellungen."
+      :s===401||s===403?(S.gmode==="konto"?"Dein xbubekir-Konto hat gerade keinen Zugang. Melde dich in den Einstellungen neu an.":"Der Gemini-Schlüssel wurde abgelehnt. Prüf ihn in den Einstellungen.")
       :s===404?"Das Modell wurde nicht gefunden. Wähl in den Einstellungen ein anderes."
       :s===400?"Google hat die Anfrage abgelehnt."
       :s>=500?"Gemini ist gerade überlastet. Versuch es gleich nochmal."
       :"Unerwarteter Fehler.";
-    return`${why} Meldung von Google${s?` (${s})`:""}: „${msg}“`; // Originaltext hilft bei der Fehlersuche
+    return`${why} Meldung${s?` (${s})`:""}: „${msg}“`; // Originaltext hilft bei der Fehlersuche
   }
   const A=SDK.claude,msg=e?.error?.error?.message||e?.message||String(e);
   if(!A)return"Unerwarteter Fehler: "+msg;
@@ -350,6 +362,27 @@ function helloHTML(){
   const n=S.name.trim();
   return`<div class="hello"><img src="icons/icon-192.png" alt=""><h2>Hallo${n?", "+esc(n):""}!</h2><p>Ich bin xbubekir, deine persönliche KI. Frag mich etwas, lass mich etwas schreiben oder erklären.</p></div>`;
 }
+function loginHTML(){
+  return`<section class="setup" aria-labelledby="suH"><img src="icons/icon-192.png" alt=""><h2 id="suH">Willkommen bei xbubekir</h2>
+<p>Melde dich mit deinem xbubekir-Konto an. Der Gemini-Schlüssel liegt sicher auf deinem eigenen Server, du musst ihn nirgends eingeben.</p>
+<label for="suMail">E-Mail</label><input class="f" id="suMail" type="email" autocomplete="username">
+<label for="suPw">Passwort</label><input class="f" id="suPw" type="password" autocomplete="current-password">
+<div class="dacts"><button class="btn alt" type="button" id="suNew">Konto erstellen</button><button class="btn" type="button" id="suIn">Anmelden</button></div>
+<p class="status" id="suMsg" role="status"></p>
+<p class="hint">Der Zugang ist nur für dich: Ein neues Konto funktioniert erst, wenn es auf dem Server freigeschaltet ist.</p>
+<p class="hint"><button class="linkbtn" type="button" id="suKeyMode">Lieber eigenen Gemini-Schlüssel eingeben</button> · <button class="linkbtn" type="button" id="suSwitch">Claude von Anthropic nutzen (kostenpflichtig)</button></p></section>`;
+}
+async function login(neu){
+  const mail=$("#suMail").value.trim(),pw=$("#suPw").value,msg=$("#suMsg");
+  msg.className="status";
+  if(!mail||pw.length<8){msg.textContent="Bitte E-Mail und ein Passwort mit mindestens 8 Zeichen eingeben.";msg.classList.add("bad");return}
+  msg.textContent=neu?"Lege dein Konto an …":"Melde dich an …";
+  const a=await auth();
+  const{data,error}=neu?await a.signUp({email:mail,password:pw,options:{emailRedirectTo:location.origin+location.pathname}}):await a.signInWithPassword({email:mail,password:pw});
+  if(error){msg.textContent=(neu?"Konto konnte nicht angelegt werden: ":"Anmeldung hat nicht geklappt: ")+error.message;msg.classList.add("bad");return}
+  if(!data.session){msg.textContent="Fast geschafft: Du bekommst gleich eine E-Mail. Tipp auf den Link darin und melde dich danach hier an.";return}
+  session=data.session;render();inp.focus();
+}
 function setupHTML(){
   const gem=S.provider==="gemini";
   const steps=gem
@@ -376,11 +409,19 @@ ${steps}
 function render(){
   const ready=!!keyOf(S.provider);
   document.body.classList.toggle("nokey",!ready);
+  if(!ready&&S.provider==="gemini"&&S.gmode==="konto"){
+    log.innerHTML=loginHTML();
+    $("#suIn").onclick=()=>login(false);$("#suNew").onclick=()=>login(true);
+    $("#suPw").onkeydown=e=>{if(e.key==="Enter")login(false)};
+    $("#suKeyMode").onclick=()=>{S.gmode="key";saveS();render()};
+    $("#suSwitch").onclick=()=>{S.provider="claude";S.model=PROV.claude.def;saveS();cur=null;render()};
+    return;
+  }
   if(!ready){
     log.innerHTML=setupHTML();
     $("#suGo").onclick=()=>checkKey(S.provider,$("#suKey").value,$("#suMsg"),$("#suGo")).then(ok=>{if(ok){saveS();render();inp.focus()}});
     $("#suKey").onkeydown=e=>{if(e.key==="Enter")$("#suGo").click()};
-    $("#suSwitch").onclick=()=>{S.provider=S.provider==="gemini"?"claude":"gemini";S.model=PROV[S.provider].def;saveS();cur=null;render()};
+    $("#suSwitch").onclick=()=>{S.provider=S.provider==="gemini"?"claude":"gemini";S.model=PROV[S.provider].def;S.gmode="konto";saveS();cur=null;render()};
     return;
   }
   const st=log.scrollTop,stick=nearBottom();
@@ -424,6 +465,10 @@ function fillModels(){ // Modellauswahl passend zum gewählten Anbieter
   sel.innerHTML=Object.entries(MODELS).filter(([,M])=>M.p===p).map(([id,M])=>`<option value="${id}">${M.name.replace(/^(Claude|Gemini) /,"")} – ${M.hint}</option>`).join("");
   sel.value=MODELS[was]?.p===p?was:PROV[p].def;
   $("#kGemini").hidden=p!=="gemini";$("#kClaude").hidden=p!=="claude";
+  const konto=$("#sGMode").value==="konto";
+  $("#kKonto").hidden=!konto;$("#kGKey").hidden=konto;
+  $("#kontoInfo").textContent=session?`Angemeldet als ${session.user.email}.`:"Nicht angemeldet. Nach dem Speichern erscheint die Anmeldung.";
+  $("#bLogout").hidden=!session;
   costHint();
 }
 function costHint(){
@@ -437,7 +482,7 @@ function openSettings(){
   for(const[id,v]of[["sGKey",S.gkey],["sCKey",S.ckey]]){const k=$("#"+id);k.value=v;k.type="password"}
   document.querySelectorAll(".eye").forEach(b=>{b.textContent="Zeigen";b.setAttribute("aria-pressed","false")});
   $("#sName").value=S.name;$("#sAbout").value=S.about;$("#sStyle").value=S.style;
-  $("#sProv").value=S.provider;$("#sModel").value=S.model;fillModels();
+  $("#sProv").value=S.provider;$("#sGMode").value=S.gmode;$("#sModel").value=S.model;fillModels();
   $("#sEffort").value=S.effort;$("#sWeb").checked=S.web;
   $("#setMsg").textContent="";
   dSet.showModal();
@@ -464,16 +509,18 @@ $("#fSet").addEventListener("submit",async e=>{
   e.preventDefault();
   S.name=$("#sName").value;S.about=$("#sAbout").value;S.style=$("#sStyle").value;
   if($("#sProv").value!==S.provider&&!busy)cur=null; // anderer Anbieter: gleich mit einem neuen Chat weitermachen
-  S.provider=$("#sProv").value;S.model=$("#sModel").value;S.effort=$("#sEffort").value;S.web=$("#sWeb").checked;saveS();
+  S.provider=$("#sProv").value;S.gmode=$("#sGMode").value;S.model=$("#sModel").value;S.effort=$("#sEffort").value;S.web=$("#sWeb").checked;saveS();
   for(const[p,id]of[["gemini","sGKey"],["claude","sCKey"]]){
     const key=$("#"+id).value.trim();
-    if(key===keyOf(p))continue;
+    if(key===(p==="gemini"?S.gkey:S.ckey))continue;
     if(!key){if(p==="gemini")S.gkey="";else S.ckey="";saveS();continue}
     if(!await checkKey(p,key,$("#setMsg"),$("#bSave")))return;
   }
   dSet.close();if(!busy)render();
 });
 $("#sProv").addEventListener("change",fillModels);
+$("#sGMode").addEventListener("change",fillModels);
+$("#bLogout").addEventListener("click",async()=>{if(busy)return;await(await auth()).signOut();session=null;dSet.close();render()});
 $("#sModel").addEventListener("change",costHint);
 document.querySelectorAll(".eye").forEach(b=>b.addEventListener("click",()=>{const k=$("#"+b.dataset.for),show=k.type==="password";k.type=show?"text":"password";b.textContent=show?"Verbergen":"Zeigen";b.setAttribute("aria-pressed",String(show))}));
 $("#bWipeChats").addEventListener("click",()=>{if(busy||!confirm("Wirklich alle Chats auf diesem Gerät löschen?"))return;chats=[];cur=null;DB.clear();dSet.close();render()});
@@ -501,6 +548,7 @@ inp.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.isComposi
 inp.addEventListener("input",grow);
 
 setBusy(false);
+if(S.gmode==="konto"||location.hash.includes("access_token")){try{session=(await(await auth()).getSession()).data.session}catch{}} // auch Rückkehr aus der Bestätigungs-Mail
 try{chats=(await DB.all()).sort((a,b)=>b.updated-a.updated)}catch{chats=[]}
 render();
 if(keyOf(S.provider)&&desk.matches)inp.focus();
