@@ -24,7 +24,7 @@ nachtrainiert und läuft danach mit WebLLM **im Browser** (kostenlos, keine Date
    Dann auf `main` bringen (das Notebook lädt die Daten von dort).
 3. **Training:** `xbubekir_training.ipynb` in Google Colab öffnen (Datei → Notebook hochladen oder über GitHub), Laufzeit **T4 GPU**,
    Secret `HF_TOKEN` (Hugging-Face-Token mit Schreibrecht) anlegen, Zellen der Reihe nach starten.
-4. **Ergebnis:** öffentliches Hugging-Face-Repo `<name>/xbubekir-qwen3-1.7b-q4f16_1-MLC`. Diese Adresse wird in xbubekir/Mufradaat eingetragen.
+4. **Ergebnis:** öffentliches Hugging-Face-Repo `xbubekir/xbubekir-qwen3-1.7b-q4f16_1-MLC` (https://huggingface.co/xbubekir/xbubekir-qwen3-1.7b-q4f16_1-MLC). Diese Adresse wird in xbubekir/Mufradaat eingetragen.
    Die Browser-Bibliothek (wasm) ist die fertige von WebLLM für Qwen3-1.7B q4f16_1. Weil sich beim Nachtrainieren nur die Gewichte ändern,
    muss nichts kompiliert werden.
 
