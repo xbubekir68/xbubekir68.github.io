@@ -14,6 +14,8 @@ nachtrainiert und läuft danach mit WebLLM **im Browser** (kostenlos, keine Date
 | `xbubekir_training.ipynb` | Colab-Notebook: Training (LoRA), Probelauf, Umwandlung ins WebLLM-Format, Upload zu Hugging Face |
 
 ## Ablauf
+> **Stand:** Der erste Trainingslauf nutzt die arabischen Übungssätze noch **ungeprüft** (Wunsch des Nutzers). Korrekturen aus `dialoge-pruefen.md` später einarbeiten und nachtrainieren.
+
 1. **Gegenlesen:** `dialoge-pruefen.md` an einen Muttersprachler geben, Korrekturen in `uebung.json` übernehmen.
 2. **Datensatz bauen und prüfen:**
    ```
