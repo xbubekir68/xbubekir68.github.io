@@ -1,5 +1,6 @@
-// xbubekir: persönliche KI im Browser. Denkt mit Gemini von Google (kostenlos), Claude von Anthropic (eigener Schlüssel)
-// oder mit der eigenen xbubekir-KI, die komplett auf dem Gerät läuft (WebLLM); Chats bleiben auf diesem Gerät.
+// xbubekir: persönliche KI im Browser. Denkt mit Gemini von Google (kostenlos), Claude von Anthropic (eigener Schlüssel),
+// DeepSeek (Open Source, über den eigenen Server und OpenRouter) oder mit der eigenen xbubekir-KI, die komplett auf dem Gerät
+// läuft (WebLLM); Chats bleiben auf diesem Gerät.
 
 // p: Anbieter; web: Websuch-Werkzeug (nur Claude); fb: serverseitiger Ersatz bei Ablehnung durch Sicherheitsfilter
 const MODELS={
@@ -9,8 +10,11 @@ const MODELS={
   "claude-sonnet-5-5":{p:"claude",name:"Claude Sonnet 5.5",hint:"schneller, günstiger",price:"2 $ / 10 $",web:"web_search_20260209",fb:true},
   "claude-haiku-5-5":{p:"claude",name:"Claude Haiku 5.5",hint:"am günstigsten",price:"0,10 $ / 0,50 $",web:null,fb:false},
   "xbubekir-qwen3-1.7b":{p:"eigen",name:"xbubekir-KI",hint:"Qwen3 1,7B, nachtrainiert"},
+  "deepseek/deepseek-v4.1-flash":{p:"open",name:"DeepSeek V4.1 Flash",hint:"schnell und sehr günstig"},
+  "deepseek/deepseek-v4-pro":{p:"open",name:"DeepSeek V4 Pro",hint:"gründlicher, etwa 3× teurer"},
 };
-const PROV={gemini:{name:"Gemini",by:"Google",def:"gemini-3.8-flash"},claude:{name:"Claude",by:"Anthropic",def:"claude-opus-5-5"},eigen:{name:"xbubekir-KI",by:"xbubekir",def:"xbubekir-qwen3-1.7b"}};
+const PROV={gemini:{name:"Gemini",by:"Google",def:"gemini-3.8-flash"},claude:{name:"Claude",by:"Anthropic",def:"claude-opus-5-5"},eigen:{name:"xbubekir-KI",by:"xbubekir",def:"xbubekir-qwen3-1.7b"},
+  open:{name:"DeepSeek",by:"DeepSeek (Open Source, über OpenRouter)",def:"deepseek/deepseek-v4.1-flash"}};
 // Eigene KI: nachtrainiertes Qwen3-1.7B (xbubekir/training), läuft per WebLLM im Browser. Die Browser-Bibliothek (wasm) ist die fertige
 // von WebLLM für Qwen3-1.7B, weil sich beim Nachtrainieren nur die Gewichte ändern. System-Prompt wie im Training (persona.json).
 // Zwei Fassungen: q4f16 (schneller, braucht „shader-f16“) und q4f32 für Grafikkarten ohne 16-Bit. Die q4f32-Dateien erzeugt der
@@ -21,7 +25,7 @@ const LOCAL={f16:{model:HF16,files:HF16+"/resolve/main/",id:"xbubekir-qwen3-1.7b
   system:"Du bist xbubekir, eine persönliche KI, die direkt im Browser läuft. Du duzt, antwortest in der Sprache der Person, direkt, ehrlich und freundlich, ohne Floskeln. Kurze Fragen bekommen kurze Antworten. Wenn du etwas nicht weißt, sagst du das.",
   maxChars:6000}; // Verlauf grob kürzen, damit er ins Kontextfenster (4096 Tokens) passt
 // Eigener Server (Supabase-Projekt „xbubekir“, getrennt von Mufradaat): hält den Gemini-Schlüssel, nur der Besitzer hat Zugang
-const SB_URL="https://ydasoikczdjjdtdarrpx.supabase.co",SB_KEY="sb_publishable_hsk2OROaXkk_cJAR0sxkhA_2EdjhIiN",SB_FN=SB_URL+"/functions/v1/gemini";
+const SB_URL="https://ydasoikczdjjdtdarrpx.supabase.co",SB_KEY="sb_publishable_hsk2OROaXkk_cJAR0sxkhA_2EdjhIiN",SB_FN=SB_URL+"/functions/v1/gemini",SB_OR=SB_URL+"/functions/v1/openrouter";
 const MAX_TOKENS=64000,LEVEL={low:"LOW",medium:"MEDIUM",high:"HIGH"};
 const G_REFUSE=new Set(["SAFETY","RECITATION","BLOCKLIST","PROHIBITED_CONTENT","SPII","LANGUAGE"]);
 const NOTES={
@@ -46,8 +50,9 @@ try{Object.assign(S,JSON.parse(localStorage.getItem(SK)||"{}"))}catch{}
 if(!PROV[S.provider])S.provider="gemini";
 if(MODELS[S.model]?.p!==S.provider)S.model=PROV[S.provider].def;
 function saveS(){try{localStorage.setItem(SK,JSON.stringify(S))}catch{}}
-// Gemini entweder über das eigene Konto (Server hält den Schlüssel) oder mit eigenem Schlüssel im Browser
-const keyOf=p=>p==="eigen"?"lokal":p==="gemini"?(S.gmode==="konto"?(session?"konto":""):S.gkey):S.ckey;
+// Gemini entweder über das eigene Konto (Server hält den Schlüssel) oder mit eigenem Schlüssel im Browser; DeepSeek nur über das Konto
+const viaKonto=p=>p==="open"||p==="gemini"&&S.gmode==="konto";
+const keyOf=p=>p==="eigen"?"lokal":viaKonto(p)?(session?"konto":""):p==="gemini"?S.gkey:S.ckey;
 
 // ---------- Chats (können groß werden, daher IndexedDB; ohne IndexedDB nur im Speicher) ----------
 const DB=(()=>{
@@ -138,7 +143,7 @@ async function run(c,um){
   toBottom(true);
   const live=$("#live"),p=provOf(c);
   let err=null;
-  try{await({gemini:askGemini,claude:askClaude,eigen:askLocal}[p])(c,um,live)}
+  try{await({gemini:askGemini,claude:askClaude,eigen:askLocal,open:askOpen}[p])(c,um,live)}
   catch(e){err=e;undo(c,um)}
   stopFn=null;
   if(c.msgs.length)store(c);else forget(c);
@@ -291,6 +296,45 @@ async function askLocal(c,um,live){
   c.msgs.push({role:"assistant",content:txt,...(stopped?{note:"stop"}:{})});
 }
 
+// ---------- DeepSeek (Open Source) über den eigenen Server → OpenRouter ----------
+// Der Server (server/openrouter) prüft das Konto, ergänzt den Schlüssel und legt Modelle, Länge und erlaubte Anbieter fest.
+async function askOpen(c,um,live){
+  const{data}=await(await auth()).getSession();
+  if(!data.session)throw Object.assign(new Error("Nicht angemeldet."),{status:401});
+  const ctl=new AbortController();let think="",txt="",fin="";
+  stopFn=()=>ctl.abort();
+  const blocks=()=>[...(think.trim()?[{type:"thinking",thinking:think}]:[]),...(txt?[{type:"text",text:txt}]:[])];
+  const plain=m=>typeof m.content==="string"?m.content:m.content.filter(b=>b.type==="text").map(b=>b.text).join("");
+  try{
+    const res=await fetch(SB_OR,{method:"POST",signal:ctl.signal,headers:{"content-type":"application/json",Authorization:"Bearer "+data.session.access_token},
+      body:JSON.stringify({model:c.model,effort:S.effort,messages:[{role:"system",content:c.system},...c.msgs.filter(m=>!m.skip).map(m=>({role:m.role,content:plain(m)}))]})});
+    if(!res.ok){let msg=res.statusText;try{msg=(await res.json()).error?.message||msg}catch{}throw Object.assign(new Error(msg),{status:res.status})}
+    const rd=res.body.pipeThrough(new TextDecoderStream()).getReader();let buf="";
+    for(;;){ // Server-Sent Events: „data: {…}“-Zeilen, Kommentare („: OPENROUTER PROCESSING“) halten nur die Verbindung offen
+      const{value,done}=await rd.read();if(done)break;
+      buf+=value;let i;
+      while((i=buf.indexOf("\n"))>=0){
+        const line=buf.slice(0,i).trim();buf=buf.slice(i+1);
+        if(!line.startsWith("data:"))continue;
+        const d=line.slice(5).trim();if(d==="[DONE]")continue;
+        let j;try{j=JSON.parse(d)}catch{continue}
+        if(j.error)throw Object.assign(new Error(j.error.message||"Fehler beim Anbieter"),{status:+j.error.code||502});
+        const ch=j.choices?.[0];if(!ch)continue;
+        think+=ch.delta?.reasoning||"";txt+=ch.delta?.content||"";
+        if(ch.finish_reason)fin=ch.finish_reason;
+        paint(live,blocks());
+      }
+    }
+  }catch(e){if(!ctl.signal.aborted)throw e}
+  if(ctl.signal.aborted){ // Stopp gedrückt: bisherigen Text behalten (ohne Gedanken)
+    if(txt.trim())c.msgs.push({role:"assistant",content:[{type:"text",text:txt}],note:"stop"});
+    else undo(c,um);
+    return;
+  }
+  if(!txt.trim())throw new Error("DeepSeek hat keine Antwort geschickt"+(fin?` (${fin})`:"")+".");
+  c.msgs.push({role:"assistant",content:blocks(),...(fin==="length"?{note:"cut"}:{})});
+}
+
 // ---------- Claude ----------
 function claudeParams(c){
   const p={model:c.model,max_tokens:MAX_TOKENS,system:c.system,
@@ -345,6 +389,17 @@ function undo(c,um){
 
 function errText(e,p){
   if(p==="eigen")return localErr(e,"antworten");
+  if(p==="open"){
+    const s=e?.status,msg=e?.message||String(e);
+    if(e instanceof TypeError&&!s)return"Keine Verbindung zu deinem Server. Bist du online?";
+    const why=s===401||s===403?"Dein xbubekir-Konto hat gerade keinen Zugang. Melde dich in den Einstellungen neu an."
+      :s===402?"Das OpenRouter-Guthaben ist aufgebraucht oder das Ausgabenlimit des Schlüssels erreicht. Lade auf openrouter.ai auf."
+      :s===429?"Gerade zu viele Anfragen. Warte einen Moment und versuch es nochmal."
+      :s===413?"Der Chat ist zu lang."
+      :s>=500?"Der Server oder DeepSeek hatte gerade ein Problem. Versuch es gleich nochmal."
+      :"Unerwarteter Fehler.";
+    return`${why} Meldung${s?` (${s})`:""}: „${msg}“`;
+  }
   if(p==="gemini"){
     let msg=e?.message||String(e);
     try{msg=JSON.parse(msg.slice(msg.indexOf("{"))).error.message||msg}catch{}
@@ -488,13 +543,13 @@ function helloHTML(){
 }
 function loginHTML(){
   return`<section class="setup" aria-labelledby="suH"><img src="icons/icon-192.png" alt=""><h2 id="suH">Willkommen bei xbubekir</h2>
-<p>Melde dich mit deinem xbubekir-Konto an. Der Gemini-Schlüssel liegt sicher auf deinem eigenen Server, du musst ihn nirgends eingeben.</p>
+<p>Melde dich mit deinem xbubekir-Konto an. Der ${S.provider==="open"?"OpenRouter":"Gemini"}-Schlüssel liegt sicher auf deinem eigenen Server, du musst ihn nirgends eingeben.</p>
 <label for="suMail">E-Mail</label><input class="f" id="suMail" type="email" autocomplete="username">
 <label for="suPw">Passwort</label><input class="f" id="suPw" type="password" autocomplete="current-password">
 <div class="dacts"><button class="btn alt" type="button" id="suNew">Konto erstellen</button><button class="btn" type="button" id="suIn">Anmelden</button></div>
 <p class="status" id="suMsg" role="status"></p>
 <p class="hint">Der Zugang ist nur für dich: Ein neues Konto funktioniert erst, wenn es auf dem Server freigeschaltet ist.</p>
-<p class="hint"><button class="linkbtn" type="button" id="suKeyMode">Lieber eigenen Gemini-Schlüssel eingeben</button> · <button class="linkbtn" type="button" id="suSwitch">Claude von Anthropic nutzen (kostenpflichtig)</button></p></section>`;
+<p class="hint"><button class="linkbtn" type="button" id="suKeyMode">${S.provider==="open"?"Lieber Gemini mit eigenem Schlüssel nutzen":"Lieber eigenen Gemini-Schlüssel eingeben"}</button> · <button class="linkbtn" type="button" id="suSwitch">Claude von Anthropic nutzen (kostenpflichtig)</button></p></section>`;
 }
 async function login(neu){
   const mail=$("#suMail").value.trim(),pw=$("#suPw").value,msg=$("#suMsg");
@@ -533,11 +588,11 @@ ${steps}
 function render(){
   const ready=!!keyOf(S.provider);
   document.body.classList.toggle("nokey",!ready);
-  if(!ready&&S.provider==="gemini"&&S.gmode==="konto"){
+  if(!ready&&viaKonto(S.provider)){
     log.innerHTML=loginHTML();
     $("#suIn").onclick=()=>login(false);$("#suNew").onclick=()=>login(true);
     $("#suPw").onkeydown=e=>{if(e.key==="Enter")login(false)};
-    $("#suKeyMode").onclick=()=>{S.gmode="key";saveS();render()};
+    $("#suKeyMode").onclick=()=>{if(S.provider==="open"){S.provider="gemini";S.model=PROV.gemini.def;cur=null}S.gmode="key";saveS();render()};
     $("#suSwitch").onclick=()=>{S.provider="claude";S.model=PROV.claude.def;saveS();cur=null;render()};
     return;
   }
@@ -588,9 +643,9 @@ function fillModels(){ // Modellauswahl passend zum gewählten Anbieter
   const p=$("#sProv").value,sel=$("#sModel"),was=sel.value;
   sel.innerHTML=Object.entries(MODELS).filter(([,M])=>M.p===p).map(([id,M])=>`<option value="${id}">${M.name.replace(/^(Claude|Gemini) /,"")} – ${M.hint}</option>`).join("");
   sel.value=MODELS[was]?.p===p?was:PROV[p].def;
-  $("#kGemini").hidden=p!=="gemini";$("#kClaude").hidden=p!=="claude";$("#kEigen").hidden=p!=="eigen";
+  $("#kGemini").hidden=p!=="gemini";$("#kClaude").hidden=p!=="claude";$("#kEigen").hidden=p!=="eigen";$("#kOpen").hidden=p!=="open";
   const konto=$("#sGMode").value==="konto";
-  $("#kKonto").hidden=!konto;$("#kGKey").hidden=konto;
+  $("#kKonto").hidden=!(p==="open"||p==="gemini"&&konto);$("#kGKey").hidden=konto;
   $("#kontoInfo").textContent=session?`Angemeldet als ${session.user.email}.`:"Nicht angemeldet. Nach dem Speichern erscheint die Anmeldung.";
   $("#bLogout").hidden=!session;
   costHint();
@@ -598,7 +653,9 @@ function fillModels(){ // Modellauswahl passend zum gewählten Anbieter
 function costHint(){
   const M=MODELS[$("#sModel").value];
   $("#sWeb").disabled=!M.web;
-  $("#costHint").textContent=M.p==="eigen"
+  $("#costHint").textContent=M.p==="open"
+    ?`${M.name}: Open-Source-KI von DeepSeek, über deinen eigenen Server bei OpenRouter. Eine normale Nachricht kostet meist weniger als 0,1 Cent${M.hint.includes("teurer")?" (dieses Modell etwa das Dreifache)":""}, bezahlt aus deinem OpenRouter-Guthaben. Es werden nur Anbieter genutzt, die nichts speichern und nicht in China sitzen. Eine Websuche gibt es hier nicht.`
+    :M.p==="eigen"
     ?"Kostenlos und ohne Konto: Die eigene xbubekir-KI läuft komplett auf diesem Gerät, nichts wird an einen Server geschickt. Beim ersten Start etwa 1 GB Download. Sie ist kleiner als Gemini und irrt sich öfter, eine Websuche gibt es nicht."
     :M.p==="gemini"
     ?"Kostenlos. Google begrenzt dafür die Nachrichten pro Minute und pro Tag; die genauen Grenzen zeigt AI Studio. Das Tageslimit setzt sich um Mitternacht kalifornischer Zeit zurück. Flash-Lite erlaubt mehr Nachrichten. Eine Websuche gibt es mit Gemini hier nicht."
@@ -675,7 +732,7 @@ inp.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.isComposi
 inp.addEventListener("input",grow);
 
 setBusy(false);
-if(S.gmode==="konto"||location.hash.includes("access_token")){try{session=(await(await auth()).getSession()).data.session}catch{}} // auch Rückkehr aus der Bestätigungs-Mail
+if(viaKonto(S.provider)||S.gmode==="konto"||location.hash.includes("access_token")){try{session=(await(await auth()).getSession()).data.session}catch{}} // auch Rückkehr aus der Bestätigungs-Mail
 try{chats=(await DB.all()).sort((a,b)=>b.updated-a.updated)}catch{chats=[]}
 render();
 if(keyOf(S.provider)&&desk.matches)inp.focus();
