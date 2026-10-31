@@ -173,24 +173,26 @@ label.chk{display:flex;align-items:center;gap:10px;font-weight:500;font-size:15p
       <select class="f" id="sProv">
         <option value="gemini">Google Gemini – kostenlos</option>
         <option value="claude">Anthropic Claude – kostenpflichtig</option>
+        <option value="open">DeepSeek (Open Source) – über dein Konto, Cent-Beträge</option>
         <option value="eigen">Eigene xbubekir-KI – im Browser, kostenlos</option>
       </select>
       <p class="hint" id="kEigen" hidden>Kein Schlüssel und kein Konto nötig. Läuft komplett auf diesem Gerät.</p>
+      <p class="hint" id="kOpen" hidden>Läuft über dein xbubekir-Konto: Der OpenRouter-Schlüssel liegt nur auf deinem Server.</p>
       <div id="kGemini">
         <label for="sGMode">Zugang zu Gemini</label>
         <select class="f" id="sGMode">
           <option value="konto">Über mein xbubekir-Konto (kein Schlüssel nötig)</option>
           <option value="key">Mit eigenem Gemini-Schlüssel</option>
         </select>
-        <div id="kKonto">
-          <p class="hint" id="kontoInfo"></p>
-          <button type="button" class="linkbtn hint" id="bLogout">Abmelden</button>
-        </div>
         <div id="kGKey" hidden>
           <label for="sGKey">Gemini-API-Schlüssel</label>
           <div class="keyrow"><input class="f" id="sGKey" type="password" autocomplete="off" spellcheck="false"><button type="button" class="eye" data-for="sGKey" aria-pressed="false">Zeigen</button></div>
           <p class="hint">Kostenlos erstellen auf <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer">aistudio.google.com/apikey</a>.</p>
         </div>
+      </div>
+      <div id="kKonto">
+        <p class="hint" id="kontoInfo"></p>
+        <button type="button" class="linkbtn hint" id="bLogout">Abmelden</button>
       </div>
       <div id="kClaude" hidden>
         <label for="sCKey">Anthropic-API-Schlüssel</label>
