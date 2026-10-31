@@ -13,7 +13,11 @@ const MODELS={
 const PROV={gemini:{name:"Gemini",by:"Google",def:"gemini-3.8-flash"},claude:{name:"Claude",by:"Anthropic",def:"claude-opus-5-5"},eigen:{name:"xbubekir-KI",by:"xbubekir",def:"xbubekir-qwen3-1.7b"}};
 // Eigene KI: nachtrainiertes Qwen3-1.7B (xbubekir/training), läuft per WebLLM im Browser. Die Browser-Bibliothek (wasm) ist die fertige
 // von WebLLM für Qwen3-1.7B, weil sich beim Nachtrainieren nur die Gewichte ändern. System-Prompt wie im Training (persona.json).
-const LOCAL={model:"https://huggingface.co/xbubekir/xbubekir-qwen3-1.7b-q4f16_1-MLC",id:"xbubekir-qwen3-1.7b-q4f16_1-MLC",base:"Qwen3-1.7B-q4f16_1-MLC",
+// Zwei Fassungen: q4f16 (schneller, braucht „shader-f16“) und q4f32 für Grafikkarten ohne 16-Bit. Die q4f32-Dateien erzeugt der
+// Service-Worker aus den q4f16-Dateien (sw.js); files = Adresse, unter der WebLLM die Dateien im Cache „webllm/model“ ablegt.
+const HF16="https://huggingface.co/xbubekir/xbubekir-qwen3-1.7b-q4f16_1-MLC",F32=new URL("q4f32/resolve/main/",import.meta.url).href;
+const LOCAL={f16:{model:HF16,files:HF16+"/resolve/main/",id:"xbubekir-qwen3-1.7b-q4f16_1-MLC",base:"Qwen3-1.7B-q4f16_1-MLC"},
+  f32:{model:F32,files:F32,id:"xbubekir-qwen3-1.7b-q4f32_1-MLC",base:"Qwen3-1.7B-q4f32_1-MLC"},
   system:"Du bist xbubekir, eine persönliche KI, die direkt im Browser läuft. Du duzt, antwortest in der Sprache der Person, direkt, ehrlich und freundlich, ohne Floskeln. Kurze Fragen bekommen kurze Antworten. Wenn du etwas nicht weißt, sagst du das.",
   maxChars:6000}; // Verlauf grob kürzen, damit er ins Kontextfenster (4096 Tokens) passt
 // Eigener Server (Supabase-Projekt „xbubekir“, getrennt von Mufradaat): hält den Gemini-Schlüssel, nur der Besitzer hat Zugang
@@ -184,10 +188,12 @@ async function askGemini(c,um,live){
 
 // ---------- Eigene KI im Browser (WebLLM) ----------
 let engineP=null,loadEl=null;
-const lstat=$("#lstat"),LFILES=LOCAL.model+"/resolve/main/"; // so legt WebLLM die Modelldateien im Cache „webllm/model“ ab
+const lstat=$("#lstat");
 const clean=t=>t.replace(/<think>[\s\S]*?(<\/think>|$)/g,"").trim(); // falls das Modell doch „nachdenkt“, nicht anzeigen
-const NOF16="Deine Grafikkarte oder dein Browser kann die 16-Bit-Rechnungen nicht, die die xbubekir-KI braucht („shader-f16“). Oft hilft es, Chrome oder Edge und den Grafiktreiber zu aktualisieren. Bis dahin kannst du in den Einstellungen Gemini wählen.";
-const localErr=(e,what)=>e?.local?e.message:/ShaderModule|shader-f16/i.test(e?.message)?NOF16+` (Meldung: „${e.message}“)`:`Die xbubekir-KI konnte nicht ${what}. Meldung: „${e?.message||e}“`;
+const NOGPU="Dieses Gerät oder dieser Browser kann die eigene xbubekir-KI nicht ausführen (WebGPU fehlt). Nimm ein aktuelles Chrome, Edge oder Safari, oder wähl in den Einstellungen Gemini.";
+const GPUERR="Die Grafikkarte konnte die xbubekir-KI nicht vorbereiten. Oft hilft es, Chrome oder Edge und den Grafiktreiber zu aktualisieren. Bis dahin kannst du in den Einstellungen Gemini wählen.";
+const gpuErr=e=>/ShaderModule|shader-f16/i.test(e?.message)||e?.name==="ShaderF16SupportError";
+const localErr=(e,what)=>e?.local?e.message:gpuErr(e)?GPUERR+` (Meldung: „${e.message}“)`:`Die xbubekir-KI konnte nicht ${what}. Meldung: „${e?.message||e}“`;
 const persistStore=()=>navigator.storage?.persist?.().catch(()=>{}); // Browser bitten, das Modell auch bei Platzmangel zu behalten
 // WebLLM lädt in drei Schritten, jeder zählt seinen eigenen Fortschritt: Download, aus dem Gerätespeicher laden, Grafikkarte vorbereiten
 function loadText(r){
@@ -207,20 +213,47 @@ function showLoad(r){
   if(p==null)bar.removeAttribute("value");else bar.value=p;
   if(loadEl?.isConnected)loadEl.innerHTML='<p class="tool wait">Wartet, bis die xbubekir-KI geladen ist (Stand oben) …</p>';
 }
+// Welche Fassung passt zur Grafikkarte? null = keine nutzbare Grafikkarte (WebGPU)
+async function localVariant(){
+  if(!navigator.gpu)return null;
+  let a=null;try{a=await navigator.gpu.requestAdapter({powerPreference:"high-performance"})}catch{}
+  return!a?null:S.localF32||!a.features?.has("shader-f16")?"f32":"f16";
+}
+// Die q4f32-Dateien kommen vom Service-Worker; er muss diese Seite steuern und schon die Fassung mit q4f32 sein (Antwort auf „sw-ok“)
+async function swReady(){
+  const sw=navigator.serviceWorker;
+  for(let i=0;sw&&i<3;i++){
+    if(sw.controller&&(await fetch(F32+"sw-ok",{cache:"no-store"}).catch(()=>null))?.ok)return;
+    (await sw.getRegistration().catch(()=>null))?.update().catch(()=>{});
+    await new Promise(r=>{sw.addEventListener("controllerchange",r,{once:true});setTimeout(r,5000)});
+  }
+  throw Object.assign(new Error("Die xbubekir-KI wurde gerade aktualisiert. Lade die Seite bitte einmal neu."),{local:true});
+}
+async function loadEngine(v){
+  const L=LOCAL[v];
+  showLoad({});
+  if(v==="f32")await swReady();
+  const w=await import("./vendor/webllm.js");
+  const base=w.prebuiltAppConfig.model_list.find(m=>m.model_id===L.base);
+  const eng=await w.CreateMLCEngine(L.id,{appConfig:{...w.prebuiltAppConfig,model_list:[{...base,model:L.model,model_id:L.id,...(v==="f16"&&{required_features:["shader-f16"]})}]},initProgressCallback:showLoad});
+  if(v==="f32")caches.open("webllm/model").then(async c=>{for(const q of await c.keys())if(q.url.startsWith(LOCAL.f16.files))await c.delete(q)}).catch(()=>{}); // q4f16 läuft hier nicht: ca. 1 GB frei machen
+  return eng;
+}
 function localEngine(){
-  if(!navigator.gpu)throw Object.assign(new Error("Dieses Gerät oder dieser Browser kann die eigene xbubekir-KI nicht ausführen (WebGPU fehlt). Nimm ein aktuelles Chrome, Edge oder Safari, oder wähl in den Einstellungen Gemini."),{local:true});
+  if(!navigator.gpu)throw Object.assign(new Error(NOGPU),{local:true});
   if(!engineP){
     engineP=(async()=>{
-      // Die WebLLM-Bibliothek für Qwen3 q4f16 rechnet mit 16-Bit-Zahlen: ohne „shader-f16“ scheitert sie erst nach dem Download
-      let a=null;try{a=await navigator.gpu.requestAdapter({powerPreference:"high-performance"})}catch{}
-      if(!a?.features?.has("shader-f16"))throw Object.assign(new Error(NOF16),{local:true});
+      const v=await localVariant();
+      if(!v)throw Object.assign(new Error(NOGPU),{local:true});
       if(!S.localOk&&!confirm("Die eigene xbubekir-KI lädt beim ersten Start knapp 1 GB herunter, am besten im WLAN. Danach bleibt sie auf diesem Gerät gespeichert. Wird der Download unterbrochen, geht es beim nächsten Mal dort weiter. Jetzt laden?"))
         throw Object.assign(new Error("Download abgebrochen."),{cancel:true});
       S.localOk=true;saveS();persistStore();
-      showLoad({});
-      const w=await import("./vendor/webllm.js");
-      const base=w.prebuiltAppConfig.model_list.find(m=>m.model_id===LOCAL.base);
-      return w.CreateMLCEngine(LOCAL.id,{appConfig:{...w.prebuiltAppConfig,model_list:[{...base,model:LOCAL.model,model_id:LOCAL.id,required_features:["shader-f16"]}]},initProgressCallback:showLoad});
+      try{return await loadEngine(v)}
+      catch(e){ // Grafikkarte meldet 16-Bit, scheitert aber daran: ab jetzt die q4f32-Fassung (nutzt die schon geladenen Dateien)
+        if(v!=="f16"||!gpuErr(e))throw e;
+        S.localF32=true;saveS();
+        return await loadEngine("f32");
+      }
     })();
     engineP.then(()=>{lstat.hidden=true;persistStore()},()=>{engineP=null;lstat.hidden=true}); // nach einem Fehler beim nächsten Mal neu versuchen
   }
@@ -231,13 +264,14 @@ async function preloadLocal(){
   try{await localEngine()}
   catch(e){if(e?.cancel)return;lstat.hidden=false;lstat.classList.add("bad");$("#lstatT").textContent=localErr(e,"geladen werden");$("#lstatP").hidden=true}
 }
-async function localCached(){ // liegt das Modell schon vollständig auf dem Gerät? Dann darf es ohne Rückfrage vorladen
+// Liegt die Fassung v schon vollständig auf dem Gerät? Dann darf sie ohne Rückfrage vorladen. Für q4f32 reichen auch die q4f16-Dateien,
+// der Service-Worker wandelt sie ohne Netz um.
+async function localCached(v){
   try{
-    if(!await caches.has("webllm/model"))return false;
-    const c=await caches.open("webllm/model"),r=await c.match(LFILES+"tensor-cache.json");
-    if(!r)return false;
-    const have=new Set((await c.keys()).map(q=>q.url));
-    return(await r.json()).records.every(s=>have.has(LFILES+s.dataPath));
+    if(!v||!await caches.has("webllm/model"))return false;
+    const c=await caches.open("webllm/model"),have=new Set((await c.keys()).map(q=>q.url));
+    const full=async f=>{const r=await c.match(f+"tensor-cache.json");return!!r&&(await r.json()).records.every(s=>have.has(f+s.dataPath))};
+    return await full(LOCAL[v].files)||v==="f32"&&await full(LOCAL.f16.files);
   }catch{return false}
 }
 async function askLocal(c,um,live){
@@ -645,5 +679,5 @@ if(S.gmode==="konto"||location.hash.includes("access_token")){try{session=(await
 try{chats=(await DB.all()).sort((a,b)=>b.updated-a.updated)}catch{chats=[]}
 render();
 if(keyOf(S.provider)&&desk.matches)inp.focus();
-if(S.provider==="eigen"&&navigator.gpu&&await localCached())preloadLocal(); // schon gespeichert: in den Grafikspeicher laden, während man tippt
+if(S.provider==="eigen"&&await localCached(await localVariant()))preloadLocal(); // schon gespeichert: in den Grafikspeicher laden, während man tippt
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
