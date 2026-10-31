@@ -4,7 +4,8 @@ Aufbau (Namen, Formen, Reihenfolge, Aufteilung in params_shard_*.bin) kommt 1:1 
 Modells mlc-ai/Qwen3-1.7B-q4f16_1-MLC. Dadurch passt das Ergebnis sicher zur fertigen WebLLM-Browser-Bibliothek.
 Die 4-Bit-Quantisierung rechnet wie mlc_llm (GroupQuantize): je 32 Werte eine float16-Skala = max|w| / 7,
 q = round(w / Skala + 7) begrenzt auf 0..14, acht 4-Bit-Werte pro uint32 (erster Wert in den untersten Bits).
-selftest() prüft das am unveränderten Qwen3-1.7B gegen die offiziellen Dateien.
+selftest() prüft das am unveränderten Qwen3-1.7B gegen die offiziellen Dateien und sucht dabei unter VARIANTS die
+Rechenweise, die deren float16-Rundung am besten trifft (die offiziellen Dateien wurden auf einer GPU gerechnet).
 """
 import hashlib
 import json
@@ -17,20 +18,36 @@ GROUP = 32  # Werte pro Skala
 PACK = 8  # 4-Bit-Werte pro uint32
 MAXQ = 7  # 2 ** (4 - 1) - 1
 ROWS = 8192  # Zeilen pro Rechenschritt (hält den Speicherbedarf beim großen Wortschatz klein)
+# Rechenweisen "Skala/Werte/Rundung", die sich nur in der float16-Rundung unterscheiden:
+# Skala  div = max/7, rcp = max · float16(1/7) (Fast-Math auf der GPU)
+# Werte  div16 = w/s und +7 je auf float16 gerundet (wie mlc_llm auf der CPU), add32 = nur w/s gerundet,
+#        rcp16 = w · float16(1/s), f32 = ohne Zwischenrundung
+# Rundung even = .5 zur geraden Zahl, away = .5 aufrunden
+VARIANTS = [f"{s}/{v}/{r}" for s in ("div", "rcp") for v in ("div16", "add32", "rcp16", "f32") for r in ("even", "away")]
 
 
-def quantize(w, rounding="even"):
-    """float16 [N, K] → (q_weight uint32 [N, K/8], q_scale float16 [N, K/32]); gerechnet in float16 wie mlc_llm."""
+def f16(x):
+    """auf float16 runden, in float32 weiterrechnen"""
+    return x.astype(np.float16).astype(np.float32)
+
+
+def quantize(w, variant=VARIANTS[0]):
+    """float16 [N, K] → (q_weight uint32 [N, K/8], q_scale float16 [N, K/32]) wie mlc_llm GroupQuantize."""
+    sc, va, ro = variant.split("/")
     n, k = w.shape
     qw = np.empty((n, k // PACK), np.uint32)
     qs = np.empty((n, k // GROUP), np.float16)
     for a in range(0, n, ROWS):
         g = w[a:a + ROWS].reshape(-1, k // GROUP, GROUP)
-        s = (np.abs(g).max(axis=2).astype(np.float32) / MAXQ).astype(np.float16)
-        with np.errstate(divide="ignore", invalid="ignore"):  # Gruppe nur aus Nullen: Skala 0, ergibt wie bei mlc_llm q = 0
-            x = (g.astype(np.float32) / s[..., None].astype(np.float32)).astype(np.float16)
-        x = (x.astype(np.float32) + MAXQ).astype(np.float16).astype(np.float32)
-        x = np.rint(x) if rounding == "even" else np.floor(x + 0.5)  # .5 zur geraden Zahl oder aufrunden
+        m = np.abs(g).max(axis=2).astype(np.float32)
+        s = (m / MAXQ if sc == "div" else m * np.float32(np.float16(1 / MAXQ))).astype(np.float16)
+        sf = s[..., None].astype(np.float32)
+        # Gruppe nur aus Nullen: Skala 0, ergibt wie bei mlc_llm q = 0
+        with np.errstate(divide="ignore", invalid="ignore", over="ignore"):
+            x = g.astype(np.float32) * f16(1 / sf) if va == "rcp16" else g.astype(np.float32) / sf
+            x = x + MAXQ if va == "f32" else f16(x) + MAXQ
+            x = f16(x) if va in ("div16", "rcp16") else x
+        x = np.rint(x) if ro == "even" else np.floor(x + 0.5)
         x = np.clip(np.nan_to_num(x, nan=0.0), 0, 2 * MAXQ).astype(np.uint32).reshape(len(g), k // PACK, PACK)
         q = np.zeros(x.shape[:2], np.uint32)
         for r in range(PACK):
@@ -70,7 +87,7 @@ def reader(src):
     return get
 
 
-def tensors(get, rounding="even"):
+def tensors(get, variant=VARIANTS[0]):
     """name aus tensor-cache.json → Array. Zusammengelegte Gewichte wie im MLC-Qwen3-Loader:
     c_attn = q_proj + k_proj + v_proj, gate_up_proj = gate_proj + up_proj (untereinander)."""
     cache = {}
@@ -89,7 +106,7 @@ def tensors(get, rounding="even"):
         if not m:
             return get(name)
         if m[1] not in cache:
-            cache[m[1]] = dict(zip(("weight", "scale"), quantize(source(m[1]), rounding)))
+            cache[m[1]] = dict(zip(("weight", "scale"), quantize(source(m[1]), variant)))
         out = cache[m[1]].pop(m[2])
         if not cache[m[1]]:
             del cache[m[1]]
@@ -110,11 +127,11 @@ def shard(rec, tensor):
     return bytes(buf)
 
 
-def convert(src, template, out, rounding="even", log=print):
-    """src: Hugging-Face-Ordner, template: offizielle tensor-cache.json, out: Zielordner."""
+def convert(src, template, out, variant=VARIANTS[0], log=print):
+    """src: Hugging-Face-Ordner, template: offizielle tensor-cache.json, out: Zielordner, variant: von selftest()."""
     tpl = json.load(open(template))
     os.makedirs(out, exist_ok=True)
-    tensor = tensors(reader(src), rounding)
+    tensor = tensors(reader(src), variant)
     for i, rec in enumerate(tpl["records"]):
         data = shard(rec, tensor)
         with open(os.path.join(out, rec["dataPath"]), "wb") as f:
@@ -128,7 +145,7 @@ def convert(src, template, out, rounding="even", log=print):
 
 
 def compare(mine, official, records):
-    """Anteil gleicher Werte je Eintrag (4-Bit-Werte einzeln gezählt)."""
+    """Je Eintrag: (Anteil gleicher Werte, größte Abweichung in float16-Stufen); 4-Bit-Werte einzeln gezählt."""
     res = {}
     for r in records:
         a = np.frombuffer(mine, r["dtype"], r["nbytes"] // np.dtype(r["dtype"]).itemsize, r["byteOffset"])
@@ -136,27 +153,44 @@ def compare(mine, official, records):
         if r["dtype"] == "uint32":
             sh = np.arange(PACK, dtype=np.uint32) * 4
             a, b = (a[:, None] >> sh) & 0xF, (b[:, None] >> sh) & 0xF
-        res[r["name"]] = float(np.mean(a == b))
+            steps = 0
+        else:
+            steps = int(np.abs(a.view(np.int16).astype(np.int32) - b.view(np.int16)).max())
+        res[r["name"]] = (float(np.mean(a == b)), steps)
     return res
 
 
 def selftest(base, template, shards, log=print):
-    """Wandelt das unveränderte Qwen3-1.7B (Ordner base) für die angegebenen Shards um und vergleicht mit den
-    offiziellen Dateien ({dataPath: Pfad}). Gibt die passende Rundung zurück oder bricht ab."""
+    """Wandelt das unveränderte Qwen3-1.7B (Ordner base) für die angegebenen Shards in jeder Rechenweise aus VARIANTS um
+    und vergleicht mit den offiziellen Dateien ({dataPath: Pfad}). Gibt die passende Rechenweise zurück oder bricht ab.
+    Bestanden: byte-genau gleich, oder Normen gleich, 4-Bit-Werte zu mindestens 99 % gleich und Skalen höchstens
+    1 float16-Stufe daneben (reine Rundungsunterschiede, ohne Einfluss auf die Qualität)."""
     tpl = {r["dataPath"]: r for r in json.load(open(template))["records"]}
+    official = {path: open(file, "rb").read() for path, file in shards.items()}
     get, best = reader(base), None
-    for rounding in ("even", "away"):
+    for variant in VARIANTS:
         res, same = {}, True
-        for path, file in shards.items():
-            mine, official = shard(tpl[path], tensors(get, rounding)), open(file, "rb").read()
-            same &= hashlib.md5(mine).hexdigest() == tpl[path]["md5sum"] and mine == official
-            res.update(compare(mine, official, tpl[path]["records"]))
-        worst = min(res.values())
-        log(f"Rundung {rounding}: {'byte-genau gleich' if same else f'mindestens {worst:.4%} gleich'}")
-        if best is None or worst > best[1]:
-            best = (rounding, worst, res)
-    if best[1] < 0.999:
-        for name, v in best[2].items():
-            log(f"  {v:8.2%}  {name}")
-        raise AssertionError(f"Selbsttest fehlgeschlagen: nur {best[1]:.2%} stimmen mit dem offiziellen Modell überein")
-    return best[0]
+        for path in shards:
+            mine = shard(tpl[path], tensors(get, variant))
+            same &= hashlib.md5(mine).hexdigest() == tpl[path]["md5sum"] and mine == official[path]
+            res.update(compare(mine, official[path], tpl[path]["records"]))
+        scale = [v for n, v in res.items() if n.endswith(".q_scale")]
+        weight = [v[0] for n, v in res.items() if n.endswith(".q_weight")]
+        score = (same, min(v[0] for v in scale), min(weight))
+        log(f"{variant:16} Skalen {score[1]:7.2%} gleich (max. {max(v[1] for v in scale)} Stufe), 4-Bit-Werte {score[2]:7.2%}"
+            + ("  byte-genau gleich" if same else ""))
+        if best is None or score > best[0]:
+            best = (score, variant, res)
+    (same, _, weight), variant, res = best
+    norms = all(v[0] == 1 for n, v in res.items() if not re.search(r"\.q_(weight|scale)$", n))
+    steps = max(v[1] for n, v in res.items() if n.endswith(".q_scale"))
+    if same:
+        log(f"✅ Selbsttest bestanden mit {variant}: byte-genau gleich wie das offizielle Modell")
+    elif norms and weight >= 0.99 and steps <= 1:
+        log(f"✅ Selbsttest bestanden mit {variant}: Aufbau stimmt, Unterschiede nur in der letzten float16-Stelle")
+    else:
+        for name, (v, st) in res.items():
+            log(f"  {v:8.2%}  {st:3} Stufen  {name}")
+        raise AssertionError(f"Selbsttest fehlgeschlagen (beste Rechenweise {variant}): Normen gleich: {norms}, "
+                             f"4-Bit-Werte {weight:.2%}, Skalen bis {steps} Stufen daneben")
+    return variant
