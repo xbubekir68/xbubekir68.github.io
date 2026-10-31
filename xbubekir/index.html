@@ -68,6 +68,13 @@ button{font:inherit;color:inherit;cursor:pointer}
 .src a{color:var(--ink)}
 .src span{color:var(--mute)}
 .note{font-size:14px;color:var(--mute);font-style:italic;margin:8px 0 0}
+.lstat{padding:8px 16px 10px;border-bottom:1px solid var(--line);font-size:14px;color:var(--mute)}
+.lstat>*{max-width:720px;margin:0 auto}
+.lstat p{margin-bottom:6px}
+.lstat small{font-size:13px}
+.lstat progress{display:block;width:100%;height:6px;accent-color:var(--acc)}
+.lstat progress[hidden]{display:none}
+.lstat.bad{color:var(--bad)}
 .msg.u+.note{text-align:right}
 .err{background:var(--badl);color:var(--bad);border-radius:12px;padding:10px 14px;margin-top:20px;font-size:15px}
 .acts-a{display:flex;gap:4px;margin:6px 0 0 -8px}
@@ -141,6 +148,7 @@ label.chk{display:flex;align-items:center;gap:10px;font-weight:500;font-size:15p
   <button class="ib" id="bNew" type="button" aria-label="Neuer Chat" title="Neuer Chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h8"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
   <button class="ib" id="bSet" type="button" aria-label="Einstellungen" title="Einstellungen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></button>
 </header>
+<div id="lstat" class="lstat" role="status" hidden><p id="lstatT"></p><progress id="lstatP" max="1"></progress></div>
 <main id="log" role="log" aria-live="polite" aria-relevant="additions"></main>
 <form id="composer" class="composer">
   <label class="sr" for="inp">Nachricht an xbubekir</label>
