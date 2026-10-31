@@ -2,7 +2,7 @@
 // Außerdem die eigene KI für Grafikkarten ohne 16-Bit („shader-f16“): Die WebLLM-Bibliothek q4f32_1 braucht dieselben Dateien wie q4f16_1,
 // nur Skalen und Normen als bfloat16 statt float16 (gleiche Größe, gleiche Offsets). Unter q4f32/resolve/main/ entsteht diese Fassung
 // aus den q4f16-Dateien: zuerst aus dem schon geladenen WebLLM-Cache, sonst von Hugging Face.
-const V="xb-v7",SHELL=["./","index.html","app.js","manifest.webmanifest","vendor/genai.js","vendor/supabase.js","vendor/anthropic.js","icons/icon-192.png","icons/icon-512.png","icons/favicon-64.png","icons/icon-180.png"];
+const V="xb-v8",SHELL=["./","index.html","app.js","manifest.webmanifest","vendor/genai.js","vendor/supabase.js","vendor/anthropic.js","icons/icon-192.png","icons/icon-512.png","icons/favicon-64.png","icons/icon-180.png"];
 self.addEventListener("install",e=>{
   e.waitUntil(caches.open(V).then(c=>Promise.all(SHELL.map(u=>c.add(u).catch(()=>{})))).then(()=>self.skipWaiting()));
 });
