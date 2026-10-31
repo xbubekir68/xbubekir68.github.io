@@ -34,7 +34,7 @@ const NOTES={
   refusal:"Darauf kann xbubekir nicht antworten. Diese Nachricht zählt im weiteren Gespräch nicht mit.",
 };
 const IC={
-  send:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>',
+  send:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
   stop:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2"/></svg>',
   search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="m20 20-4.5-4.5"/></svg>',
   del:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>',
@@ -584,7 +584,7 @@ function chatHTML(c){
 
 function helloHTML(){
   const n=S.name.trim();
-  return`<div class="hello"><img src="icons/icon-192.png" alt=""><h2>Hallo${n?", "+esc(n):""}!</h2><p>Ich bin xbubekir, deine persönliche KI. Frag mich etwas, lass mich etwas schreiben oder erklären.</p></div>`;
+  return`<div class="hello"><h2 class="sr">Hallo${n?", "+esc(n):""}! Ich bin xbubekir, deine persönliche KI.</h2><svg viewBox="0 0 194 62" role="img" aria-label="xbu"><use href="#wm"/></svg><p class="dom">xbubekir.ai</p><p class="tag">Frag. Entdecke. Erreiche mehr.</p></div>`;
 }
 function loginHTML(){
   return`<section class="setup" aria-labelledby="suH"><img src="icons/icon-192.png" alt=""><h2 id="suH">Willkommen bei xbubekir</h2>
@@ -633,6 +633,7 @@ ${steps}
 function render(){
   const ready=!!keyOf(S.provider);
   document.body.classList.toggle("nokey",!ready);
+  if(!ready)document.body.classList.remove("start");
   if(!ready&&viaKonto(S.provider)){
     log.innerHTML=loginHTML();
     $("#suIn").onclick=()=>login(false);$("#suNew").onclick=()=>login(true);
@@ -648,8 +649,9 @@ function render(){
     $("#suSwitch").onclick=()=>{S.provider=S.provider==="gemini"?"claude":"gemini";S.model=PROV[S.provider].def;S.gmode="konto";saveS();cur=null;render()};
     return;
   }
-  const st=log.scrollTop,stick=nearBottom();
-  log.innerHTML=cur&&cur.msgs.length?chatHTML(cur):helloHTML();
+  const st=log.scrollTop,stick=nearBottom(),has=!!(cur&&cur.msgs.length);
+  document.body.classList.toggle("start",!has);
+  log.innerHTML=has?chatHTML(cur):helloHTML();
   log.scrollTop=st;if(stick)toBottom(true);
   updSend();
 }

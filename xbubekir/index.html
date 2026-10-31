@@ -7,7 +7,7 @@
 <meta name="description" content="xbubekir – deine persönliche KI.">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://huggingface.co https://*.huggingface.co https://*.hf.co https://raw.githubusercontent.com https://ydasoikczdjjdtdarrpx.supabase.co https://generativelanguage.googleapis.com https://api.anthropic.com; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
 <meta name="referrer" content="no-referrer">
-<meta name="theme-color" content="#6d28d9">
+<meta name="theme-color" content="#0a0713">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/favicon-64.png" type="image/png">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
@@ -15,27 +15,57 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="xbubekir">
 <style>
-:root{--bg:#f6f4ef;--card:#fffdf8;--ink:#1c1a17;--mute:#68635a;--line:#e3ddd1;--acc:#6d28d9;--accl:#ece4fb;--on:#fbf8ff;--bad:#a8321d;--badl:#f8e0da;--code:#efeae0;
---sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color-scheme:light}
-@media (prefers-color-scheme:dark){:root{--bg:#141312;--card:#1c1b19;--ink:#ece9e3;--mute:#a19b90;--line:#2e2b27;--acc:#a78bfa;--accl:#2a1d45;--on:#150a29;--bad:#ef8a73;--badl:#3b1e17;--code:#25231f;color-scheme:dark}}
+:root{--bg:#07050c;--side:#0a0713;--card:#130e21;--field:#0c0917;--ink:#ece8f6;--soft:#c9c2da;--mute:#938ca8;--line:#251d38;--glass:rgba(167,139,250,.16);
+--acc:#7c3aed;--acc2:#a78bfa;--accl:#1d1530;--on:#fff;--bad:#f39a88;--badl:#3a1820;--code:#1a1429;
+--sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color-scheme:dark}
 *,*::before,*::after{box-sizing:border-box}
 html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:16px/1.55 var(--sans);-webkit-text-size-adjust:100%}
-body{display:flex;flex-direction:column;height:100dvh;padding:env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left)}
+body{display:grid;grid-template-columns:320px minmax(0,1fr);grid-template-rows:minmax(0,1fr);overflow:hidden;height:100dvh;padding:env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left)}
 button{font:inherit;color:inherit;cursor:pointer}
-:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+:focus-visible{outline:2px solid var(--acc2);outline-offset:2px}
+noscript{position:fixed;left:0;right:0;bottom:0;z-index:9;background:var(--card)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
-.top{display:flex;align-items:center;gap:2px;padding:6px 10px;border-bottom:1px solid var(--line)}
-.brand{flex:1;margin:0 6px;font-size:19px;font-weight:750;letter-spacing:-.02em}
-.brand span{color:var(--acc)}
-.ib{display:grid;place-items:center;width:44px;height:44px;flex:none;border:0;border-radius:12px;background:none}
-.ib:hover{background:var(--accl)}
-.ib svg{width:22px;height:22px}
-#log{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:8px 16px 24px}
-#log>*{max-width:720px;margin-left:auto;margin-right:auto}
+/* Seitenleiste */
+.side{display:flex;flex-direction:column;gap:0;padding:40px 30px 40px 30px;background:linear-gradient(180deg,#0d0a19,#0a0714 60%,#0c0818);border-right:1px solid rgba(255,255,255,.06);position:relative;z-index:2;min-height:0}
+.logo{display:flex;align-items:center;gap:24px;margin:0 0 72px 4px}
+.tile{display:grid;place-items:center;width:70px;height:70px;flex:none;border-radius:16px;border:1.5px solid #8b5cf6;background:radial-gradient(circle at 30% 18%,#3a1b7a,#170b33 72%);box-shadow:0 0 22px rgba(139,92,246,.45),inset 0 0 14px rgba(139,92,246,.35)}
+.tile svg{width:50px;height:auto;--wm:#f4f0ff}
+.logo b{font-size:24px;font-weight:400;letter-spacing:.005em;color:var(--ink)}
+.nav{display:flex;flex-direction:column;gap:7px}
+.nv{display:flex;align-items:center;gap:25px;height:68px;padding:0 20px;border:1px solid transparent;border-radius:22px;background:none;color:#b3acc6;font-size:20px;text-align:left}
+.nv svg{width:30px;height:30px;flex:none;color:#8b5cf6}
+.nv:hover{background:rgba(124,58,237,.1)}
+.nv.on{color:#fff;background:linear-gradient(180deg,rgba(150,120,230,.2),rgba(88,52,160,.16));border-color:rgba(167,139,250,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 6px 24px rgba(0,0,0,.35)}
+.me{margin-top:auto;position:relative;overflow:hidden;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(160deg,rgba(255,255,255,.035),rgba(124,58,237,.05));padding:22px 26px 24px}
+.me::after{content:"";position:absolute;right:-70px;bottom:-120px;width:200px;height:150px;border-radius:50%;border-top:1px solid rgba(139,92,246,.45);box-shadow:0 -6px 18px -8px rgba(139,92,246,.4)}
+.me b{display:flex;align-items:center;gap:16px;font-size:20px;font-weight:500;color:var(--ink)}
+.me b i{width:12px;height:12px;border-radius:50%;background:#8b5cf6;box-shadow:0 0 10px #8b5cf6}
+.me small{display:block;margin-top:10px;font-size:17px;color:var(--soft)}
+/* Hauptbereich mit Lichtbögen */
+.main{position:relative;display:flex;flex-direction:column;min-width:0;min-height:0;overflow:hidden;background:radial-gradient(ellipse 55% 45% at 100% 62%,rgba(91,33,182,.22),transparent 70%),radial-gradient(ellipse 50% 40% at 70% 100%,rgba(91,33,182,.18),transparent 70%)}
+body.start .main{padding-bottom:34px}
+.fx{position:absolute;inset:0;pointer-events:none;z-index:0}
+.fx i{position:absolute;border-radius:50%}
+.fx i:nth-child(1){left:-597px;top:-777px;width:1054px;height:1054px;border:2px solid rgba(178,150,255,.6);background:radial-gradient(circle at 45% 40%,rgba(40,14,92,.55) 40%,rgba(72,28,150,.7) 82%,rgba(118,60,235,.85) 99%);box-shadow:0 0 80px 10px rgba(124,58,237,.38),inset 0 0 60px rgba(150,105,255,.5)}
+.fx i:nth-child(2){right:-888px;bottom:-1299px;width:1680px;height:1680px;border:2px solid rgba(178,150,255,.8);background:radial-gradient(circle,rgba(36,12,84,.45) 70%,rgba(70,26,150,.7) 90%,rgba(118,60,238,.85) 99.5%);box-shadow:0 0 90px 12px rgba(124,58,237,.35),inset 0 0 70px rgba(150,105,255,.45)}
+.fx i:nth-child(3){right:-1068px;bottom:-1429px;width:1840px;height:1840px;border:1px solid rgba(167,139,250,.35);box-shadow:0 0 30px rgba(124,58,237,.2)}
+.main>:not(.fx){position:relative;z-index:1}
+#log{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:8px 32px 24px}
+#log>*{max-width:820px;margin-left:auto;margin-right:auto}
+body.start .main{justify-content:center}
+body.start #log{flex:none;overflow:visible;padding-bottom:0}
+body.start #log>.hello{max-width:none}
+/* Startbild */
+.hello{text-align:center;padding:0 0 84px}
+.hello svg{display:block;width:255px;height:auto;margin:0 auto;--wm:url(#xg);filter:drop-shadow(0 0 18px rgba(139,92,246,.35))}
+.hello .dom{margin:12px 0 0;font-size:28px;font-weight:300;letter-spacing:.32em;color:#d6cfe6;padding-left:.32em}
+.hello .tag{margin:32px 0 0;font-size:25px;font-weight:400;letter-spacing:.14em;color:#e6e0f2;padding-left:.14em}
+/* Nachrichten */
 .msg{margin-top:20px}
 .msg.u{display:flex;justify-content:flex-end}
-.bub{max-width:85%;background:var(--accl);border-radius:18px 18px 4px 18px;padding:9px 14px;white-space:pre-wrap;overflow-wrap:anywhere}
+.bub{max-width:85%;background:rgba(124,58,237,.18);border:1px solid rgba(167,139,250,.2);border-radius:18px 18px 4px 18px;padding:9px 14px;white-space:pre-wrap;overflow-wrap:anywhere}
 .msg.a{overflow-wrap:anywhere}
+.msg.a,.bub{font-size:17px}
 .md>:first-child{margin-top:0}.md>:last-child{margin-bottom:0}
 .md p,.md ul,.md ol,.md pre,.md blockquote,.md .tbl{margin:0 0 .8em}
 .md h3,.md h4,.md h5,.md h6{margin:1.1em 0 .4em;font-size:1.05em;line-height:1.3}
@@ -44,10 +74,10 @@ button{font:inherit;color:inherit;cursor:pointer}
 .md li+li,.md li>ul,.md li>ol{margin-top:.25em}
 .md li>ul,.md li>ol{margin-bottom:0}
 .md code{font-family:var(--mono);font-size:.88em;background:var(--code);padding:.1em .35em;border-radius:5px}
-.md pre{background:var(--code);border-radius:10px;padding:12px 14px;overflow-x:auto;overflow-wrap:normal}
+.md pre{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:12px 14px;overflow-x:auto;overflow-wrap:normal}
 .md pre code{background:none;padding:0;font-size:.85em}
 .md blockquote{border-left:3px solid var(--line);margin-left:0;padding-left:12px;color:var(--mute)}
-.md a{color:var(--acc)}
+.md a{color:var(--acc2)}
 .md hr{border:0;border-top:1px solid var(--line);margin:1.2em 0}
 .tbl{overflow-x:auto}
 .md table{border-collapse:collapse;font-size:.94em;overflow-wrap:normal}
@@ -68,8 +98,8 @@ button{font:inherit;color:inherit;cursor:pointer}
 .src a{color:var(--ink)}
 .src span{color:var(--mute)}
 .note{font-size:14px;color:var(--mute);font-style:italic;margin:8px 0 0}
-.lstat{padding:8px 16px 10px;border-bottom:1px solid var(--line);font-size:14px;color:var(--mute)}
-.lstat>*{max-width:720px;margin:0 auto}
+.lstat{padding:10px 32px 12px;border-bottom:1px solid var(--line);font-size:14px;color:var(--mute);background:rgba(10,7,19,.7)}
+.lstat>*{max-width:820px;margin:0 auto}
 .lstat p{margin-bottom:6px}
 .lstat small{font-size:13px}
 .lstat progress{display:block;width:100%;height:6px;accent-color:var(--acc)}
@@ -80,38 +110,43 @@ button{font:inherit;color:inherit;cursor:pointer}
 .acts-a{display:flex;gap:4px;margin:6px 0 0 -8px}
 .mini{border:0;background:none;color:var(--mute);font-size:13px;padding:6px 8px;border-radius:8px}
 .mini:hover{background:var(--accl);color:var(--ink)}
-.composer{display:flex;align-items:flex-end;gap:8px;width:100%;max-width:752px;margin:0 auto;padding:8px 16px calc(10px + env(safe-area-inset-bottom))}
-.composer textarea:focus-visible{outline-width:2px;outline-offset:0}
-.composer textarea{flex:1;resize:none;height:48px;max-height:40vh;padding:12px 16px;border:1px solid var(--line);border-radius:24px;background:var(--card);color:var(--ink);font:inherit;line-height:1.4}
-.send{flex:none;display:grid;place-items:center;width:48px;height:48px;border:0;border-radius:50%;background:var(--acc);color:var(--on)}
-.send:disabled{opacity:.35;cursor:default}
-.send svg{width:22px;height:22px}
+/* Eingabe */
+.composer{display:flex;align-items:center;gap:30px;width:calc(100% - 64px);max-width:1120px;min-height:96px;margin:0 auto calc(28px + env(safe-area-inset-bottom));padding:18px 18px 18px 36px;border:1.5px solid rgba(160,140,210,.28);border-radius:48px;background:rgba(28,22,44,.62);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 14px 50px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.04)}
+body.start .composer{margin-bottom:0}
+.composer:focus-within{border-color:rgba(167,139,250,.6)}
+.spark{width:34px;height:34px;flex:none;color:#8b5cf6;filter:drop-shadow(0 0 6px rgba(139,92,246,.6))}
+.composer textarea{flex:1;resize:none;height:32px;max-height:40vh;padding:0;border:0;background:none;color:var(--ink);font:inherit;font-size:23px;line-height:1.4;outline:0}
+.composer textarea::placeholder{color:#8a83a0}
+.send{flex:none;display:grid;place-items:center;width:58px;height:58px;border:0;border-radius:50%;background:radial-gradient(circle at 35% 30%,#9b6bff,#7c3aed 60%,#6d28d9);color:var(--on);box-shadow:0 0 22px rgba(124,58,237,.55)}
+.send:disabled{cursor:default;opacity:1}
+.send svg{width:26px;height:26px}
 body.nokey .composer{display:none}
-.hello{padding-top:14vh;text-align:center}
-.hello img{width:56px;height:56px;border-radius:14px}
-.hello h2{font-size:24px;margin:14px 0 6px;letter-spacing:-.01em}
-.hello p{color:var(--mute);margin:0 auto;max-width:30em}
-.setup{margin-top:6vh;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 20px}
+/* Anmelden und Einrichten */
+.setup{margin-top:6vh;background:rgba(19,14,33,.85);border:1px solid var(--glass);border-radius:22px;padding:22px 20px;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
 .setup img{width:48px;height:48px;border-radius:12px}
 .setup h2{font-size:22px;margin:12px 0 8px;letter-spacing:-.01em}
 .setup ol{padding-left:1.3em;margin:12px 0}
 .setup li+li{margin-top:6px}
-.setup a{color:var(--acc)}
+.setup a{color:var(--acc2)}
 .btn{border:0;border-radius:999px;background:var(--acc);color:var(--on);padding:12px 22px;font-weight:600}
 .btn:disabled{opacity:.5;cursor:default}
-.btn.alt{background:var(--accl);color:var(--ink)}
-.f{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit}
+.btn.alt{background:var(--accl);color:var(--ink);box-shadow:inset 0 0 0 1px var(--glass)}
+.f{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--field);color:var(--ink);font:inherit}
 textarea.f{resize:vertical;line-height:1.45}
 .keyrow{display:flex;gap:8px}
 .keyrow .f{flex:1;min-width:0;font-family:var(--mono);font-size:15px}
-.keyrow button:not(.btn){flex:none;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:0 12px;font-size:14px}
+.keyrow button:not(.btn){flex:none;border:1px solid var(--line);background:var(--field);border-radius:10px;padding:0 12px;font-size:14px}
 .hint{font-size:13px;color:var(--mute);margin:6px 0 0}
-.hint a{color:var(--acc)}
-.linkbtn{border:0;background:none;padding:0;color:var(--acc);text-decoration:underline;font-size:inherit}
+.hint a{color:var(--acc2)}
+.linkbtn{border:0;background:none;padding:0;color:var(--acc2);text-decoration:underline;font-size:inherit}
 .status{min-height:1.4em;font-size:14px;margin:12px 0 0}
 .status.bad{color:var(--bad)}
-dialog{border:0;border-radius:18px;padding:0;background:var(--card);color:var(--ink);width:min(560px,calc(100% - 24px));max-height:calc(100dvh - 24px)}
-dialog::backdrop{background:rgb(0 0 0/.45)}
+/* Fenster */
+.ib{display:grid;place-items:center;width:44px;height:44px;flex:none;border:0;border-radius:12px;background:none}
+.ib:hover{background:var(--accl)}
+.ib svg{width:22px;height:22px}
+dialog{border:1px solid var(--glass);border-radius:18px;padding:0;background:var(--card);color:var(--ink);width:min(560px,calc(100% - 24px));max-height:calc(100dvh - 24px)}
+dialog::backdrop{background:rgb(4 2 10/.65)}
 .dbody{padding:16px 20px 22px}
 .dh{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 -8px 4px 0}
 .dh h2{margin:0;font-size:20px}
@@ -125,7 +160,7 @@ label.chk{display:flex;align-items:center;gap:10px;font-weight:500;font-size:15p
 .danger summary{cursor:pointer;color:var(--mute)}
 .danger div{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .danger button{border:1px solid var(--bad);color:var(--bad);background:none;border-radius:999px;padding:8px 14px}
-.sheet{margin:0 auto 0 0;width:min(340px,88vw);height:100dvh;max-height:none;border-radius:0 18px 18px 0}
+.sheet{margin:0 auto 0 0;width:min(340px,88vw);height:100dvh;max-height:none;border-radius:0 18px 18px 0;border-left:0}
 .sheet .dbody{padding-top:calc(12px + env(safe-area-inset-top))}
 .sheet .btn{width:100%;margin-top:8px}
 #chList{list-style:none;margin:14px 0 0;padding:0}
@@ -138,23 +173,72 @@ label.chk{display:flex;align-items:center;gap:10px;font-weight:500;font-size:15p
 #chList .ib{width:40px;height:40px;color:var(--mute)}
 #chList .ib svg{width:18px;height:18px}
 .empty{color:var(--mute);font-size:14px;margin-top:14px}
+/* kleinere Bildschirme */
+@media (max-width:1200px){
+  body{grid-template-columns:260px minmax(0,1fr)}
+  .side{padding:32px 20px}
+  .logo{gap:16px;margin-bottom:56px}
+  .tile{width:56px;height:56px;border-radius:14px}.tile svg{width:40px}
+  .logo b{font-size:20px}
+  .nv{height:56px;gap:18px;font-size:18px;padding:0 16px;border-radius:18px}.nv svg{width:26px;height:26px}
+  .me{padding:18px 20px}.me b{font-size:18px}.me small{font-size:15px}
+  .hello svg{width:210px}.hello .dom{font-size:24px}.hello .tag{font-size:21px;margin-top:34px}.hello{padding-bottom:64px}
+  .composer{min-height:80px;padding:12px 12px 12px 28px;gap:18px}
+  .spark{width:28px;height:28px}.composer textarea{font-size:19px}.send{width:52px;height:52px}
+}
+@media (max-width:760px){
+  body{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
+  .side{flex-direction:row;align-items:center;padding:10px 12px;border-right:0;border-bottom:1px solid rgba(255,255,255,.06)}
+  .logo{gap:12px;margin:0}
+  .tile{width:42px;height:42px;border-radius:11px}.tile svg{width:30px}
+  .logo b{font-size:18px}
+  .nav{flex-direction:row;gap:4px;margin-left:auto}
+  .nv{width:44px;height:44px;padding:0;justify-content:center;border-radius:14px}
+  .nv span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  .nv svg{width:24px;height:24px}
+  .me{display:none}
+  #log{padding:8px 16px 20px}
+  .lstat{padding:8px 16px 10px}
+  .hello svg{width:150px}.hello .dom{font-size:17px;margin-top:14px}.hello .tag{font-size:16px;letter-spacing:.1em;margin-top:24px}.hello{padding-bottom:40px}
+  .composer{width:calc(100% - 24px);min-height:60px;margin-bottom:calc(12px + env(safe-area-inset-bottom));padding:8px 8px 8px 18px;gap:12px;border-radius:30px}
+  .spark{width:22px;height:22px}.composer textarea{font-size:17px;height:26px}.send{width:44px;height:44px}.send svg{width:22px;height:22px}
+  .fx i:nth-child(1){left:-420px;top:-560px;width:700px;height:700px}
+  .fx i:nth-child(2){right:-560px;bottom:-660px;width:900px;height:900px}
+  .fx i:nth-child(3){right:-640px;bottom:-700px;width:1000px;height:1000px}
+  .msg.a,.bub{font-size:16px}
+}
 </style>
 <script type="module" src="app.js"></script>
 </head>
 <body class="nokey">
-<header class="top">
-  <button class="ib" id="bMenu" type="button" aria-label="Chats" title="Chats"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button>
-  <h1 class="brand"><span>xbu</span>bekir</h1>
-  <button class="ib" id="bNew" type="button" aria-label="Neuer Chat" title="Neuer Chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h8"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
-  <button class="ib" id="bSet" type="button" aria-label="Einstellungen" title="Einstellungen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></button>
-</header>
-<div id="lstat" class="lstat" role="status" hidden><p id="lstatT"></p><progress id="lstatP" max="1"></progress></div>
-<main id="log" role="log" aria-live="polite" aria-relevant="additions"></main>
-<form id="composer" class="composer">
-  <label class="sr" for="inp">Nachricht an xbubekir</label>
-  <textarea id="inp" rows="1" placeholder="Schreib xbubekir …" autocomplete="off" enterkeyhint="send"></textarea>
-  <button id="bSend" class="send" type="submit" aria-label="Senden" disabled></button>
-</form>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="xg" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="194" y2="62"><stop offset="0" stop-color="#cbb8fd"/><stop offset=".5" stop-color="#a383f7"/><stop offset="1" stop-color="#8b55f6"/></linearGradient>
+    <clipPath id="xc"><rect x="-2" y="16" width="66" height="46"/></clipPath>
+    <symbol id="wm" viewBox="0 0 194 62"><g fill="none" stroke-width="10" style="stroke:var(--wm,#fff)"><g clip-path="url(#xc)"><path d="M-.5 8.5 62.5 69.5M62.5 8.5-.5 69.5"/></g><path d="M75 0v62"/><ellipse cx="99" cy="39" rx="24" ry="18"/><path d="M141 16v23a24 18 0 0 0 48 0V16M189 16v46"/></g></symbol>
+  </defs>
+</svg>
+<h1 class="sr">xbubekir</h1>
+<aside class="side">
+  <div class="logo"><span class="tile"><svg viewBox="0 0 194 62" aria-hidden="true"><use href="#wm"/></svg></span><b>xbubekir.ai</b></div>
+  <nav class="nav" aria-label="Hauptmenü">
+    <button class="nv on" id="bNew" type="button" title="Neuer Chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 15.5a2.5 2.5 0 0 1-2.5 2.5H8l-4.5 3.5V6A2.5 2.5 0 0 1 6 3.5h11.5A2.5 2.5 0 0 1 20 6Z"/><path d="M15.5 9.5v.01"/></svg><span>Chat</span></button>
+    <button class="nv" id="bMenu" type="button" title="Verlauf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M12 6.5V12l3.5 2"/></svg><span>Verlauf</span></button>
+    <button class="nv" id="bSet" type="button" title="Einstellungen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg><span>Einstellungen</span></button>
+  </nav>
+  <div class="me"><b><i></i>xbu</b><small>Deine persönliche KI</small></div>
+</aside>
+<div class="main">
+  <div class="fx" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div id="lstat" class="lstat" role="status" hidden><p id="lstatT"></p><progress id="lstatP" max="1"></progress></div>
+  <main id="log" role="log" aria-live="polite" aria-relevant="additions"></main>
+  <form id="composer" class="composer">
+    <svg class="spark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.5c.7 5.6 3.3 8.6 10.5 10.5-7.2 1.9-9.8 4.9-10.5 10.5C11.3 16.9 8.7 13.9 1.5 12 8.7 10.1 11.3 7.1 12 1.5Z"/></svg>
+    <label class="sr" for="inp">Nachricht an xbubekir</label>
+    <textarea id="inp" rows="1" placeholder="Stelle deine Frage …" autocomplete="off" enterkeyhint="send"></textarea>
+    <button id="bSend" class="send" type="submit" aria-label="Senden" disabled></button>
+  </form>
+</div>
 
 <dialog id="dChats" class="sheet" aria-labelledby="chH">
   <div class="dbody">
