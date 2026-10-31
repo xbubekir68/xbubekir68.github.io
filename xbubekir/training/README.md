@@ -12,6 +12,7 @@ nachtrainiert und läuft danach mit WebLLM **im Browser** (kostenlos, keine Date
 | `check_dataset.mjs` | prüft Format, Rollen und Harakat der Übungsantworten |
 | `review.mjs` → `dialoge-pruefen.md` | Prüfliste der neuen arabischen Sätze für Muttersprachler |
 | `xbubekir_training.ipynb` | Colab-Notebook: Training (LoRA), Probelauf, Umwandlung ins WebLLM-Format, Upload zu Hugging Face |
+| `mlc_convert.py` | eigener Umwandler ins WebLLM-Format q4f16_1 (reines Python/NumPy, ohne `mlc_llm`); Aufbau aus der `tensor-cache.json` des offiziellen Modells `mlc-ai/Qwen3-1.7B-q4f16_1-MLC`, mit Selbsttest gegen dessen Dateien |
 
 ## Ablauf
 > **Stand:** Der erste Trainingslauf nutzt die arabischen Übungssätze noch **ungeprüft** (Wunsch des Nutzers). Korrekturen aus `dialoge-pruefen.md` später einarbeiten und nachtrainieren.
@@ -29,6 +30,8 @@ nachtrainiert und läuft danach mit WebLLM **im Browser** (kostenlos, keine Date
 4. **Ergebnis:** öffentliches Hugging-Face-Repo `xbubekir/xbubekir-qwen3-1.7b-q4f16_1-MLC` (https://huggingface.co/xbubekir/xbubekir-qwen3-1.7b-q4f16_1-MLC). Diese Adresse wird in xbubekir/Mufradaat eingetragen.
    Die Browser-Bibliothek (wasm) ist die fertige von WebLLM für Qwen3-1.7B q4f16_1. Weil sich beim Nachtrainieren nur die Gewichte ändern,
    muss nichts kompiliert werden.
+   Die Umwandlung macht `mlc_convert.py` (Zelle 7), weil `mlc_llm convert_weight` in Colab abstürzt. Vorher wandelt ein Selbsttest das unveränderte
+   Qwen3-1.7B um und vergleicht es mit dem offiziellen WebLLM-Modell.
 
 ## Gut zu wissen
 - Gelernt wird nur, was xbubekir antwortet (die Eingaben sind im Training ausgeblendet).
