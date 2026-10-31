@@ -4,7 +4,7 @@ self.addEventListener("install",e=>{
   e.waitUntil(caches.open(V).then(c=>Promise.all(SHELL.map(u=>c.add(u).catch(()=>{})))).then(()=>self.skipWaiting()));
 });
 self.addEventListener("activate",e=>{
-  e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V&&k!==AC).map(k=>caches.delete(k)))).then(()=>self.clients.claim()).then(()=>self.clients.matchAll({includeUncontrolled:true})).then(cs=>cs.forEach(c=>c.postMessage({v:V})))); // offene Seiten erfahren die neue Version
+  e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k.startsWith("mfr-")&&k!==V&&k!==AC).map(k=>caches.delete(k)))).then(()=>self.clients.claim()).then(()=>self.clients.matchAll({includeUncontrolled:true})).then(cs=>cs.forEach(c=>c.postMessage({v:V})))); // offene Seiten erfahren die neue Version
 });
 self.addEventListener("fetch",e=>{
   const r=e.request,u=new URL(r.url);

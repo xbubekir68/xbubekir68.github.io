@@ -1,10 +1,11 @@
 // xbubekir Service Worker: App-Hülle offline, Anfragen an Server, Google und Anthropic nie aus dem Cache.
-const V="xb-v4",SHELL=["./","index.html","app.js","manifest.webmanifest","vendor/genai.js","vendor/supabase.js","vendor/anthropic.js","icons/icon-192.png","icons/icon-512.png","icons/favicon-64.png","icons/icon-180.png"];
+const V="xb-v5",SHELL=["./","index.html","app.js","manifest.webmanifest","vendor/genai.js","vendor/supabase.js","vendor/anthropic.js","icons/icon-192.png","icons/icon-512.png","icons/favicon-64.png","icons/icon-180.png"];
 self.addEventListener("install",e=>{
   e.waitUntil(caches.open(V).then(c=>Promise.all(SHELL.map(u=>c.add(u).catch(()=>{})))).then(()=>self.skipWaiting()));
 });
 self.addEventListener("activate",e=>{
-  e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));
+  // nur eigene alte Caches löschen: Mufradaat und WebLLM (Modell der eigenen KI) teilen sich dieselbe Herkunft
+  e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k.startsWith("xb-")&&k!==V).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));
 });
 self.addEventListener("fetch",e=>{
   const r=e.request,u=new URL(r.url);
