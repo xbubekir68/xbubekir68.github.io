@@ -585,7 +585,7 @@ function chatHTML(c){
 
 function helloHTML(){
   const n=S.name.trim();
-  return`<div class="hello"><h2 class="sr">Hallo${n?", "+esc(n):""}! Ich bin xbubekir, deine persönliche KI.</h2><svg viewBox="0 0 194 62" role="img" aria-label="xbu"><use href="#wm"/></svg><p class="dom">xbubekir.ai</p><p class="tag">Frag. Entdecke. Erreiche mehr.</p></div>`;
+  return`<div class="hello"><h2 class="sr">Hallo${n?", "+esc(n):""}! Ich bin xbubekir, deine persönliche KI.</h2><img class="mark" src="brand/xbu.webp" alt="xbu" width="640" height="376"><img class="dom" src="brand/wortmarke.webp" alt="xbubekir" width="900" height="259"><p class="tag">Frag. Entdecke. Erreiche mehr.</p></div>`;
 }
 function loginHTML(){
   return`<section class="setup" aria-labelledby="suH"><img src="icons/icon-192.png" alt=""><h2 id="suH">Willkommen bei xbubekir</h2>
