@@ -10,7 +10,7 @@ web
 
 Genau eine Person: die, der xbubekir gehört. Sie nutzt die App meistens am Handy, installiert auf dem Home-Bildschirm, kurz zwischendurch.
 
-Ihre Aufgaben sind so breit wie der Alltag: Fragen beantworten, Schule und Lernen, Texte schreiben, Dinge erklären, planen, nachdenken und Arabisch lernen (zusammen mit der App Mufradaat).
+Ihre Aufgaben sind so breit wie der Alltag: Fragen beantworten, Schule und Lernen, Texte schreiben, Dinge erklären, planen, nachdenken und Arabisch lernen (zusammen mit der App Mufradaat). Arabisch ist ein Zweck unter mehreren, kein Kernzweck.
 
 ## Product Purpose
 
@@ -23,6 +23,8 @@ Erfolg ist nicht als Kennzahl festgelegt.
 **Eine KI, viele Gehirne.** xbubekir bleibt dieselbe Persönlichkeit in derselben Oberfläche, egal ob Gemini, Claude, DeepSeek oder die eigene nachtrainierte Browser-KI denkt. Das Modell ist eine Einstellung, nicht das Produkt.
 
 Chats auf dem eigenen Gerät, geringe Kosten und Arabisch sind echte Eigenschaften, wurden aber ausdrücklich nicht als Unterschied gewählt. Sie stützen die Positionierung und ersetzen sie nicht.
+
+**Powered by xbu.** Nach diesem System laufen alle eigenen Projekte: Eine App bekommt KI-Funktionen, und die übernimmt xbu. Erstes Beispiel ist mufradaat.AI, im Logo „powered by xbu“.
 
 ## Operating Context
 
@@ -68,7 +70,7 @@ Gehirn (Modellwahl), Anbieter, Denktiefe, Schlüssel, Konto, eigene xbubekir-KI,
 ### Noch offen
 
 - Die Anleitung zum eigenen API-Schlüssel richtet sich an jede Person, obwohl die App nur für eine gedacht ist. Ob sie bleibt, ist nicht entschieden.
-- Die eigene KI ist auch für Mufradaat Pro gedacht. Das gehört zu Mufradaat, nicht hierher.
+- Die eigene KI ist auch für Mufradaat Pro gedacht. Wie andere Apps xbu technisch nutzen, ist nicht entschieden. Der Server lässt heute nur Konten aus `public.allowed_users` durch, und das Supabase-Projekt ist von Mufradaat getrennt.
 
 ## Brand Commitments
 

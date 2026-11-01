@@ -111,8 +111,9 @@ body.start #log>.hello{max-width:none}
 .mini{border:0;background:none;color:var(--mute);font-size:13px;padding:6px 8px;border-radius:8px}
 .mini:hover{background:var(--accl);color:var(--ink)}
 /* Eingabe */
-.brain{flex:none;width:calc(100% - 64px);max-width:1120px;margin:0 auto;padding:16px 38px 9px;border:0;background:none;color:var(--mute);font-size:13px;line-height:1.5;text-align:left}
+.brain{flex:none;display:flex;align-items:center;gap:8px;width:calc(100% - 64px);max-width:1120px;margin:0 auto;padding:16px 38px 9px;border:0;background:none;color:var(--mute);font-size:13px;line-height:1.5;text-align:left}
 .brain:hover{color:var(--ink)}
+.brain::after{content:"";flex:none;width:5px;height:5px;border:solid;border-width:1.5px 1.5px 0 0;transform:rotate(45deg)}
 .composer{display:flex;align-items:center;gap:30px;width:calc(100% - 64px);max-width:1120px;min-height:96px;margin:0 auto calc(28px + env(safe-area-inset-bottom));padding:18px 18px 18px 36px;border:1.5px solid rgba(160,140,210,.28);border-radius:48px;background:rgba(28,22,44,.62);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 14px 50px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.04)}
 body.start .composer{margin-bottom:0}
 .composer:focus-within{border-color:rgba(167,139,250,.6)}
@@ -203,7 +204,7 @@ label.chk{display:flex;align-items:center;gap:10px;font-weight:500;font-size:15p
   #log{padding:8px 16px 20px}
   .lstat{padding:8px 16px 10px}
   .hello svg{width:150px}.hello .dom{font-size:17px;margin-top:14px}.hello .tag{font-size:16px;letter-spacing:.1em;margin-top:24px}.hello{padding-bottom:40px}
-  .brain{width:calc(100% - 24px);padding-left:20px}
+  .brain{width:calc(100% - 24px);padding-inline:20px}
   .composer{width:calc(100% - 24px);min-height:60px;margin-bottom:calc(12px + env(safe-area-inset-bottom));padding:8px 8px 8px 18px;gap:12px;border-radius:30px}
   .spark{width:22px;height:22px}.composer textarea{font-size:17px;height:26px}.send{width:44px;height:44px}.send svg{width:22px;height:22px}
   .fx i:nth-child(1){left:-420px;top:-560px;width:700px;height:700px}
