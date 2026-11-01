@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Mufradaat – Arabisch lernen</title>
 <meta name="description" content="Arabisch lernen für Deutschsprachige: Vokabeln, Karteikarten, Spiele.">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://yvhfnatslxrkmqpivvxg.supabase.co wss://yvhfnatslxrkmqpivvxg.supabase.co; manifest-src 'self'; worker-src 'self'; media-src 'self' blob: data:; object-src 'none'; base-uri 'none'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://yvhfnatslxrkmqpivvxg.supabase.co wss://yvhfnatslxrkmqpivvxg.supabase.co; manifest-src 'self'; worker-src 'self'; media-src 'self' blob: data:; object-src 'none'; base-uri 'none'; form-action 'self'">
 <meta name="theme-color" content="#1f6f55">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/favicon-64.png" type="image/png">
@@ -2072,11 +2072,10 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 
 // ---- Supabase: Konto + Fortschritts-Sync (der Publishable Key ist öffentlich gedacht; Schutz = Row Level Security)
 const SB_URL="https://yvhfnatslxrkmqpivvxg.supabase.co",SB_KEY="sb_publishable_DVnUpObsQ2uIeqIk-12dcA_1AKPsWpu";
-let sb=null,EXT=false; // EXT: Bibliothek kam von einem Drittanbieter (jsDelivr)
-function loadSb(){ // erst die eigene Datei vendor/supabase.js, sonst der CDN
+let sb=null;
+function loadSb(){ // nur die eigene Datei: auf dieser Herkunft liegen auch die Schlüssel von xbubekir, fremder Code hat hier nichts zu suchen
   return new Promise(res=>{
-    const add=(src,fail)=>{const t=document.createElement("script");t.src=src;t.onload=()=>window.supabase?res(true):(fail?fail():res(false));t.onerror=()=>{t.remove();fail?fail():res(false)};document.head.appendChild(t)};
-    add("vendor/supabase.js",()=>{EXT=true;add("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2")});
+    const t=document.createElement("script");t.src="vendor/supabase.js";t.onload=()=>res(!!window.supabase);t.onerror=()=>{t.remove();res(false)};document.head.appendChild(t);
   });
 }
 function initSb(){
@@ -2170,7 +2169,7 @@ function legal(){
   paint(topb+
   sec("Wer ist verantwortlich?",`${miss(LEGAL.name)}<br>Kontakt: ${miss(LEGAL.kontakt)}<br>Wohnsitz: Österreich (Salzburg)<br>Art und Richtung: private, nicht kommerzielle Lern-App für arabische Vokabeln, ohne Einnahmen.`)+
   sec("Was gespeichert wird",`<b>Ohne Konto (Gast):</b> Lernstand und Einstellungen liegen nur in deinem Browser (lokaler Speicher) und werden nicht übertragen.<br><b>Mit Konto:</b> deine E-Mail-Adresse, dein Passwort (nur als Hash), dein Lernstand (z. B. Wörter, XP, Serie, Abzeichen), deine Einstellungen und der Zeitpunkt der letzten Änderung.`)+
-  sec("Dienstleister",`<b>Supabase</b> (Anmeldung und Datenbank), Serverstandort: ${miss(LEGAL.region)}.<br><b>GitHub Pages</b> liefert diese Seite aus. Beim Aufruf verarbeitet GitHub technisch notwendige Verbindungsdaten wie deine IP-Adresse.<br>${EXT?"Die Programmbibliothek für die Anmeldung wird von <b>jsDelivr</b> geladen, dabei wird deine IP-Adresse an diesen Dienst übertragen.":"Schriften und Programmteile werden von dieser Seite selbst ausgeliefert."}`)+
+  sec("Dienstleister",`<b>Supabase</b> (Anmeldung und Datenbank), Serverstandort: ${miss(LEGAL.region)}.<br><b>GitHub Pages</b> liefert diese Seite aus. Beim Aufruf verarbeitet GitHub technisch notwendige Verbindungsdaten wie deine IP-Adresse.<br>Schriften und Programmteile werden von dieser Seite selbst ausgeliefert.`)+
   sec("Sprachausgabe","Die Aussprache nutzt die Sprachausgabe deines Geräts. Manche Browser (z. B. Chrome) greifen dafür auf Online-Dienste des Herstellers zurück, dabei kann das gesprochene Wort übertragen werden.")+
   sec("Mikrofon und Spracherkennung","Beim Nachsprechen nimmst du dich mit dem Mikrofon auf. Die Aufnahme bleibt auf deinem Gerät und wird nicht gespeichert. Ab Etappe 8 kann zusätzlich die Spracherkennung deines Browsers zuhören, aber nur, wenn du vorher zustimmst. Dabei schickt der Browser deine Stimme an den Dienst seines Herstellers (bei Chrome an Google, bei Safari an Apple), der Text daraus kommt zurück und wird nur auf deinem Gerät verglichen. Die App selbst speichert davon nichts.")+
   sec("Cookies und lokaler Speicher","Es gibt keine Werbe- oder Analyse-Cookies und kein Tracking. Der lokale Speicher deines Browsers dient nur der Anmeldung und dem Lernstand und ist dafür technisch notwendig.")+
