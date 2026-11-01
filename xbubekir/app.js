@@ -195,6 +195,7 @@ async function run(c,um){
   setBusy(false);
   if(c===cur)render();
   if(err&&!err.cancel)showError(err,p,back);
+  if(c===cur&&!c.msgs.length)cur=null; // ein leerer Chat hält kein Gehirn fest, sonst geht die nächste Nachricht ans alte Modell
 }
 
 // ---------- Gemini ----------
@@ -631,7 +632,7 @@ ${steps}
 }
 
 function render(){
-  const ready=!!keyOf(S.provider),brain=cur?.model||S.model,bn=MODELS[brain]?.name||brain; // ein laufender Chat behält sein Gehirn
+  const ready=!!keyOf(S.provider),nm=m=>MODELS[m]?.name||m,brain=cur?.model||S.model,bn=brain===S.model?nm(brain):`${nm(brain)} · neue Chats: ${nm(S.model)}`; // ein laufender Chat behält sein Gehirn
   document.body.classList.toggle("nokey",!ready);
   if(!ready)document.body.classList.remove("start");
   bBrain.textContent=bn;bBrain.setAttribute("aria-label",`Gehirn: ${bn}. Einstellungen öffnen`);
