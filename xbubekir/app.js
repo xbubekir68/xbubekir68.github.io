@@ -41,7 +41,7 @@ const IC={
 };
 
 const $=s=>document.querySelector(s);
-const log=$("#log"),inp=$("#inp"),bSend=$("#bSend"),dSet=$("#dSet"),dChats=$("#dChats");
+const log=$("#log"),inp=$("#inp"),bSend=$("#bSend"),bBrain=$("#bBrain"),dSet=$("#dSet"),dChats=$("#dChats");
 
 // ---------- Einstellungen (klein, daher localStorage) ----------
 const SK="xb.settings";
@@ -187,14 +187,14 @@ async function run(c,um){
   log.insertAdjacentHTML("beforeend",'<div class="msg a" id="live" aria-busy="true"><p class="tool wait">xbubekir denkt nach …</p></div>');
   toBottom(true);
   const live=$("#live"),p=provOf(c);
-  let err=null;
+  let err=null,back=false;
   try{await({gemini:askGemini,claude:askClaude,eigen:askLocal,open:askOpen}[p])(c,um,live)}
-  catch(e){err=e;undo(c,um)}
+  catch(e){err=e;back=undo(c,um)}
   stopFn=null;
   if(c.msgs.length)store(c);else forget(c);
   setBusy(false);
   if(c===cur)render();
-  if(err&&!err.cancel)showError(err,p);
+  if(err&&!err.cancel)showError(err,p,back);
 }
 
 // ---------- Gemini ----------
@@ -429,7 +429,7 @@ function refuse(c,um,start){for(const m of c.msgs.slice(start))m.skip=true;um.no
 function undo(c,um){
   const i=c.msgs.indexOf(um);if(i<0)return;
   c.msgs.splice(i);
-  if(c===cur&&!inp.value.trim()){inp.value=um.content;grow()}
+  if(c===cur&&!inp.value.trim()){inp.value=um.content;grow();return true}
 }
 
 function errText(e,p){
@@ -450,9 +450,9 @@ function errText(e,p){
     try{msg=JSON.parse(msg.slice(msg.indexOf("{"))).error.message||msg}catch{}
     const s=e?.status;
     if(e instanceof TypeError&&!s)return"Keine Verbindung zu Google. Bist du online?";
-    const why=s===429?"Das Gratis-Kontingent ist gerade aufgebraucht. Warte eine Minute und versuch es nochmal. Ist das Tageslimit erreicht, geht es nach Mitternacht kalifornischer Zeit weiter (in Deutschland morgens um 8 oder 9 Uhr). Mit Gemini Flash-Lite (Einstellungen) sind mehr Nachrichten pro Tag drin."
+    const why=s===429?`Das Gratis-Kontingent ist gerade aufgebraucht. Warte eine Minute und versuch es nochmal. Ist das Tageslimit erreicht, geht es nach Mitternacht kalifornischer Zeit weiter (in Deutschland morgens um 8 oder 9 Uhr).${cur?.model==="gemini-3.5-flash-lite"?"":" Flash-Lite erlaubt mehr Nachrichten pro Tag: Wähl es in den Einstellungen und starte einen neuen Chat."}`
       :s===401||s===403?(S.gmode==="konto"?"Dein xbubekir-Konto hat gerade keinen Zugang. Melde dich in den Einstellungen neu an.":"Der Gemini-Schlüssel wurde abgelehnt. Prüf ihn in den Einstellungen.")
-      :s===404?"Das Modell wurde nicht gefunden. Wähl in den Einstellungen ein anderes."
+      :s===404?"Das Modell wurde nicht gefunden. Wähl in den Einstellungen ein anderes und starte einen neuen Chat."
       :s===400?"Google hat die Anfrage abgelehnt."
       :s>=500?"Gemini ist gerade überlastet. Versuch es gleich nochmal."
       :"Unerwarteter Fehler.";
@@ -462,7 +462,7 @@ function errText(e,p){
   if(!A)return"Unerwarteter Fehler: "+msg;
   if(e instanceof A.AuthenticationError)return"Der Anthropic-Schlüssel wurde abgelehnt. Prüf ihn in den Einstellungen.";
   if(e instanceof A.PermissionDeniedError)return"Dein Schlüssel darf dieses Modell nicht nutzen: "+msg;
-  if(e instanceof A.NotFoundError)return"Das Modell wurde nicht gefunden. Wähl in den Einstellungen ein anderes.";
+  if(e instanceof A.NotFoundError)return"Das Modell wurde nicht gefunden. Wähl in den Einstellungen ein anderes und starte einen neuen Chat.";
   if(e instanceof A.RateLimitError)return"Gerade zu viele Anfragen. Warte einen Moment und schick die Nachricht nochmal.";
   if(e instanceof A.BadRequestError)return"Anthropic hat die Anfrage abgelehnt: "+msg;
   if(e instanceof A.InternalServerError)return"Claude ist gerade überlastet oder hatte einen Fehler. Versuch es gleich nochmal.";
@@ -470,9 +470,9 @@ function errText(e,p){
   if(e instanceof A.APIError)return`Fehler ${e.status??""}: ${msg}`;
   return"Unerwarteter Fehler: "+msg;
 }
-function showError(e,p){
+function showError(e,p,back){
   console.error(e);
-  log.insertAdjacentHTML("beforeend",`<p class="err" role="alert">${esc(errText(e,p))} Deine Nachricht steht wieder im Eingabefeld.</p>`);
+  log.insertAdjacentHTML("beforeend",`<p class="err" role="alert">${esc(errText(e,p))}${back?"<br>Deine Nachricht steht wieder im Eingabefeld.":""}</p>`);
   toBottom(true);
 }
 
@@ -631,9 +631,10 @@ ${steps}
 }
 
 function render(){
-  const ready=!!keyOf(S.provider);
+  const ready=!!keyOf(S.provider),brain=cur?.model||S.model,bn=MODELS[brain]?.name||brain; // ein laufender Chat behält sein Gehirn
   document.body.classList.toggle("nokey",!ready);
   if(!ready)document.body.classList.remove("start");
+  bBrain.textContent=bn;bBrain.setAttribute("aria-label",`Gehirn: ${bn}. Einstellungen öffnen`);
   if(!ready&&viaKonto(S.provider)){
     log.innerHTML=loginHTML();
     $("#suIn").onclick=()=>login(false);$("#suNew").onclick=()=>login(true);
@@ -687,12 +688,12 @@ function renderList(){
 
 // ---------- Einstellungen ----------
 function fillModels(){ // Modellauswahl passend zum gewählten Anbieter
-  const p=$("#sProv").value,sel=$("#sModel"),was=sel.value;
+  const p=$("#sProv").value,sel=$("#sModel"),was=sel.value||S.model; // beim ersten Öffnen ist die Auswahl noch leer
   sel.innerHTML=Object.entries(MODELS).filter(([,M])=>M.p===p).map(([id,M])=>`<option value="${id}">${M.name.replace(/^(Claude|Gemini) /,"")} – ${M.hint}</option>`).join("");
   sel.value=MODELS[was]?.p===p?was:PROV[p].def;
   $("#kGemini").hidden=p!=="gemini";$("#kClaude").hidden=p!=="claude";$("#kEigen").hidden=p!=="eigen";$("#kOpen").hidden=p!=="open";
   const konto=$("#sGMode").value==="konto";
-  $("#kKonto").hidden=!(p==="open"||p==="gemini"&&konto);$("#kGKey").hidden=konto;
+  $("#kKonto").hidden=!(p==="open"||p==="gemini"&&konto);$("#kGKey").hidden=konto;$("#kKey").hidden=!(p==="claude"||p==="gemini"&&!konto);
   $("#kontoInfo").textContent=session?`Angemeldet als ${session.user.email}.`:"Nicht angemeldet. Nach dem Speichern erscheint die Anmeldung.";
   $("#bLogout").hidden=!session;
   costHint();
@@ -759,8 +760,10 @@ $("#bWipeKey").addEventListener("click",()=>{if(busy||!confirm("Alle API-Schlüs
 
 // ---------- Bedienung ----------
 document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>b.closest("dialog").close()));
-for(const d of[dSet,dChats])d.addEventListener("click",e=>{if(e.target===d)d.close()}); // Klick neben das Fenster schließt
+dChats.addEventListener("click",e=>{if(e.target===dChats)dChats.close()}); // Klick neben das Fenster schließt (Einstellungen nicht, sonst geht Getipptes verloren)
+dSet.addEventListener("cancel",e=>{if(($("#sName").value!==S.name||$("#sAbout").value!==S.about||$("#sStyle").value!==S.style)&&!confirm("Änderungen verwerfen?"))e.preventDefault()});
 $("#bSet").addEventListener("click",openSettings);
+bBrain.addEventListener("click",openSettings);
 $("#bNew").addEventListener("click",startNew);
 $("#bNew2").addEventListener("click",startNew);
 $("#bMenu").addEventListener("click",()=>{renderList();dChats.showModal()});

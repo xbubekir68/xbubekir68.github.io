@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-01T02:23:31.187Z",
+        "reason": "Claude triage: false positive, .dbody inside dialog.sheet sets padding-top (index.html .sheet .dbody), so text is inset; only the wrapper is flush"
+      }
+    ]
+  }
+}
