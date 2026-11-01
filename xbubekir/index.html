@@ -111,6 +111,8 @@ body.start #log>.hello{max-width:none}
 .mini{border:0;background:none;color:var(--mute);font-size:13px;padding:6px 8px;border-radius:8px}
 .mini:hover{background:var(--accl);color:var(--ink)}
 /* Eingabe */
+.brain{flex:none;width:calc(100% - 64px);max-width:1120px;margin:0 auto;padding:16px 38px 9px;border:0;background:none;color:var(--mute);font-size:13px;line-height:1.5;text-align:left}
+.brain:hover{color:var(--ink)}
 .composer{display:flex;align-items:center;gap:30px;width:calc(100% - 64px);max-width:1120px;min-height:96px;margin:0 auto calc(28px + env(safe-area-inset-bottom));padding:18px 18px 18px 36px;border:1.5px solid rgba(160,140,210,.28);border-radius:48px;background:rgba(28,22,44,.62);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 14px 50px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.04)}
 body.start .composer{margin-bottom:0}
 .composer:focus-within{border-color:rgba(167,139,250,.6)}
@@ -120,7 +122,7 @@ body.start .composer{margin-bottom:0}
 .send{flex:none;display:grid;place-items:center;width:58px;height:58px;border:0;border-radius:50%;background:radial-gradient(circle at 35% 30%,#9b6bff,#7c3aed 60%,#6d28d9);color:var(--on);box-shadow:0 0 22px rgba(124,58,237,.55)}
 .send:disabled{cursor:default;opacity:1}
 .send svg{width:26px;height:26px}
-body.nokey .composer{display:none}
+body.nokey .composer,body.nokey .brain{display:none}
 /* Anmelden und Einrichten */
 .setup{margin-top:6vh;background:rgba(19,14,33,.85);border:1px solid var(--glass);border-radius:22px;padding:22px 20px;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
 .setup img{width:48px;height:48px;border-radius:12px}
@@ -183,6 +185,7 @@ label.chk{display:flex;align-items:center;gap:10px;font-weight:500;font-size:15p
   .nv{height:56px;gap:18px;font-size:18px;padding:0 16px;border-radius:18px}.nv svg{width:26px;height:26px}
   .me{padding:18px 20px}.me b{font-size:18px}.me small{font-size:15px}
   .hello svg{width:210px}.hello .dom{font-size:24px}.hello .tag{font-size:21px;margin-top:34px}.hello{padding-bottom:64px}
+  .brain{padding-left:30px}
   .composer{min-height:80px;padding:12px 12px 12px 28px;gap:18px}
   .spark{width:28px;height:28px}.composer textarea{font-size:19px}.send{width:52px;height:52px}
 }
@@ -200,6 +203,7 @@ label.chk{display:flex;align-items:center;gap:10px;font-weight:500;font-size:15p
   #log{padding:8px 16px 20px}
   .lstat{padding:8px 16px 10px}
   .hello svg{width:150px}.hello .dom{font-size:17px;margin-top:14px}.hello .tag{font-size:16px;letter-spacing:.1em;margin-top:24px}.hello{padding-bottom:40px}
+  .brain{width:calc(100% - 24px);padding-left:20px}
   .composer{width:calc(100% - 24px);min-height:60px;margin-bottom:calc(12px + env(safe-area-inset-bottom));padding:8px 8px 8px 18px;gap:12px;border-radius:30px}
   .spark{width:22px;height:22px}.composer textarea{font-size:17px;height:26px}.send{width:44px;height:44px}.send svg{width:22px;height:22px}
   .fx i:nth-child(1){left:-420px;top:-560px;width:700px;height:700px}
@@ -232,6 +236,7 @@ label.chk{display:flex;align-items:center;gap:10px;font-weight:500;font-size:15p
   <div class="fx" aria-hidden="true"><i></i><i></i><i></i></div>
   <div id="lstat" class="lstat" role="status" hidden><p id="lstatT"></p><progress id="lstatP" max="1"></progress></div>
   <main id="log" role="log" aria-live="polite" aria-relevant="additions"></main>
+  <button id="bBrain" class="brain" type="button"></button>
   <form id="composer" class="composer">
     <svg class="spark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.5c.7 5.6 3.3 8.6 10.5 10.5-7.2 1.9-9.8 4.9-10.5 10.5C11.3 16.9 8.7 13.9 1.5 12 8.7 10.1 11.3 7.1 12 1.5Z"/></svg>
     <label class="sr" for="inp">Nachricht an xbubekir</label>
@@ -252,7 +257,7 @@ label.chk{display:flex;align-items:center;gap:10px;font-weight:500;font-size:15p
   <form id="fSet" class="dbody" method="dialog">
     <div class="dh"><h2 id="setH">Einstellungen</h2><button class="ib" type="button" data-close aria-label="Schließen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
     <fieldset>
-      <legend>KI-Anbieter</legend>
+      <legend>Gehirn</legend>
       <label for="sProv">Wer denkt für xbubekir?</label>
       <select class="f" id="sProv">
         <option value="gemini">Google Gemini – kostenlos</option>
@@ -262,6 +267,16 @@ label.chk{display:flex;align-items:center;gap:10px;font-weight:500;font-size:15p
       </select>
       <p class="hint" id="kEigen" hidden>Kein Schlüssel und kein Konto nötig. Läuft komplett auf diesem Gerät.</p>
       <p class="hint" id="kOpen" hidden>Läuft über dein xbubekir-Konto: Der OpenRouter-Schlüssel liegt nur auf deinem Server.</p>
+      <label for="sModel">Modell</label>
+      <select class="f" id="sModel"></select>
+      <label for="sEffort">Denktiefe</label>
+      <select class="f" id="sEffort">
+        <option value="low">Schnell – für Alltägliches</option>
+        <option value="medium">Normal</option>
+        <option value="high">Gründlich – für knifflige Aufgaben</option>
+      </select>
+      <label class="chk"><input type="checkbox" id="sWeb"> Darf im Internet suchen</label>
+      <p class="hint" id="costHint"></p>
       <div id="kGemini">
         <label for="sGMode">Zugang zu Gemini</label>
         <select class="f" id="sGMode">
@@ -283,7 +298,7 @@ label.chk{display:flex;align-items:center;gap:10px;font-weight:500;font-size:15p
         <div class="keyrow"><input class="f" id="sCKey" type="password" autocomplete="off" spellcheck="false" placeholder="sk-ant-…"><button type="button" class="eye" data-for="sCKey" aria-pressed="false">Zeigen</button></div>
         <p class="hint">Erstellen auf <a href="https://platform.claude.com/" target="_blank" rel="noopener noreferrer">platform.claude.com</a>, dafür ist Guthaben nötig.</p>
       </div>
-      <p class="hint">Schlüssel bleiben nur auf diesem Gerät und gehen nur an den jeweiligen Anbieter.</p>
+      <p class="hint" id="kKey">Schlüssel bleiben nur auf diesem Gerät und gehen nur an den jeweiligen Anbieter.</p>
     </fieldset>
     <fieldset>
       <legend>Über dich</legend>
@@ -293,19 +308,6 @@ label.chk{display:flex;align-items:center;gap:10px;font-weight:500;font-size:15p
       <textarea class="f" id="sAbout" rows="4" maxlength="4000" placeholder="z. B. wo du wohnst, was du machst, wofür du dich interessierst, woran du gerade arbeitest"></textarea>
       <label for="sStyle">Wie xbubekir antworten soll</label>
       <textarea class="f" id="sStyle" rows="3" maxlength="2000" placeholder="z. B. „Antworte kurz und auf den Punkt.“ oder „Erklär mir Technik wie einem Anfänger.“"></textarea>
-    </fieldset>
-    <fieldset>
-      <legend>Gehirn</legend>
-      <label for="sModel">Modell</label>
-      <select class="f" id="sModel"></select>
-      <label for="sEffort">Denktiefe</label>
-      <select class="f" id="sEffort">
-        <option value="low">Schnell – für Alltägliches</option>
-        <option value="medium">Normal</option>
-        <option value="high">Gründlich – für knifflige Aufgaben</option>
-      </select>
-      <label class="chk"><input type="checkbox" id="sWeb"> Darf im Internet suchen</label>
-      <p class="hint" id="costHint"></p>
     </fieldset>
     <p class="hint">Name, „Über dich“, Antwortstil, Modell und Websuche gelten ab dem nächsten neuen Chat. Beim Wechsel des Anbieters beginnt gleich ein neuer Chat. Laufende Chats behalten ihre Einstellungen, damit xbubekir den Faden nicht verliert. Die Denktiefe gilt sofort.</p>
     <p class="status" id="setMsg" role="status"></p>
