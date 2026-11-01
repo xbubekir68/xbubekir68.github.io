@@ -27,10 +27,10 @@ noscript{position:fixed;left:0;right:0;bottom:0;z-index:9;background:var(--card)
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 /* Seitenleiste */
 .side{display:flex;flex-direction:column;gap:0;padding:40px 30px 40px 30px;background:linear-gradient(180deg,#0d0a19,#0a0714 60%,#0c0818);border-right:1px solid rgba(255,255,255,.06);position:relative;z-index:2;min-height:0}
-.logo{display:flex;align-items:center;gap:24px;margin:0 0 72px 4px}
-.tile{display:grid;place-items:center;width:70px;height:70px;flex:none;border-radius:16px;border:1.5px solid #8b5cf6;background:radial-gradient(circle at 30% 18%,#3a1b7a,#170b33 72%);box-shadow:0 0 22px rgba(139,92,246,.45),inset 0 0 14px rgba(139,92,246,.35)}
-.tile svg{width:50px;height:auto;--wm:#f4f0ff}
-.logo b{font-size:24px;font-weight:400;letter-spacing:.005em;color:var(--ink)}
+.logo{display:flex;align-items:center;gap:18px;margin:0 0 72px 4px}
+.tile{display:block;width:70px;height:70px;flex:none;overflow:hidden;border-radius:16px;border:1.5px solid #8b5cf6;background:#170b2c;box-shadow:0 0 22px rgba(139,92,246,.45)}
+.tile img{display:block;width:100%;height:100%;object-fit:cover}
+.wmk{display:block;width:160px;height:auto;min-width:0}
 .nav{display:flex;flex-direction:column;gap:7px}
 .nv{display:flex;align-items:center;gap:25px;height:68px;padding:0 20px;border:1px solid transparent;border-radius:22px;background:none;color:#b3acc6;font-size:20px;text-align:left}
 .nv svg{width:30px;height:30px;flex:none;color:#8b5cf6}
@@ -38,7 +38,8 @@ noscript{position:fixed;left:0;right:0;bottom:0;z-index:9;background:var(--card)
 .nv.on{color:#fff;background:linear-gradient(180deg,rgba(150,120,230,.2),rgba(88,52,160,.16));border-color:rgba(167,139,250,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 6px 24px rgba(0,0,0,.35)}
 .me{margin-top:auto;position:relative;overflow:hidden;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(160deg,rgba(255,255,255,.035),rgba(124,58,237,.05));padding:22px 26px 24px}
 .me::after{content:"";position:absolute;right:-70px;bottom:-120px;width:200px;height:150px;border-radius:50%;border-top:1px solid rgba(139,92,246,.45);box-shadow:0 -6px 18px -8px rgba(139,92,246,.4)}
-.me b{display:flex;align-items:center;gap:16px;font-size:20px;font-weight:500;color:var(--ink)}
+.me b{display:flex;align-items:center;gap:14px;font-size:20px;font-weight:500;color:var(--ink)}
+.me .mk{display:block;width:auto;height:30px;margin:-4px 0 -4px -3px}
 .me b i{width:12px;height:12px;border-radius:50%;background:#8b5cf6;box-shadow:0 0 10px #8b5cf6}
 .me small{display:block;margin-top:10px;font-size:17px;color:var(--soft)}
 /* Hauptbereich mit Lichtbögen */
@@ -57,8 +58,8 @@ body.start #log{flex:none;overflow:visible;padding-bottom:0}
 body.start #log>.hello{max-width:none}
 /* Startbild */
 .hello{text-align:center;padding:0 0 84px}
-.hello svg{display:block;width:255px;height:auto;margin:0 auto;--wm:url(#xg);filter:drop-shadow(0 0 18px rgba(139,92,246,.35))}
-.hello .dom{margin:12px 0 0;font-size:28px;font-weight:300;letter-spacing:.32em;color:#d6cfe6;padding-left:.32em}
+.hello .mark{display:block;width:250px;height:auto;margin:0 auto}
+.hello .dom{display:block;width:230px;height:auto;margin:14px auto 0}
 .hello .tag{margin:32px 0 0;font-size:25px;font-weight:400;letter-spacing:.14em;color:#e6e0f2;padding-left:.14em}
 /* Nachrichten */
 .msg{margin-top:20px}
@@ -180,11 +181,11 @@ label.chk{display:flex;align-items:center;gap:10px;font-weight:500;font-size:15p
   body{grid-template-columns:260px minmax(0,1fr)}
   .side{padding:32px 20px}
   .logo{gap:16px;margin-bottom:56px}
-  .tile{width:56px;height:56px;border-radius:14px}.tile svg{width:40px}
-  .logo b{font-size:20px}
+  .tile{width:56px;height:56px;border-radius:14px}
+  .wmk{width:136px}
   .nv{height:56px;gap:18px;font-size:18px;padding:0 16px;border-radius:18px}.nv svg{width:26px;height:26px}
   .me{padding:18px 20px}.me b{font-size:18px}.me small{font-size:15px}
-  .hello svg{width:210px}.hello .dom{font-size:24px}.hello .tag{font-size:21px;margin-top:34px}.hello{padding-bottom:64px}
+  .hello .mark{width:210px}.hello .dom{width:196px}.hello .tag{font-size:21px;margin-top:34px}.hello{padding-bottom:64px}
   .brain{padding-left:30px}
   .composer{min-height:80px;padding:12px 12px 12px 28px;gap:18px}
   .spark{width:28px;height:28px}.composer textarea{font-size:19px}.send{width:52px;height:52px}
@@ -193,8 +194,8 @@ label.chk{display:flex;align-items:center;gap:10px;font-weight:500;font-size:15p
   body{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
   .side{flex-direction:row;align-items:center;padding:10px 12px;border-right:0;border-bottom:1px solid rgba(255,255,255,.06)}
   .logo{gap:12px;margin:0}
-  .tile{width:42px;height:42px;border-radius:11px}.tile svg{width:30px}
-  .logo b{font-size:18px}
+  .tile{width:42px;height:42px;border-radius:11px}
+  .wmk{width:112px}
   .nav{flex-direction:row;gap:4px;margin-left:auto}
   .nv{width:44px;height:44px;padding:0;justify-content:center;border-radius:14px}
   .nv span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
@@ -202,7 +203,7 @@ label.chk{display:flex;align-items:center;gap:10px;font-weight:500;font-size:15p
   .me{display:none}
   #log{padding:8px 16px 20px}
   .lstat{padding:8px 16px 10px}
-  .hello svg{width:150px}.hello .dom{font-size:17px;margin-top:14px}.hello .tag{font-size:16px;letter-spacing:.1em;margin-top:24px}.hello{padding-bottom:40px}
+  .hello .mark{width:150px}.hello .dom{width:140px;margin-top:8px}.hello .tag{font-size:16px;letter-spacing:.1em;margin-top:24px}.hello{padding-bottom:40px}
   .brain{width:calc(100% - 24px);padding-left:20px}
   .composer{width:calc(100% - 24px);min-height:60px;margin-bottom:calc(12px + env(safe-area-inset-bottom));padding:8px 8px 8px 18px;gap:12px;border-radius:30px}
   .spark{width:22px;height:22px}.composer textarea{font-size:17px;height:26px}.send{width:44px;height:44px}.send svg{width:22px;height:22px}
@@ -215,22 +216,15 @@ label.chk{display:flex;align-items:center;gap:10px;font-weight:500;font-size:15p
 <script type="module" src="app.js"></script>
 </head>
 <body class="nokey">
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <defs>
-    <linearGradient id="xg" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="194" y2="62"><stop offset="0" stop-color="#cbb8fd"/><stop offset=".5" stop-color="#a383f7"/><stop offset="1" stop-color="#8b55f6"/></linearGradient>
-    <clipPath id="xc"><rect x="-2" y="16" width="66" height="46"/></clipPath>
-    <symbol id="wm" viewBox="0 0 194 62"><g fill="none" stroke-width="10" style="stroke:var(--wm,#fff)"><g clip-path="url(#xc)"><path d="M-.5 8.5 62.5 69.5M62.5 8.5-.5 69.5"/></g><path d="M75 0v62"/><ellipse cx="99" cy="39" rx="24" ry="18"/><path d="M141 16v23a24 18 0 0 0 48 0V16M189 16v46"/></g></symbol>
-  </defs>
-</svg>
 <h1 class="sr">xbubekir</h1>
 <aside class="side">
-  <div class="logo"><span class="tile"><svg viewBox="0 0 194 62" aria-hidden="true"><use href="#wm"/></svg></span><b>xbubekir.ai</b></div>
+  <div class="logo"><span class="tile"><img src="icons/icon-192.png" alt=""></span><img class="wmk" src="brand/wortmarke.webp" alt="xbubekir" width="900" height="259"></div>
   <nav class="nav" aria-label="Hauptmenü">
     <button class="nv on" id="bNew" type="button" title="Neuer Chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 15.5a2.5 2.5 0 0 1-2.5 2.5H8l-4.5 3.5V6A2.5 2.5 0 0 1 6 3.5h11.5A2.5 2.5 0 0 1 20 6Z"/><path d="M15.5 9.5v.01"/></svg><span>Chat</span></button>
     <button class="nv" id="bMenu" type="button" title="Verlauf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M12 6.5V12l3.5 2"/></svg><span>Verlauf</span></button>
     <button class="nv" id="bSet" type="button" title="Einstellungen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg><span>Einstellungen</span></button>
   </nav>
-  <div class="me"><b><i></i>xbu</b><small>Deine persönliche KI</small></div>
+  <div class="me"><b><i></i><img class="mk" src="brand/xbu.webp" alt="xbu" width="640" height="376"></b><small>Deine persönliche KI</small></div>
 </aside>
 <div class="main">
   <div class="fx" aria-hidden="true"><i></i><i></i><i></i></div>
