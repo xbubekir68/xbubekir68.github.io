@@ -290,7 +290,7 @@ details.rule{display:block;margin-top:12px}details.rule>ol,details.rule>p{margin
 .ksp{margin-top:14px;display:grid;gap:8px;justify-items:center;text-align:center;padding:16px}.ksp .kgl{margin:4px 0}.ksh{font-size:13px;line-height:1.5}
 .ksr{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:6px}.ksr .btn{width:auto;margin:0;padding:10px 18px;display:inline-flex;align-items:center;gap:6px}
 .ksr .krec{background:var(--bad);color:var(--on)}.ksk{display:block;margin:10px auto 0}
-.ksoon{margin-top:14px}.ksoon ol{list-style:none;margin:10px 0;padding:0;display:grid;gap:10px}.ksoon li{display:flex;gap:12px;align-items:center;opacity:.8}.ksoon li .ar{flex:none;width:96px;text-align:right;font-size:18px;color:var(--mute)}.ksoon li b{display:block;font-size:14px}.ksoon li small{display:block;font-size:12px;color:var(--mute)}
+.ksoon{margin-top:14px}.kold{margin-top:12px}.ksoon ol{list-style:none;margin:10px 0;padding:0;display:grid;gap:10px}.ksoon li{display:flex;gap:12px;align-items:center;opacity:.8}.ksoon li .ar{flex:none;width:96px;text-align:right;font-size:18px;color:var(--mute)}.ksoon li b{display:block;font-size:14px}.ksoon li small{display:block;font-size:12px;color:var(--mute)}
 html.splash-lock{overflow:hidden}
 /* ===== MUFRADAAT STARTBILDSCHIRM ===== */
 @property --spp{syntax:'<percentage>';inherits:false;initial-value:140%}
@@ -543,8 +543,10 @@ function migrate(st){
     st.fav=(st.fav||[]).map(m).filter(Boolean);st.box=mapObj(st.box);st.due=mapObj(st.due);delete st.known;
   }
   if(!st.goalv){if(st.goal===50||st.goal===undefined)st.goal=100;st.goalv=1} // Standardziel von 50 auf 100 XP angehoben
+  if(!st.npv){if(!hasHist(st))st.np=true;st.npv=1} // neuer Lernpfad ist Standard; wer schon gelernt hat, bleibt auf seinem Pfad
   st.v=2;return st;
 }
+const hasHist=st=>(st.xp||0)>0||Object.keys(st.box||{}).length>0||Object.keys(st.alpha||{}).length>0||!!st.aok||Object.keys((st.kp||{}).d||{}).length>0; // auf diesem Stand wurde schon gelernt
 function loadS(){S=JSON.parse(DEF);try{Object.assign(S,migrate(JSON.parse(localStorage.getItem(SK())||"{}")))}catch(e){}save();applyTheme()}
 const store=()=>{try{if(U)localStorage.setItem(SK(),JSON.stringify(S))}catch(e){}};
 const save=()=>{store();sched()};
@@ -996,7 +998,7 @@ function aEnd(){
 }
 
 // ===== Neuer Lernpfad (Vorschau): Kurs aus kurs/*.json =====
-// Läuft neben dem bisherigen Pfad, bis Stufe 1 fertig ist (S.np schaltet um). Stand: S.kp.d[Lektions-ID] = wie oft abgeschlossen.
+// Standard für neue Profile (migrate setzt S.np); der bisherige Pfad bleibt über S.np=false erreichbar. Stand: S.kp.d[Lektions-ID] = wie oft abgeschlossen.
 let KURS=null,KE={},KL=[],QTX=new Set(); // Übersicht (false = Laden fehlgeschlagen), geladene Etappen, alle Lektionen in Kursreihenfolge, Korantexte
 function kursSet(idx,files){
   KURS=idx;KE=files||{};KL=[];
@@ -1637,13 +1639,13 @@ function kpath(){
   const road=`<svg viewBox="0 0 100 ${y}" preserveAspectRatio="none" aria-hidden="true">${lay(()=>"ed")}${lay(s=>"bed c"+s.k%5)}</svg>${FPS}`;FP=pts;
   const land=bands.map((b,n)=>`<div class="ub ${b.th}" style="top:${b.y+4}px;height:${(n+1<bands.length?bands[n+1].y:y)-b.y-8}px">${b.h}</div>`).join("");
   const dn=KL.filter(l=>kDone(l.id)).length,st1=KURS.stufen[0];
+  const old=`<p class="mute kold">Bis Stufe 2 da ist, übst du Wörter und Sätze im bisherigen Lernpfad. Dein Fortschritt dort bleibt erhalten.</p>${off}`; // der bisherige Pfad bleibt erreichbar, am Ende statt über dem Weg
   paint(`<h1>Lernpfad</h1><p class="mute">Stufe ${st1.id} · ${esc(st1.titel)} · ${dn} von ${KL.length} Lektionen geschafft</p>
-  <div class="card note kpv"><p><b>Vorschau.</b> Stufe 1 ist komplett. Der neue Lernpfad ersetzt den bisherigen, sobald die ersten Lektionen von Stufe 2 dazukommen.</p>${off}</div>
   ${!dn&&!S.wt?`<div class="card askip kwt"><b>Kannst du schon etwas lesen?</b><p class="mute">Ein kurzer Einstufungstest zeigt, wo du einsteigst. Was du schon kannst, zählt dann als geschafft.</p><button class="btn" data-kt="wissen">Einstufungstest starten</button><button class="lnk" data-kt="nein">Ich fange von vorn an</button></div>`:""}
   <details class="card rule"><summary><b>So funktioniert der Lernpfad</b></summary><ol><li><i>1</i><span>Stufe 1 bringt dir das <b>Lesen</b> bei, von den Buchstaben bis zur Schrift des Korans. Danach lernst du in Stufe 2 die Sprache.</span></li><li><i>2</i><span>Jede <b>Lektion</b> mischt kurze Aufgaben: kennenlernen, erkennen, hören, zuordnen und Wörter in Buchstaben zerlegen.</span></li><li><i>3</i><span>Fehler kommen am Ende der Lektion noch einmal, bis sie sitzen. Danach öffnet sich die nächste Lektion.</span></li><li><i>4</i><span>Du kannst schon etwas? Vor jeder gesperrten Etappe springst du mit einem <b>Test</b> weiter.</span></li></ol><button class="lnk" data-kt="wissen">Einstufungstest machen</button></details>
   <div class="pth" style="height:${y}px">${land}${road}${nodes.join("")}</div>
-  ${soon.length?`<div class="card ksoon"><b>Demnächst</b><p class="mute">Diese Etappen entstehen gerade.</p><ol>${soon.map(e=>`<li><span class="ar" lang="ar">${e.ar}</span><span><b>${e.id.toUpperCase()} · ${esc(e.titel)}</b><small>${esc(e.kurz||"")}</small></span></li>`).join("")}</ol>${KURS.stufen.slice(1).map(s=>`<p class="mute">Danach: Stufe ${s.id} · ${esc(s.titel)}</p>`).join("")}</div>`
-    :KURS.stufen.some(s=>!kStE(s).length)?`<div class="card ksoon"><b>Demnächst</b>${KURS.stufen.filter(s=>!kStE(s).length).map(s=>`<p class="mute">Stufe ${s.id} · ${esc(s.titel)} entsteht gerade: Wörter, Sätze und Grammatik, Lektion für Lektion.</p>`).join("")}</div>`:""}`);
+  ${soon.length?`<div class="card ksoon"><b>Demnächst</b><p class="mute">Diese Etappen entstehen gerade.</p><ol>${soon.map(e=>`<li><span class="ar" lang="ar">${e.ar}</span><span><b>${e.id.toUpperCase()} · ${esc(e.titel)}</b><small>${esc(e.kurz||"")}</small></span></li>`).join("")}</ol>${KURS.stufen.slice(1).map(s=>`<p class="mute">Danach: Stufe ${s.id} · ${esc(s.titel)}</p>`).join("")}${old}</div>`
+    :KURS.stufen.some(s=>!kStE(s).length)?`<div class="card ksoon"><b>Demnächst</b>${KURS.stufen.filter(s=>!kStE(s).length).map(s=>`<p class="mute">Stufe ${s.id} · ${esc(s.titel)} entsteht gerade: Wörter, Sätze und Grammatik, Lektion für Lektion.</p>`).join("")}${old}</div>`:`<p class="kold">${off}</p>`}`);
   fpDraw();
   if(ui.keep){ui.keep=false;return}
   const c=$(".pn.cur");if(c&&dn)requestAnimationFrame(()=>c.scrollIntoView({block:"center"}));
@@ -1783,7 +1785,7 @@ function path(){
       ?`<div class="card askip"><b>Wie sicher bist du bei den Buchstaben?</b><p class="mute">Ein Kurztest mit 10 Fragen zeigt es. Ab 8 richtigen Antworten überspringen wir den Abschnitt für dich.</p><button class="btn" data-atest>Kurztest starten</button><button class="btn alt" id="sk2">Ohne Test überspringen</button><button class="lnk" id="skx" style="margin-top:8px">Doch lieber üben</button></div>`
       :`<div class="card askip"><b>${as.s} von ${as.n} Buchstaben sicher</b><p class="mute">${gate?"Zuerst kommen die Buchstaben, dann Wörter und Sätze. ":""}Du kennst die Schrift schon? Dann spring direkt zu den Wörtern und Sätzen.</p><button class="btn alt" id="sk" style="margin-top:8px">Ich kann die Buchstaben schon</button></div>`;
   paint(`<h1>Lernpfad</h1><p class="mute">${knownN()} von ${W.length} Wörtern gelernt · ${sentDone()} von ${SENT.length} Sätzen geübt</p>
-  ${KL.length?`<div class="card note kpv"><p><b>Neu: Vorschau des neuen Lernpfads.</b> Er beginnt mit „Lesen lernen“. Schon spielbar: ${KURS.stufen.flatMap(s=>s.etappen).filter(e=>KE[e.id]).map(e=>"„"+esc(e.titel)+"“").join(", ").replace(/, (?=[^,]*$)/," und ")}.</p><button class="btn" data-kn>Vorschau öffnen</button></div>`:""}
+  ${KL.length?`<div class="card note kpv"><p><b>Neu: der neue Lernpfad.</b> Stufe 1 bringt dir das Lesen bei, von den Buchstaben bis zur Schrift des Korans.</p><button class="btn" data-kn>Zum neuen Lernpfad</button></div>`:""}
   ${skipCard}
   <details class="card rule"><summary><b>So funktioniert der Lernpfad</b></summary><ol><li><i>1</i><span>Erst die <b>Buchstaben</b>, in vier kleinen Blöcken. Wer sie schon kann, überspringt sie.</span></li><li><i>2</i><span>Dann <b>Wörter</b> in Lektionen. Ein Wort ist <b>begonnen</b>, sobald du es richtig beantwortest, und <b>gelernt</b>, wenn du es nach mindestens einem Tag noch einmal weißt.</span></li><li><i>3</i><span>Nach jeder Einheit warten <b>Sätze</b> mit genau den Wörtern, die du gerade gelernt hast.</span></li></ol><p class="mute">Die nächste Lektion öffnet sich, sobald du 60 % der vorherigen begonnen hast, bei den Buchstaben 60 % eines Blocks (zweimal richtig erkannt). Satzrunden sind freiwillig und sperren nichts. Wörter früherer Lektionen werden in neuen Runden mitgeprüft.</p><p class="mute" style="margin-top:6px">Wie lange es bis zur Auffrischung dauert, richtet sich nach dir: Was sicher sitzt, kommt später wieder, was wackelt, früher. Der kleine Balken zeigt, wie frisch ein Wort ist.</p></details>
   ${due?`<div class="menu">${itm('data-go="review"',"repeat","Wiederholen",due+" Wörter fällig")}</div>`:""}
@@ -2091,7 +2093,7 @@ const LOCALKEYS=["dir","rem","time","theme","goal","sound","vib","auto","hk","np
 function mergeS(a,b){ // pro Wort der bessere Stand, Favoriten vereinigen, pro Tag das Maximum; ein späteres Zurücksetzen gewinnt
   b=Object.assign({box:{},due:{},ef:{},sent:{},days:{},xpDays:{},st:{},alpha:{},kp:{d:{}},fav:[],badges:[],seen:[]},b);
   const ea=a.epoch||0,eb=b.epoch||0;
-  if(ea!==eb){const w=clone(ea>eb?a:b);for(const k of LOCALKEYS)if(a[k]!==undefined)w[k]=a[k];return w}
+  if(ea!==eb){const w=clone(ea>eb?a:b);for(const k of LOCALKEYS)if(a[k]!==undefined)w[k]=a[k];if(!hasHist(a)&&b.np!==undefined)w.np=b.np;return w}
   const r=Object.assign({},a);r.box={};r.due={};r.ef={};
   for(const id of new Set([...Object.keys(a.box||{}),...Object.keys(b.box)])){
     const x=(a.box||{})[id],y=b.box[id],useB=x===undefined||(y!==undefined&&(y>x||(y===x&&(b.due[id]||0)>((a.due||{})[id]||0)))),src=useB?b:a;
@@ -2105,6 +2107,7 @@ function mergeS(a,b){ // pro Wort der bessere Stand, Favoriten vereinigen, pro T
   r.kp={d:mx((a.kp||{}).d,(b.kp||{}).d)}; // neuer Lernpfad: abgeschlossen bleibt abgeschlossen
   const al=a.last||"",bl=b.last||"";if(bl>al||(bl===al&&(b.streak||0)>(a.streak||0))){r.streak=b.streak||0;r.last=bl}
   const as=a.seenDay||"",bs=b.seenDay||"";if(bs>as){r.seenDay=bs;r.seen=b.seen||[]}else if(bs===as)r.seen=[...new Set([...(a.seen||[]),...(b.seen||[])])];
+  if(!hasHist(a)&&b.np!==undefined)r.np=b.np; // neues Gerät ohne eigenen Stand: Lernpfad vom Konto übernehmen
   return r;
 }
 // Abgleich: Serverstand lesen, mit dem lokalen mischen, nur schreiben wenn der Server seit dem Lesen unverändert ist (sonst nochmal)

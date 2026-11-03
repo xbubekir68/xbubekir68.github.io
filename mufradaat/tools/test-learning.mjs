@@ -387,14 +387,14 @@ ok("Pfad zeigt die Stationen von S1 bis S8 (6, 7, 5, 4, 5, 4, 5 und 7)",(kh.matc
 ok("… erledigt, aktuell (Mim) und gesperrt",/pn abl done[^"]*" data-kl="s1-1"/.test(kh)&&/pn abl\s+cur[^"]*" data-kl="s1-2"/.test(kh)&&/pn abl lock[^"]*" data-kl="s1-3"/.test(kh),kh.match(/class="pn [^"]*" data-kl="s1-\d"/g));
 ok("… Ziel der Etappe mit allen 29 Buchstaben",/Ziel der Etappe/.test(kh)&&(kh.match(/<span class="[ku]">/g)||[]).length===29);
 ok("… Demnächst: Stufe 2, alle Etappen von Stufe 1 sind da",!/<li><span class="ar" lang="ar">/.test(kh)&&/Stufe 2 · Sprache lernen entsteht gerade/.test(kh));
-ok("… Vorschau-Hinweis mit Weg zurück",/data-ko/.test(kh)&&/Vorschau/.test(kh));
+ok("… Weg zum bisherigen Lernpfad am Ende, kein Vorschau-Hinweis mehr",/data-ko/.test(kh)&&kh.indexOf("data-ko")>kh.indexOf('class="pth"')&&!/Vorschau/.test(kh));
 ok("… keine Buchnamen oder Verweise",!/Qaida|Noorani|Nuraniyya|Medina|Madina|Band [123]/i.test(kh+fs.readdirSync(kdir).map(n=>fs.readFileSync(path.join(kdir,n),"utf8")).join("")));
 run(`pHint('data-kl="s1-3"')`);
 ok("gesperrte Station: Grund direkt darunter",/Schließe erst „Jīm bis Dhāl“ ab\./.test(run(`app.innerHTML`)));
 run(`home()`);
 ok("Startseite: Weiterlernen führt zur aktuellen Lektion",/data-kl="s1-2"/.test(run(`app.innerHTML`))&&/Etappe S1 · Lektion 2: Jīm bis Dhāl/.test(run(`app.innerHTML`)));
 run(`S.np=false;path()`);
-ok("bisheriger Pfad bleibt und bietet die Vorschau an",/data-kn/.test(run(`app.innerHTML`))&&/data-open="0"/.test(run(`app.innerHTML`)));
+ok("bisheriger Pfad bleibt und bietet den neuen an",/data-kn/.test(run(`app.innerHTML`))&&/data-open="0"/.test(run(`app.innerHTML`)));
 // Wiederholung aller Buchstaben
 run(`S.kp={d:{}};view="path";startK(null)`);
 ok("Wiederholung erst nach der ersten Lektion",run(`view`)==="path");
@@ -407,7 +407,13 @@ r=JSON.parse(run(`JSON.stringify(mergeS({epoch:0,box:{},due:{},kp:{d:{"s1-1":2}}
 ok("Merge: abgeschlossene Lektionen von beiden Geräten",r.kp.d["s1-1"]===2&&r.kp.d["s1-2"]===1,r.kp);
 r=JSON.parse(run(`JSON.stringify(mergeS({epoch:0,box:{},due:{}},{epoch:0,box:{},due:{}}))`));
 ok("Merge: alter Stand ohne Lernpfad-Daten geht",JSON.stringify(r.kp)==='{"d":{}}',r.kp);
-ok("Vorschau an/aus bleibt auf dem Gerät",run(`LOCALKEYS.includes("np")`));
+ok("Lernpfad-Wahl bleibt auf dem Gerät",run(`LOCALKEYS.includes("np")`));
+// neuer Lernpfad als Standard
+ok("Standard: frischer Stand startet im neuen Lernpfad",run(`migrate({}).np===true`));
+ok("Standard: wer schon gelernt hat, bleibt im bisherigen",run(`migrate({v:2,xp:40,np:false}).np===false&&migrate({v:2,box:{kitab:1},np:false}).np===false&&migrate({v:2,aok:"skip",np:false}).np===false`));
+ok("Standard: wird nur einmal gesetzt, danach zählt die eigene Wahl",run(`migrate({npv:1,np:false}).np===false&&migrate(migrate({})).np===true`));
+ok("Merge: neues Gerät übernimmt den Lernpfad vom Konto",run(`mergeS({epoch:0,box:{},due:{},np:true},{epoch:0,box:{kitab:2},due:{},xp:300,np:false}).np===false`));
+ok("Merge: wer auf dem Gerät schon lernt, behält seine Wahl",run(`mergeS({epoch:0,box:{},due:{},xp:20,np:true},{epoch:0,box:{},due:{},np:false}).np===true`));
 ok("Service Worker: Kursdateien offline verfügbar",kidx.stufen.flatMap(s=>s.etappen).filter(e=>e.datei).every(e=>swSrc.includes(`"kurs/${e.datei}"`))&&swSrc.includes('"kurs/kurs.json"'));
 ok("Service Worker: Kursdateien zuerst aus dem Netz",/\\\/kurs\\\/\[\^\/\]\+\\\.json\$/.test(swSrc));
 
