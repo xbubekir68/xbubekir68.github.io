@@ -76,6 +76,8 @@ input[type=search],input.t{width:100%;padding:13px 14px;border-radius:12px;borde
 .zb{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:12px}.zb i{display:block;height:100%;background:var(--g);border-radius:99px}.zk .zs{font-size:13px}
 .obz{margin:12px 2px 0;font-size:14px}
 .cta.alt2{background:var(--gl);color:var(--g)}
+.item.lock{color:var(--mute)}.item.lock b{color:var(--ink)}.item.lock small.hint{display:block;border:0;margin-top:6px;color:var(--ink)}
+.ffree{display:block;margin:14px auto 0}.nhl .i{display:inline-block;vertical-align:-3px;margin-right:4px}
 .obw h1{margin:14px 0 6px}.obw h2{margin:22px 0 4px;font-size:18px}.obw .top{margin-bottom:4px}
 .obar{font-size:30px;line-height:1.5;text-align:center;margin:18px 0 0;color:var(--g)}
 .obo b{display:block}.obo small{display:block;color:var(--mute);font-size:14px;margin-top:2px}
@@ -1830,7 +1832,7 @@ function homeNp(){
   const ziel=all?"":`<div class="card zk"><p class="nhl">Ziel der Etappe</p><p><b>${esc(zl?zl.text:e.kurz)}</b></p>${zp}
     <div class="zb" role="img" aria-label="${dnE} von ${ls.length} Lektionen dieser Etappe geschafft"><i style="width:${Math.round(dnE/ls.length*100)}%"></i></div><p class="mute zs">${dnE} von ${ls.length} Lektionen geschafft</p></div>`;
   const z8=(KE.s8||{}).ziel,mine=S.ob&&S.ob.z==="koran"&&l.e!=="s8"&&!all&&z8?`<p class="mute obz">Dein Ziel, den Koran zu lesen: In Etappe S8 liest du die Basmala.</p>`
-    :S.ob&&S.ob.z==="sprache"&&!all?`<p class="mute obz">Dein Ziel, Arabisch zu verstehen: Erst kommt das Lesen, dann Wörter und Sätze. Wörter kannst du schon jetzt unter Karten üben.</p>`:"";
+    :S.ob&&S.ob.z==="sprache"&&!all?`<p class="mute obz">Dein Ziel, Arabisch zu verstehen: Erst kommt das Lesen, dann Wörter und Sätze. ${fGate("cards")?"Nach Etappe S3 öffnen sich die Karteikarten für Wörter.":"Wörter kannst du schon jetzt unter Karten üben."}</p>`:"";
   const mix=(()=>{const p=mixPlan(),n=p.due.length+p.nw.length+p.weak.length;return n&&!alphaGate()&&Object.keys(S.box).length?itm('data-go="mix"',"bolt","Wörter: heute dran",n+" Wörter · "+mixText(p)):""})();
   paint(top+nh+ziel+mine+`${due?`<button class="cta alt2" data-go="review">${due} Wörter wiederholen</button>`:""}
   <div class="menu">${mix}${itm('data-go="alphabet"',"list","Alphabet",alphaSure()+" von "+ALPHA.length+" Buchstaben sicher")}${itm('data-go="stats"',"chart","Dein Fortschritt",`Level ${lvl()} · ${S.xp||0} XP · ${Object.keys(kp().d).length} von ${KL.length} Lektionen`)}</div>`);
@@ -1907,8 +1909,19 @@ function badges(){
   const have=S.badges||[];
   paint(head("Abzeichen","more")+`<p class="mute">${have.length} von ${BADGES.length} freigeschaltet</p><div class="bg">${BADGES.map(b=>`<div class="card bdg ${have.includes(b.id)?"":"lock"}"><span class="med">${medal(b.ic)}</span><b>${b.n}</b><small>${b.d}</small></div>`).join("")}</div>`);
 }
+// Karten und Spiele gehen im neuen Lernpfad Etappe für Etappe auf: Hören sofort, Karten und Paare nach S3 (Wörter mit Vokalzeichen), Wort-Blitz nach S5 (flüssig lesen).
+// Nie gesperrt: bisheriger Pfad, wer schon Wörter übt oder „kann schon lesen“ gewählt hat (S.aok), Einstufung markiert Etappen als geschafft.
+const FREI={cards:"s3",pairs:"s3",blitz:"s5"};
+const fGate=k=>{const e=FREI[k];return e&&S.np&&!S.aok&&!hasWords()&&KL.length&&!kEDone(e)?e:null};
+const fLeft=e=>{const last=Math.max(...KL.filter(l=>l.e===e).map(l=>l.k));return KL.filter(l=>l.k<=last&&!kDone(l.id)).length};
+const fWhy=e=>{const n=fLeft(e);return `Öffnet sich nach Etappe ${e.toUpperCase()} · ${esc(kEtap(e).titel)} (noch ${n} ${n===1?"Lektion":"Lektionen"})`};
+const fFree=()=>`<button class="lnk ffree" id="ffree">Ich kann schon lesen: alles freischalten</button>`;
+function fFreeOn(again){const b=$("#ffree");if(b)b.onclick=()=>{S.aok="skip";save();sfx("tap");toast("Karten und Spiele sind frei.");again()}}
 function games(){
-  paint(`<h1>Spiele</h1><div class="menu">${itm('data-go="pairs"',"pairs","Paare zuordnen","6 Wortpaare, so schnell du kannst")}${itm('data-go="blitz"',"bolt","Wort-Blitz","60 Sekunden · Rekord: "+(S.st.blitz||0)+" Treffer")}${itm('data-go="listen"',"speaker","Hörübung",ARV===false?"Braucht eine arabische Stimme auf dem Gerät":"Wort hören, Bedeutung wählen")}</div>`);
+  const g=k=>fGate(k),row=(k,icon,t,sub)=>{const e=g(k);return e?`<button class="item lock" data-fl="${k}" aria-expanded="${ui.fl===k}"><span class="ic">${ic("lock")}</span><span><b>${t}</b><small>${fWhy(e)}</small>${ui.fl===k?`<small class="hint" role="status">Lerne im Lernpfad weiter, dann geht das Spiel von selbst auf.</small>`:""}</span></button>`:itm(`data-go="${k}"`,icon,t,sub)};
+  paint(`<h1>Spiele</h1><div class="menu">${itm('data-go="listen"',"speaker","Hörübung",ARV===false?"Braucht eine arabische Stimme auf dem Gerät":"Wort hören, Bedeutung wählen")}${row("pairs","pairs","Paare zuordnen","6 Wortpaare, so schnell du kannst")}${row("blitz","bolt","Wort-Blitz","60 Sekunden · Rekord: "+(S.st.blitz||0)+" Treffer")}</div>${g("pairs")||g("blitz")?fFree():""}`);
+  document.querySelectorAll("[data-fl]").forEach(b=>b.onclick=()=>{ui.fl=ui.fl===b.dataset.fl?null:b.dataset.fl;sfx("tap");games()});
+  fFreeOn(games);
 }
 function wordRow(w){const nt=noteOf(w);return `<button class="w" data-say="${w.i}"><span class="ar" lang="ar">${w.ar}</span><span style="flex:1"><b>${w.de}</b><span class="tr"><br>(${w.tr})${nt?" · "+esc(nt):""}</span></span><span class="mute" style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">${memBar(w.i)}${isLearned(w.i)?ic("check",16):""}${ic("speaker",18)}</span></button>`}
 function list(){
@@ -1928,6 +1941,13 @@ function fav(){paint(head("Favoriten","more")+`<p class="mute">Tippe bei den Kar
 // ===== Karteikarten =====
 let cd={order:[],n:0,flip:false,sig:0,anim:false};
 function cards(){
+  const e=fGate("cards");
+  if(e){const ls=KL.filter(l=>l.k<=Math.max(...KL.filter(x=>x.e===e).map(x=>x.k))),dn=ls.filter(l=>kDone(l.id)).length,c=kCur();
+    paint(`<h1>Karteikarten</h1><div class="card nh"><p class="nhl">${ic("lock",16)} Noch gesperrt</p><p class="ar nha" lang="ar">كِتَابٌ</p>
+      <p>Die Karten öffnen sich nach <b>Etappe ${e.toUpperCase()} · ${esc(kEtap(e).titel)}</b>. Dann liest du Wörter mit Vokalzeichen, wie dieses: „kitābun“, ein Buch.</p>
+      <div class="zb" role="img" aria-label="${dn} von ${ls.length} Lektionen bis dahin geschafft"><i style="width:${Math.round(dn/ls.length*100)}%"></i></div><p class="mute zs">${dn} von ${ls.length} Lektionen bis dahin geschafft</p>
+      <button class="btn" data-kl="${c.id}">Zum nächsten Halt</button></div>${fFree()}`);
+    return fFreeOn(cards)}
   const pool=unlockedWords();
   if(!cd.order.length||cd.sig!==pool.length){cd.order=shuffle(pool.map(w=>w.i));cd.n=0;cd.sig=pool.length;cd.flip=false}
   const w=BY[cd.order[cd.n%cd.order.length]],isF=(S.fav||[]).includes(w.i);
@@ -2065,6 +2085,7 @@ function quiz(){
 
 // ===== Spiel 1: Paare zuordnen =====
 function startPairs(){
+  if(fGate("pairs"))return go("games");
   const pool=gamePool(6),ws=[];for(const w of shuffle(pool)){if(ws.length<6&&!ws.some(x=>clash(x,w)))ws.push(w)}
   G={L:shuffle(ws),R:shuffle(ws),sel:null,done:[],miss:0,t0:Date.now(),end:false,bad:null,last:null,xp:0,sec:0};
   view="pairs";render();
@@ -2099,6 +2120,7 @@ function pairs(){
 function nextB(){const pool=gamePool(8);B.w=pool[Math.floor(Math.random()*pool.length)];B.opts=options(B.w);B.pick=null;B.locked=false}
 const leftB=()=>Math.max(0,60-(Date.now()-B.t0)/1000);
 function startBlitz(){
+  if(fGate("blitz"))return go("games");
   B={right:0,wrong:0,combo:0,t0:Date.now(),end:false,xp:0,tick:0};nextB();view="blitz";render();
   gt=setInterval(()=>{
     if(view!=="blitz")return clearInterval(gt);const l=leftB();if(l<=0)return endBlitz();
@@ -2371,7 +2393,7 @@ loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v28"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v29"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>

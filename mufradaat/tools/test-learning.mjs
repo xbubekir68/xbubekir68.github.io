@@ -843,5 +843,28 @@ run(`more()`);ok("Mehr: Alphabet ist erreichbar",/data-go="alphabet"/.test(run(`
 run(`S.np=false;home()`);ok("bisheriger Lernpfad: Start bleibt wie bisher",/class="card ov"/.test(run(`app.innerHTML`)));
 run(`U="gast";loadS()`);
 
+// ---------- 17. Karten und Spiele gehen Etappe für Etappe auf ----------
+run(`U="frei1";loadS();S.ob={z:"lesen",d:today()};ui.fl=null;games()`);let gs=run(`app.innerHTML`);
+ok("Frischer Gast: Hörübung offen, Paare und Wort-Blitz gesperrt mit Grund",/data-go="listen"/.test(gs)&&/data-fl="pairs"/.test(gs)&&/data-fl="blitz"/.test(gs)&&!/data-go="pairs"/.test(gs)&&!/data-go="blitz"/.test(gs)
+  &&new RegExp(`Öffnet sich nach Etappe S3 · Kurze Vokale \\(noch ${run(`fLeft("s3")`)} Lektionen\\)`).test(gs)&&/Öffnet sich nach Etappe S5 · Lange Vokale/.test(gs)&&/id="ffree"/.test(gs));
+ok("… Lektionen bis S3 richtig gezählt",run(`fLeft("s3")===KL.filter(l=>["s1","s2","s3"].includes(l.e)).length`));
+run(`ui.fl="pairs";games()`);ok("… Antippen zeigt den Hinweis direkt darunter",/Lerne im Lernpfad weiter/.test(run(`app.innerHTML`)));run(`ui.fl=null`);
+run(`cards()`);gs=run(`app.innerHTML`);
+ok("Karten gesperrt: Grund, Fortschritt, Knopf zum nächsten Halt",/Noch gesperrt/.test(gs)&&/Etappe S3 · Kurze Vokale/.test(gs)&&/data-kl="s1-1"/.test(gs)&&/Zum nächsten Halt/.test(gs)&&!/id="fl"/.test(gs));
+run(`view="games";startBlitz()`);ok("Wort-Blitz lässt sich nicht an der Sperre vorbei starten",run(`view`)==="games");
+run(`S.ob.z="sprache";home()`);ok("Start: Ziel Sprache sagt, wann die Karten aufgehen",/Nach Etappe S3 öffnen sich die Karteikarten/.test(run(`app.innerHTML`)));
+run(`for(const l of KL.filter(l=>["s1","s2","s3"].includes(l.e)))S.kp.d[l.id]=1;games()`);gs=run(`app.innerHTML`);
+ok("Nach S3: Paare offen, Wort-Blitz noch zu",/data-go="pairs"/.test(gs)&&/data-fl="blitz"/.test(gs)&&run(`fGate("cards")===null`));
+run(`cards()`);ok("… Karten offen",/id="fl"/.test(run(`app.innerHTML`)));
+run(`home()`);ok("… Start: Wörter schon unter Karten",/Wörter kannst du schon jetzt unter Karten üben/.test(run(`app.innerHTML`)));
+run(`for(const l of KL.filter(l=>["s4","s5"].includes(l.e)))S.kp.d[l.id]=1;games()`);gs=run(`app.innerHTML`);
+ok("Nach S5: alles offen, kein Freischalt-Link",/data-go="blitz"/.test(gs)&&!/data-fl=/.test(gs)&&!/id="ffree"/.test(gs));
+run(`U="frei2";loadS();S.box.kitab=1`);ok("Wer schon Wörter übt, wird nie gesperrt",run(`["cards","pairs","blitz"].every(k=>fGate(k)===null)`));
+run(`U="frei3";loadS();S.aok="skip"`);ok("„Kann schon lesen“ schaltet alles frei",run(`["cards","pairs","blitz"].every(k=>fGate(k)===null)`));
+run(`resetAll()`);ok("… Zurücksetzen sperrt wieder",run(`fGate("cards")==="s3"&&fGate("blitz")==="s5"`));
+run(`U="frei4";loadS();S.np=false`);ok("Bisheriger Lernpfad: nichts gesperrt",run(`["cards","pairs","blitz"].every(k=>fGate(k)===null)`));
+run(`U="frei5";loadS();for(const l of KL.filter(l=>["s1","s2","s3","s4","s5"].includes(l.e)&&l.art!=="test"))S.kp.d[l.id]=1`);ok("Einstufung bis S6: alles offen",run(`["cards","pairs","blitz"].every(k=>fGate(k)===null)`));
+run(`U="gast";loadS()`);
+
 console.log("\n"+pass+" OK, "+fail+" FAIL");
 process.exit(fail?1:0);
