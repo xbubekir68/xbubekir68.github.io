@@ -394,7 +394,7 @@ ok("… keine Buchnamen oder Verweise",!/Qaida|Noorani|Nuraniyya|Medina|Madina|B
 run(`pHint('data-kl="s1-3"')`);
 ok("gesperrte Station: Grund direkt darunter",/Schließe erst „Jīm bis Dhāl“ ab\./.test(run(`app.innerHTML`)));
 run(`home()`);
-ok("Startseite: Weiterlernen führt zur aktuellen Lektion",/data-kl="s1-2"/.test(run(`app.innerHTML`))&&/Etappe S1 · Lektion 2: Jīm bis Dhāl/.test(run(`app.innerHTML`)));
+ok("Startseite: nächster Halt ist die aktuelle Lektion, ein Knopf",/Nächster Halt · Etappe S1 · Die Buchstaben/.test(run(`app.innerHTML`))&&/Lektion 2: Jīm bis Dhāl/.test(run(`app.innerHTML`))&&(run(`app.innerHTML`).match(/class="btn" data-kl="s1-2"/g)||[]).length===1);
 run(`S.np=false;path()`);
 ok("bisheriger Pfad bleibt und bietet den neuen an",/data-kn/.test(run(`app.innerHTML`))&&/data-open="0"/.test(run(`app.innerHTML`)));
 // Wiederholung aller Buchstaben
@@ -774,7 +774,7 @@ ok("… X mitten in der Lektion: Hinweis, wo es weitergeht",run(`view`)==="path"
 kh=run(`app.innerHTML`);
 ok("… Station zeigt „Weitermachen · Aufgabe 8 von …“, auch für Screenreader",new RegExp(`Weitermachen · Aufgabe 8 von ${snap.T.filter(x=>!x.rep).length}`).test(kh)&&/weitermachen: Aufgabe 8 von/.test(kh),kh.match(/Weitermachen[^<]*/));
 run(`view="home";home()`);
-ok("… Startseite: „Weitermachen“ mit Lektion und Aufgabe",/Weitermachen/.test(run(`app.innerHTML`))&&/Lektion 1: [^<]*· Aufgabe 8 von/.test(run(`app.innerHTML`)));
+ok("… Startseite: „Weitermachen“ mit Lektion und Aufgabe",/Angefangen · Etappe S1/.test(run(`app.innerHTML`))&&/Lektion 1: [^<]*<\/h2><p class="mute">Aufgabe 8 von/.test(run(`app.innerHTML`))&&/>Weitermachen<\/button>/.test(run(`app.innerHTML`)));
 run(`K=null;startK(KL[0])`);
 ok("… erneut geöffnet: weiter an derselben Stelle, ohne Tipp-Karte, gleiche Zähler",kSig()===sig&&run(`K.n>0&&K.T[K.n].t!=="tipp"&&view==="klek"`),[kSig(),sig]);
 ok("… Buchstaben sind wieder dieselben Objekte wie im Katalog",run(`K.T.filter(x=>x.a).every(x=>x.a===ALBY[x.a.i])&&K.T.some(x=>x.a)`));
@@ -817,6 +817,31 @@ run(`startK(KL[1]);runK(4);go("path");resetAll()`);
 ok("Zurücksetzen löscht auch angefangene Lektionen",run(`kSnapGet()===null&&localStorage.getItem(SK()+":fortsetzen")===null`));
 run(`settings()`);
 ok("Einstellungen: Export auch für Gäste, Zurücksetzen öffnet erst einen Dialog",/Meine Daten exportieren/.test(run(`app.innerHTML`))&&run(`U`)==="gast");
+
+// ---------- 16. Start im neuen Lernpfad und erster Start ----------
+run(`U="neu1";loadS();ui.ob=null;view="home";home()`);
+let hs=run(`app.innerHTML`);
+ok("Erster Start: Begrüßung mit Zielfrage statt Zahlen",/Willkommen!/.test(hs)&&/Was ist dein Ziel\?/.test(hs)&&(hs.match(/data-ob="/g)||[]).length===3&&!/XP/.test(hs)&&run(`S.np===true&&!S.ob`));
+run(`ui.obz="koran";ui.ob=2;welcome()`);hs=run(`app.innerHTML`);
+ok("… zweite Frage: Vorkenntnisse, Test nennt seine Länge",/Kannst du schon Arabisch lesen\?/.test(hs)&&/data-ob="neu"/.test(hs)&&/data-ob="test"/.test(hs)&&/höchstens 16 Aufgaben/.test(hs)&&/id="obb"/.test(hs));
+run(`S.ob={z:"koran",d:today()};ui.ob=null;home()`);hs=run(`app.innerHTML`);
+ok("Start danach: erster Halt mit den neuen Buchstaben groß und einem Knopf",/Dein erster Halt · Etappe S1 · Die Buchstaben/.test(hs)&&/class="ar nha" lang="ar">ا ب ت ث</.test(hs)&&/>Erste Lektion starten<\/button>/.test(hs)&&(hs.match(/class="btn"/g)||[]).length===1,hs.match(/nha[^<]*</)?.[0]);
+ok("… Ziel der Etappe mit Fortschritt",/Ziel der Etappe/.test(hs)&&/Alle 29 Buchstaben erkennen/.test(hs)&&/0 von 29 Buchstaben gelernt/.test(hs)&&/0 von 6 Lektionen geschafft/.test(hs));
+ok("… keine Null-Statistik, keine Serie ohne Serie",!/Lerne heute, um deine Serie zu halten/.test(hs)&&!/class="card ov"/.test(hs)&&!/class="flame/.test(hs)&&!/von 330 gelernt/.test(hs));
+ok("… eigenes Ziel Koran: Hinweis auf die Basmala in S8",/In Etappe S8 liest du die Basmala/.test(hs));
+ok("… Statistiken einen Tipp weiter",/data-go="stats"/.test(hs)&&/Dein Fortschritt/.test(hs)&&new RegExp(`0 von ${run(`KL.length`)} Lektionen`).test(hs));
+run(`S.ob.z="sprache";home()`);ok("… Ziel Sprache: erst Lesen, Wörter schon unter Karten",/Erst kommt das Lesen, dann Wörter und Sätze/.test(run(`app.innerHTML`)));
+run(`for(const l of KL.filter(l=>["s1","s2"].includes(l.e)))S.kp.d[l.id]=1;S.last=today();S.streak=3;home()`);hs=run(`app.innerHTML`);
+ok("Start in S3: nächster Halt, Zielsatz der Etappe auf Arabisch, Serie sichtbar",/Nächster Halt · Etappe S3 · Kurze Vokale/.test(hs)&&/class="ar zar" lang="ar">هُوَ سَمِعَ وَفَهِمَ</.test(hs)&&/Er hörte und verstand/.test(hs)&&/class="flame on"[^>]*aria-label="Serie: 3 Tage"/.test(hs));
+run(`for(const l of KL)S.kp.d[l.id]=1;home()`);hs=run(`app.innerHTML`);
+ok("Alles geschafft: Stufe 1 geschafft, weiter zum Pfad oder zu den Wörtern",/Stufe 1 geschafft/.test(hs)&&/data-go="path"/.test(hs)&&/data-go="cards"/.test(hs)&&!/Ziel der Etappe/.test(hs));
+run(`U="neu2";loadS();S.kp.d["s1-1"]=1;home()`);
+ok("Wer schon gelernt hat, sieht keine Begrüßung",!/Willkommen!/.test(run(`app.innerHTML`))&&/Nächster Halt/.test(run(`app.innerHTML`)));
+ok("Ziel bleibt beim Zusammenführen erhalten",run(`mergeS({epoch:1,kp:{d:{}}},{epoch:1,ob:{z:"koran",d:"2026-11-03"}}).ob.z`)==="koran"&&run(`mergeS({epoch:1,ob:{z:"lesen"}},{epoch:1,ob:{z:"koran"}}).ob.z`)==="lesen");
+run(`settings()`);ok("Einstellungen: Ziel änderbar",/id="oz"/.test(run(`app.innerHTML`))&&/Den Koran lesen/.test(run(`app.innerHTML`)));
+run(`more()`);ok("Mehr: Alphabet ist erreichbar",/data-go="alphabet"/.test(run(`app.innerHTML`)));
+run(`S.np=false;home()`);ok("bisheriger Lernpfad: Start bleibt wie bisher",/class="card ov"/.test(run(`app.innerHTML`)));
+run(`U="gast";loadS()`);
 
 console.log("\n"+pass+" OK, "+fail+" FAIL");
 process.exit(fail?1:0);
