@@ -290,7 +290,7 @@ details.rule{display:block;margin-top:12px}details.rule>ol,details.rule>p{margin
 .ksp{margin-top:14px;display:grid;gap:8px;justify-items:center;text-align:center;padding:16px}.ksp .kgl{margin:4px 0}.ksh{font-size:13px;line-height:1.5}
 .ksr{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:6px}.ksr .btn{width:auto;margin:0;padding:10px 18px;display:inline-flex;align-items:center;gap:6px}
 .ksr .krec{background:var(--bad);color:var(--on)}.ksk{display:block;margin:10px auto 0}
-.ksoon{margin-top:14px}.ksoon ol{list-style:none;margin:10px 0;padding:0;display:grid;gap:10px}.ksoon li{display:flex;gap:12px;align-items:center;opacity:.8}.ksoon li .ar{flex:none;width:96px;text-align:right;font-size:18px;color:var(--mute)}.ksoon li b{display:block;font-size:14px}.ksoon li small{display:block;font-size:12px;color:var(--mute)}
+.ksoon{margin-top:14px}.kold{margin-top:12px}.ksoon ol{list-style:none;margin:10px 0;padding:0;display:grid;gap:10px}.ksoon li{display:flex;gap:12px;align-items:center;opacity:.8}.ksoon li .ar{flex:none;width:96px;text-align:right;font-size:18px;color:var(--mute)}.ksoon li b{display:block;font-size:14px}.ksoon li small{display:block;font-size:12px;color:var(--mute)}
 html.splash-lock{overflow:hidden}
 /* ===== MUFRADAAT STARTBILDSCHIRM ===== */
 @property --spp{syntax:'<percentage>';inherits:false;initial-value:140%}
@@ -543,8 +543,10 @@ function migrate(st){
     st.fav=(st.fav||[]).map(m).filter(Boolean);st.box=mapObj(st.box);st.due=mapObj(st.due);delete st.known;
   }
   if(!st.goalv){if(st.goal===50||st.goal===undefined)st.goal=100;st.goalv=1} // Standardziel von 50 auf 100 XP angehoben
+  if(!st.npv){if(!hasHist(st))st.np=true;st.npv=1} // neuer Lernpfad ist Standard; wer schon gelernt hat, bleibt auf seinem Pfad
   st.v=2;return st;
 }
+const hasHist=st=>(st.xp||0)>0||Object.keys(st.box||{}).length>0||Object.keys(st.alpha||{}).length>0||!!st.aok||Object.keys((st.kp||{}).d||{}).length>0; // auf diesem Stand wurde schon gelernt
 function loadS(){S=JSON.parse(DEF);try{Object.assign(S,migrate(JSON.parse(localStorage.getItem(SK())||"{}")))}catch(e){}save();applyTheme()}
 const store=()=>{try{if(U)localStorage.setItem(SK(),JSON.stringify(S))}catch(e){}};
 const save=()=>{store();sched()};
@@ -928,12 +930,13 @@ const AFAM=[["ba","ta","tha","nun","ya"],["jim","hha","kha"],["dal","dhal"],["ra
 const ZWJ="‍";
 const aform=(a,k)=>k==="i"?a.c:a.i==="hamza"?"–":k==="b"?(a.nj?"–":a.c+ZWJ):k==="m"?(a.nj?"–":ZWJ+a.c+ZWJ):ZWJ+a.c;
 const aCnt=id=>(S.alpha||{})[id]||0,alphaSure=()=>ALPHA.filter(a=>aCnt(a.i)>=3).length;
-// Buchstaben im Lernpfad: vier Blöcke. Ein Block ist geschafft, wenn 60 % seiner Buchstaben mindestens zweimal richtig erkannt wurden.
+// Buchstaben-Blöcke des bisherigen Pfads: Die Buchstaben lernt man jetzt in Etappe S1; die Blöcke zählen nur noch früheren Fortschritt (60 % eines Blocks mindestens zweimal richtig erkannt).
 const ABLOCKS=[["alif","ba","ta","tha","jim","hha","kha"],["dal","dhal","ra","zay","sin","shin","sad"],["dad","tah","zah","ayn","ghayn","fa","qaf"],["kaf","lam","mim","nun","he","waw","ya","hamza"]].map(b=>b.map(i=>ALBY[i]));
 const aNeed=b=>Math.ceil(b.length*.6),aStat=b=>({n:b.length,g:b.filter(a=>aCnt(a.i)>=2).length,s:b.filter(a=>aCnt(a.i)>=3).length});
 const aPass=i=>aStat(ABLOCKS[i]).g>=aNeed(ABLOCKS[i]),alphaPassed=()=>ABLOCKS.every((_,i)=>aPass(i));
 const hasWords=()=>Object.keys(S.box||{}).length>0;
-const alphaGate=()=>!S.aok&&!hasWords()&&!alphaPassed(); // vor dem ersten Wort: Buchstaben schaffen oder überspringen (wer schon Wörter übt, wird nie gebremst)
+const alphaGate=()=>!S.aok&&!hasWords()&&!alphaPassed()&&!kS1Done(); // vor dem ersten Wort: Buchstaben in Etappe S1 des neuen Lernpfads (früher geschaffte Blöcke zählen) oder überspringen; wer schon Wörter übt, wird nie gebremst
+const kS1Done=()=>{const ls=KL.filter(l=>l.e==="s1");return ls.length>0&&ls.every(l=>kDone(l.id))};
 const aLocked=b=>b>0&&!S.aok&&!hasWords()&&!aPass(b-1);
 const dots=n=>`<span class="dots" aria-hidden="true">${[0,1,2].map(i=>`<i class="${i<n?"on":""}"></i>`).join("")}</span>`;
 function alphabet(){
@@ -988,7 +991,7 @@ function aEnd(){
   if(!AQ.fin){AQ.fin=true;const good=AQ.right>=Math.ceil(AQ.qs.length*.8);AQ.xp=AQ.right*4+(good?10:0);S.st.alpha=(S.st.alpha||0)+1;
     if(!S.aok){if(AQ.test&&AQ.right>=8){S.aok="skip";AQ.msg="skip"}else if(alphaPassed()){S.aok="done";AQ.msg="done"}else if(AQ.test)AQ.msg="fail"}
     if(AQ.xp)addXP(AQ.xp);else{save();checkBadges()}if(good){confetti();sfx("win")}else sfx("tap")}
-  const wr=[...new Set(AQ.wrong)],MSG={skip:["Stark, das sitzt.","Der Buchstaben-Abschnitt ist übersprungen. Weiter geht es mit den ersten Wörtern."],done:["Buchstaben geschafft.","Ab jetzt geht es mit Wörtern weiter. Das Alphabet bleibt zum Üben jederzeit offen."],fail:["Noch nicht ganz sicher.","Das macht nichts: Im Lernpfad üben wir die Buchstaben in vier kleinen Blöcken."]}[AQ.msg];
+  const wr=[...new Set(AQ.wrong)],MSG={skip:["Stark, das sitzt.","Der Buchstaben-Abschnitt ist übersprungen. Weiter geht es mit den ersten Wörtern."],done:["Buchstaben geschafft.","Ab jetzt geht es mit Wörtern weiter. Das Alphabet bleibt zum Üben jederzeit offen."],fail:["Noch nicht ganz sicher.","Das macht nichts: In Etappe S1 des neuen Lernpfads lernst du die Buchstaben Schritt für Schritt."]}[AQ.msg];
   paint(`<div style="text-align:center;margin-top:20px"><h1>Runde beendet</h1></div>${MSG?`<div class="card note" role="status" style="margin-top:12px"><p><b>${MSG[0]}</b> ${MSG[1]}</p></div>`:""}<div class="tiles"><div class="card"><p class="mute">Richtig</p><b>${AQ.right} / ${AQ.qs.length}</b></div><div class="card"><p class="mute">XP verdient</p><b>+${AQ.xp}</b></div><div class="card" style="grid-column:span 2"><p class="mute">Sichere Buchstaben</p><b>${alphaSure()} / ${ALPHA.length}</b></div></div>
   ${wr.length?`<p style="margin-top:18px"><b>Das üben wir nochmal</b></p><div class="agrid">${wr.map(a=>`<button class="card at" data-al="${a.i}"><span class="ar" lang="ar">${a.c}</span><b>${a.n}</b></button>`).join("")}</div>`:""}
   ${AQ.msg==="skip"||AQ.msg==="done"?`<button class="btn" data-go="path">Zu den Wörtern</button><button class="btn alt" id="again">Noch eine Runde</button>`:`<button class="btn" id="again">${AQ.test?"Test wiederholen":"Noch eine Runde"}</button><button class="btn alt" data-go="${AQ.back}">${AQ.back==="path"?"Zurück zum Lernpfad":"Zum Alphabet"}</button>`}`);
@@ -996,7 +999,7 @@ function aEnd(){
 }
 
 // ===== Neuer Lernpfad (Vorschau): Kurs aus kurs/*.json =====
-// Läuft neben dem bisherigen Pfad, bis Stufe 1 fertig ist (S.np schaltet um). Stand: S.kp.d[Lektions-ID] = wie oft abgeschlossen.
+// Standard für neue Profile (migrate setzt S.np); der bisherige Pfad bleibt über S.np=false erreichbar. Stand: S.kp.d[Lektions-ID] = wie oft abgeschlossen.
 let KURS=null,KE={},KL=[],QTX=new Set(); // Übersicht (false = Laden fehlgeschlagen), geladene Etappen, alle Lektionen in Kursreihenfolge, Korantexte
 function kursSet(idx,files){
   KURS=idx;KE=files||{};KL=[];
@@ -1637,13 +1640,13 @@ function kpath(){
   const road=`<svg viewBox="0 0 100 ${y}" preserveAspectRatio="none" aria-hidden="true">${lay(()=>"ed")}${lay(s=>"bed c"+s.k%5)}</svg>${FPS}`;FP=pts;
   const land=bands.map((b,n)=>`<div class="ub ${b.th}" style="top:${b.y+4}px;height:${(n+1<bands.length?bands[n+1].y:y)-b.y-8}px">${b.h}</div>`).join("");
   const dn=KL.filter(l=>kDone(l.id)).length,st1=KURS.stufen[0];
+  const old=`<p class="mute kold">Bis Stufe 2 da ist, übst du Wörter und Sätze im bisherigen Lernpfad. Dein Fortschritt dort bleibt erhalten.</p>${off}`; // der bisherige Pfad bleibt erreichbar, am Ende statt über dem Weg
   paint(`<h1>Lernpfad</h1><p class="mute">Stufe ${st1.id} · ${esc(st1.titel)} · ${dn} von ${KL.length} Lektionen geschafft</p>
-  <div class="card note kpv"><p><b>Vorschau.</b> Stufe 1 ist komplett. Der neue Lernpfad ersetzt den bisherigen, sobald die ersten Lektionen von Stufe 2 dazukommen.</p>${off}</div>
   ${!dn&&!S.wt?`<div class="card askip kwt"><b>Kannst du schon etwas lesen?</b><p class="mute">Ein kurzer Einstufungstest zeigt, wo du einsteigst. Was du schon kannst, zählt dann als geschafft.</p><button class="btn" data-kt="wissen">Einstufungstest starten</button><button class="lnk" data-kt="nein">Ich fange von vorn an</button></div>`:""}
   <details class="card rule"><summary><b>So funktioniert der Lernpfad</b></summary><ol><li><i>1</i><span>Stufe 1 bringt dir das <b>Lesen</b> bei, von den Buchstaben bis zur Schrift des Korans. Danach lernst du in Stufe 2 die Sprache.</span></li><li><i>2</i><span>Jede <b>Lektion</b> mischt kurze Aufgaben: kennenlernen, erkennen, hören, zuordnen und Wörter in Buchstaben zerlegen.</span></li><li><i>3</i><span>Fehler kommen am Ende der Lektion noch einmal, bis sie sitzen. Danach öffnet sich die nächste Lektion.</span></li><li><i>4</i><span>Du kannst schon etwas? Vor jeder gesperrten Etappe springst du mit einem <b>Test</b> weiter.</span></li></ol><button class="lnk" data-kt="wissen">Einstufungstest machen</button></details>
   <div class="pth" style="height:${y}px">${land}${road}${nodes.join("")}</div>
-  ${soon.length?`<div class="card ksoon"><b>Demnächst</b><p class="mute">Diese Etappen entstehen gerade.</p><ol>${soon.map(e=>`<li><span class="ar" lang="ar">${e.ar}</span><span><b>${e.id.toUpperCase()} · ${esc(e.titel)}</b><small>${esc(e.kurz||"")}</small></span></li>`).join("")}</ol>${KURS.stufen.slice(1).map(s=>`<p class="mute">Danach: Stufe ${s.id} · ${esc(s.titel)}</p>`).join("")}</div>`
-    :KURS.stufen.some(s=>!kStE(s).length)?`<div class="card ksoon"><b>Demnächst</b>${KURS.stufen.filter(s=>!kStE(s).length).map(s=>`<p class="mute">Stufe ${s.id} · ${esc(s.titel)} entsteht gerade: Wörter, Sätze und Grammatik, Lektion für Lektion.</p>`).join("")}</div>`:""}`);
+  ${soon.length?`<div class="card ksoon"><b>Demnächst</b><p class="mute">Diese Etappen entstehen gerade.</p><ol>${soon.map(e=>`<li><span class="ar" lang="ar">${e.ar}</span><span><b>${e.id.toUpperCase()} · ${esc(e.titel)}</b><small>${esc(e.kurz||"")}</small></span></li>`).join("")}</ol>${KURS.stufen.slice(1).map(s=>`<p class="mute">Danach: Stufe ${s.id} · ${esc(s.titel)}</p>`).join("")}${old}</div>`
+    :KURS.stufen.some(s=>!kStE(s).length)?`<div class="card ksoon"><b>Demnächst</b>${KURS.stufen.filter(s=>!kStE(s).length).map(s=>`<p class="mute">Stufe ${s.id} · ${esc(s.titel)} entsteht gerade: Wörter, Sätze und Grammatik, Lektion für Lektion.</p>`).join("")}${old}</div>`:`<p class="kold">${off}</p>`}`);
   fpDraw();
   if(ui.keep){ui.keep=false;return}
   const c=$(".pn.cur");if(c&&dn)requestAnimationFrame(()=>c.scrollIntoView({block:"center"}));
@@ -1669,7 +1672,6 @@ document.addEventListener("click",e=>{
   if(g){const t=g.dataset.go;sfx("tap");if(t==="review")return startQuiz(null);if(t==="mix")return startMix();if(t==="satz")return startSatz();if(t==="pairs")return startPairs();if(t==="blitz")return startBlitz();if(t==="aquiz")return startAQ();if(t==="listen")return startListen();return go(t)}
   const ab=e.target.closest("[data-ab]");
   if(ab){const b=+ab.dataset.ab;sfx("tap");if(aLocked(b))return pHint(`data-ab="${b}"`);return startAQ(b,false,"path")}
-  if(e.target.closest("[data-atest]")){sfx("tap");return startAQ(undefined,true,"path")}
   const kl=e.target.closest("[data-kl]");
   if(kl){const l=KL.find(x=>x.id===kl.dataset.kl);sfx("tap");if(!l)return;if(kLocked(l))return pHint(`data-kl="${l.id}"`);return startK(l)}
   const kr=e.target.closest("[data-krev]");if(kr){sfx("tap");return startK(null,kr.dataset.krev||"s1")}
@@ -1687,7 +1689,7 @@ document.addEventListener("click",e=>{
   const al=e.target.closest("[data-al]");if(al){ui.al=al.dataset.al;sfx("tap");return go("letter")}
   const l=e.target.closest("[data-les]");
   if(l){const k=+l.dataset.les;sfx("tap");
-    if(k===0&&alphaGate()){toast("Erst die Buchstaben: übe sie oder überspringe den Abschnitt im Lernpfad.");return go("path")}
+    if(k===0&&alphaGate()){toast("Erst die Buchstaben: Du lernst sie in Etappe S1 des neuen Lernpfads.");return go("path")}
     if(isLocked(k)){const p=LES[k-1],st=lessonStat(p);toast(`Gesperrt: Lerne erst „${p.t}“ (noch ${need(p)-st.s} Wörter beginnen).`);return}
     return startQuiz(k)}
   const c=e.target.closest("[data-cat]");if(c){ui.cat=c.dataset.cat;sfx("tap");list()}
@@ -1721,7 +1723,7 @@ function home(){
   <div class="menu">
   ${(()=>{const p=mixPlan(),n=p.due.length+p.nw.length+p.weak.length;
     return n&&!alphaGate()?itm('data-go="mix"',"bolt","Heute dran",n+" Wörter · "+mixText(p),"main"):""})()}
-  ${S.np&&KL.length?(c=>itm(`data-kl="${c.id}"`,"path","Weiterlernen",`Etappe ${c.e.toUpperCase()} · Lektion ${c.li+1}: ${esc(c.titel)}`,"main2"))(kCur()):ns.t==="a"?itm(`data-ab="${ns.b}"`,"path","Weiterlernen",`Buchstaben ${ns.b+1} von ${ABLOCKS.length} · ${aStat(ABLOCKS[ns.b]).g} von ${ABLOCKS[ns.b].length} erkannt`,"main2"):itm(`data-les="${cur.k}"`,"path","Weiterlernen",`Lektion ${cur.k+1}: ${cur.t}`,"main2")}
+  ${S.np&&KL.length?(c=>itm(`data-kl="${c.id}"`,"path","Weiterlernen",`Etappe ${c.e.toUpperCase()} · Lektion ${c.li+1}: ${esc(c.titel)}`,"main2"))(kCur()):ns.t==="a"?itm("data-kn","path","Weiterlernen","Buchstaben lernen · Etappe S1 im neuen Lernpfad","main2"):itm(`data-les="${cur.k}"`,"path","Weiterlernen",`Lektion ${cur.k+1}: ${cur.t}`,"main2")}
     ${itm('data-go="alphabet"',"list","Alphabet",alphaSure()+" von "+ALPHA.length+" Buchstaben sicher")}
   ${itm('data-go="badges"',"medal","Abzeichen",(S.badges||[]).length+" von "+BADGES.length+" freigeschaltet")}
   ${itm('data-go="stats"',"chart","Statistiken",knownN()+" von "+W.length+" Wörtern gelernt")}
@@ -1757,18 +1759,11 @@ function path(){
       <span class="row" style="justify-content:center;gap:10px;margin-top:8px"><button class="lnk" data-goal="${s.k}">${ic("speaker",16)} Anhören</button><button class="sbt ${lock?"lock":""}" ${attr} aria-label="Satzrunde zu ${u.t}: ${lock?"noch gesperrt, "+o+" von "+sl.length+" Sätzen frei":pr+" von "+sl.length+" Sätzen geübt"}">Sätze üben <span class="ar" lang="ar">جُمَل</span><small>${lock?o+" von "+sl.length+" frei":pr+" von "+sl.length+" geübt"}</small></button></span>
       ${lock&&hint===attr?`<small class="hint" role="status">Noch zu wenige Sätze frei (${o} von ${SMIN}). Lerne weiter Wörter aus dieser Einheit.</small>`:""}</div>`);
     y+=212};
-  if(!S.aok){
-    hdr("Schrift","الْحُرُوفُ","Die Buchstaben","4 Blöcke · jederzeit überspringbar","s");bend(-1);
-    ABLOCKS.forEach((bl,bi)=>{const st=aStat(bl),lock=aLocked(bi),dn=aPass(bi);
-      node({cls:"abl",attr:`data-ab="${bi}"`,lock,dn,cur:ns.t==="a"&&ns.b===bi,t:"Buchstaben "+(bi+1),ar:bl.slice(0,2).map(a=>a.c).join(" "),sm:lock?"nach Buchstaben "+bi:st.g+" von "+st.n+" erkannt",
-        why:`Erkenne erst mehr Buchstaben aus Block ${bi}.`,
-        aria:`Buchstaben, Block ${bi+1}: ${bl.map(a=>a.n).join(", ")}, ${lock?"gesperrt":st.g+" von "+st.n+" erkannt"}`})});
-  }
   UNITS.forEach((u,ui)=>{
     hdr("Einheit "+(ui+1),UAR[ui],u.t,u.d,ui);bend(ui);
     LES.filter(l=>l.u===ui).forEach(l=>{const st=lessonStat(l),lock=isLocked(l.k)||(l.k===0&&gate),dn=st.k>=l.w.length,cur=ns.t==="v"&&ns.L===l,nx=cur&&l.w.find(id=>S.box[id]===undefined),p=LES[l.k-1];
       node({attr:`data-open="${l.k}"`,lock,dn,cur,t:l.t,ar:lesWord(l),sm:lock?(l.k===0?"nach den Buchstaben":"nach „"+p.t+"“"):st.k+" / "+st.t+" gelernt"+(nx?` · weiter mit <span class="ar" lang="ar">${BY[nx].ar}</span>`:""),
-        why:l.k===0&&gate?"Erst die Buchstaben: übe sie oder überspringe den Abschnitt.":p?`Beginne erst noch ${need(p)-lessonStat(p).s} Wörter aus „${p.t}“.`:"",
+        why:l.k===0&&gate?"Erst die Buchstaben: Du lernst sie in Etappe S1 des neuen Lernpfads.":p?`Beginne erst noch ${need(p)-lessonStat(p).s} Wörter aus „${p.t}“.`:"",
         aria:`Lektion ${l.k+1}: ${l.t}, ${lock?"gesperrt":st.k+" von "+st.t+" gelernt"}`})});
     sign(ui,u);
   });
@@ -1777,22 +1772,17 @@ function path(){
   const lay=c=>seg.map(s=>`<path class="${c(s)} ${s.th}" d="${s.d}"/>`).join("");
   const road=`<svg viewBox="0 0 100 ${y}" preserveAspectRatio="none" aria-hidden="true">${lay(()=>"ed")}${lay(s=>"bed c"+s.k%5)}</svg>${FPS}`;FP=pts;
   const land=bands.map((b,n)=>`<div class="ub ${b.th}" style="top:${b.y+4}px;height:${(n+1<bands.length?bands[n+1].y:y)-b.y-8}px">${b.h}</div>`).join("");
-  const as=aStat(ALPHA),skipCard=S.aok
-    ?`<div class="card askip"><div class="row sp"><b>Buchstaben ${S.aok==="skip"?"übersprungen":"geschafft"}</b>${ic("check",20)}</div><p class="mute">${S.aok==="skip"?"Du startest direkt mit Wörtern und Sätzen.":"Ab jetzt geht es mit Wörtern weiter."} Das Alphabet bleibt zum Üben offen.</p><div class="row" style="gap:18px;margin-top:8px"><button class="lnk" data-go="alphabet">Alphabet üben</button><button class="lnk" id="sk3">Abschnitt wieder einblenden</button></div></div>`
-    :ui.ask
-      ?`<div class="card askip"><b>Wie sicher bist du bei den Buchstaben?</b><p class="mute">Ein Kurztest mit 10 Fragen zeigt es. Ab 8 richtigen Antworten überspringen wir den Abschnitt für dich.</p><button class="btn" data-atest>Kurztest starten</button><button class="btn alt" id="sk2">Ohne Test überspringen</button><button class="lnk" id="skx" style="margin-top:8px">Doch lieber üben</button></div>`
-      :`<div class="card askip"><b>${as.s} von ${as.n} Buchstaben sicher</b><p class="mute">${gate?"Zuerst kommen die Buchstaben, dann Wörter und Sätze. ":""}Du kennst die Schrift schon? Dann spring direkt zu den Wörtern und Sätzen.</p><button class="btn alt" id="sk" style="margin-top:8px">Ich kann die Buchstaben schon</button></div>`;
+  // die Buchstaben gibt es nur noch im neuen Lernpfad (Etappe S1); solange sie offen sind, zeigt diese Karte den Weg dorthin
+  const skipCard=gate?`<div class="card askip"><b>Zuerst die Buchstaben</b><p class="mute">Du lernst sie in Etappe S1 des neuen Lernpfads. Danach öffnet sich hier die erste Lektion.</p><button class="btn" data-kn>Buchstaben lernen</button><button class="lnk" id="sk2">Ich kann die Buchstaben schon</button></div>`:"";
   paint(`<h1>Lernpfad</h1><p class="mute">${knownN()} von ${W.length} Wörtern gelernt · ${sentDone()} von ${SENT.length} Sätzen geübt</p>
-  ${KL.length?`<div class="card note kpv"><p><b>Neu: Vorschau des neuen Lernpfads.</b> Er beginnt mit „Lesen lernen“. Schon spielbar: ${KURS.stufen.flatMap(s=>s.etappen).filter(e=>KE[e.id]).map(e=>"„"+esc(e.titel)+"“").join(", ").replace(/, (?=[^,]*$)/," und ")}.</p><button class="btn" data-kn>Vorschau öffnen</button></div>`:""}
+  ${KL.length&&!gate?`<div class="card note kpv"><p><b>Neu: der neue Lernpfad.</b> Stufe 1 bringt dir das Lesen bei, von den Buchstaben bis zur Schrift des Korans.</p><button class="btn" data-kn>Zum neuen Lernpfad</button></div>`:""}
   ${skipCard}
-  <details class="card rule"><summary><b>So funktioniert der Lernpfad</b></summary><ol><li><i>1</i><span>Erst die <b>Buchstaben</b>, in vier kleinen Blöcken. Wer sie schon kann, überspringt sie.</span></li><li><i>2</i><span>Dann <b>Wörter</b> in Lektionen. Ein Wort ist <b>begonnen</b>, sobald du es richtig beantwortest, und <b>gelernt</b>, wenn du es nach mindestens einem Tag noch einmal weißt.</span></li><li><i>3</i><span>Nach jeder Einheit warten <b>Sätze</b> mit genau den Wörtern, die du gerade gelernt hast.</span></li></ol><p class="mute">Die nächste Lektion öffnet sich, sobald du 60 % der vorherigen begonnen hast, bei den Buchstaben 60 % eines Blocks (zweimal richtig erkannt). Satzrunden sind freiwillig und sperren nichts. Wörter früherer Lektionen werden in neuen Runden mitgeprüft.</p><p class="mute" style="margin-top:6px">Wie lange es bis zur Auffrischung dauert, richtet sich nach dir: Was sicher sitzt, kommt später wieder, was wackelt, früher. Der kleine Balken zeigt, wie frisch ein Wort ist.</p></details>
+  <details class="card rule"><summary><b>So funktioniert der Lernpfad</b></summary><ol><li><i>1</i><span>Erst die <b>Buchstaben</b>: Du lernst sie in Etappe S1 des neuen Lernpfads. Wer sie schon kann, überspringt sie.</span></li><li><i>2</i><span>Dann <b>Wörter</b> in Lektionen. Ein Wort ist <b>begonnen</b>, sobald du es richtig beantwortest, und <b>gelernt</b>, wenn du es nach mindestens einem Tag noch einmal weißt.</span></li><li><i>3</i><span>Nach jeder Einheit warten <b>Sätze</b> mit genau den Wörtern, die du gerade gelernt hast.</span></li></ol><p class="mute">Die nächste Lektion öffnet sich, sobald du 60 % der vorherigen begonnen hast. Satzrunden sind freiwillig und sperren nichts. Wörter früherer Lektionen werden in neuen Runden mitgeprüft.</p><p class="mute" style="margin-top:6px">Wie lange es bis zur Auffrischung dauert, richtet sich nach dir: Was sicher sitzt, kommt später wieder, was wackelt, früher. Der kleine Balken zeigt, wie frisch ein Wort ist.</p></details>
   ${due?`<div class="menu">${itm('data-go="review"',"repeat","Wiederholen",due+" Wörter fällig")}</div>`:""}
   <div class="pth" style="height:${y}px">${land}${road}${nodes.join("")}</div>`);
   fpDraw();
   const on=id=>{const e=$(id);return f=>{if(e)e.onclick=f}};
-  on("#sk")(()=>{ui.ask=true;path()});on("#skx")(()=>{ui.ask=false;path()});
-  on("#sk2")(()=>{S.aok="skip";ui.ask=false;save();toast("Buchstaben übersprungen.");path()});
-  on("#sk3")(()=>{S.aok="";save();path()});
+  on("#sk2")(()=>{S.aok="skip";save();toast("Buchstaben übersprungen.");path()});
   if(ui.keep){ui.keep=false;return}
   const c=$(".pn.cur");if(c&&hasWords())requestAnimationFrame(()=>c.scrollIntoView({block:"center"}));
 }
@@ -2091,7 +2081,7 @@ const LOCALKEYS=["dir","rem","time","theme","goal","sound","vib","auto","hk","np
 function mergeS(a,b){ // pro Wort der bessere Stand, Favoriten vereinigen, pro Tag das Maximum; ein späteres Zurücksetzen gewinnt
   b=Object.assign({box:{},due:{},ef:{},sent:{},days:{},xpDays:{},st:{},alpha:{},kp:{d:{}},fav:[],badges:[],seen:[]},b);
   const ea=a.epoch||0,eb=b.epoch||0;
-  if(ea!==eb){const w=clone(ea>eb?a:b);for(const k of LOCALKEYS)if(a[k]!==undefined)w[k]=a[k];return w}
+  if(ea!==eb){const w=clone(ea>eb?a:b);for(const k of LOCALKEYS)if(a[k]!==undefined)w[k]=a[k];if(!hasHist(a)&&b.np!==undefined)w.np=b.np;return w}
   const r=Object.assign({},a);r.box={};r.due={};r.ef={};
   for(const id of new Set([...Object.keys(a.box||{}),...Object.keys(b.box)])){
     const x=(a.box||{})[id],y=b.box[id],useB=x===undefined||(y!==undefined&&(y>x||(y===x&&(b.due[id]||0)>((a.due||{})[id]||0)))),src=useB?b:a;
@@ -2105,6 +2095,7 @@ function mergeS(a,b){ // pro Wort der bessere Stand, Favoriten vereinigen, pro T
   r.kp={d:mx((a.kp||{}).d,(b.kp||{}).d)}; // neuer Lernpfad: abgeschlossen bleibt abgeschlossen
   const al=a.last||"",bl=b.last||"";if(bl>al||(bl===al&&(b.streak||0)>(a.streak||0))){r.streak=b.streak||0;r.last=bl}
   const as=a.seenDay||"",bs=b.seenDay||"";if(bs>as){r.seenDay=bs;r.seen=b.seen||[]}else if(bs===as)r.seen=[...new Set([...(a.seen||[]),...(b.seen||[])])];
+  if(!hasHist(a)&&b.np!==undefined)r.np=b.np; // neues Gerät ohne eigenen Stand: Lernpfad vom Konto übernehmen
   return r;
 }
 // Abgleich: Serverstand lesen, mit dem lokalen mischen, nur schreiben wenn der Server seit dem Lesen unverändert ist (sonst nochmal)
@@ -2259,7 +2250,7 @@ loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v25"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v26"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>

@@ -17,6 +17,8 @@ const run=c=>vm.runInContext(c,ctx);
 run(code);run(`U="gast";loadS();`);
 let pass=0,fail=0;
 const ok=(n,c,x)=>{c?pass++:fail++;console.log(c?"OK  ":"FAIL",n,c?"":"→ "+JSON.stringify(x))};
+ok("frischer Gast startet im neuen Lernpfad",run(`S.np`)===true);
+run(`S.np=false`); // die Tests des bisherigen Pfads laufen zuerst, der neue Pfad setzt S.np=true selbst
 const near=(a,b,t)=>Math.abs(a-b)<=t;
 const D=864e5;
 console.log(run(`W.length+" Wörter, "+LES.length+" Lektionen, "+BADGES.length+" Abzeichen"`));
@@ -110,7 +112,7 @@ run(`S.box={};S.due={};S.ef={};S.aok="skip";home()`);
 ok("Startseite bietet „Heute dran“ (Buchstaben übersprungen)",/Heute dran/.test(run(`app.innerHTML`)));
 run(`S.aok="";home()`);
 ok("Startseite blendet „Heute dran“ aus, solange die Buchstaben offen sind",!/Heute dran/.test(run(`app.innerHTML`)));
-ok("Startseite führt dann zu den Buchstaben",/data-ab="0"/.test(run(`app.innerHTML`))&&/Buchstaben 1 von 4/.test(run(`app.innerHTML`)));
+ok("Startseite führt dann zu den Buchstaben im neuen Lernpfad",/data-kn/.test(run(`app.innerHTML`))&&/Etappe S1 im neuen Lernpfad/.test(run(`app.innerHTML`))&&!/data-ab="/.test(run(`app.innerHTML`)));
 
 // ---------- 5. Zusammenführen und Zurücksetzen ----------
 let r=run(`JSON.stringify(mergeS({epoch:0,box:{kitab:1},due:{kitab:100},ef:{kitab:.8}},{epoch:0,box:{kitab:3},due:{kitab:200},ef:{kitab:1.4}}))`);
@@ -260,7 +262,7 @@ run(`S.box={};S.due={};LES[20].w.slice(0,1).forEach(id=>{S.box[id]=1;S.due[id]=D
 ok("begonnene Lektion mitten im Pfad ist offen",run(`isLocked(20)`)===false);
 ok("die nächste bleibt gesperrt, bis 60 % begonnen sind",run(`isLocked(21)`)===true&&run(`isLocked(19)`)===true);
 // Buchstaben-Abschnitt
-run(`S.box={};S.due={};S.alpha={};S.aok="";S.sent={};view="path";ui.ask=false`);
+run(`S.box={};S.due={};S.alpha={};S.aok="";S.sent={};view="path"`);
 ok("frischer Stand: Buchstaben zuerst",run(`alphaGate()&&nextStep().t==="a"&&nextStep().b===0`));
 ok("Block 1 offen, Block 2 gesperrt",run(`aLocked(0)`)===false&&run(`aLocked(1)`)===true);
 ok("vier Blöcke decken alle 29 Zeichen genau einmal ab",run(`ABLOCKS.flat().length===ALPHA.length&&new Set(ABLOCKS.flat().map(a=>a.i)).size===ALPHA.length`));
@@ -273,20 +275,19 @@ run(`ABLOCKS.forEach(b=>b.forEach(a=>S.alpha[a.i]=2))`);
 ok("alle Blöcke geschafft → kein Gate mehr",run(`alphaPassed()&&!alphaGate()&&nextStep().t==="v"`));
 run(`S.alpha={};S.aok=""`);
 run(`path()`);let ph=run(`app.innerHTML`);
-ok("Pfad zeigt 4 Buchstaben-Blöcke",(ph.match(/data-ab="/g)||[]).length===4);
+ok("Pfad zeigt keine eigenen Buchstaben-Blöcke mehr",!/data-ab="/.test(ph));
 ok("Pfad zeigt alle 38 Lektionen",(ph.match(/data-open="/g)||[]).length===38);
 ok("Pfad zeigt eine Satzrunde je Einheit mit Sätzen",(ph.match(/data-sat="/g)||[]).length===run(`Object.keys(SSTA).length`));
-ok("Pfad zeigt 10 Einheiten plus Schrift-Abschnitt",(ph.match(/class="pgr"/g)||[]).length===11);
+ok("Pfad zeigt 10 Einheiten, die Buchstaben liegen im neuen Lernpfad",(ph.match(/class="pgr"/g)||[]).length===10);
 ok("erste Lektion ist gesperrt, solange die Buchstaben offen sind",/aria-label="Lektion 1: Hallo sagen, gesperrt"/.test(ph));
 ok("Satzrunden sind am Anfang gesperrt",/noch gesperrt, 0 von/.test(ph));
-ok("Überspringen-Karte ist da",/Ich kann die Buchstaben schon/.test(ph));
-run(`ui.ask=true;path()`);let pa=run(`app.innerHTML`);
-ok("Nach Tippen: Kurztest oder ohne Test überspringen",/data-atest/.test(pa)&&/id="sk2"/.test(pa)&&/id="skx"/.test(pa));
-run(`ui.ask=false;S.aok="skip";path()`);ph=run(`app.innerHTML`);
+ok("Buchstaben-Karte: Weg in den neuen Lernpfad oder überspringen",/Zuerst die Buchstaben/.test(ph)&&/data-kn/.test(ph)&&/id="sk2"[^>]*>Ich kann die Buchstaben schon/.test(ph));
+ok("kein eigener Kurztest mehr",!/data-atest/.test(ph)&&!/Kurztest/.test(ph));
+run(`S.aok="skip";path()`);ph=run(`app.innerHTML`);
 ok("Übersprungen: keine Buchstaben-Blöcke mehr im Pfad",!/data-ab="/.test(ph)&&(ph.match(/class="pgr"/g)||[]).length===10);
 ok("Übersprungen: erste Lektion ist offen und aktuell",/pn  cur|pn   cur|class="pn  cur/.test(ph)&&!/aria-label="Lektion 1: Hallo sagen, gesperrt"/.test(ph));
 ok("Übersprungen: nächster Schritt ist die erste Lektion",run(`!alphaGate()&&nextStep().t==="v"&&nextStep().L.k===0`));
-ok("Übersprungen: Karte erlaubt Wiedereinblenden",/id="sk3"/.test(ph)&&/übersprungen/.test(ph));
+ok("Übersprungen: keine Buchstaben-Karte mehr über dem Weg",!/Zuerst die Buchstaben/.test(ph)&&!/id="sk2"/.test(ph));
 run(`S.aok="";S.box.kitab=1;path()`);
 ok("wer schon Wörter übt, wird nie gebremst",run(`!alphaGate()`)&&!/aria-label="Lektion 1: Hallo sagen, gesperrt"/.test(run(`app.innerHTML`)));
 run(`S.box={};S.due={}`);
@@ -344,6 +345,7 @@ const kdir=path.join(path.dirname(fileURLToPath(import.meta.url)),"..","kurs");
 const kidx=JSON.parse(fs.readFileSync(path.join(kdir,"kurs.json"),"utf8")),kfiles={};
 kidx.stufen.flatMap(s=>s.etappen).filter(e=>e.datei).forEach(e=>kfiles[e.id]=JSON.parse(fs.readFileSync(path.join(kdir,e.datei),"utf8")));
 run(`kursSet(${JSON.stringify(kidx)},${JSON.stringify(kfiles)});S.kp={d:{}};S.alpha={};S.np=true;K=null`);
+ok("Etappe S1 geschafft öffnet die Wörter im bisherigen Pfad",run(`(()=>{const b=S.box,a=S.aok;S.box={};S.aok="";const vor=alphaGate();S.kp={d:Object.fromEntries(KL.filter(l=>l.e==="s1").map(l=>[l.id,1]))};const nach=!alphaGate();S.kp={d:{}};S.box=b;S.aok=a;return vor&&nach})()`));
 ok("Etappe S1 hat 6 Lektionen",run(`KL.filter(l=>l.e==="s1").length`)===6,run(`KL.length`));
 ok("S1 führt alle 29 Buchstaben genau einmal ein",run(`(a=>a.length===29&&new Set(a).size===29)(KL.filter(l=>l.e==="s1").flatMap(l=>l.neu))`));
 ok("erste Lektion offen, zweite gesperrt",run(`!kLocked(KL[0])&&kLocked(KL[1])`));
@@ -387,14 +389,14 @@ ok("Pfad zeigt die Stationen von S1 bis S8 (6, 7, 5, 4, 5, 4, 5 und 7)",(kh.matc
 ok("… erledigt, aktuell (Mim) und gesperrt",/pn abl done[^"]*" data-kl="s1-1"/.test(kh)&&/pn abl\s+cur[^"]*" data-kl="s1-2"/.test(kh)&&/pn abl lock[^"]*" data-kl="s1-3"/.test(kh),kh.match(/class="pn [^"]*" data-kl="s1-\d"/g));
 ok("… Ziel der Etappe mit allen 29 Buchstaben",/Ziel der Etappe/.test(kh)&&(kh.match(/<span class="[ku]">/g)||[]).length===29);
 ok("… Demnächst: Stufe 2, alle Etappen von Stufe 1 sind da",!/<li><span class="ar" lang="ar">/.test(kh)&&/Stufe 2 · Sprache lernen entsteht gerade/.test(kh));
-ok("… Vorschau-Hinweis mit Weg zurück",/data-ko/.test(kh)&&/Vorschau/.test(kh));
+ok("… Weg zum bisherigen Lernpfad am Ende, kein Vorschau-Hinweis mehr",/data-ko/.test(kh)&&kh.indexOf("data-ko")>kh.indexOf('class="pth"')&&!/Vorschau/.test(kh));
 ok("… keine Buchnamen oder Verweise",!/Qaida|Noorani|Nuraniyya|Medina|Madina|Band [123]/i.test(kh+fs.readdirSync(kdir).map(n=>fs.readFileSync(path.join(kdir,n),"utf8")).join("")));
 run(`pHint('data-kl="s1-3"')`);
 ok("gesperrte Station: Grund direkt darunter",/Schließe erst „Jīm bis Dhāl“ ab\./.test(run(`app.innerHTML`)));
 run(`home()`);
 ok("Startseite: Weiterlernen führt zur aktuellen Lektion",/data-kl="s1-2"/.test(run(`app.innerHTML`))&&/Etappe S1 · Lektion 2: Jīm bis Dhāl/.test(run(`app.innerHTML`)));
 run(`S.np=false;path()`);
-ok("bisheriger Pfad bleibt und bietet die Vorschau an",/data-kn/.test(run(`app.innerHTML`))&&/data-open="0"/.test(run(`app.innerHTML`)));
+ok("bisheriger Pfad bleibt und bietet den neuen an",/data-kn/.test(run(`app.innerHTML`))&&/data-open="0"/.test(run(`app.innerHTML`)));
 // Wiederholung aller Buchstaben
 run(`S.kp={d:{}};view="path";startK(null)`);
 ok("Wiederholung erst nach der ersten Lektion",run(`view`)==="path");
@@ -407,7 +409,13 @@ r=JSON.parse(run(`JSON.stringify(mergeS({epoch:0,box:{},due:{},kp:{d:{"s1-1":2}}
 ok("Merge: abgeschlossene Lektionen von beiden Geräten",r.kp.d["s1-1"]===2&&r.kp.d["s1-2"]===1,r.kp);
 r=JSON.parse(run(`JSON.stringify(mergeS({epoch:0,box:{},due:{}},{epoch:0,box:{},due:{}}))`));
 ok("Merge: alter Stand ohne Lernpfad-Daten geht",JSON.stringify(r.kp)==='{"d":{}}',r.kp);
-ok("Vorschau an/aus bleibt auf dem Gerät",run(`LOCALKEYS.includes("np")`));
+ok("Lernpfad-Wahl bleibt auf dem Gerät",run(`LOCALKEYS.includes("np")`));
+// neuer Lernpfad als Standard
+ok("Standard: frischer Stand startet im neuen Lernpfad",run(`migrate({}).np===true`));
+ok("Standard: wer schon gelernt hat, bleibt im bisherigen",run(`migrate({v:2,xp:40,np:false}).np===false&&migrate({v:2,box:{kitab:1},np:false}).np===false&&migrate({v:2,aok:"skip",np:false}).np===false`));
+ok("Standard: wird nur einmal gesetzt, danach zählt die eigene Wahl",run(`migrate({npv:1,np:false}).np===false&&migrate(migrate({})).np===true`));
+ok("Merge: neues Gerät übernimmt den Lernpfad vom Konto",run(`mergeS({epoch:0,box:{},due:{},np:true},{epoch:0,box:{kitab:2},due:{},xp:300,np:false}).np===false`));
+ok("Merge: wer auf dem Gerät schon lernt, behält seine Wahl",run(`mergeS({epoch:0,box:{},due:{},xp:20,np:true},{epoch:0,box:{},due:{},np:false}).np===true`));
 ok("Service Worker: Kursdateien offline verfügbar",kidx.stufen.flatMap(s=>s.etappen).filter(e=>e.datei).every(e=>swSrc.includes(`"kurs/${e.datei}"`))&&swSrc.includes('"kurs/kurs.json"'));
 ok("Service Worker: Kursdateien zuerst aus dem Netz",/\\\/kurs\\\/\[\^\/\]\+\\\.json\$/.test(swSrc));
 
@@ -491,7 +499,7 @@ ok("Wiederholung S2: 12 Aufgaben aus geschafften Lektionen, ohne Karten, höchst
 run(`playK([])`);
 ok("… Ende: Runde beendet, nochmal üben bleibt in der Etappe",/Runde beendet/.test(run(`app.innerHTML`))&&/Wiederholung · Etappe S2/.test(run(`app.innerHTML`))&&/data-krev="s2"/.test(run(`app.innerHTML`)));
 run(`S.np=false;path()`);
-ok("bisheriger Pfad nennt die spielbaren Etappen",/Schon spielbar: „Die Buchstaben“, „Buchstaben verbinden“, „Kurze Vokale“, „Tanwin“, „Lange Vokale“, „Sukun“, „Schadda“ und „Alles zusammen“\./.test(run(`app.innerHTML`)));
+ok("bisheriger Pfad verweist auf den neuen",/data-kn/.test(run(`app.innerHTML`))&&/Neu: der neue Lernpfad|Zuerst die Buchstaben/.test(run(`app.innerHTML`)));
 run(`S.np=true`);
 const {texts}=await import("./audio-texts.mjs");
 const at=texts().filter(t=>t.id.startsWith("k/"));

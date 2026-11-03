@@ -1,0 +1,215 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-03",
+  "title": "Design System: Mufradaat",
+  "extensions": {
+    "colorMeta": {
+      "deep-garden-green": { "role": "primary", "displayName": "Deep Garden Green", "canonical": "oklch(48.7% 0.087 167.1)", "cssVar": "--g", "tonalRamp": ["#001008","#032d20","#004f39","#237157","#499377","#73b59b","#a4d6c1","#d9f7e9"] },
+      "fresh-garden-green": { "role": "primary", "displayName": "Fresh Garden Green", "canonical": "oklch(58.5% 0.102 167)", "cssVar": "--g2", "tonalRamp": ["#001008","#002d1f","#014f39","#007355","#399575","#68b899","#9cd9bf","#d5f8e9"] },
+      "garden-mist": { "role": "primary", "displayName": "Garden Mist", "canonical": "oklch(93.5% 0.024 163.1)", "cssVar": "--gl", "tonalRamp": ["#080c0a","#1e2823","#38463f","#55665d","#76877e","#9aa9a1","#c0cdc6","#e9f1ec"] },
+      "on-green": { "role": "neutral", "displayName": "On Green", "canonical": "oklch(100% 0 0)", "cssVar": "--on", "tonalRamp": ["#0b0b0b","#252525","#424242","#616161","#828282","#a5a5a5","#c9c9c9","#eeeeee"] },
+      "warm-primer-paper": { "role": "neutral", "displayName": "Warm Primer Paper", "canonical": "oklch(96.5% 0.01 87.5)", "cssVar": "--bg", "tonalRamp": ["#0c0b09","#262521","#44423d","#63615b","#85827c","#a7a59f","#cbc9c4","#efeeeb"] },
+      "card-cream": { "role": "neutral", "displayName": "Card Cream", "canonical": "oklch(99.4% 0.006 84.6)", "cssVar": "--card", "tonalRamp": ["#0c0b0a","#262523","#43423f","#63615e","#84827f","#a6a5a1","#cac9c6","#efeeed"] },
+      "garden-ink": { "role": "neutral", "displayName": "Garden Ink", "canonical": "oklch(27% 0.022 166.4)", "cssVar": "--ink", "tonalRamp": ["#080c0a","#1e2823","#384540","#56655e","#77877f","#9aa9a2","#c0ccc7","#e9f0ed"] },
+      "sage-grey": { "role": "neutral", "displayName": "Sage Grey", "canonical": "oklch(50% 0.019 162.2)", "cssVar": "--mute", "tonalRamp": ["#080c0a","#1f2723","#3a453f","#58655e","#79867f","#9ca9a2","#c2ccc6","#eaf0ed"] },
+      "sand-hairline": { "role": "neutral", "displayName": "Sand Hairline", "canonical": "oklch(91% 0.017 88)", "cssVar": "--line", "tonalRamp": ["#0c0b08","#27251f","#454239","#656157","#868277","#a9a59b","#ccc9c1","#f0eee9"] },
+      "brick-red": { "role": "neutral", "displayName": "Brick Red", "canonical": "oklch(52.5% 0.15 31.6)", "cssVar": "--bad", "tonalRamp": ["#1f0000","#4c0300","#79190a","#a43725","#cb5a47","#ed836f","#fdb4a6","#ffe9e5"] },
+      "brick-blush": { "role": "neutral", "displayName": "Brick Blush", "canonical": "oklch(92.2% 0.028 34.3)", "cssVar": "--badl", "tonalRamp": ["#100908","#2e221f","#4e3d39","#705c57","#927d78","#b4a09b","#d5c5c1","#f6ece9"] },
+      "night-path-violet": { "role": "secondary", "displayName": "Night Path Violet", "canonical": "oklch(25.5% 0.078 289.4)", "cssVar": "--vi", "tonalRamp": ["#0b0917","#25203d","#413b64","#605a8a","#817bae","#a39ece","#c8c4eb","#eeecff"] },
+      "path-lilac-glow": { "role": "secondary", "displayName": "Path Lilac Glow", "canonical": "oklch(74.3% 0.172 307.4)", "cssVar": "--vn", "tonalRamp": ["#130121","#350951","#58207f","#7b3eaa","#9e61d0","#bf89ef","#dbb8fd","#f4eaff"] },
+      "dusk-violet": { "role": "secondary", "displayName": "Dusk Violet", "canonical": "oklch(47.2% 0.144 288)", "cssVar": "--vil", "tonalRamp": ["#0b0522","#251852","#413181","#604fac","#8072d2","#a197f0","#c6c1fe","#edecfe"] },
+      "star-saffron": { "role": "tertiary", "displayName": "Star Saffron", "canonical": "oklch(76.5% 0.144 81.9)", "tonalRamp": ["#130900","#332200","#563d00","#7e5a00","#a67a11","#cd9c36","#eac37b","#feeccd"] },
+      "dusk-sand": { "role": "tertiary", "displayName": "Dusk Sand", "canonical": "oklch(87.3% 0.074 75.3)", "tonalRamp": ["#120900","#332103","#563c14","#795b2e","#9c7c4f","#bda077","#ddc5a4","#fbecd9"] },
+      "dusk-pine": { "role": "tertiary", "displayName": "Dusk Pine", "canonical": "oklch(31.4% 0.054 167.8)", "tonalRamp": ["#030e09","#112b21","#274a3d","#426b5b","#638d7c","#89af9f","#b3d1c4","#e1f3ec"] },
+      "night-mint-neon": { "role": "tertiary", "displayName": "Night Mint Neon", "canonical": "oklch(89% 0.182 161.9)", "tonalRamp": ["#001006","#032d1d","#004f34","#17724f","#159a6a","#28c188","#74e3b0","#c2ffdf"] },
+      "deep-garden-green-dark": { "role": "primary", "displayName": "Deep Garden Green (dark)", "canonical": "oklch(65% 0.114 165.8)", "cssVar": "--g", "theme": "dark", "tonalRamp": ["#001008","#032d1f","#004f38","#177254","#2b9772","#60b996","#97dabd","#d3f9e7"] },
+      "fresh-garden-green-dark": { "role": "primary", "displayName": "Fresh Garden Green (dark)", "canonical": "oklch(72.4% 0.117 166.2)", "cssVar": "--g2", "theme": "dark", "tonalRamp": ["#001008","#012d1f","#074e39","#0d7254","#229872","#5cba96","#95dbbd","#d1f9e7"] },
+      "garden-mist-dark": { "role": "primary", "displayName": "Garden Mist (dark)", "canonical": "oklch(32.2% 0.041 167.3)", "cssVar": "--gl", "theme": "dark", "tonalRamp": ["#050d0a","#172a22","#2f483e","#4b695d","#6c8a7d","#90ada0","#b9cfc5","#e5f2ec"] },
+      "on-green-dark": { "role": "neutral", "displayName": "On Green (dark)", "canonical": "oklch(18.4% 0.017 167.6)", "cssVar": "--on", "theme": "dark", "tonalRamp": ["#080c0b","#202724","#3b4540","#59645f","#798680","#9da8a3","#c2ccc7","#eaf0ed"] },
+      "night-garden": { "role": "neutral", "displayName": "Night Garden", "canonical": "oklch(20.7% 0.015 165.9)", "cssVar": "--bg", "theme": "dark", "tonalRamp": ["#090c0a","#202724","#3b4440","#5a645f","#7a8580","#9da8a3","#c3cbc7","#ebf0ed"] },
+      "card-night": { "role": "neutral", "displayName": "Card Night", "canonical": "oklch(24.7% 0.019 167.2)", "cssVar": "--card", "theme": "dark", "tonalRamp": ["#080c0a","#1f2724","#3a4540","#57655f","#788680","#9ba9a3","#c1ccc7","#eaf0ed"] },
+      "moonlit-ink": { "role": "neutral", "displayName": "Moonlit Ink", "canonical": "oklch(94.5% 0.011 149.9)", "cssVar": "--ink", "theme": "dark", "tonalRamp": ["#0a0c0a","#232623","#3e433f","#5d635e","#7e847f","#a1a7a2","#c6cbc6","#ecefed"] },
+      "sage-grey-dark": { "role": "neutral", "displayName": "Sage Grey (dark)", "canonical": "oklch(70% 0.022 161.2)", "cssVar": "--mute", "theme": "dark", "tonalRamp": ["#080c0a","#1f2723","#39453f","#57655d","#77877e","#9ba9a1","#c1ccc6","#e9f0ec"] },
+      "night-hairline": { "role": "neutral", "displayName": "Night Hairline", "canonical": "oklch(31.3% 0.024 164.7)", "cssVar": "--line", "theme": "dark", "tonalRamp": ["#080c0a","#1e2823","#38463f","#55665e","#76877f","#9aa9a2","#c0cdc6","#e9f1ed"] },
+      "brick-red-dark": { "role": "neutral", "displayName": "Brick Red (dark)", "canonical": "oklch(69.2% 0.133 31)", "cssVar": "--bad", "theme": "dark", "tonalRamp": ["#1d0201","#480b04","#742115","#9e3e2f","#c46150","#e58877","#fcb5a8","#fee9e5"] },
+      "brick-blush-dark": { "role": "neutral", "displayName": "Brick Blush (dark)", "canonical": "oklch(27.4% 0.043 31.3)", "cssVar": "--badl", "theme": "dark", "tonalRamp": ["#120807","#32201c","#553a35","#785852","#9a7973","#bc9d96","#dcc2bd","#faeae7"] },
+      "night-path-violet-dark": { "role": "secondary", "displayName": "Night Path Violet (dark)", "canonical": "oklch(24.6% 0.07 290)", "cssVar": "--vi", "theme": "dark", "tonalRamp": ["#0b0916","#25213b","#423c61","#605a86","#817ca9","#a49fca","#c8c4e7","#eeecfe"] },
+      "path-lilac-glow-dark": { "role": "secondary", "displayName": "Path Lilac Glow (dark)", "canonical": "oklch(78.9% 0.141 308.6)", "cssVar": "--vn", "theme": "dark", "tonalRamp": ["#12031d","#331248","#552a74","#78479d","#9a68c1","#bc8ee1","#dcb8fb","#f4eafe"] },
+      "dusk-violet-dark": { "role": "secondary", "displayName": "Dusk Violet (dark)", "canonical": "oklch(82.5% 0.1 297.7)", "cssVar": "--vil", "theme": "dark", "tonalRamp": ["#0d071a","#291c42","#48366b","#685492","#8975b6","#ab99d6","#cec0f2","#f0ebff"] }
+    },
+    "typographyMeta": {
+      "display-arabic": { "displayName": "Display Arabic", "purpose": "The word on a flashcard or quiz card; lessons go up to 96px for single letters." },
+      "headline-arabic": { "displayName": "Headline Arabic", "purpose": "Unit names on the learning path, in the unit's accent colour." },
+      "tile-arabic": { "displayName": "Tile Arabic", "purpose": "Sentence-builder tiles and Arabic answer options." },
+      "body-arabic": { "displayName": "Body Arabic", "purpose": "The Arabic word in word-list rows." },
+      "numeral": { "displayName": "Numeral", "purpose": "Big progress numbers." },
+      "headline": { "displayName": "Headline", "purpose": "Screen titles." },
+      "title": { "displayName": "Title", "purpose": "Sub-screen titles beside the back button." },
+      "button": { "displayName": "Button", "purpose": "Pill and block button labels." },
+      "body": { "displayName": "Body", "purpose": "Default UI text and answer options." },
+      "body-small": { "displayName": "Body Small", "purpose": "Muted explanations, hints and notes." },
+      "caption": { "displayName": "Caption", "purpose": "Menu sub-lines and transliterations." },
+      "label": { "displayName": "Label", "purpose": "Bottom-nav labels (700 when active) and status chips." },
+      "overline": { "displayName": "Overline", "purpose": "Uppercase LEVEL label inside the level ring." }
+    },
+    "shadows": [
+      { "name": "floating-pane", "value": "0 10px 30px rgba(0,0,0,.18)", "purpose": "Sign-in and registration pane over the dusk sky." },
+      { "name": "floating-message", "value": "0 6px 20px rgba(0,0,0,.25)", "purpose": "Toasts and the update banner." },
+      { "name": "badge", "value": "0 6px 18px rgba(0,0,0,.2)", "purpose": "Level-up chip that drops in from the top." },
+      { "name": "current-stop-halo", "value": "0 0 0 6px var(--gl)", "purpose": "Garden-mist halo around the current path stop; a ring, not lift." },
+      { "name": "correct-pulse", "value": "0 0 0 14px rgba(47,143,111,0)", "purpose": "End frame of the green ring that pulses out of a correct answer (starts at 0 0 0 0 rgba(47,143,111,.55))." },
+      { "name": "path-orb-glow", "value": "drop-shadow(0 0 2px var(--vn)) drop-shadow(0 0 7px color-mix(in srgb,var(--vn) 60%,transparent))", "purpose": "Filter on the active Lernpfad orb icon." }
+    ],
+    "motion": [
+      { "name": "enter", "value": "220ms ease-out; from opacity 0, translateY(8px)", "purpose": "Screen content entering." },
+      { "name": "pop", "value": "300ms; scale .92 → 1.04 → 1", "purpose": "Toasts, feedback bars, combo chip, update banner." },
+      { "name": "shake", "value": "350ms; translateX ±7px", "purpose": "Wrong answer and wrong pair." },
+      { "name": "ok-pulse", "value": "550ms ease-out; scale .96 → 1.025 → 1 with an expanding green ring", "purpose": "Correct answer." },
+      { "name": "flip", "value": "400ms ease-out; rotateY(80deg) → 0", "purpose": "Flashcard turn." },
+      { "name": "slide", "value": "300ms ease-out; from translateX(24px)", "purpose": "Next flashcard." },
+      { "name": "fill", "value": "cubic-bezier(.3,.7,.2,1); 900ms for rings, 500ms for bars", "purpose": "Progress rings and bars easing to their value." },
+      { "name": "bounce-in", "value": "cubic-bezier(.3,1.4,.5,1) 450ms (level badge), cubic-bezier(.3,1.6,.5,1) 500ms (stars)", "purpose": "Celebrations that overshoot playfully." },
+      { "name": "flicker", "value": "1.8s ease-in-out infinite", "purpose": "Streak flame once you have practised today." },
+      { "name": "orb-on", "value": "550ms ease-out; scale .9 → 1.12 → 1 with glow", "purpose": "Lernpfad orb becoming active." },
+      { "name": "toggle", "value": "150ms", "purpose": "Switch knob." },
+      { "name": "reduced-motion", "value": "@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important } }", "purpose": "All motion off; final states shown instantly." }
+    ],
+    "breakpoints": [
+      { "name": "content-column", "value": "560px", "purpose": "Max width of the single centred column." },
+      { "name": "overview-compact", "value": "430px (container query)", "purpose": "Overview card shrinks its level ring from 148px to 112px." },
+      { "name": "auth-pane", "value": "400px", "purpose": "Max width of the start and sign-in content." }
+    ],
+    "pathThemes": [
+      { "name": "ths", "unit": "Letters", "road": "#fdfaf3", "edge": "#d8cdb4", "accent": "#6b5a3e", "footprints": "#8d8370", "dark": { "road": "#232b26", "edge": "#3b463f", "accent": "#d1bd94", "footprints": "#837f6a" } },
+      { "name": "th0", "unit": "First steps", "road": "#e9d6ae", "edge": "transparent", "accent": "#8a5a1c", "footprints": "#8d6632", "dark": { "road": "#4a3d27", "accent": "#e0b86e", "footprints": "#ac9465" } },
+      { "name": "th1", "unit": "At school", "road": "#ffffff", "edge": "#8fb0d8", "accent": "#2c5a8f", "footprints": "#6f89a7", "dark": { "road": "#e9eef5", "edge": "#5d82b0", "accent": "#93b7e6", "footprints": "#5f7ea4" } },
+      { "name": "th2", "unit": "At home", "road": "#d9a48a", "edge": "#bd7f64", "accent": "#a14e2e", "footprints": "#813f25", "dark": { "road": "#7e4a36", "edge": "#a0654c", "accent": "#eba183", "footprints": "#e4aa94" } },
+      { "name": "th3", "unit": "Food & drink", "road": "#f2d27e", "edge": "#d9a93a", "accent": "#93540a", "footprints": "#94611d", "dark": { "road": "#7a5d1f", "edge": "#a57c22", "accent": "#efbd5c", "footprints": "#e5c17b" } },
+      { "name": "th4", "unit": "Numbers & colours", "road": "#9cc7ef", "edge": "transparent", "accent": "#5b3fa0", "footprints": "#5f559f", "segments": ["#f4a3a3","#f7cd7e","#a8d8a0","#9cc7ef","#c7a8ea"], "dark": { "road": "#3d5f80", "accent": "#bba5f2", "footprints": "#b0c0d1", "segments": ["#8a4848","#8a6b2c","#4c7444","#3d5f80","#644a87"] } },
+      { "name": "th5", "unit": "On the road", "road": "#59616a", "edge": "#f2f2f2", "accent": "#37474f", "footprints": "#c1c4c8", "dark": { "road": "#3a4148", "edge": "#c9cdd1", "accent": "#b0c0ca", "footprints": "#94999d" } },
+      { "name": "th6", "unit": "Nature & animals", "road": "#c9a979", "edge": "#7fb069", "accent": "#3f7a2a", "footprints": "#2f5b1f", "dark": { "road": "#5b4930", "edge": "#4f8a3c", "accent": "#95d277", "footprints": "#94b177" } },
+      { "name": "th7", "unit": "Time & body", "road": "#30406c", "edge": "transparent", "accent": "#2f4a8a", "footprints": "#9c9a94", "dark": { "road": "#25335a", "accent": "#ffd77a", "footprints": "#8c8a86" } },
+      { "name": "th8", "unit": "Verbs", "road": "#c8553d", "edge": "#f5e5dd", "accent": "#a33a24", "footprints": "#f7e6e2", "dark": { "road": "#8f3a28", "edge": "#2a1813", "accent": "#f0907a", "footprints": "#d4aba0" } },
+      { "name": "th9", "unit": "Daily life", "road": "#a99b84", "edge": "transparent", "accent": "#6d5a3d", "footprints": "#4f422c", "dark": { "road": "#4b4438", "accent": "#d3bd95", "footprints": "#ab9d84" } }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Full-width green pill for the strongest action on a screen.",
+      "html": "<button class=\"ds-btn\">Lektion starten</button>",
+      "css": ".ds-btn{width:100%;border:0;border-radius:999px;background:var(--g,#1f6f55);color:var(--on,#fff);padding:15px;font:600 16px/1.2 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;cursor:pointer;transition:transform .15s}.ds-btn:hover{transform:translateY(-1px)}.ds-btn:active{transform:scale(.98)}.ds-btn:focus-visible{outline:3px solid var(--g2,#2f8f6f);outline-offset:2px}.ds-btn:disabled{opacity:.4;cursor:default}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Garden-mist pill for the quieter partner action.",
+      "html": "<button class=\"ds-btn-alt\">Ich kann die Buchstaben schon</button>",
+      "css": ".ds-btn-alt{width:100%;border:0;border-radius:999px;background:var(--gl,#dcefe5);color:var(--g,#1f6f55);padding:15px;font:600 16px/1.2 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;cursor:pointer;transition:transform .15s}.ds-btn-alt:hover{transform:translateY(-1px)}.ds-btn-alt:active{transform:scale(.98)}.ds-btn-alt:focus-visible{outline:3px solid var(--g2,#2f8f6f);outline-offset:2px}"
+    },
+    {
+      "name": "Menu Item",
+      "kind": "card",
+      "refersTo": "menu-item",
+      "description": "Full-width row with line icon, title, sub-line and chevron; the primary variant is solid green.",
+      "html": "<div class=\"ds-menu\"><button class=\"ds-item ds-item-main\"><svg viewBox=\"0 0 24 24\" width=\"22\" height=\"22\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M13 2L4 14h7l-1 8 9-12h-7z\"/></svg><span><b>Heute dran</b><small>12 Wörter · 5 fällig, 7 neu</small></span><span class=\"ds-ch\">›</span></button><button class=\"ds-item\"><svg viewBox=\"0 0 24 24\" width=\"22\" height=\"22\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 6h16M4 12h16M4 18h10\"/></svg><span><b>Alphabet</b><small>0 von 29 Buchstaben sicher</small></span><span class=\"ds-ch\">›</span></button></div>",
+      "css": ".ds-menu{display:flex;flex-direction:column;gap:10px;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}.ds-item{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--card,#fffdf9);color:var(--ink,#1c2a24);border:1px solid var(--line,#e6e1d5);border-radius:14px;padding:14px 16px;font:inherit;font-size:16px;cursor:pointer;transition:transform .15s}.ds-item b{display:block}.ds-item small{display:block;font-size:13px;opacity:.75}.ds-item .ds-ch{margin-left:auto;opacity:.5;font-size:20px}.ds-item-main{background:var(--g,#1f6f55);color:var(--on,#fff);border-color:var(--g,#1f6f55)}.ds-item-main small{opacity:1}.ds-item:hover{transform:translateY(-1px)}.ds-item:active{transform:scale(.99)}.ds-item:focus-visible{outline:3px solid var(--g2,#2f8f6f);outline-offset:2px}"
+    },
+    {
+      "name": "Filter Chips",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "44px pills in a horizontally scrolling row; selected chip is solid green.",
+      "html": "<div class=\"ds-chips\"><button class=\"ds-chip ds-on\">Alle</button><button class=\"ds-chip\">Alltag</button><button class=\"ds-chip\">Essen &amp; Trinken</button><button class=\"ds-chip\">Reisen</button></div>",
+      "css": ".ds-chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}.ds-chip{flex:none;border:1px solid var(--line,#e6e1d5);background:var(--card,#fffdf9);color:var(--ink,#1c2a24);border-radius:999px;padding:11px 16px;min-height:44px;white-space:nowrap;font:14px system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;cursor:pointer;transition:background .15s,border-color .15s}.ds-chip:hover{border-color:var(--g,#1f6f55)}.ds-chip:focus-visible{outline:3px solid var(--g2,#2f8f6f);outline-offset:2px}.ds-chip.ds-on{background:var(--g,#1f6f55);color:var(--on,#fff);border-color:var(--g,#1f6f55)}"
+    },
+    {
+      "name": "Search Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Cream field with sand hairline and 12px corners.",
+      "html": "<input class=\"ds-input\" type=\"search\" placeholder=\"Wörter suchen …\" aria-label=\"Wörter suchen\">",
+      "css": ".ds-input{width:100%;box-sizing:border-box;padding:13px 14px;border-radius:12px;border:1px solid var(--line,#e6e1d5);background:var(--card,#fffdf9);color:var(--ink,#1c2a24);font:16px system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;transition:border-color .15s}.ds-input:hover{border-color:var(--mute,#5a6760)}.ds-input:focus-visible{outline:3px solid var(--g2,#2f8f6f);outline-offset:2px}"
+    },
+    {
+      "name": "Answer Options",
+      "kind": "custom",
+      "refersTo": "answer-option",
+      "description": "Quiz options; correct turns mist green and pops, wrong turns blush and shakes.",
+      "html": "<div class=\"ds-q\"><div class=\"ds-q-ar\" lang=\"ar\">كِتَابٌ</div><button class=\"ds-opt ds-ok\">Buch</button><button class=\"ds-opt ds-no\">Tür</button><button class=\"ds-opt\">Haus</button></div>",
+      "css": ".ds-q{font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}.ds-q-ar{font-family:'Noto Naskh Arabic','Geeza Pro','Segoe UI','Traditional Arabic',Arial,serif;direction:rtl;font-size:64px;line-height:1.4;text-align:center;color:var(--ink,#1c2a24)}.ds-opt{display:block;width:100%;text-align:left;margin-top:10px;padding:15px;border-radius:12px;border:1.5px solid var(--line,#e6e1d5);background:var(--card,#fffdf9);color:var(--ink,#1c2a24);font:16px system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;cursor:pointer;transition:border-color .15s}.ds-opt:hover{border-color:var(--g,#1f6f55)}.ds-opt:focus-visible{outline:3px solid var(--g2,#2f8f6f);outline-offset:2px}.ds-opt.ds-ok{border-color:var(--g,#1f6f55);background:var(--gl,#dcefe5);animation:ds-pop .55s ease-out}.ds-opt.ds-no{border-color:var(--bad,#b0402e);background:var(--badl,#f7dfd9);animation:ds-shake .35s}@keyframes ds-pop{0%{transform:scale(.96);box-shadow:0 0 0 0 rgba(47,143,111,.55)}50%{transform:scale(1.025)}100%{transform:scale(1);box-shadow:0 0 0 14px rgba(47,143,111,0)}}@keyframes ds-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}@media (prefers-reduced-motion:reduce){.ds-opt{animation:none!important}}"
+    },
+    {
+      "name": "Word Tiles",
+      "kind": "custom",
+      "refersTo": "word-tile",
+      "description": "Arabic sentence-builder tiles in an RTL tray; placed tiles turn mist green.",
+      "html": "<div class=\"ds-tray\" dir=\"rtl\"><button class=\"ds-tk ds-placed\" lang=\"ar\">هٰذَا</button><button class=\"ds-tk ds-placed\" lang=\"ar\">كِتَابٌ</button></div><div class=\"ds-bank\" dir=\"rtl\"><button class=\"ds-tk\" lang=\"ar\">بَيْتٌ</button><button class=\"ds-tk\" lang=\"ar\">قَلَمٌ</button></div>",
+      "css": ".ds-tray{display:flex;flex-wrap:wrap;gap:8px;min-height:68px;align-items:center;border:2px dashed var(--line,#e6e1d5);border-radius:16px;padding:10px;background:var(--card,#fffdf9)}.ds-bank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px}.ds-tk{font-family:'Noto Naskh Arabic','Geeza Pro','Segoe UI','Traditional Arabic',Arial,serif;font-size:26px;line-height:1.5;padding:6px 16px;min-height:48px;border-radius:14px;border:1px solid var(--line,#e6e1d5);background:var(--card,#fffdf9);color:var(--ink,#1c2a24);cursor:pointer;transition:transform .15s}.ds-tk:hover{transform:translateY(-2px)}.ds-tk:active{transform:scale(.96)}.ds-tk:focus-visible{outline:3px solid var(--g2,#2f8f6f);outline-offset:2px}.ds-tk.ds-placed{border-color:var(--g,#1f6f55);background:var(--gl,#dcefe5)}"
+    },
+    {
+      "name": "Bottom Navigation",
+      "kind": "nav",
+      "refersTo": "nav-tab",
+      "description": "Five-tab bar with the raised night-violet Lernpfad orb in the centre.",
+      "html": "<nav class=\"ds-nav\"><button class=\"ds-tab ds-on\"><svg viewBox=\"0 0 24 24\" width=\"22\" height=\"22\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 11l9-8 9 8\"/><path d=\"M5 10v10h14V10\"/><path d=\"M10 20v-6h4v6\"/></svg>Start</button><button class=\"ds-tab\"><svg viewBox=\"0 0 24 24\" width=\"22\" height=\"22\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"7\" width=\"18\" height=\"11\" rx=\"5\"/><path d=\"M8 11v3M6.5 12.5h3\"/></svg>Spiele</button><button class=\"ds-tab ds-main\"><span class=\"ds-orb\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"6\" cy=\"19\" r=\"2\"/><circle cx=\"18\" cy=\"5\" r=\"2\"/><path d=\"M8 19h8a3.5 3.5 0 0 0 0-7H8a3.5 3.5 0 0 1 0-7h8\"/></svg></span>Lernpfad</button><button class=\"ds-tab\"><svg viewBox=\"0 0 24 24\" width=\"22\" height=\"22\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"4\" y=\"7\" width=\"13\" height=\"13\" rx=\"2\"/><path d=\"M8 4h10a2 2 0 0 1 2 2v10\"/></svg>Karten</button><button class=\"ds-tab\"><svg viewBox=\"0 0 24 24\" width=\"22\" height=\"22\" fill=\"currentColor\"><circle cx=\"5\" cy=\"12\" r=\"1.8\"/><circle cx=\"12\" cy=\"12\" r=\"1.8\"/><circle cx=\"19\" cy=\"12\" r=\"1.8\"/></svg>Mehr</button></nav>",
+      "css": ".ds-nav{display:flex;justify-content:center;background:var(--card,#fffdf9);border-top:1px solid var(--line,#e6e1d5);padding:22px 8px 8px;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}.ds-tab{flex:1;max-width:120px;border:0;background:none;color:var(--mute,#5a6760);font-size:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:4px;min-height:48px;cursor:pointer}.ds-tab:hover{color:var(--ink,#1c2a24)}.ds-tab:focus-visible{outline:3px solid var(--g2,#2f8f6f);outline-offset:2px}.ds-tab.ds-on{color:var(--g,#1f6f55);font-weight:700}.ds-main{color:var(--vil,#5a49a6);font-weight:600}.ds-orb{display:grid;place-items:center;width:46px;height:46px;margin:-30px 0 -2px;border-radius:50%;background:var(--vi,#231a45);color:#fff;border:5px solid var(--card,#fffdf9);box-sizing:content-box;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--vn,#c98bff) 40%,transparent);transition:color .3s}.ds-main:hover .ds-orb,.ds-main:focus-visible .ds-orb{color:var(--vn,#c98bff)}.ds-main:hover .ds-orb svg{filter:drop-shadow(0 0 2px var(--vn,#c98bff)) drop-shadow(0 0 7px color-mix(in srgb,var(--vn,#c98bff) 60%,transparent))}.ds-main:focus-visible{outline:none}.ds-main:focus-visible .ds-orb{outline:2px solid var(--ink,#1c2a24);outline-offset:1px}"
+    },
+    {
+      "name": "Path Stops",
+      "kind": "custom",
+      "refersTo": "path-stop",
+      "description": "Signature Winding Road stops: done, current (with halo) and locked, on a themed road.",
+      "html": "<div class=\"ds-road\"><svg class=\"ds-road-svg\" viewBox=\"0 0 100 300\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><path d=\"M30 40 C30 95 70 95 70 150 C70 205 35 205 35 260\" fill=\"none\" stroke=\"#e9d6ae\" stroke-width=\"30\" stroke-linecap=\"round\" vector-effect=\"non-scaling-stroke\"/></svg><button class=\"ds-pn ds-done\" style=\"left:30%;top:8px\" aria-label=\"Hallo sagen, gelernt\"><span class=\"ds-nd\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12.5l4.5 4.5L19 7.5\"/></svg></span></button><button class=\"ds-pn ds-cur\" style=\"left:70%;top:112px\" aria-label=\"Höflichkeit, aktuelle Station\"><span class=\"ds-nd\" lang=\"ar\" aria-hidden=\"true\">م</span></button><button class=\"ds-pn ds-lock\" style=\"left:35%;top:228px\" aria-label=\"Pronomen, gesperrt\"><span class=\"ds-nd\" lang=\"ar\">أَنَا</span></button></div>",
+      "css": ".ds-road{position:relative;height:300px;max-width:360px;margin:0 auto;--ac:#8a5a1c}.ds-road-svg{position:absolute;inset:0;width:100%;height:100%}.ds-pn{position:absolute;transform:translateX(-50%);width:64px;height:64px;display:grid;place-items:center;background:none;border:0;padding:0;cursor:pointer}.ds-nd{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;box-sizing:border-box;border:3px solid var(--ac);background:var(--card,#fffdf9);color:var(--ac);font-family:'Noto Naskh Arabic','Geeza Pro','Segoe UI','Traditional Arabic',Arial,serif;font-size:17px;line-height:1;padding-top:5px;transition:transform .2s cubic-bezier(.3,1.4,.5,1)}.ds-pn:hover .ds-nd{transform:scale(1.08)}.ds-pn:focus-visible{outline:3px solid var(--g2,#2f8f6f);outline-offset:2px;border-radius:50%}.ds-done .ds-nd{background:var(--g,#1f6f55);border-color:var(--g,#1f6f55);color:var(--on,#fff);padding-top:0}.ds-cur .ds-nd{width:76px;height:76px;border:0;background:#111a16;color:#4fbd95;box-shadow:0 0 0 6px var(--gl,#dcefe5);font-size:40px;padding-top:8px}.ds-lock .ds-nd{border:3px dashed color-mix(in srgb,var(--ac) 50%,transparent);color:var(--mute,#5a6760)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Winding Road",
+    "overview": "Learning Arabic is a journey you walk one stop at a time. The learning path (Lernpfad) is the literal heart of the app: a road that winds down the screen. Each unit has its own landscape and its own road surface, every stop shows an Arabic word, and each unit ends at a sign carrying its goal sentence. Everything around the road is calm and quiet: warm primer paper, cream cards, deep garden green ink. The journey supplies the colour, and the rest of the app is the resting place between stretches.\n\nThe system is mobile-first and single-column. It is dense with Arabic and light on chrome. The Arabic script is always the largest, most legible thing on screen, set in a real Naskh face, never treated as decoration. German UI text is plain system sans that stays out of its way. Components are **playful and bouncy**. Buttons are pills, cards are soft. Correct answers pop and pulse, wrong ones shake, and stars, confetti and a level-up badge make each step forward a small celebration. All of it switches off under reduced motion.\n\nThere are two moods. The start screen is a dusk sky fading from sand to pine green behind a mosque silhouette, with the calligraphic wordmark. The splash at launch is night garden dark, with the wordmark revealed letter by letter in neon mint. Inside the app, light and dark themes mirror each other token for token.\n\nFour looks are ruled out on purpose: cartoon mascots, decorative ornament such as arabesques and lanterns, Arabic used as decoration, and hearts or lives. The other guardrails below come from what the shipped app does.",
+    "keyCharacteristics": [
+      "One road, many landscapes: the path carries the colour, the rest of the app stays neutral.",
+      "Arabic first: Noto Naskh Arabic, large sizes and generous line height, so vowel marks never clip.",
+      "One green for action and success, one brick red for errors, violet only for the path.",
+      "Flat, tonal surfaces with hairline borders. Shadows only for things that float.",
+      "Bouncy, celebratory feedback that is fully disabled under `prefers-reduced-motion`.",
+      "Complete light and dark themes, following the system or set manually."
+    ],
+    "rules": [
+      { "name": "The One Green Rule", "body": "Deep Garden Green is the only colour that means \"do this\" or \"correct\". Never introduce a second action colour.", "section": "colors" },
+      { "name": "The Path Owns Violet Rule", "body": "Night Path Violet and its lilac glow belong to the learning path, and they may appear wherever the path appears: its tab, entry points, the current stop, path highlights. Nothing unrelated to the path is ever violet.", "section": "colors" },
+      { "name": "The Mirrored Theme Rule", "body": "Every colour token exists in light and dark. Dark values are declared twice: under `@media (prefers-color-scheme: dark)` guarded by `:root:not([data-theme=\"light\"])`, and under `:root[data-theme=\"dark\"]`.", "section": "colors" },
+      { "name": "The Script Leads Rule", "body": "Arabic is always set larger than the German next to it, at a minimum of 22px in the UI and 24px in lists. It is always marked up with `lang=\"ar\"` and `direction: rtl`.", "section": "typography" },
+      { "name": "The Room for Harakat Rule", "body": "Arabic line height never drops below 1.4, and runs from 1.5 to 2 for multi-word lines. Vowel marks and pause signs must never clip.", "section": "typography" },
+      { "name": "The Float-Only Shadow Rule", "body": "If it scrolls with the page, it has no shadow. Only overlays and transient messages lift.", "section": "elevation" }
+    ],
+    "dos": [
+      "**Do** set every Arabic string in Noto Naskh Arabic with `lang=\"ar\"`, at least 22px, with line height of 1.4 or more.",
+      "**Do** use Deep Garden Green for the single strongest action and for every \"correct\" or \"done\" state, and Garden Mist for its quieter partner.",
+      "**Do** keep surfaces flat: cream card on warm paper, 1px Sand Hairline, 14–16px corners.",
+      "**Do** make actions and small statuses pills (999px).",
+      "**Do** use night violet and lilac glow for anything that belongs to the learning path, and only for that.",
+      "**Do** give every unit or section of the path its own road theme from the palette above, with a matching dark set.",
+      "**Do** celebrate progress with bouncy motion (pop, pulse, stars, confetti, level-up badge), and disable all animation under `prefers-reduced-motion`.",
+      "**Do** keep touch targets at 44px or more (chips 44px, back button 44px, tabs 48px, tiles 48px).",
+      "**Do** define every new colour in both themes, in both the media query and the `[data-theme=\"dark\"]` block.",
+      "**Do** draw icons as 24px line SVGs with a 1.8 stroke and round joins, coloured by `currentColor`."
+    ],
+    "donts": [
+      "**Don't** put shadows on resting cards, rows or tiles. Shadows are only for floating overlays and messages.",
+      "**Don't** introduce a second action colour, or use green for anything decorative that isn't action or success.",
+      "**Don't** use Brick Red outside of errors, wrong answers, recording and weak-memory states.",
+      "**Don't** use violet or lilac for anything unrelated to the learning path.",
+      "**Don't** set Arabic in the system sans, shrink it below the German next to it, or tighten its line height until vowel marks clip.",
+      "**Don't** use emoji as interface icons. The app moved to inline SVG line icons.",
+      "**Don't** use pure black or pure grey for text. Use Garden Ink and Sage Grey.",
+      "**Don't** add cartoon mascots or drawn characters (people or animals) as decoration, and never near Qur'anic text. The brand marks are the Mim icon and the calligraphic wordmark, and playfulness comes from motion.",
+      "**Don't** decorate with arabesque borders, lanterns, crescent moons or gold filigree. Ornament never frames or replaces content. Real scenes, like the mosque silhouette on the start screen, are fine.",
+      "**Don't** use Arabic as texture, watermark or background pattern, and never show Arabic only in transliteration. Transliteration sits under the Arabic as a helper, never in its place.",
+      "**Don't** show hearts, lives or lock-out screens. Mistakes come back at the end of a lesson; they are never punished. (The old path's heart styles in `index.html` go away when it is retired.)"
+    ]
+  }
+}
