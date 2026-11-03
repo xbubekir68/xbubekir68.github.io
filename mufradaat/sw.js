@@ -8,7 +8,7 @@ self.addEventListener("activate",e=>{
 });
 self.addEventListener("fetch",e=>{
   const r=e.request,u=new URL(r.url);
-  if(r.method!=="GET"||u.origin!==location.origin)return; // Supabase & CDN bleiben unberührt
+  if(r.method!=="GET"||u.origin!==location.origin)return; // Supabase bleibt unberührt
   if(/\/audio\/audio\.json$/.test(u.pathname)||/\/kurs\/[^/]+\.json$/.test(u.pathname)){ // Audioliste und Kursdateien: erst Netz, damit Korrekturen sofort ankommen
     e.respondWith(fetch(r,{cache:"no-cache"}).then(res=>{if(res.ok){const cp=res.clone();caches.open(V).then(c=>c.put(r,cp))}return res}).catch(()=>caches.match(r)));
     return;
