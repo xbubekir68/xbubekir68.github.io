@@ -69,6 +69,16 @@ input[type=search],input.t{width:100%;padding:13px 14px;border-radius:12px;borde
 .dlg h2{margin:0 0 8px;font-size:20px}.dlg p{margin:0}.dlg ul{margin:10px 0 4px;padding-left:20px;line-height:1.7}
 .dlga{display:flex;gap:10px;margin-top:14px}.dlga .btn{margin-top:0}
 .btn.bad{background:var(--bad);color:var(--on)}
+.nh{margin-top:16px;padding:20px;text-align:center}.nh h2{margin:4px 0 2px;font-size:20px}.nh .btn{margin-top:14px}.nh .btn+.btn{margin-top:10px}
+.nhl{margin:0;font-size:13px;font-weight:600;color:var(--g);letter-spacing:.02em}
+.nha{font-size:44px;line-height:1.5;margin:6px 0 0;color:var(--ink)}
+.zk{margin-top:12px}.zk p{margin:4px 0 0}.zar{font-size:24px;line-height:1.6}
+.zb{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:12px}.zb i{display:block;height:100%;background:var(--g);border-radius:99px}.zk .zs{font-size:13px}
+.obz{margin:12px 2px 0;font-size:14px}
+.cta.alt2{background:var(--gl);color:var(--g)}
+.obw h1{margin:14px 0 6px}.obw h2{margin:22px 0 4px;font-size:18px}.obw .top{margin-bottom:4px}
+.obar{font-size:30px;line-height:1.5;text-align:center;margin:18px 0 0;color:var(--g)}
+.obo b{display:block}.obo small{display:block;color:var(--mute);font-size:14px;margin-top:2px}
 .grp{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:8px 0 18px}.grp .set:last-child{border-bottom:0}
 .sw{width:46px;height:28px;border-radius:99px;background:var(--line);position:relative;flex:none}
 .sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:left .15s}
@@ -945,7 +955,7 @@ const kS1Done=()=>{const ls=KL.filter(l=>l.e==="s1");return ls.length>0&&ls.ever
 const aLocked=b=>b>0&&!S.aok&&!hasWords()&&!aPass(b-1);
 const dots=n=>`<span class="dots" aria-hidden="true">${[0,1,2].map(i=>`<i class="${i<n?"on":""}"></i>`).join("")}</span>`;
 function alphabet(){
-  paint(head("Alphabet","home")+`<p class="mute">${alphaSure()} von ${ALPHA.length} Buchstaben sicher. Ein Buchstabe gilt als sicher, wenn du ihn dreimal in Folge richtig erkannt hast (die Punkte zeigen den Stand).</p>
+  paint(head("Alphabet",ui.from||"home")+`<p class="mute">${alphaSure()} von ${ALPHA.length} Buchstaben sicher. Ein Buchstabe gilt als sicher, wenn du ihn dreimal in Folge richtig erkannt hast (die Punkte zeigen den Stand).</p>
   <button class="btn" data-go="aquiz" style="margin-top:12px">Buchstaben üben</button>
   <div class="agrid">${ALPHA.map(a=>`<button class="card at" data-al="${a.i}" aria-label="${a.n}, ${aCnt(a.i)>=3?"sicher":"noch nicht sicher"}"><span class="ar" lang="ar">${a.c}</span><b>${a.n}</b>${dots(Math.min(3,aCnt(a.i)))}</button>`).join("")}</div>`);
 }
@@ -1690,6 +1700,7 @@ const SUB={more:["stats","fav","settings","list","badges","legal"],games:["pairs
 const pHint=a=>{if(view!=="path"){ui.hint=a;return go("path")}ui.hint=ui.hint===a?null:a;ui.keep=true;path()}; // gesperrte Station: Grund direkt darunter zeigen statt als Toast
 function go(v){
   if(view==="klek"&&K&&K.l&&!K.test&&!K.fin&&(K.n||K.fb)){kSnap();const r=kSnapGet(K.l.id);if(r)toast(kRepAt(r)?"Gespeichert · du machst mit deinen Fehlern weiter":`Gespeichert · du machst bei ${kResTxt(r)} weiter`)} // X oder Zurück mitten in der Lektion
+  if(TABS.some(t=>t[0]===view))ui.from=view; // Zurück führt zum Tab, von dem man kam (Alphabet und Statistiken gibt es an mehreren Stellen)
   if(v!=="path")ui.hint=null;view=v;render();const m=$("#app");if(m){m.setAttribute("tabindex","-1");try{m.focus({preventScroll:true})}catch(e){}}} // Fokus an den Seitenanfang, damit Screenreader den Wechsel bemerken
 const paint=h=>{app.innerHTML=h;fx()};
 function fx(){requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelectorAll("[data-to]").forEach(e=>{e.style.width=e.dataset.to+"%"})))}
@@ -1764,6 +1775,7 @@ function miniStats(o){
   <div class="mnums"><div><b>${learnt}</b><span>von ${W.length} gelernt</span></div><div><b>${started}</b><span>begonnen</span></div><div><b>${dueN()}</b><span>fällig</span></div></div></button></div>`;
 }
 function home(){
+  if(S.np)return homeNp();
   const g=S.goal||100,xd=S.xpDays[today()]||0,gp=Math.min(100,Math.round(xd/g*100)),L=lvl(),lo=xpFor(L),hi=xpFor(L+1),xp=S.xp||0,lp=Math.round((xp-lo)/(hi-lo)*100),st=streak(),lit=S.last===today(),ns=nextStep(),cur=currentLesson(),due=dueN();
   paint(`<div class="mark"><img class="wm" src="brand/mufradaat.webp" width="720" height="194" alt="Mufradaat"></div>
   <div class="row sp" style="margin-top:8px"><div><h1 style="margin:0">Ahlan wa Sahlan${U&&U!=="gast"?", "+esc(U.split("@")[0]):""}!</h1></div><span class="flame ${lit?"on":"off"}" role="img" aria-label="Serie: ${st} Tage">${ic("flame",18,true)} ${st}</span></div>
@@ -1777,6 +1789,51 @@ function home(){
   ${itm('data-go="badges"',"medal","Abzeichen",(S.badges||[]).length+" von "+BADGES.length+" freigeschaltet")}
   ${itm('data-go="stats"',"chart","Statistiken",knownN()+" von "+W.length+" Wörtern gelernt")}
   </div>`);
+}
+// ---- Start im neuen Lernpfad: der nächste Halt auf dem Weg, das Ziel der Etappe, ein Knopf. Zahlen liegen einen Tipp weiter (Statistiken).
+// Beim ersten Start fragt die App einmal nach Ziel und Vorkenntnissen (S.ob), das Ziel lässt sich in den Einstellungen ändern.
+const OBZ=[["koran","Den Koran lesen","Bis zur Basmala in Koranschrift"],["sprache","Arabisch verstehen","Erst lesen, dann Wörter und Sätze"],["lesen","Einfach anfangen","Lesen lernen, alles Weitere später"]];
+const obNeed=()=>!S.ob&&!hasHist(S);
+const kEDone=e=>{const ls=KL.filter(l=>l.e===e);return ls.length>0&&ls.every(l=>kDone(l.id))};
+function welcome(){
+  $("#nav").hidden=true;const st=ui.ob||1;
+  const opt=(k,t,sub)=>`<button class="opt obo" data-ob="${k}"><b>${t}</b><small>${sub}</small></button>`;
+  paint(st===1?`<div class="obw"><div class="mark"><img class="wm" src="brand/mufradaat.webp" width="720" height="194" alt="Mufradaat"></div>
+    <p class="ar obar" lang="ar">أَهْلًا وَسَهْلًا</p><h1>Willkommen!</h1><p class="mute">Mufradaat bringt dir Schritt für Schritt das Lesen bei, von den Buchstaben bis zur Koranschrift. Danach geht es mit Wörtern und Sätzen weiter.</p>
+    <h2 id="obq">Was ist dein Ziel?</h2><div role="group" aria-labelledby="obq">${OBZ.map(z=>opt(...z)).join("")}</div></div>`
+   :`<div class="obw"><div class="top"><button class="x" id="obb" aria-label="Zurück">${ic("back")}</button></div>
+    <h1 id="obq">Kannst du schon Arabisch lesen?</h1><p class="mute">Danach weißt du, wo du einsteigst. Du kannst jede Lektion später wiederholen.</p>
+    <div role="group" aria-labelledby="obq">${opt("neu","Noch gar nicht","Du startest bei den ersten vier Buchstaben")}${opt("test","Ja, schon etwas","Ein kurzer Test mit höchstens 16 Aufgaben findet deinen Einstieg")}</div></div>`);
+  const b=$("#obb");if(b)b.onclick=()=>{ui.ob=1;welcome()};
+  document.querySelectorAll("[data-ob]").forEach(x=>x.onclick=()=>{const k=x.dataset.ob;sfx("tap");
+    if(st===1){ui.obz=k;ui.ob=2;welcome();const f=$(".obo");if(f)f.focus();return}
+    S.ob={z:ui.obz||"lesen",d:today()};ui.ob=ui.obz=null;save();
+    if(!KL.length)return go("home");
+    if(k==="test")startKT("wissen");else startK(KL[0])});
+}
+function homeNp(){
+  if(obNeed())return welcome();
+  const st=streak(),due=dueN(),name=U&&U!=="gast"?", "+esc(U.split("@")[0]):"";
+  const top=`<div class="mark"><img class="wm" src="brand/mufradaat.webp" width="720" height="194" alt="Mufradaat"></div>
+  <div class="row sp" style="margin-top:8px"><h1 style="margin:0">Ahlan wa Sahlan${name}!</h1>${st?`<span class="flame on" role="img" aria-label="Serie: ${st} ${st===1?"Tag":"Tage"}">${ic("flame",18,true)} ${st}</span>`:""}</div>
+  ${!canSpeak()&&!hintOff?`<div class="card hint" role="note"><p>Auf diesem Gerät ist keine arabische Stimme installiert. Die Aussprache fehlt oder klingt falsch. Du kannst in den Systemeinstellungen (Sprachausgabe) eine arabische Stimme hinzufügen.</p><button class="x" id="hx" aria-label="Hinweis schließen">${ic("close")}</button></div>`:""}`;
+  if(!KL.length){paint(top+`<div class="card nh">${KURS===false?`<p>Der Lernpfad konnte nicht geladen werden. Prüfe die Verbindung.</p><button class="btn alt" id="kr">Nochmal versuchen</button>`:`<p class="mute">Lernpfad lädt …</p>`}</div>`);
+    const r=$("#kr");if(r)r.onclick=()=>{KURS=null;loadKurs();homeNp()};return}
+  const r=kSnapGet(),l=r?KL.find(x=>x.id===r.id):kCur(),e=kEtap(l.e),zl=(KE[l.e]||{}).ziel,ls=KL.filter(x=>x.e===l.e),dnE=ls.filter(x=>kDone(x.id)).length;
+  const fresh=!Object.keys(kp().d).length,all=KL.every(x=>kDone(x.id)),big=l.station||kLet(l).slice(0,4).map(a=>a.c).join(" ")||e.ar;
+  const nh=all?`<div class="card nh"><p class="nhl">Stufe 1 geschafft</p><p class="ar nha" lang="ar">${esc(KURS.stufen[0].ar)}</p><h2>Du kannst Arabisch lesen</h2><p class="mute">Alle Etappen sind geschafft. Die nächste Stufe ist in Arbeit. Bis dahin kannst du jede Lektion wiederholen und unter Karten Wörter lernen.</p>
+      <button class="btn" data-go="path">Zum Lernpfad</button><button class="btn alt" data-go="cards">Wörter lernen</button></div>`
+    :`<div class="card nh"><p class="nhl">${r?"Angefangen":fresh?"Dein erster Halt":"Nächster Halt"} · Etappe ${e.id.toUpperCase()} · ${esc(e.titel)}</p>
+      <p class="ar nha" lang="ar">${big}</p><h2>${l.art==="test"?esc(l.titel):`Lektion ${l.li+1}: ${esc(l.titel)}`}</h2><p class="mute">${r?kResTxt(r):kSm(l)}</p>
+      <button class="btn" data-kl="${l.id}">${r?"Weitermachen":fresh?"Erste Lektion starten":"Lektion starten"}</button></div>`;
+  const zp=all?"":zl&&zl.art==="alle-buchstaben"?`<p class="mute">${kLearnt().length} von ${ALPHA.length} Buchstaben gelernt</p>`:zl&&zl.ar?`<p class="ar zar" lang="ar">${zl.ar}</p><p class="mute">${esc(zl.de||"")}</p>`:"";
+  const ziel=all?"":`<div class="card zk"><p class="nhl">Ziel der Etappe</p><p><b>${esc(zl?zl.text:e.kurz)}</b></p>${zp}
+    <div class="zb" role="img" aria-label="${dnE} von ${ls.length} Lektionen dieser Etappe geschafft"><i style="width:${Math.round(dnE/ls.length*100)}%"></i></div><p class="mute zs">${dnE} von ${ls.length} Lektionen geschafft</p></div>`;
+  const z8=(KE.s8||{}).ziel,mine=S.ob&&S.ob.z==="koran"&&l.e!=="s8"&&!all&&z8?`<p class="mute obz">Dein Ziel, den Koran zu lesen: In Etappe S8 liest du die Basmala.</p>`
+    :S.ob&&S.ob.z==="sprache"&&!all?`<p class="mute obz">Dein Ziel, Arabisch zu verstehen: Erst kommt das Lesen, dann Wörter und Sätze. Wörter kannst du schon jetzt unter Karten üben.</p>`:"";
+  const mix=(()=>{const p=mixPlan(),n=p.due.length+p.nw.length+p.weak.length;return n&&!alphaGate()&&Object.keys(S.box).length?itm('data-go="mix"',"bolt","Wörter: heute dran",n+" Wörter · "+mixText(p)):""})();
+  paint(top+nh+ziel+mine+`${due?`<button class="cta alt2" data-go="review">${due} Wörter wiederholen</button>`:""}
+  <div class="menu">${mix}${itm('data-go="alphabet"',"list","Alphabet",alphaSure()+" von "+ALPHA.length+" Buchstaben sicher")}${itm('data-go="stats"',"chart","Dein Fortschritt",`Level ${lvl()} · ${S.xp||0} XP · ${Object.keys(kp().d).length} von ${KL.length} Lektionen`)}</div>`);
 }
 // nächster Schritt: erst Buchstaben (solange nicht erledigt, übersprungen oder schon Wörter gestartet), dann die aktuelle Lektion
 function nextStep(){
@@ -1844,7 +1901,7 @@ function lesson(){
   <div class="wl">${ws.map(w=>{const t=wordState(w.i),nt=noteOf(w);return `<button class="w" data-say="${w.i}"><span class="ar" lang="ar">${w.ar}</span><span style="flex:1"><b>${w.de}</b><span class="tr">(${w.tr})${nt?" · "+esc(nt):""}</span><span class="sl"><span class="st ${t.k}">${t.k==="l"?ic("check",14)+" ":""}${t.t}</span>${memBar(w.i)}<span class="tr">${t.h}</span></span></span></button>`}).join("")}</div>`);
 }
 function more(){
-  paint(`<h1>Mehr</h1><div class="menu">${[["badges","medal","Abzeichen"],["list","list","Wortliste"],["stats","chart","Statistiken"],["fav","star","Favoriten"],["settings","gear","Einstellungen"],["legal","lock","Datenschutz &amp; Impressum"]].map(m=>itm(`data-go="${m[0]}"`,m[1],m[2],"")).join("")}</div>`);
+  paint(`<h1>Mehr</h1><div class="menu">${[["alphabet","list","Alphabet"],["badges","medal","Abzeichen"],["list","list","Wortliste"],["stats","chart","Statistiken"],["fav","star","Favoriten"],["settings","gear","Einstellungen"],["legal","lock","Datenschutz &amp; Impressum"]].map(m=>itm(`data-go="${m[0]}"`,m[1],m[2],"")).join("")}</div>`);
 }
 function badges(){
   const have=S.badges||[];
@@ -2078,7 +2135,9 @@ function blitz(){
 function stats(){
   const days=[...Array(7)].map((_,k)=>{const d=ago(6-k);return[["So","Mo","Di","Mi","Do","Fr","Sa"][d.getDay()],S.days[ymd(d)]||0]});
   const mx=Math.max(1,...days.map(d=>d[1]));
-  paint(head("Statistiken","more")+`<div class="card row"><div><p class="mute">Lernfortschritt</p><p class="big">${pct()}%</p><p class="mute">${knownN()} von ${W.length} Wörtern</p></div><div class="ring" style="--p:${pct()};margin-left:auto"><span>${pct()}%</span></div></div>
+  const g=S.goal||100,xd=S.xpDays[today()]||0,es=KURS?KURS.stufen[0].etappen.filter(e=>KE[e.id]):[];
+  const rd=S.np&&KL.length?`<p><b>Lesen lernen</b></p><div class="tiles" style="margin-bottom:18px"><div class="card"><p class="mute">Lektionen</p><b>${KL.filter(l=>kDone(l.id)).length}</b><span class="mute">von ${KL.length} geschafft</span></div><div class="card"><p class="mute">Etappen</p><b>${es.filter(e=>kEDone(e.id)).length}</b><span class="mute">von ${es.length} geschafft</span></div><div class="card"><p class="mute">Buchstaben sicher</p><b>${alphaSure()}</b><span class="mute">von ${ALPHA.length}</span></div><div class="card"><p class="mute">Tagesziel</p><b>${Math.min(xd,g)} / ${g}</b><span class="mute">XP heute</span></div></div><p><b>Wörter</b></p>`:"";
+  paint(head("Statistiken",ui.from==="home"?"home":"more")+rd+`<div class="card row"><div><p class="mute">Lernfortschritt</p><p class="big">${pct()}%</p><p class="mute">${knownN()} von ${W.length} Wörtern</p></div><div class="ring" style="--p:${pct()};margin-left:auto"><span>${pct()}%</span></div></div>
   <div class="tiles"><div class="card"><p class="mute">Heute geübt</p><b>${S.days[today()]||0}</b><span class="mute">Wörter</span></div><div class="card"><p class="mute">Aktuelle Serie</p><b>${streak()}</b><span class="mute">Tage</span></div><div class="card"><p class="mute">Gefestigt</p><b>${Object.values(S.box).filter(b=>b>=3).length}</b><span class="mute">von ${W.length}</span></div><div class="card"><p class="mute">Gelernt gesamt</p><b>${knownN()}</b></div><div class="card"><p class="mute">Level</p><b>${lvl()}</b></div><div class="card"><p class="mute">XP gesamt</p><b>${S.xp||0}</b></div></div>
   <div class="card" style="margin-top:10px"><p><b>Gedächtnis</b></p><p class="mute" style="margin-top:2px">Wie frisch deine angefangenen Wörter gerade sind.</p>${(()=>{const c=[0,0,0,0];W.forEach(w=>{const m=mem(w.i);if(m)c[m.k]++});const tot=c.reduce((a,b)=>a+b,0);
     return tot?[[3,"frisch","var(--g)"],[2,"wackelig","#c99a2e"],[1,"fällig","#c99a2e"],[0,"vergessen","var(--bad)"]].map(([k,n,col])=>`<div class="row sp" style="margin-top:10px"><span style="width:92px;font-size:14px">${n}</span><div class="bar"><i style="width:${Math.round(c[k]/tot*100)}%;background:${col}"></i></div><span class="mute" style="width:32px;text-align:right">${c[k]}</span></div>`).join(""):'<p class="mute" style="margin-top:10px">Noch keine Wörter angefangen.</p>'})()}</div>
@@ -2088,7 +2147,7 @@ function settings(){
   const row=(id,l,v,a="")=>`<button class="set" id="${id}" ${a}><span>${l}</span>${v}</button>`,sw=on=>`<span class="sw ${on?"on":""}" aria-hidden="true"></span>`,swr=(id,l,on)=>row(id,l,sw(on),`role="switch" aria-checked="${!!on}"`),
     pick=(id,l,opts,cur)=>`<label class="set"><span>${l}</span><select id="${id}">${opts.map(([v,t])=>`<option value="${v}" ${String(v)===String(cur)?"selected":""}>${t}</option>`).join("")}</select></label>`;
   paint(head("Einstellungen","more")+`<p><b>Lernrichtung</b></p><div class="grp">${row("d1","Arabisch → Deutsch",S.dir==="ad"?ic("check",18):"",`aria-pressed="${S.dir==="ad"}"`)}${row("d2","Deutsch → Arabisch (Schreiben)",S.dir==="da"?ic("check",18):"",`aria-pressed="${S.dir==="da"}"`)}</div>
-  <p><b>Lesen</b></p><div class="grp">${pick("hk","Vokalzeichen",[[0,"immer zeigen"],[1,"automatisch"],[2,"immer ohne"]],hkSet())}</div>
+  <p><b>Lesen</b></p><div class="grp">${S.np?pick("oz","Dein Ziel",OBZ.map(z=>[z[0],z[1]]),(S.ob&&S.ob.z)||"lesen"):""}${pick("hk","Vokalzeichen",[[0,"immer zeigen"],[1,"automatisch"],[2,"immer ohne"]],hkSet())}</div>
   <p class="mute" style="margin:-10px 0 18px">Bei „automatisch“ verschwinden die Vokalzeichen Schritt für Schritt, sobald ein Wort sicher sitzt – so wie in echten Texten. Antippen zeigt sie jederzeit wieder.</p>
   <p><b>Spiel</b></p><div class="grp">${swr("sd","Töne",S.sound!==false)}${swr("vb","Vibration",S.vib!==false)}${swr("au","Aussprache automatisch",S.auto!==false)}${pick("gl","Tagesziel",[50,100,150,250].map(v=>[v,v+" XP"]),S.goal||100)}</div>
   <p><b>Benachrichtigungen</b></p><div class="grp">${swr("rm","Tägliche Lern-Erinnerung",S.rem)}<label class="set"><span>Uhrzeit</span><input type="time" id="tm" value="${S.time}" style="border:0;background:none;color:var(--mute);font:inherit"></label></div>
@@ -2097,6 +2156,7 @@ function settings(){
   $("#vb").onclick=()=>{S.vib=S.vib===false;save();if(S.vib)vib(30);settings()};
   $("#gl").onchange=e=>{S.goal=+e.target.value;save();settings()};
   $("#hk").onchange=e=>{S.hk=+e.target.value;save();settings()};
+  if($("#oz"))$("#oz").onchange=e=>{S.ob={...(S.ob||{d:today()}),z:e.target.value};save()};
   $("#d1").onclick=()=>{S.dir="ad";save();settings()};$("#d2").onclick=()=>{S.dir="da";save();settings()};
   $("#rm").onclick=()=>{S.rem=!S.rem;save();if(S.rem)try{Notification.requestPermission()}catch(e){}settings()};$("#tm").onchange=e=>{S.time=e.target.value;save()};
   $("#th").onchange=e=>{S.theme=e.target.value;save();applyTheme();settings()};
@@ -2140,7 +2200,7 @@ function mergeS(a,b){ // pro Wort der bessere Stand, Favoriten vereinigen, pro T
   const mx=(x,y)=>{const o={};for(const k of new Set([...Object.keys(x||{}),...Object.keys(y||{})]))o[k]=Math.max((x||{})[k]||0,(y||{})[k]||0);return o};
   r.xp=Math.max(a.xp||0,b.xp||0);r.xpDays=mx(a.xpDays,b.xpDays);r.st=mx(a.st,b.st);r.days=mx(a.days,b.days);r.alpha=mx(a.alpha,b.alpha);r.sent=mx(a.sent,b.sent);r.aok=a.aok||b.aok||""; // Buchstaben-Abschnitt: erledigt oder übersprungen gilt überall
   r.badges=[...new Set([...(a.badges||[]),...(b.badges||[])])];
-  r.kp={d:mx((a.kp||{}).d,(b.kp||{}).d)}; // neuer Lernpfad: abgeschlossen bleibt abgeschlossen
+  r.kp={d:mx((a.kp||{}).d,(b.kp||{}).d)};r.ob=a.ob||b.ob; // neuer Lernpfad: abgeschlossen bleibt abgeschlossen
   const al=a.last||"",bl=b.last||"";if(bl>al||(bl===al&&(b.streak||0)>(a.streak||0))){r.streak=b.streak||0;r.last=bl}
   const as=a.seenDay||"",bs=b.seenDay||"";if(bs>as){r.seenDay=bs;r.seen=b.seen||[]}else if(bs===as)r.seen=[...new Set([...(a.seen||[]),...(b.seen||[])])];
   if(!hasHist(a)&&b.np!==undefined)r.np=b.np; // neues Gerät ohne eigenen Stand: Lernpfad vom Konto übernehmen
@@ -2311,7 +2371,7 @@ loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v27"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v28"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>
