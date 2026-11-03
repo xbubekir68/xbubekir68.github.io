@@ -754,5 +754,69 @@ ok("Pfad: nach der Einstufung keine Einstufungskarte mehr, im Hinweis bleibt sie
 run(`legal()`);
 ok("Datenschutz nennt Mikrofon und Spracherkennung",/Spracherkennung/.test(run(`app.innerHTML`))&&/bleibt auf deinem Gerät/.test(run(`app.innerHTML`)));
 
+// ---------- 15. Lektion fortsetzen ----------
+// ein Schritt wie mit „Weiter“: Karten durchklicken, sonst antworten (wrong: Liste der Schritte mit falscher Antwort)
+run(`function stepK(wrong,i){const it=K.T[K.n];if(it.t==="paare"){K.ps=null;klek();const x=it.rep?1:5;K.xp+=x;K.fb={ok:true,x};K.first++}else if(!KCARD.includes(it.t)){klek();kAns(!wrong.includes(i))}K.n++;K.fb=null;K.picked=null;K.ps=null;K.sel=[];kSnap()}
+function runK(k,wrong){for(let i=0;i<k&&K.n<K.T.length;i++)stepK(wrong||[],i)}
+function finishK(){let g=0;while(view==="klek"&&!K.fin&&g++<400){klek();if(K.fin)break;stepK([],-1)}klek()}`);
+run(`K=null;S.kp={d:{}};S.np=true;kSnapDel();startK(KL[0])`);
+ok("Fortsetzen: frisch gestartet gibt es noch keinen Stand",run(`kSnapGet()===null&&kSnapGet(KL[0].id)===null`));
+run(`runK(1)`);
+ok("… nur die Tipp-Karte gesehen: noch kein Stand",run(`K.T[0].t!=="tipp"||kSnapGet(KL[0].id)===null`));
+run(`runK(6,[3])`);
+let snap=JSON.parse(run(`JSON.stringify(kSnapGet(KL[0].id))`));
+ok("… nach Antworten: Stand mit Position, Fehler-Runde und Zählern",snap&&snap.n===run(`K.n`)&&snap.T.length===run(`K.T.length`)&&snap.T.some(x=>x.rep)&&snap.miss===1&&snap.first===run(`K.first`)&&snap.xp===run(`K.xp`),snap&&{n:snap.n,miss:snap.miss});
+ok("… ohne Antwort-Zwischenstand und nur auf dem Gerät (nicht in S)",snap.T.every(x=>x.opts===null&&x.bank===null)&&run(`!JSON.stringify(S).includes("fortsetzen")&&!!localStorage.getItem(SK()+":fortsetzen")`));
+const kSig=()=>run(`JSON.stringify({n:K.n,T:K.T.map(kKey),rep:K.T.map(x=>!!x.rep),first:K.first,miss:K.miss,xp:K.xp,graded:K.graded})`);
+let sig=kSig();
+run(`globalThis.LASTTOAST="";const toast0=toast;toast=m=>{LASTTOAST=m;toast0(m)};klek();go("path")`);
+ok("… X mitten in der Lektion: Hinweis, wo es weitergeht",run(`view`)==="path"&&/^Gespeichert · du machst bei Aufgabe 8 von \d+ weiter$/.test(run(`LASTTOAST`)),run(`LASTTOAST`));
+kh=run(`app.innerHTML`);
+ok("… Station zeigt „Weitermachen · Aufgabe 8 von …“, auch für Screenreader",new RegExp(`Weitermachen · Aufgabe 8 von ${snap.T.filter(x=>!x.rep).length}`).test(kh)&&/weitermachen: Aufgabe 8 von/.test(kh),kh.match(/Weitermachen[^<]*/));
+run(`view="home";home()`);
+ok("… Startseite: „Weitermachen“ mit Lektion und Aufgabe",/Weitermachen/.test(run(`app.innerHTML`))&&/Lektion 1: [^<]*· Aufgabe 8 von/.test(run(`app.innerHTML`)));
+run(`K=null;startK(KL[0])`);
+ok("… erneut geöffnet: weiter an derselben Stelle, ohne Tipp-Karte, gleiche Zähler",kSig()===sig&&run(`K.n>0&&K.T[K.n].t!=="tipp"&&view==="klek"`),[kSig(),sig]);
+ok("… Buchstaben sind wieder dieselben Objekte wie im Katalog",run(`K.T.filter(x=>x.a).every(x=>x.a===ALBY[x.a.i])&&K.T.some(x=>x.a)`));
+run(`finishK()`);
+ok("… zu Ende gespielt: Lektion geschafft, Stand gelöscht",run(`kDone(KL[0].id)&&kSnapGet(KL[0].id)===null&&K.fin`));
+// jede Art von Lektion: unterbrechen, neu öffnen, alles rendert und lässt sich beenden
+const kinds={};for(const l of JSON.parse(run(`JSON.stringify(KL.filter(l=>l.art!=="test").map(l=>({id:l.id,art:(l.art||"buchstaben")+(l.art==="vokale"&&QZ.includes(l.zeichen)?"-q":"")})))`)))kinds[l.art]=kinds[l.art]||[],kinds[l.art].push(l.id);
+for(const [art,ids] of Object.entries(kinds)){ // alle Lektionen, je Art eine Prüfung
+  const bad=[];
+  for(const id of ids){
+    let err="";
+    try{
+      run(`K=null;kSnapDel();startK(KL.find(l=>l.id==="${id}"));runK(Math.min(5,K.T.length-2),[2,4]);klek()`); // klek überspringt Nachsprechen ohne Mikrofon
+      const s0=kSig();run(`go("path");K=null;startK(KL.find(l=>l.id==="${id}"))`);
+      if(kSig()!==s0)err="anderer Stand";
+      run(`finishK()`);if(!run(`kDone("${id}")&&kSnapGet("${id}")===null`))err+=" nicht beendet";
+    }catch(e){err=String(e.message||e)}
+    if(err)bad.push(id+": "+err);
+  }
+  ok(`… ${art} (${ids.length===1?"1 Lektion":ids.length+" Lektionen"}): fortgesetzt an derselben Stelle und bis zum Ende spielbar`,!bad.length,bad);
+}
+// mehrere angefangene Lektionen
+run(`K=null;kSnapDel();for(const id of ["s1-2","s2-1","s3-1"]){startK(KL.find(l=>l.id===id));runK(4);go("path")}`);
+ok("Fortsetzen: mehrere angefangene Lektionen bleiben je für sich gespeichert",run(`["s1-2","s2-1","s3-1"].every(id=>kSnapGet(id))`));
+ok("… die zuletzt angefangene steht auf der Startseite",run(`kSnapGet().id`)==="s3-1");
+run(`for(const id of ["s1-3","s1-4","s2-2"]){startK(KL.find(l=>l.id===id));runK(4);go("path")}`);
+ok("… höchstens 5, die älteste fällt weg",run(`Object.keys(kSnapAll()).length===5&&!kSnapGet("s1-2")&&!!kSnapGet("s2-2")`));
+// Ablauf, Tests, Zurücksetzen
+run(`(m=>{m["s2-1"].ts=Date.now()-8*864e5;localStorage.setItem(SK()+":fortsetzen",JSON.stringify(m))})(JSON.parse(localStorage.getItem(SK()+":fortsetzen")))`);
+ok("Fortsetzen: nach mehr als 7 Tagen verfällt der Stand",run(`kSnapGet("s2-1")===null&&!!kSnapGet("s3-1")`));
+run(`startK(KL.find(l=>l.id==="s2-1"))`);
+ok("… und die Lektion beginnt von vorn",run(`K.n===0`));
+run(`K=null;startK(KL.find(l=>l.art==="test"));runK(3,[1]);go("path")`);
+ok("Fortsetzen: Tests laufen am Stück, kein Stand",run(`!Object.keys(kSnapAll()).some(id=>KL.find(l=>l.id===id).art==="test")`));
+run(`(m=>{const l=KL.find(l=>l.art==="test");m[l.id]={...m["s3-1"],id:l.id,ts:Date.now()};localStorage.setItem(SK()+":fortsetzen",JSON.stringify(m))})(JSON.parse(localStorage.getItem(SK()+":fortsetzen")));startK(KL.find(l=>l.art==="test"))`);
+ok("… auch ein untergeschobener Stand setzt keinen Test fort",run(`K.n===0&&!!K.test`));
+run(`localStorage.setItem(SK()+":fortsetzen","{kaputt")`);
+ok("Fortsetzen: kaputter Speicher stört nicht",run(`kSnapGet()===null&&(startK(KL[1]),K.n===0)`));
+run(`startK(KL[1]);runK(4);go("path");resetAll()`);
+ok("Zurücksetzen löscht auch angefangene Lektionen",run(`kSnapGet()===null&&localStorage.getItem(SK()+":fortsetzen")===null`));
+run(`settings()`);
+ok("Einstellungen: Export auch für Gäste, Zurücksetzen öffnet erst einen Dialog",/Meine Daten exportieren/.test(run(`app.innerHTML`))&&run(`U`)==="gast");
+
 console.log("\n"+pass+" OK, "+fail+" FAIL");
 process.exit(fail?1:0);

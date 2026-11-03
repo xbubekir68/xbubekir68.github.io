@@ -64,6 +64,11 @@ input[type=search],input.t{width:100%;padding:13px 14px;border-radius:12px;borde
 .chart div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:12px;color:var(--mute);gap:4px}
 .chart i{width:100%;max-width:26px;background:var(--g);border-radius:6px 6px 0 0;min-height:4px}
 .set{display:flex;justify-content:space-between;align-items:center;width:100%;padding:14px 16px;background:var(--card);border:0;border-bottom:1px solid var(--line);text-align:left}
+.dlg{border:1px solid var(--line);border-radius:20px;padding:22px 20px 18px;background:var(--card);color:var(--ink);width:min(420px,calc(100% - 32px))}
+.dlg::backdrop{background:rgba(0,0,0,.5)}
+.dlg h2{margin:0 0 8px;font-size:20px}.dlg p{margin:0}.dlg ul{margin:10px 0 4px;padding-left:20px;line-height:1.7}
+.dlga{display:flex;gap:10px;margin-top:14px}.dlga .btn{margin-top:0}
+.btn.bad{background:var(--bad);color:var(--on)}
 .grp{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:8px 0 18px}.grp .set:last-child{border-bottom:0}
 .sw{width:46px;height:28px;border-radius:99px;background:var(--line);position:relative;flex:none}
 .sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:left .15s}
@@ -1342,6 +1347,27 @@ function kOpts(it){ // vier Antworten als Text, it.ok = Index der richtigen
 const kZDistr=L=>{const has=new Set(L.map(a=>a.i)),pe=shuffle(L.flatMap(a=>DOTF.find(f=>f.includes(a.i))||[]));
   return [...new Set([...pe,...shuffle(ALPHA.map(a=>a.i))])].filter(i=>!has.has(i)&&i!=="hamza").slice(0,L.length>3?3:2).map(i=>ALBY[i])};
 let K=null;
+// Lektion fortsetzen: Stand angefangener Lektionen nur auf diesem Gerät (nicht in S, also ohne Synchronisierung), je Lektion, höchstens 7 Tage und 5 Lektionen. Tests laufen am Stück.
+const KRK=()=>SK()+":fortsetzen",KRMAX=5;
+const kSnapOk=r=>!!r&&Array.isArray(r.T)&&Date.now()-r.ts<=7*864e5&&r.n>0&&r.n<r.T.length&&r.T.slice(0,r.n).some(x=>x.t!=="tipp")&&KL.some(l=>l.id===r.id&&l.art!=="test");
+function kSnapAll(){ // {Lektions-ID: Stand}, nur gültige
+  let m=null;try{m=JSON.parse(localStorage.getItem(KRK())||"null")}catch(e){}
+  const o={};if(m&&typeof m==="object"&&!Array.isArray(m))for(const k in m)if(kSnapOk(m[k])&&m[k].id===k)o[k]=m[k];return o;
+}
+function kSnapPut(m){
+  const ks=Object.keys(m).sort((a,b)=>m[b].ts-m[a].ts),o={};ks.slice(0,KRMAX).forEach(k=>o[k]=m[k]);
+  try{ks.length?localStorage.setItem(KRK(),JSON.stringify(o)):localStorage.removeItem(KRK())}catch(e){}
+}
+function kSnap(){ // nach jeder Antwort, jedem „Weiter“ und beim Verlassen
+  if(!K||!K.l||K.test||K.fin)return;
+  const n=K.fb!==null?K.n+1:K.n,m=kSnapAll(),r={id:K.l.id,n,T:K.T.map(x=>({...x,opts:null,bank:null})),graded:K.graded,first:K.first,miss:K.miss,xp:K.xp,ts:Date.now()};
+  if(kSnapOk(r))m[r.id]=r;else delete m[r.id];kSnapPut(m);
+}
+const kSnapDel=id=>{if(id){const m=kSnapAll();delete m[id];kSnapPut(m)}else try{localStorage.removeItem(KRK())}catch(e){}}; // ohne id: alle
+const kSnapGet=id=>{const m=kSnapAll();return id?m[id]||null:Object.values(m).sort((a,b)=>b.ts-a.ts)[0]||null}; // ohne id: zuletzt angefangene
+const kOrig=r=>r.T.filter(x=>!x.rep).length; // Aufgaben ohne die „Noch einmal“-Runde, Karten zählen wie im Fortschrittsbalken mit
+const kRepAt=r=>!!(r.T[r.n]&&r.T[r.n].rep);
+const kResTxt=r=>kRepAt(r)?"Fehler wiederholen":`Aufgabe ${Math.min(r.T.slice(0,r.n).filter(x=>!x.rep).length+1,kOrig(r))} von ${kOrig(r)}`;
 // Nachsprechen: eigene Aufnahme neben dem Vorbild, bleibt auf dem Gerät. Ohne Mikrofon oder nach „Gerade nicht sprechen“ fällt die Karte weg.
 let MREC=null,MICNO=false,SPAUSE=0;
 const kSpOk=()=>!MICNO&&Date.now()>SPAUSE&&!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.MediaRecorder);
@@ -1376,6 +1402,11 @@ function kSr(tx){
 }
 function startK(l,e){ // l = Lektion; ohne l: Wiederholung der Etappe e
   const hear=canSpeak();let T;e=l?l.e:e||"s1";
+  const r=l&&l.art!=="test"&&kSnapGet(l.id);
+  if(r){ // gespeicherten Stand fortsetzen; Buchstaben wieder als dieselben Objekte wie im Katalog (Antworten werden damit verglichen)
+    K={l,e,T:r.T.map(x=>x.a&&ALBY[x.a.i]?{...x,a:ALBY[x.a.i]}:x),n:r.n,graded:r.graded,first:r.first,miss:r.miss,xp:r.xp,fb:null,picked:null,ps:null,sel:[],rec:null,fin:false,test:null};
+    view="klek";return render();
+  }
   if(l)T=kGen(l,hear);
   else{if(!kRevOk(e)){toast(e==="s1"?"Schließe erst die erste Lektion ab.":"Schließe erst die erste Lektion dieser Etappe ab.");return go("path")}T=kRevE(e,hear)}
   K={l,e,T,n:0,graded:T.filter(x=>!KCARD.includes(x.t)).length,first:0,miss:0,xp:0,fb:null,picked:null,ps:null,sel:[],rec:null,fin:false,test:l&&l.art==="test"?{kind:"ab",need:Math.ceil(T.length*.8),res:[]}:null};
@@ -1442,6 +1473,7 @@ function kAns(ok){ // Bewertung: Fehler kommen am Ende noch einmal (außer im Te
   const it=K.T[K.n],a=it.a;S.alpha=S.alpha||{};K.fb={ok};if(K.test)K.test.res.push(ok);
   if(ok){if(a)S.alpha[a.i]=Math.min(5,aCnt(a.i)+1);const x=it.rep?1:3;K.xp+=x;K.fb.x=x;if(!it.rep)K.first++;sfx("good",Math.min(6,K.first));vib(10);addXP(x)}
   else{if(a)S.alpha[a.i]=Math.max(0,aCnt(a.i)-1);K.miss++;if(!K.test)K.T.push({...it,rep:true,opts:null,bank:null});sfx("bad");vib([40,30,40]);save()}
+  kSnap();
 }
 function klek(){
   if(K.n>=K.T.length&&!(K.test&&K.test.kind==="wissen"&&!K.fin&&kWNext()))return kEnd();
@@ -1564,7 +1596,7 @@ function klek(){
     if(it.t==="hoeren"){$("#rp").onclick=()=>speak(a.sp);if(!done)speak(a.sp)}
     if(!done)document.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{K.picked=b.dataset.o;kAns(K.picked===a.i);if(it.t!=="hoeren"||!K.fb.ok)speakLater(a.sp);klek()});
   }
-  if($("#nx"))$("#nx").onclick=()=>{kRecStop();kSrStop();K.n++;K.fb=null;K.picked=null;K.ps=null;K.sel=[];K.rec=null;K.sr=null;sfx("tap");klek()};
+  if($("#nx"))$("#nx").onclick=()=>{kRecStop();kSrStop();K.n++;K.fb=null;K.picked=null;K.ps=null;K.sel=[];K.rec=null;K.sr=null;kSnap();sfx("tap");klek()};
 }
 const kKnownAll=()=>K&&K.test?ALPHA:K&&K.l?[...kKnown(K.l.k),...(K.l.art==="buchstaben"?kLet(K.l):[])]:kLearnt(); // im Test alle Buchstaben als Ablenker
 function kSum(l){ // was die Lektion gebracht hat: Buchstaben, gelesene Wörter oder Surenanfänge
@@ -1574,7 +1606,7 @@ function kSum(l){ // was die Lektion gebracht hat: Buchstaben, gelesene Wörter 
 function kEnd(){
   if(K.test)return kEndT();
   const l=K.l,nx=l&&KL[l.k+1];
-  if(!K.fin){K.fin=true;K.newDone=l&&!kDone(l.id);
+  if(!K.fin){K.fin=true;K.newDone=l&&!kDone(l.id);if(l)kSnapDel(l.id);
     if(l)kp().d[l.id]=(kp().d[l.id]||0)+1;
     S.st.kurs=(S.st.kurs||0)+1;K.bonus=(l?10:5)+(K.miss?0:5);K.xp+=K.bonus;addXP(K.bonus);
     if(K.newDone)confetti();sfx("win")}
@@ -1605,7 +1637,7 @@ function kpath(){
   const off=`<button class="lnk" data-ko>Zum bisherigen Lernpfad</button>`;
   if(!KURS||!KL.length){paint(`<h1>Lernpfad</h1>${KURS===false?`<div class="card note"><p>Der neue Lernpfad konnte nicht geladen werden. Prüfe die Verbindung.</p><button class="btn alt" id="kr">Nochmal versuchen</button></div>`:`<p class="mute">Lädt …</p>`}${off}`);
     const r=$("#kr");if(r)r.onclick=()=>{KURS=null;loadKurs();kpath()};return}
-  const hint=ui.hint,cur=kCur(),nodes=[],pts=[],bands=[],soon=[],P=104;
+  const hint=ui.hint,cur=kCur(),rsm=kSnapAll(),nodes=[],pts=[],bands=[],soon=[],P=104;
   let y=0,br=true,i=0,amp=22,fr=1.1,ph=0,th="";
   const bend=s=>{i=0;amp=18+(s*5)%9;fr=[1.15,.8,1.4,.95,1.25][(s+5)%5];ph=s*1.7};
   KURS.stufen.forEach(st=>st.etappen.forEach((e,ei)=>{
@@ -1615,8 +1647,8 @@ function kpath(){
     y+=jp?196:140;br=true;bend(ei-1);
     ls.forEach(l=>{const lock=kLocked(l),dn=kDone(l.id),c=l===cur&&!dn,attr=`data-kl="${l.id}"`,x=Math.max(24,Math.min(76,50+amp*Math.sin(i*fr+ph))),pv=KL[l.k-1];i++;
       pts.push({x,y:y+32,dn,brk:br,th});br=false;
-      const sm=lock?(pv.e!==l.e?"nach Etappe "+pv.e.toUpperCase():"nach Lektion "+(pv.li+1)):dn?"geschafft":kSm(l);
-      nodes.push(`<button class="pn abl ${lock?"lock":dn?"done":""} ${c?"cur":""} ${th}" ${attr} style="left:${x.toFixed(1)}%;top:${y}px" aria-label="Lektion ${l.li+1}: ${esc(l.titel)}, ${lock?"gesperrt":dn?"geschafft":"offen"}"><span class="nd">${c?'<img src="icons/favicon-64.png" alt="">':dn?ic("check",24):`<span class="ar${l.station&&l.station.replace(/[ً-ٰۖ-ۭ]/g,"").length>5?" lng":""}" lang="ar">${l.station||kLet(l).slice(0,2).map(a=>a.c).join(" ")}</span>`}</span><span class="lb ${x>50?"l":"r"}"><b>${esc(l.titel)}</b><small>${sm}</small>${lock&&hint===attr?`<small class="hint" role="status">Schließe erst „${esc(pv.titel)}“ ab.</small>`:""}</span></button>`);
+      const rs=!lock&&rsm[l.id],rr=!!rs,sm=lock?(pv.e!==l.e?"nach Etappe "+pv.e.toUpperCase():"nach Lektion "+(pv.li+1)):rr?"Weitermachen · "+kResTxt(rs):dn?"geschafft":kSm(l);
+      nodes.push(`<button class="pn abl ${lock?"lock":dn?"done":""} ${c?"cur":""} ${th}" ${attr} style="left:${x.toFixed(1)}%;top:${y}px" aria-label="Lektion ${l.li+1}: ${esc(l.titel)}, ${lock?"gesperrt":dn?"geschafft":"offen"}${rr?", weitermachen: "+kResTxt(rs):""}"><span class="nd">${c?'<img src="icons/favicon-64.png" alt="">':dn?ic("check",24):`<span class="ar${l.station&&l.station.replace(/[ً-ٰۖ-ۭ]/g,"").length>5?" lng":""}" lang="ar">${l.station||kLet(l).slice(0,2).map(a=>a.c).join(" ")}</span>`}</span><span class="lb ${x>50?"l":"r"}"><b>${esc(l.titel)}</b><small>${sm}</small>${lock&&hint===attr?`<small class="hint" role="status">Schließe erst „${esc(pv.titel)}“ ab.</small>`:""}</span></button>`);
       y+=P});
     if(f.ziel&&f.ziel.art==="alle-buchstaben"){ // Ziel der Etappe: alle Buchstaben, gelernte färben sich grün
       const lt=new Set(kLearnt().map(a=>a.i)),sure=ALPHA.filter(a=>aCnt(a.i)>=3).length,can=lt.size>=4,all=lt.size===ALPHA.length;
@@ -1656,7 +1688,9 @@ let view="home",ui={cat:"Alle",q:""},gt=0;
 const TABS=[["home","home","Start"],["games","pad","Spiele"],["path","path","Lernpfad"],["cards","cards","Karten"],["more","more","Mehr"]];
 const SUB={more:["stats","fav","settings","list","badges","legal"],games:["pairs","blitz","listen"],path:["quiz","lesson","alphabet","letter","aquiz","satz","klek"]};
 const pHint=a=>{if(view!=="path"){ui.hint=a;return go("path")}ui.hint=ui.hint===a?null:a;ui.keep=true;path()}; // gesperrte Station: Grund direkt darunter zeigen statt als Toast
-function go(v){if(v!=="path")ui.hint=null;view=v;render();const m=$("#app");if(m){m.setAttribute("tabindex","-1");try{m.focus({preventScroll:true})}catch(e){}}} // Fokus an den Seitenanfang, damit Screenreader den Wechsel bemerken
+function go(v){
+  if(view==="klek"&&K&&K.l&&!K.test&&!K.fin&&(K.n||K.fb)){kSnap();const r=kSnapGet(K.l.id);if(r)toast(kRepAt(r)?"Gespeichert · du machst mit deinen Fehlern weiter":`Gespeichert · du machst bei ${kResTxt(r)} weiter`)} // X oder Zurück mitten in der Lektion
+  if(v!=="path")ui.hint=null;view=v;render();const m=$("#app");if(m){m.setAttribute("tabindex","-1");try{m.focus({preventScroll:true})}catch(e){}}} // Fokus an den Seitenanfang, damit Screenreader den Wechsel bemerken
 const paint=h=>{app.innerHTML=h;fx()};
 function fx(){requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelectorAll("[data-to]").forEach(e=>{e.style.width=e.dataset.to+"%"})))}
 function render(){
@@ -1665,8 +1699,22 @@ function render(){
   $("#nav").hidden=["quiz","pairs","blitz","aquiz","listen","satz","klek"].includes(view)||(view==="legal"&&!U);
   ({home,path,lesson,alphabet,letter,aquiz,listen,satz,cards,more,list,stats,settings,quiz,fav,games,badges,pairs,blitz,legal,klek})[view]();
   app.classList.remove("enter");void app.offsetWidth;app.classList.add("enter");
-  window.scrollTo(0,0);
+  window.scrollTo(0,0);pushH();
 }
+// Zurück-Geste (Android, Browser): ein Verlaufseintrag, solange nicht Start offen ist. Zurück löst den Zurück-Knopf des Bildschirms aus
+// (Lektionen speichern dabei wie beim X), ohne Knopf geht es zum Tab bzw. zum Start. Auf Start verlässt die Geste die App wie gewohnt.
+let hist=false,popSkip=false;
+function pushH(){
+  if(!window.history||!history.pushState)return;
+  if(view!=="home"){if(!hist)try{history.pushState({mfr:1},"");hist=true}catch(e){}}
+  else if(hist&&history.state&&history.state.mfr){hist=false;popSkip=true;try{history.back()}catch(e){popSkip=false}} // per Tab zurück zum Start: Eintrag wieder entfernen, damit die Geste dort die App verlässt
+}
+const authOn=()=>!!document.querySelector("#app .auth"); // Anmeldebildschirme: Zurück wie im Browser üblich
+addEventListener("popstate",()=>{if(popSkip){popSkip=false;return}hist=false;if(authOn())return;
+  const d=document.querySelector("dialog[open]");
+  if(d)d.close();
+  else if(view!=="home"){const b=document.querySelector("#app .top .x, #lback");if(b)b.click();else{const t=Object.keys(SUB).find(k=>SUB[k].includes(view));go(t||"home")}}
+  if(!authOn())pushH()});
 document.addEventListener("click",e=>{
   const g=e.target.closest("[data-go]");
   if(g){const t=g.dataset.go;sfx("tap");if(t==="review")return startQuiz(null);if(t==="mix")return startMix();if(t==="satz")return startSatz();if(t==="pairs")return startPairs();if(t==="blitz")return startBlitz();if(t==="aquiz")return startAQ();if(t==="listen")return startListen();return go(t)}
@@ -1723,7 +1771,8 @@ function home(){
   <div class="menu">
   ${(()=>{const p=mixPlan(),n=p.due.length+p.nw.length+p.weak.length;
     return n&&!alphaGate()?itm('data-go="mix"',"bolt","Heute dran",n+" Wörter · "+mixText(p),"main"):""})()}
-  ${S.np&&KL.length?(c=>itm(`data-kl="${c.id}"`,"path","Weiterlernen",`Etappe ${c.e.toUpperCase()} · Lektion ${c.li+1}: ${esc(c.titel)}`,"main2"))(kCur()):ns.t==="a"?itm("data-kn","path","Weiterlernen","Buchstaben lernen · Etappe S1 im neuen Lernpfad","main2"):itm(`data-les="${cur.k}"`,"path","Weiterlernen",`Lektion ${cur.k+1}: ${cur.t}`,"main2")}
+  ${S.np&&KL.length?(()=>{const r=kSnapGet(),c=r?KL.find(l=>l.id===r.id):kCur(); // eine angefangene Lektion geht vor
+    return itm(`data-kl="${c.id}"`,"path",r?"Weitermachen":"Weiterlernen",`Etappe ${c.e.toUpperCase()} · Lektion ${c.li+1}: ${esc(c.titel)}${r?" · "+kResTxt(r):""}`,"main2")})():ns.t==="a"?itm("data-kn","path","Weiterlernen","Buchstaben lernen · Etappe S1 im neuen Lernpfad","main2"):itm(`data-les="${cur.k}"`,"path","Weiterlernen",`Lektion ${cur.k+1}: ${cur.t}`,"main2")}
     ${itm('data-go="alphabet"',"list","Alphabet",alphaSure()+" von "+ALPHA.length+" Buchstaben sicher")}
   ${itm('data-go="badges"',"medal","Abzeichen",(S.badges||[]).length+" von "+BADGES.length+" freigeschaltet")}
   ${itm('data-go="stats"',"chart","Statistiken",knownN()+" von "+W.length+" Wörtern gelernt")}
@@ -2043,7 +2092,7 @@ function settings(){
   <p class="mute" style="margin:-10px 0 18px">Bei „automatisch“ verschwinden die Vokalzeichen Schritt für Schritt, sobald ein Wort sicher sitzt – so wie in echten Texten. Antippen zeigt sie jederzeit wieder.</p>
   <p><b>Spiel</b></p><div class="grp">${swr("sd","Töne",S.sound!==false)}${swr("vb","Vibration",S.vib!==false)}${swr("au","Aussprache automatisch",S.auto!==false)}${pick("gl","Tagesziel",[50,100,150,250].map(v=>[v,v+" XP"]),S.goal||100)}</div>
   <p><b>Benachrichtigungen</b></p><div class="grp">${swr("rm","Tägliche Lern-Erinnerung",S.rem)}<label class="set"><span>Uhrzeit</span><input type="time" id="tm" value="${S.time}" style="border:0;background:none;color:var(--mute);font:inherit"></label></div>
-  <p class="mute" style="margin:-10px 0 18px">Die Erinnerung erscheint, solange die Seite geöffnet ist.</p><p><b>Darstellung und Konto</b></p><div class="grp">${pick("th","Darstellung",[["system","System"],["light","Hell"],["dark","Dunkel"]],S.theme)}${U!=="gast"?row("sy","Synchronisierung",`<span class="mute">${SY||"–"}</span>`):""}${row("lo",U==="gast"?"Anmelden oder registrieren":"Abmelden",`<span class="mute" style="max-width:50%;overflow:hidden;text-overflow:ellipsis">${U==="gast"?"Gast":esc(U)}</span>`)}${U!=="gast"?row("ex","Meine Daten exportieren",'<span class="mute">JSON</span>'):""}${row("lg","Datenschutz &amp; Impressum",ic("chev",18))}${row("rs","Fortschritt zurücksetzen",'<span class="mute">Löschen</span>')}${U!=="gast"?row("dl","Konto löschen",'<span class="mute" style="color:var(--bad)">Endgültig</span>'):""}</div>`);
+  <p class="mute" style="margin:-10px 0 18px">Die Erinnerung erscheint, solange die Seite geöffnet ist.</p><p><b>Darstellung und Konto</b></p><div class="grp">${pick("th","Darstellung",[["system","System"],["light","Hell"],["dark","Dunkel"]],S.theme)}${U!=="gast"?row("sy","Synchronisierung",`<span class="mute">${SY||"–"}</span>`):""}${row("lo",U==="gast"?"Anmelden oder registrieren":"Abmelden",`<span class="mute" style="max-width:50%;overflow:hidden;text-overflow:ellipsis">${U==="gast"?"Gast":esc(U)}</span>`)}${row("ex","Meine Daten exportieren",'<span class="mute">JSON</span>')}${row("lg","Datenschutz &amp; Impressum",ic("chev",18))}${row("rs","Fortschritt zurücksetzen",'<span class="mute">Löschen</span>')}${U!=="gast"?row("dl","Konto löschen",'<span class="mute" style="color:var(--bad)">Endgültig</span>'):""}</div>`);
   $("#sd").onclick=()=>{S.sound=S.sound===false;save();if(S.sound)sfx("good",1);settings()};
   $("#vb").onclick=()=>{S.vib=S.vib===false;save();if(S.vib)vib(30);settings()};
   $("#gl").onchange=e=>{S.goal=+e.target.value;save();settings()};
@@ -2055,7 +2104,7 @@ function settings(){
   $("#lg").onclick=()=>go("legal");$("#au").onclick=()=>{S.auto=S.auto===false;save();settings()};
   if($("#ex"))$("#ex").onclick=exportData;
   if($("#dl")){let a2=false;$("#dl").onclick=()=>{if(!a2){a2=true;$("#dl").lastChild.textContent="Nochmal tippen: alles wird gelöscht";return}deleteAccount()}}
-  let arm=false;$("#rs").onclick=()=>{if(!arm){arm=true;$("#rs").lastChild.textContent="Nochmal tippen zum Löschen";return}S.seen=[];S.seenDay="";S.xp=0;S.xpDays={};S.badges=[];S.st={perfect:0,rounds:0,goals:0,pairs:0,blitz:0,mix:0,sent:0};S.alpha={};S.aok="";S.kp={d:{}};S.wt=null;S.sent={};S.days={};S.fav=[];S.box={};S.due={};S.ef={};S.streak=0;S.last="";S.epoch=Date.now();save();settings()};
+  $("#rs").onclick=resetAsk;
 }
 setInterval(()=>{try{const hm=new Date().toTimeString().slice(0,5);if(S.rem&&hm===S.time&&S.notified!==today()&&Notification.permission==="granted"){S.notified=today();save();new Notification("Mufradaat",{body:"Zeit für deine arabischen Vokabeln!"})}}catch(e){}},20000);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -2128,6 +2177,19 @@ addEventListener("pagehide",()=>{if(UID)sync()});
 addEventListener("online",()=>{if(UID)sync()});
 document.addEventListener("click",e=>{if(e.target.closest("#hx")){hintOff=true;if(view==="home")home()}});
 
+// Zurücksetzen: Dialog mit allem, was verloren geht. „Abbrechen“ hat den Fokus, Esc und die Zurück-Geste brechen ab, vorher exportieren geht direkt.
+function resetAll(){S.seen=[];S.seenDay="";S.xp=0;S.xpDays={};S.badges=[];S.st={perfect:0,rounds:0,goals:0,pairs:0,blitz:0,mix:0,sent:0};S.alpha={};S.aok="";S.kp={d:{}};S.wt=null;S.sent={};S.days={};S.fav=[];S.box={};S.due={};S.ef={};S.streak=0;S.last="";S.epoch=Date.now();kSnapDel();save()}
+function resetAsk(){
+  const lost=[[S.xp||0,"XP"],[streak(),"Tag Serie","Tage Serie"],[(S.badges||[]).length,"Abzeichen"],[alphaSure(),"sicherer Buchstabe","sichere Buchstaben"],[Object.keys(kp().d).length,"geschaffte Lektion","geschaffte Lektionen"],[knownN(),"gelerntes Wort","gelernte Wörter"],[(S.fav||[]).length,"Favorit","Favoriten"]];
+  const d=document.createElement("dialog");d.className="dlg";d.setAttribute("aria-labelledby","dlgh");d.setAttribute("aria-describedby","dlgt");
+  d.innerHTML=`<h2 id="dlgh">Fortschritt zurücksetzen?</h2><p id="dlgt">Das wird auf diesem Gerät${U&&U!=="gast"?" und in deinem Konto":""} gelöscht und lässt sich nicht wiederherstellen:</p>
+    <ul>${lost.map(([n,t,pl])=>`<li><b>${n}</b> ${n===1||!pl?t:pl}</li>`).join("")}</ul><button class="lnk" id="dex">Vorher exportieren (JSON)</button>
+    <div class="dlga"><button class="btn alt" id="dno">Abbrechen</button><button class="btn bad" id="dyes">Alles löschen</button></div>`;
+  document.body.appendChild(d);d.addEventListener("close",()=>d.remove());
+  d.querySelector("#dno").onclick=()=>d.close();d.querySelector("#dex").onclick=exportData;
+  d.querySelector("#dyes").onclick=()=>{resetAll();d.close();toast("Fortschritt zurückgesetzt");settings()};
+  d.showModal();d.querySelector("#dno").focus();
+}
 function exportData(){
   const data={exportiert:new Date().toISOString(),konto:U,fortschritt:S};
   const b=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),a=document.createElement("a");
@@ -2249,7 +2311,7 @@ loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v26"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v27"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>
