@@ -287,7 +287,7 @@ Four looks are ruled out on purpose: cartoon mascots, decorative ornament such a
 **Key Characteristics:**
 - One road, many landscapes: the path carries the colour, the rest of the app stays neutral.
 - Arabic first: Noto Naskh Arabic, large sizes and generous line height, so vowel marks never clip.
-- One green for action and success, one brick red for errors, violet only for the path.
+- One green for action and success (Logo Mint on dark surfaces), one brick red for errors.
 - Flat, tonal surfaces with hairline borders. Shadows only for things that float.
 - Bouncy, celebratory feedback that is fully disabled under `prefers-reduced-motion`.
 - Complete light and dark themes, following the system or set manually.
@@ -307,9 +307,9 @@ A warm, earthy neutral base (paper, cream, sand, sage) under a single deep green
 - **Garden Mist** (garden-mist): green as a soft surface. Fills secondary buttons, correct-answer fills, the streak pill, the "learned" status chip, numbered rule bullets, and the halo around the current path stop.
 
 ### Secondary
-- **Night Path Violet** (night-path-violet): the orb behind the Lernpfad tab, wrapped in a 5px card-coloured ring.
+- **Night Path Violet** (night-path-violet): retired in November 2026; the Lernpfad tab now uses Logo Night and Logo Mint.
 - **Path Lilac Glow** (path-lilac-glow): the orb's icon colour and neon glow when the path tab is active.
-- **Dusk Violet** (dusk-violet): the Lernpfad tab's label.
+- **Dusk Violet** (dusk-violet): retired; the Lernpfad tab's label is Deep Garden Green.
 
 ### Tertiary
 - **Star Saffron** (star-saffron, `--star`): earned stars. Related golds:
@@ -333,7 +333,7 @@ A warm, earthy neutral base (paper, cream, sand, sage) under a single deep green
 ### Named Rules
 **The One Green Rule.** Deep Garden Green is the only colour that means "do this" or "correct". Never introduce a second action colour.
 
-**The Path Owns Violet Rule.** Night Path Violet and its lilac glow belong to the learning path, and they may appear wherever the path appears: its tab, entry points, the current stop, path highlights. Nothing unrelated to the path is ever violet.
+**The Path Owns the Night Orb Rule.** The raised Logo Night orb with the mint icon belongs to the learning path: the Lernpfad tab and the current stop. Nothing unrelated to the path uses it.
 
 **The Mirrored Theme Rule.** Every colour token exists in light and dark. Dark values are declared twice: under `@media (prefers-color-scheme: dark)` guarded by `:root:not([data-theme="light"])`, and under `:root[data-theme="dark"]`.
 
@@ -375,7 +375,7 @@ Multi-word lines may go up to line height 2. Arabic inside a German sentence can
 
 The app is a single centred column (max 560px) with 20px top padding, a 24px side gutter, and 110px bottom padding that clears the fixed tab bar. Safe-area insets are honoured on every fixed element. Cards and menu items stack with 10px gaps. Inner card padding is 16px, and the overview card uses 28px. There are no width breakpoints. The overview card adapts through a container query at 430px, where the ring shrinks from 148px to 112px.
 
-The bottom navigation is a fixed bar of five equal tabs, each up to 120px wide. The centre tab is the raised violet path orb, which overlaps the bar's top edge by 30px.
+The bottom navigation is a fixed bar of five equal tabs, each up to 120px wide. The centre tab is the raised Logo Night path orb, which overlaps the bar's top edge by 30px.
 
 The learning path is an absolutely positioned canvas. Stops sit 104px apart vertically and swing sinusoidally between 24% and 76% of the width, with a different amplitude and frequency per unit, so each stretch winds differently. A unit header takes 118px and the goal sign 212px. Labels sit on whichever side of the stop has more room. Horizontal chip rows scroll edge to edge, with soft mask fades and snap points.
 
@@ -441,7 +441,14 @@ Full-width rows: a 22–28px line icon, a bold title, a 13px sub-line and a trai
 Stacked full-width options with 12px corners, a 1.5px sand border and 15px padding. **Correct** turns mist green with a green border, pops, and pulses a green ring outward (0.55s). **Wrong** turns blush with a brick border and shakes 7px left and right (0.35s). Arabic options are centred at 26–34px.
 
 ### Navigation
-A cream bar fixed to the bottom with a hairline top border. It has five tabs (Start, Spiele, Lernpfad, Karten, Mehr), each a 20px line icon over a 12px label. Inactive tabs are sage grey, and the active tab is green and bold. The centre **Lernpfad** tab is a 46px night-violet orb raised out of the bar. When active, its icon turns lilac, scales in (0.9 → 1.12 → 1) and gains a neon drop-shadow glow. Sub-screens use a top row with a 44px back arrow and a 20px title.
+A cream bar fixed to the bottom with a hairline top border. It has five tabs (Start, Spiele, Lernpfad, Karten, Mehr), each a 20px line icon over a 12px label. Inactive tabs are sage grey, and the active tab is green and bold. The centre **Lernpfad** tab is a 46px Logo Night orb with a mint icon, raised out of the bar, wrapped in a 5px card-coloured ring and resting on a 4px Ribbon Depth edge (in dark mode a Logo Mint orb with a night icon). When active, its icon scales in (0.9 → 1) and gains a soft mint glow; the label turns green. Violet is no longer used.
+
+### Start (next stop)
+- **Header:** the transparent logo (130px, no outline) on the left; on the right a saffron streak chip (only with a streak) and a mint XP chip (only with XP).
+- **Greeting:** 30px, weight 900.
+- **Next stop:** a Logo Night card (20px corners) with a Night Circle in the top right corner: a mint label, the stop's Arabic in mint (`--ar5`, long words `--ar4`), a white title, a Night Mute line and one mint button with a night label and Ribbon Depth edge. In dark mode it gets a 1px hairline.
+- **Goal of the Etappe:** a white card with one segment per lesson; finished lessons are mint.
+- **Tiles:** Alphabet (large أ) and Tagesziel (mint ring), side by side; "Dein Fortschritt" below as a list row.
 
 ### The Winding Road (Signature Component)
 The learning path is drawn as an SVG road of 30px stroke over each unit's landscape band, with footprints along the finished stretch. Each unit has its own theme, made of a road surface, an edge, an accent and a footprint colour, with a matching dark set:
@@ -460,7 +467,7 @@ The learning path is drawn as an SVG road of 30px stroke over each unit's landsc
 | th8 | Verbs | brick red | #a33a24 |
 | th9 | Daily life | stone | #6d5a3d |
 
-- **Stops:** 58px circles with a 3px accent border on cream, showing the stop's own Arabic word at `--ar2` (long words at `--ar1`). If a word is too wide, the circle grows into a pill instead of clipping it. **Done** stops are solid green with a check. The **current** stop grows to 76px, shows the app icon (a mint-green Mim on a night-garden disc), and carries the garden-mist halo. **Locked** stops use a dashed border at 50% accent, with muted text.
+- **Stops:** 58px circles with a 3px accent border and a 4px bottom edge, showing the stop's own Arabic word at `--ar2` (long words at `--ar1`; too wide, the circle becomes a pill). **Done** stops are Logo Mint with a night check and a Ribbon Depth edge. The **current** stop is a 76px Logo Night pill with its Arabic in mint (`--ar3`), a 6px mist halo and a 7px Ribbon Depth edge (Logo Mint with night text in dark mode). **Locked** stops use a dashed border at 50% accent, with muted text and no edge.
 - **Unit header:** the Arabic unit name at 30px in the accent colour, then "Einheit N · Title" and a 13px description.
 - **Goal sign:** the unit's longest sentence in Naskh at `--ar3`. Words already begun turn green and unknown ones are muted. Below it sit the German translation, a listen link and a "Sätze üben" button.
 - **Provisional:** the new course will cycle these ten surfaces and give each part of stage 2 its own accent colour.
