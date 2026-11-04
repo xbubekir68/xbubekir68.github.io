@@ -280,7 +280,7 @@ Learning Arabic is a journey you walk one stop at a time. The learning path (Ler
 
 The system is mobile-first and single-column. It is dense with Arabic and light on chrome. The Arabic script is always the largest, most legible thing on screen, set in a real Naskh face, never treated as decoration. German UI text is plain system sans that stays out of its way. Components are **playful and bouncy**. Buttons are pills, cards are soft. Correct answers pop and pulse, wrong ones shake, and stars, confetti and a level-up badge make each step forward a small celebration. All of it switches off under reduced motion.
 
-There are two moods. The start screen is a dusk sky fading from sand to pine green behind a mosque silhouette, with the calligraphic wordmark. The splash at launch is night garden dark, with the wordmark revealed letter by letter in neon mint. Inside the app, light and dark themes mirror each other token for token.
+There are two moods. Brand moments (app start, welcome, sign-in) are Logo Night with the mint ribbon logo. At app start a mint ribbon swings in, the logo's letters fold open one after another as it passes (about 0.5 s each, 70 ms apart), the ribbon shrinks to a thin mint line under the logo that doubles as the loading indicator (a light runs along it while the app loads), and one sheen glides over the letters. With reduced motion the logo and line simply appear. Inside the app, light and dark themes mirror each other token for token.
 
 Four looks are ruled out on purpose: cartoon mascots, decorative ornament such as arabesques and lanterns, Arabic used as decoration, and hearts or lives. The other guardrails below come from what the shipped app does.
 
@@ -319,7 +319,7 @@ A warm, earthy neutral base (paper, cream, sand, sage) under a single deep green
 - **Start screen:** the dusk gradient runs `--dawn` → `--dawn2` → `--pine` → `--pine2`, with `--pine3` text. The wordmark outline is `--wm-line`.
 - **Confetti** reads its colours from the tokens (`--g`, `--spark`, `--bad`, `--g2`, `--dawn`, `--sky`). Fixed hex values outside `:root` are not allowed; pure black/white only appears in masks.
 - **Dusk Sand → Dusk Pine** (dusk-sand, dusk-pine): the start-screen sky gradient (#f2cf9f → #ead9bd 36% → #2d7059 80% → #0f3a2c) and the mosque silhouette, with text in #12332a. The wordmark gets a 1px #0b3d2e outline in light contexts.
-- **Night Mint Neon** (night-mint-neon): the splash screen's glow, halo, ring and loading shuttle. In dark mode it is echoed by the level ring's gradient end (#3dfbb3).
+- **Night Mint Neon** (night-mint-neon): no longer used by the splash, which now uses Logo Mint for the ribbon and loading line and Ribbon Depth (#01795e) for the ribbon's underside. In dark mode it is echoed by the level ring's gradient end (#3dfbb3).
 
 ### Neutral
 - **Warm Primer Paper** (warm-primer-paper): the page background in light mode.
