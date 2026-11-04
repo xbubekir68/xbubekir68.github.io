@@ -20,10 +20,10 @@
 .as1{font-size:var(--ar1);line-height:1.4}.as2{font-size:var(--ar2);line-height:1.5}.as3{font-size:var(--ar3);line-height:1.5}.as4{font-size:var(--ar4);line-height:1.5}.as5{font-size:var(--ar5);line-height:1.4}.as6{font-size:var(--ar6);line-height:1.4}
 
 :root{--bg:#f1f6f4;--card:#ffffff;--ink:#0a1c16;--mute:#4f635c;--line:#dce6e1;--g:#007a62;--g2:#00a383;--gl:#d2f5ea;--on:#fff;--bad:#b0402e;--badl:#f7dfd9;--g-d:#005e4b;--gl-d:#a6e6d4;--bad-d:#7e2c1f;
---night:#010d0b;--night2:#04241d;--night3:#021813;--mint:#00dab0;--night-mute:#9db8af;--band-d:#01795e;--night-track:#0b2a22;--on-night:#ffffff;
+--night:#010d0b;--night2:#04241d;--night3:#021813;--mint:#00dab0;--night-mute:#9db8af;--sk-bg:#fff1d6;--sk-ink:#7a4e0b;--band-d:#01795e;--night-track:#0b2a22;--on-night:#ffffff;
 --ar:"Noto Naskh Arabic","Geeza Pro","Segoe UI","Traditional Arabic",Arial,serif;--sans:Figtree,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#020f0c;--card:#0b1e18;--ink:#e6f2ee;--mute:#94ada5;--line:#18332b;--g:#00dab0;--g2:#3de6c1;--gl:#0c352b;--on:#010d0b;--bad:#e27a68;--badl:#3a1f1a;--g-d:#00957a;--gl-d:#06231c;--bad-d:#a9503f}}
-:root[data-theme="dark"]{--bg:#020f0c;--card:#0b1e18;--ink:#e6f2ee;--mute:#94ada5;--line:#18332b;--g:#00dab0;--g2:#3de6c1;--gl:#0c352b;--on:#010d0b;--bad:#e27a68;--badl:#3a1f1a;--g-d:#00957a;--gl-d:#06231c;--bad-d:#a9503f}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--sk-bg:#3a2c12;--sk-ink:#f0c060;--bg:#020f0c;--card:#0b1e18;--ink:#e6f2ee;--mute:#94ada5;--line:#18332b;--g:#00dab0;--g2:#3de6c1;--gl:#0c352b;--on:#010d0b;--bad:#e27a68;--badl:#3a1f1a;--g-d:#00957a;--gl-d:#06231c;--bad-d:#a9503f}}
+:root[data-theme="dark"]{--sk-bg:#3a2c12;--sk-ink:#f0c060;--bg:#020f0c;--card:#0b1e18;--ink:#e6f2ee;--mute:#94ada5;--line:#18332b;--g:#00dab0;--g2:#3de6c1;--gl:#0c352b;--on:#010d0b;--bad:#e27a68;--badl:#3a1f1a;--g-d:#00957a;--gl-d:#06231c;--bad-d:#a9503f}
 *,*::before,*::after{box-sizing:inherit}
 html{touch-action:pan-x pan-y}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)}
 body{min-height:100vh}
@@ -84,6 +84,25 @@ html.splash-lock .wl,html.splash-lock .wl *{animation-play-state:paused}
 @keyframes wCycle{0%{opacity:0;transform:translateY(18px) scale(.96)}5%{opacity:1;transform:none}21%{opacity:1;transform:none}25%{opacity:0;transform:translateY(-18px) scale(1.02)}100%{opacity:0}}
 @keyframes wTick{0%,21%{background:var(--mint);color:var(--night)}25%,100%{background:transparent;color:var(--night-mute)}}
 @media (prefers-reduced-motion:reduce){.wl-top,.wl-tx h1,.wl-tx p,.wl-go,.wl-sc{animation:none}.wl-st>div{animation:none}.wl-st>div:nth-child(3){opacity:1}.wl-tk span{animation:none}.wl-tk span:nth-child(3){background:var(--mint);color:var(--night)}}
+/* Start im neuen Design: Kopf mit Logo und Chips, dunkle Karte „Nächster Halt“ in Logo-Farben, Segmente, Kacheln */
+.hhd{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px}.hhd .wm{width:130px}
+.chips{display:flex;gap:8px}.flame{background:var(--sk-bg);color:var(--sk-ink);font-weight:800;font-size:14px;padding:6px 11px}.flame svg{color:var(--star)}
+.xpc{display:inline-flex;align-items:center;padding:6px 11px;border-radius:999px;background:var(--gl);color:var(--g);font-weight:800;font-size:14px;white-space:nowrap}
+.hi{margin:16px 0 0;font-size:30px;font-weight:900;letter-spacing:-.03em}
+.nh.dk{position:relative;overflow:hidden;background:var(--night);color:var(--on-night);border:0;padding:20px 20px 22px;border-radius:20px}
+.nh.dk>*{position:relative}.nh.dk .nhc{position:absolute;right:-50px;top:-50px;width:170px;height:170px;border-radius:50%;background:var(--night2)}
+.nh.dk .nhl{color:var(--mint);font-weight:800;font-size:13px;letter-spacing:.01em}
+.nh.dk .nha{color:var(--mint);font-size:var(--ar5);line-height:1.4}.nh.dk .nha.lng{font-size:var(--ar4);line-height:1.5}
+.nh.dk h2{color:var(--on-night);font-weight:900;font-size:21px}.nh.dk p.mute{color:var(--night-mute)}
+.nh.dk .btn{background:var(--mint);color:var(--night);--g-d:var(--band-d)}.nh.dk .btn.alt{background:var(--night2);color:var(--mint);--g-d:var(--night3)}
+.zseg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:6px;margin-top:12px}.zseg i{height:10px;border-radius:999px;background:var(--line)}.zseg i.on{background:var(--mint)}
+.ht{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.ht button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px 16px;color:var(--ink);font:inherit;cursor:pointer;min-height:44px}
+.ht b{font-size:15px}.ht small{font-size:13px;color:var(--mute)}.ht .ar{font-size:var(--ar3);line-height:1.4;color:var(--g)}
+.kph{display:flex;align-items:center;gap:10px;margin:8px 0 4px;font-size:14px;color:var(--mute)}.kph b{font-size:13px}
+.kpb{flex:1;height:8px;border-radius:999px;background:var(--line);overflow:hidden}.kpb i{display:block;height:100%;border-radius:999px;background:var(--mint)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .nh.dk{box-shadow:0 0 0 1px var(--line)}:root:not([data-theme="light"]) .pn.cur .nd{background:var(--mint);color:var(--night)}}
+:root[data-theme="dark"] .nh.dk{box-shadow:0 0 0 1px var(--line)}:root[data-theme="dark"] .pn.cur .nd{background:var(--mint);color:var(--night)}
 #app:focus{outline:none}a:focus-visible,summary:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--g2);outline-offset:2px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
 .btn{width:100%;border:0;border-radius:16px;background:var(--g);color:var(--on);padding:15px;font-weight:800;font-size:17px;margin-top:16px;box-shadow:0 5px 0 var(--g-d);transition:transform .08s,box-shadow .08s}.btn:active:not(:disabled){transform:translateY(3px);box-shadow:0 2px 0 var(--g-d)}
@@ -149,19 +168,19 @@ input[type=search],input.t{width:100%;padding:13px 14px;border-radius:12px;borde
 nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:center;padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px))}
 nav button{flex:1;max-width:120px;border:0;background:none;color:var(--mute);font-size:12px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px;min-height:48px;justify-content:center}
 nav button span{font-size:20px}nav button.on{color:var(--g);font-weight:700}
-:root{--vi:#231a45;--vn:#c98bff;--vil:#5a49a6}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--vi:#21193f;--vn:#d4a0ff;--vil:#cdb8ff}}
-:root[data-theme="dark"]{--vi:#21193f;--vn:#d4a0ff;--vil:#cdb8ff}
-nav button.main{color:var(--vil);font-weight:600}nav button.main span{display:grid;place-items:center;width:46px;height:46px;margin:-30px 0 -2px;border-radius:50%;background:var(--vi);color:#fff;border:5px solid var(--card);box-sizing:content-box;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--vn) 40%,transparent)}
+:root{--vi:var(--night);--vn:var(--mint);--vil:var(--g)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--vi:var(--mint);--vn:var(--night);--vil:var(--g)}}
+:root[data-theme="dark"]{--vi:var(--mint);--vn:var(--night);--vil:var(--g)}
+nav button.main{color:var(--vil);font-weight:600}nav button.main span{display:grid;place-items:center;width:46px;height:46px;margin:-30px 0 -2px;border-radius:50%;background:var(--vi);color:var(--vn);border:5px solid var(--card);box-sizing:content-box;box-shadow:0 4px 0 var(--band-d)}
 nav button.main span svg{width:24px;height:24px;stroke-width:2}
 nav button.main.on span{color:var(--vn);animation:vi-on .55s ease-out}
 nav button.main.on span svg{filter:drop-shadow(0 0 2px var(--vn)) drop-shadow(0 0 7px color-mix(in srgb,var(--vn) 60%,transparent));animation:vi-glow .55s ease-out}
-@keyframes vi-on{from{color:#fff}to{color:var(--vn)}}
+@keyframes vi-on{from{transform:scale(.9)}to{transform:none}}
 @keyframes vi-glow{0%{filter:drop-shadow(0 0 0 transparent);transform:scale(.9)}45%{filter:drop-shadow(0 0 4px var(--vn)) drop-shadow(0 0 14px var(--vn));transform:scale(1.12)}100%{filter:drop-shadow(0 0 2px var(--vn)) drop-shadow(0 0 7px color-mix(in srgb,var(--vn) 60%,transparent));transform:scale(1)}}
 @media (prefers-reduced-motion:reduce){nav button.main.on span,nav button.main.on span svg{animation:none}}
 nav button.main.on{font-weight:700}
 nav button.main:focus-visible{outline:none}nav button.main:focus-visible span{outline:2px solid var(--ink);outline-offset:1px}
-.wm{filter:drop-shadow(1px 0 0 var(--wm-line)) drop-shadow(-1px 0 0 var(--wm-line)) drop-shadow(0 1px 0 var(--wm-line)) drop-shadow(0 -1px 0 var(--wm-line))}
+.wm{filter:none}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .wm{filter:none}}:root[data-theme="dark"] .wm{filter:none}
 .hero{text-align:center;padding:40px 10px 10px}.hero .ar{font-size:var(--ar5);color:var(--g);line-height:1.4}
 nav[hidden]{display:none}
@@ -215,15 +234,15 @@ nav[hidden]{display:none}
 .ub{position:absolute;left:0;right:0}
 .pgr{position:absolute;left:0;right:0;display:grid;justify-items:center;text-align:center;gap:2px;padding-top:14px}.pgr .ut{font-size:var(--ar3);line-height:1.5;color:var(--ac,var(--g))}.pgr b{font-size:16px}.pgr small{font-size:13px;color:var(--mute)}
 .pn{position:absolute;width:64px;height:64px;transform:translateX(-50%);display:grid;place-items:center;background:none;border:0;padding:0;color:var(--ink)}
-.pn .nd{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;border:3px solid var(--ac,var(--g));background:var(--card);color:var(--ac,var(--g));overflow:hidden}.pn .nd .ar{font-size:var(--ar1);line-height:1.4;padding-top:5px;white-space:nowrap}
+.pn .nd{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;border:3px solid var(--ac,var(--g));background:var(--card);color:var(--ac,var(--g));overflow:hidden;box-shadow:0 4px 0 color-mix(in srgb,var(--ac,var(--g)) 30%,var(--line))}.pn .nd .ar{font-size:var(--ar1);line-height:1.4;padding-top:5px;white-space:nowrap}
 .pn .lb{position:absolute;top:50%;transform:translateY(-50%);width:clamp(96px,calc(50vw - 56px),140px);display:grid;gap:2px;text-align:left}.pn .lb.l{right:calc(100% + 10px);text-align:right}.pn .lb.r{left:calc(100% + 10px)}
 .pn b{font-size:15px;line-height:1.2}.pn small{font-size:12px;color:var(--mute)}.pn small .ar{font-size:var(--ar1);line-height:1.4}.pn .hint,.sgn .hint{display:block;color:var(--g);font-weight:600;margin-top:2px}
 .pn.abl .nd .ar{font-size:var(--ar2);line-height:1.5}.pn.abl .nd .ar.lng{font-size:var(--ar1);line-height:1.4}
 .askip{margin-top:12px}.askip .btn{margin-top:10px}.askip p{margin-top:4px}.note{margin-top:12px;border-color:var(--g);background:var(--gl)}.note p{font-size:14px;line-height:1.45}
 details.rule{display:block;margin-top:12px}details.rule>ol,details.rule>p{margin-top:10px}details.rule summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between}details.rule summary::-webkit-details-marker{display:none}details.rule summary::after{content:"+";font-size:20px;color:var(--mute);line-height:1}details.rule[open] summary::after{content:"–"}details.rule[open] summary{margin-bottom:8px}
 .pn:not(.cur) .nd{width:auto;min-width:58px;padding:0 6px;border-radius:999px} /* lange Stationswörter: der Kreis wird zur Pille, statt Zeichen abzuschneiden */
-.pn.done .nd{background:var(--g);color:var(--on)}.pn.cur .nd{width:76px;height:76px;border:0;box-shadow:0 0 0 6px var(--gl)}.pn.cur .nd img{width:100%;height:100%}.pn.cur .lb.r{left:calc(100% + 18px)}.pn.cur .lb.l{right:calc(100% + 18px)}.pn.cur b{font-size:16px}
-.pn.lock .nd{border:3px dashed color-mix(in srgb,var(--ac,var(--mute)) 50%,transparent);color:var(--mute);background:var(--card)}.pn.lock b{color:var(--mute);font-weight:500}
+.pn.done .nd{background:var(--mint);color:var(--night);border-color:var(--mint);box-shadow:0 4px 0 var(--band-d)}.pn.cur .nd{min-width:76px;width:auto;height:76px;padding:0 10px;box-sizing:border-box;border:0;border-radius:999px;background:var(--night);color:var(--mint);box-shadow:0 0 0 6px var(--gl),0 7px 0 var(--band-d)}.pn.cur .nd .ar{font-size:var(--ar3);line-height:1.5;padding-top:4px}.pn.cur .nd .ar.lng{font-size:var(--ar2);line-height:1.5}.pn.cur .lb.r{left:calc(100% + 18px)}.pn.cur .lb.l{right:calc(100% + 18px)}.pn.cur b{font-size:16px}
+.pn.lock .nd{box-shadow:none;border:3px dashed color-mix(in srgb,var(--ac,var(--mute)) 50%,transparent);color:var(--mute);background:var(--card)}.pn.lock b{color:var(--mute);font-weight:500}
 .sgn{position:absolute;left:50%;transform:translateX(-50%);width:min(320px,96%);display:grid;justify-items:center;gap:2px;text-align:center;background:var(--card);border:2px solid var(--line);border-radius:20px;padding:10px 14px 12px}.sgn.all,.sgn.done{border-color:var(--g)}
 .sgn .eta{font-size:12px;color:var(--mute)}.sgn .sent{background:none;border:0;padding:0;font-family:var(--ar);font-size:var(--ar3);line-height:1.7;color:var(--ink)}.sgn .sent .k{color:var(--g)}.sgn .sent .u{color:var(--mute);opacity:.6}.sgn .de{font-weight:600;font-size:15px}.sgn small{font-size:12px;color:var(--mute)}
 /* Lernpfad: jede Einheit hat ihre eigene Landschaft und ihren eigenen Wegbelag */
@@ -1648,7 +1667,7 @@ function kpath(){
     ls.forEach(l=>{const lock=kLocked(l),dn=kDone(l.id),c=l===cur&&!dn,attr=`data-kl="${l.id}"`,x=Math.max(24,Math.min(76,50+amp*Math.sin(i*fr+ph))),pv=KL[l.k-1];i++;
       pts.push({x,y:y+32,dn,brk:br,th});br=false;
       const rs=!lock&&rsm[l.id],rr=!!rs,sm=lock?(pv.e!==l.e?"nach Etappe "+pv.e.toUpperCase():"nach Lektion "+(pv.li+1)):rr?"Weitermachen · "+kResTxt(rs):dn?"geschafft":kSm(l);
-      nodes.push(`<button class="pn abl ${lock?"lock":dn?"done":""} ${c?"cur":""} ${th}" ${attr} style="left:${x.toFixed(1)}%;top:${y}px" aria-label="Lektion ${l.li+1}: ${esc(l.titel)}, ${lock?"gesperrt":dn?"geschafft":"offen"}${rr?", weitermachen: "+kResTxt(rs):""}"><span class="nd">${c?'<img src="icons/favicon-64.png" alt="">':dn?ic("check",24):`<span class="ar${l.station&&l.station.replace(/[ً-ٰۖ-ۭ]/g,"").length>5?" lng":""}" lang="ar">${l.station||kLet(l).slice(0,2).map(a=>a.c).join(" ")}</span>`}</span><span class="lb ${x>50?"l":"r"}"><b>${esc(l.titel)}</b><small>${sm}</small>${lock&&hint===attr?`<small class="hint" role="status">Schließe erst „${esc(pv.titel)}“ ab.</small>`:""}</span></button>`);
+      nodes.push(`<button class="pn abl ${lock?"lock":dn?"done":""} ${c?"cur":""} ${th}" ${attr} style="left:${x.toFixed(1)}%;top:${y}px" aria-label="Lektion ${l.li+1}: ${esc(l.titel)}, ${lock?"gesperrt":dn?"geschafft":"offen"}${rr?", weitermachen: "+kResTxt(rs):""}"><span class="nd">${dn&&!c?ic("check",24):`<span class="ar${l.station&&l.station.replace(/[ً-ٰۖ-ۭ]/g,"").length>5?" lng":""}" lang="ar">${l.station||kLet(l).slice(0,2).map(a=>a.c).join(" ")}</span>`}</span><span class="lb ${x>50?"l":"r"}"><b>${esc(l.titel)}</b><small>${sm}</small>${lock&&hint===attr?`<small class="hint" role="status">Schließe erst „${esc(pv.titel)}“ ab.</small>`:""}</span></button>`);
       y+=P});
     if(f.ziel&&f.ziel.art==="alle-buchstaben"){ // Ziel der Etappe: alle Buchstaben, gelernte färben sich grün
       const lt=new Set(kLearnt().map(a=>a.i)),sure=ALPHA.filter(a=>aCnt(a.i)>=3).length,can=lt.size>=4,all=lt.size===ALPHA.length;
@@ -1673,7 +1692,7 @@ function kpath(){
   const land=bands.map((b,n)=>`<div class="ub ${b.th}" style="top:${b.y+4}px;height:${(n+1<bands.length?bands[n+1].y:y)-b.y-8}px">${b.h}</div>`).join("");
   const dn=KL.filter(l=>kDone(l.id)).length,st1=KURS.stufen[0];
   const old=`<p class="mute kold">Bis Stufe 2 da ist, übst du Wörter und Sätze im bisherigen Lernpfad. Dein Fortschritt dort bleibt erhalten.</p>${off}`; // der bisherige Pfad bleibt erreichbar, am Ende statt über dem Weg
-  paint(`<h1>Lernpfad</h1><p class="mute">Stufe ${st1.id} · ${esc(st1.titel)} · ${dn} von ${KL.length} Lektionen geschafft</p>
+  paint(`<h1 class="hi">Lernpfad</h1><div class="kph"><span>Stufe ${st1.id} · ${esc(st1.titel)}</span><span class="kpb" role="img" aria-label="${dn} von ${KL.length} Lektionen geschafft"><i style="width:${Math.round(dn/KL.length*100)}%"></i></span><b>${dn}/${KL.length}</b></div>
   ${!dn&&!S.wt?`<div class="card askip kwt"><b>Kannst du schon etwas lesen?</b><p class="mute">Ein kurzer Einstufungstest zeigt, wo du einsteigst. Was du schon kannst, zählt dann als geschafft.</p><button class="btn" data-kt="wissen">Einstufungstest starten</button><button class="lnk" data-kt="nein">Ich fange von vorn an</button></div>`:""}
   <details class="card rule"><summary><b>So funktioniert der Lernpfad</b></summary><ol><li><i>1</i><span>Stufe 1 bringt dir das <b>Lesen</b> bei, von den Buchstaben bis zur Schrift des Korans. Danach lernst du in Stufe 2 die Sprache.</span></li><li><i>2</i><span>Jede <b>Lektion</b> mischt kurze Aufgaben: kennenlernen, erkennen, hören, zuordnen und Wörter in Buchstaben zerlegen.</span></li><li><i>3</i><span>Fehler kommen am Ende der Lektion noch einmal, bis sie sitzen. Danach öffnet sich die nächste Lektion.</span></li><li><i>4</i><span>Du kannst schon etwas? Vor jeder gesperrten Etappe springst du mit einem <b>Test</b> weiter.</span></li></ol><button class="lnk" data-kt="wissen">Einstufungstest machen</button></details>
   <div class="pth" style="height:${y}px">${land}${road}${nodes.join("")}</div>
@@ -1818,26 +1837,30 @@ function welcome(){
 function homeNp(){
   if(obNeed())return welcome();
   const st=streak(),due=dueN(),name=U&&U!=="gast"?", "+esc(U.split("@")[0]):"";
-  const top=`<div class="mark"><img class="wm" src="brand/mufradaat.webp" width="720" height="194" alt="Mufradaat"></div>
-  <div class="row sp" style="margin-top:8px"><h1 style="margin:0">Ahlan wa Sahlan${name}!</h1>${st?`<span class="flame on" role="img" aria-label="Serie: ${st} ${st===1?"Tag":"Tage"}">${ic("flame",18,true)} ${st}</span>`:""}</div>
+  const top=`<div class="hhd"><img class="wm" src="brand/mufradaat.webp" width="720" height="194" alt="Mufradaat"><div class="chips">${st?`<span class="flame on" role="img" aria-label="Serie: ${st} ${st===1?"Tag":"Tage"}">${ic("flame",16,true)} ${st}</span>`:""}${S.xp?`<span class="xpc">${S.xp} XP</span>`:""}</div></div>
+  <h1 class="hi">Ahlan wa Sahlan${name}!</h1>
   ${!canSpeak()&&!hintOff?`<div class="card hint" role="note"><p>Auf diesem Gerät ist keine arabische Stimme installiert. Die Aussprache fehlt oder klingt falsch. Du kannst in den Systemeinstellungen (Sprachausgabe) eine arabische Stimme hinzufügen.</p><button class="x" id="hx" aria-label="Hinweis schließen">${ic("close")}</button></div>`:""}`;
   if(!KL.length){paint(top+`<div class="card nh">${KURS===false?`<p>Der Lernpfad konnte nicht geladen werden. Prüfe die Verbindung.</p><button class="btn alt" id="kr">Nochmal versuchen</button>`:`<p class="mute">Lernpfad lädt …</p>`}</div>`);
     const r=$("#kr");if(r)r.onclick=()=>{KURS=null;loadKurs();homeNp()};return}
   const r=kSnapGet(),l=r?KL.find(x=>x.id===r.id):kCur(),e=kEtap(l.e),zl=(KE[l.e]||{}).ziel,ls=KL.filter(x=>x.e===l.e),dnE=ls.filter(x=>kDone(x.id)).length;
   const fresh=!Object.keys(kp().d).length,all=KL.every(x=>kDone(x.id)),big=l.station||kLet(l).slice(0,4).map(a=>a.c).join(" ")||e.ar;
-  const nh=all?`<div class="card nh"><p class="nhl">Stufe 1 geschafft</p><p class="ar nha" lang="ar">${esc(KURS.stufen[0].ar)}</p><h2>Du kannst Arabisch lesen</h2><p class="mute">Alle Etappen sind geschafft. Die nächste Stufe ist in Arbeit. Bis dahin kannst du jede Lektion wiederholen und unter Karten Wörter lernen.</p>
+  const lng=big.replace(/[\u064B-\u065F\u0670\u06D6-\u06ED\s]/g,"").length>6?" lng":"";
+  const nh=all?`<div class="card nh dk"><span class="nhc" aria-hidden="true"></span><p class="nhl">Stufe 1 geschafft</p><p class="ar nha" lang="ar">${esc(KURS.stufen[0].ar)}</p><h2>Du kannst Arabisch lesen</h2><p class="mute">Alle Etappen sind geschafft. Die nächste Stufe ist in Arbeit. Bis dahin kannst du jede Lektion wiederholen und unter Karten Wörter lernen.</p>
       <button class="btn" data-go="path">Zum Lernpfad</button><button class="btn alt" data-go="cards">Wörter lernen</button></div>`
-    :`<div class="card nh"><p class="nhl">${r?"Angefangen":fresh?"Dein erster Halt":"Nächster Halt"} · Etappe ${e.id.toUpperCase()} · ${esc(e.titel)}</p>
-      <p class="ar nha" lang="ar">${big}</p><h2>${l.art==="test"?esc(l.titel):`Lektion ${l.li+1}: ${esc(l.titel)}`}</h2><p class="mute">${r?kResTxt(r):kSm(l)}</p>
+    :`<div class="card nh dk"><span class="nhc" aria-hidden="true"></span><p class="nhl">${r?"Angefangen":fresh?"Dein erster Halt":"Nächster Halt"} · Etappe ${e.id.toUpperCase()} · ${esc(e.titel)}</p>
+      <p class="ar nha${lng}" lang="ar">${big}</p><h2>${l.art==="test"?esc(l.titel):`Lektion ${l.li+1}: ${esc(l.titel)}`}</h2><p class="mute">${r?kResTxt(r):kSm(l)}</p>
       <button class="btn" data-kl="${l.id}">${r?"Weitermachen":fresh?"Erste Lektion starten":"Lektion starten"}</button></div>`;
   const zp=all?"":zl&&zl.art==="alle-buchstaben"?`<p class="mute">${kLearnt().length} von ${ALPHA.length} Buchstaben gelernt</p>`:zl&&zl.ar?`<p class="ar zar" lang="ar">${zl.ar}</p><p class="mute">${esc(zl.de||"")}</p>`:"";
   const ziel=all?"":`<div class="card zk"><p class="nhl">Ziel der Etappe</p><p><b>${esc(zl?zl.text:e.kurz)}</b></p>${zp}
-    <div class="zb" role="img" aria-label="${dnE} von ${ls.length} Lektionen dieser Etappe geschafft"><i style="width:${Math.round(dnE/ls.length*100)}%"></i></div><p class="mute zs">${dnE} von ${ls.length} Lektionen geschafft</p></div>`;
+    <div class="zseg" role="img" aria-label="${dnE} von ${ls.length} Lektionen dieser Etappe geschafft">${ls.map(x=>`<i class="${kDone(x.id)?"on":""}"></i>`).join("")}</div><p class="mute zs">${dnE} von ${ls.length} Lektionen geschafft</p></div>`;
   const z8=(KE.s8||{}).ziel,mine=S.ob&&S.ob.z==="koran"&&l.e!=="s8"&&!all&&z8?`<p class="mute obz">Dein Ziel, den Koran zu lesen: In Etappe S8 liest du die Basmala.</p>`
     :S.ob&&S.ob.z==="sprache"&&!all?`<p class="mute obz">Dein Ziel, Arabisch zu verstehen: Erst kommt das Lesen, dann Wörter und Sätze. ${fGate("cards")?"Nach Etappe S3 öffnen sich die Karteikarten für Wörter.":"Wörter kannst du schon jetzt unter Karten üben."}</p>`:"";
+  const g=S.goal||100,xd=S.xpDays[today()]||0,C=2*Math.PI*17,gf=Math.min(1,xd/g);
+  const tiles=`<div class="ht"><button data-go="alphabet"><span class="ar" lang="ar">أ</span><b>Alphabet</b><small>${alphaSure()} von ${ALPHA.length} sicher</small></button>
+    <button data-go="stats"><svg width="42" height="42" viewBox="0 0 42 42" aria-hidden="true"><circle cx="21" cy="21" r="17" fill="none" stroke-width="6" style="stroke:var(--line)"/>${gf?`<circle cx="21" cy="21" r="17" fill="none" stroke-width="6" stroke-linecap="round" style="stroke:var(--mint)" stroke-dasharray="${(gf*C).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 21 21)"/>`:""}</svg><b>Tagesziel</b><small>${Math.min(xd,g)} von ${g} XP heute</small></button></div>`;
   const mix=(()=>{const p=mixPlan(),n=p.due.length+p.nw.length+p.weak.length;return n&&!alphaGate()&&Object.keys(S.box).length?itm('data-go="mix"',"bolt","Wörter: heute dran",n+" Wörter · "+mixText(p)):""})();
   paint(top+nh+ziel+mine+`${due?`<button class="cta alt2" data-go="review">${due} Wörter wiederholen</button>`:""}
-  <div class="menu">${mix}${itm('data-go="alphabet"',"list","Alphabet",alphaSure()+" von "+ALPHA.length+" Buchstaben sicher")}${itm('data-go="stats"',"chart","Dein Fortschritt",`Level ${lvl()} · ${S.xp||0} XP · ${Object.keys(kp().d).length} von ${KL.length} Lektionen`)}</div>`);
+  ${tiles}<div class="menu">${mix}${itm('data-go="stats"',"chart","Dein Fortschritt",`Level ${lvl()} · ${S.xp||0} XP · ${Object.keys(kp().d).length} von ${KL.length} Lektionen`)}</div>`);
 }
 // nächster Schritt: erst Buchstaben (solange nicht erledigt, übersprungen oder schon Wörter gestartet), dann die aktuelle Lektion
 function nextStep(){
@@ -2424,7 +2447,7 @@ loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v35"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v36"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>

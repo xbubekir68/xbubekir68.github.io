@@ -941,5 +941,18 @@ run(`more()`);ok("Mehr: jede Zeile hat eine Unterzeile",(run(`app.innerHTML`).ma
 }
 run(`U="gast";loadS()`);
 
+// ---------- 22. Start, Leiste und Lernpfad im neuen Design ----------
+run(`U="neu22";loadS();S.ob={z:"lesen",d:today()};S.kp.d["s1-1"]=1;S.xp=12;S.xpDays[today()]=12;home()`);let h22=run(`app.innerHTML`);
+ok("Start: Kopf mit Logo ohne Umrandung, XP-Chip, Begrüßung",/class="hhd"><img class="wm"/.test(h22)&&/class="xpc">12 XP</.test(h22)&&/class="hi">Ahlan wa Sahlan/.test(h22)&&/\.wm\{filter:none\}/.test(html)&&!/\.wm\{filter:drop-shadow/.test(html));
+ok("… „Nächster Halt“ als dunkle Karte in Logo-Farben",/class="card nh dk"><span class="nhc"/.test(h22)&&/\.nh\.dk\{[^}]*background:var\(--night\)/.test(html)&&/\.nh\.dk \.btn\{background:var\(--mint\);color:var\(--night\)/.test(html));
+ok("… Ziel der Etappe in Segmenten, eins je Lektion, geschaffte gefüllt",(h22.match(/<div class="zseg"[^>]*>(.*?)<\/div>/)||[,""])[1].match(/<i/g).length===6&&(h22.match(/<i class="on"><\/i>/g)||[]).length===1);
+ok("… Kacheln Alphabet und Tagesziel",/class="ht"><button data-go="alphabet">/.test(h22)&&/<b>Tagesziel<\/b><small>12 von 100 XP heute/.test(h22));
+run(`S.xp=0;S.xpDays={};home()`);ok("… ohne XP kein XP-Chip und kein leerer Ring",!/class="xpc"/.test(run(`app.innerHTML`))&&!/stroke:var\(--mint\)/.test(run(`app.innerHTML`)));
+ok("Leiste: kein Lila mehr, Lernpfad-Knopf in Logo-Farben",/--vi:var\(--night\);--vn:var\(--mint\)/.test(html)&&!/#231a45|#c98bff|#5a49a6|#21193f|#d4a0ff|#cdb8ff/.test(html));
+run(`view="path";path()`);let p22=run(`app.innerHTML`);
+ok("Lernpfad: Kopf mit Fortschrittsbalken",/class="kph"><span>Stufe 1 · Lesen lernen<\/span><span class="kpb" role="img" aria-label="1 von \d+ Lektionen geschafft">/.test(p22));
+ok("… aktuelle Station zeigt ihr Zeichen statt des App-Icons, geschaffte einen Haken",!/favicon-64/.test(p22)&&/pn abl\s+cur[^"]*" data-kl="s1-2"[^>]*><span class="nd"><span class="ar" lang="ar">ج ح</.test(p22)&&/pn abl done[^"]*" data-kl="s1-1"[^>]*><span class="nd"><svg/.test(p22),p22.match(/data-kl="s1-2"[^>]*><span class="nd">.{0,60}/)?.[0]);
+run(`U="gast";loadS()`);
+
 console.log("\n"+pass+" OK, "+fail+" FAIL");
 process.exit(fail?1:0);
