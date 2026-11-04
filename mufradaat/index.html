@@ -33,9 +33,9 @@ h1,.h1{font-size:26px;font-weight:700;margin:6px 0 4px}h2{font-size:20px;margin:
 p{margin:0}.mute{color:var(--mute);font-size:14px}
 button{font:inherit;color:inherit;cursor:pointer}
 /* Willkommen und Anmeldung: dunkle Fläche in den Farben des Logos, darunter hell; Bewegung nur ohne „Bewegung reduzieren“ */
-.wl{position:fixed;inset:0;z-index:10;overflow:auto;background:var(--bg);color:var(--ink);display:flex;flex-direction:column;align-items:center}
-.wl>*{width:100%;max-width:480px;box-sizing:border-box}
-html.splash-lock .wl,html.splash-lock .wl *{animation-play-state:paused}
+.wel{position:fixed;inset:0;z-index:10;overflow:auto;background:var(--bg);color:var(--ink);display:flex;flex-direction:column;align-items:center}
+.wel>*{width:100%;max-width:480px;box-sizing:border-box}
+html.splash-lock .wel,html.splash-lock .wel *{animation-play-state:paused}
 .wl-top{position:relative;flex:none;height:min(440px,54vh);min-height:380px;display:flex;flex-direction:column;background:var(--night);color:var(--mint);border-radius:0 0 40px 40px;overflow:hidden;padding-top:env(safe-area-inset-top,0px);animation:wDrop .7s cubic-bezier(.2,.8,.2,1) both}
 .wl-c1{position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:var(--night2)}
 .wl-c2{position:absolute;left:-40px;bottom:-70px;width:180px;height:180px;border-radius:50%;background:var(--night3)}
@@ -68,12 +68,12 @@ html.splash-lock .wl,html.splash-lock .wl *{animation-play-state:paused}
 .wl-tabs button{height:44px;border:0;border-radius:12px;background:none;color:var(--mute);font:800 15px var(--sans);cursor:pointer}
 .wl-tabs button[aria-selected="true"]{background:var(--card);color:var(--g);box-shadow:0 2px 0 var(--gl-d)}
 .wl-pad label{display:block;margin:16px 0 6px;font-size:14px;font-weight:600}
-.wl input.t{height:52px;border-width:2px;border-radius:14px;font-size:16px}
-.wl input.t:focus{outline:none;border-color:var(--g);box-shadow:0 0 0 4px var(--gl)}
+.wel input.t{height:52px;border-width:2px;border-radius:14px;font-size:16px}
+.wel input.t:focus{outline:none;border-color:var(--g);box-shadow:0 0 0 4px var(--gl)}
 .wl-pw{position:relative}.wl-pw input.t{padding-right:52px}
 .wl-eye{position:absolute;right:4px;top:4px;width:44px;height:44px;border:0;background:none;color:var(--mute);display:grid;place-items:center;cursor:pointer}
 .wl-eye[aria-pressed="true"]{color:var(--g)}
-.wl a{color:var(--g)}.wl-fg{margin:10px 0 0;text-align:right;font-size:14px}.wl-fg a,.wl-legal a{font-weight:600;text-underline-offset:3px}
+.wel a{color:var(--g)}.wl-fg{margin:10px 0 0;text-align:right;font-size:14px}.wl-fg a,.wl-legal a{font-weight:600;text-underline-offset:3px}
 .wl-ac .btn{margin-top:0}.wl-note{margin:12px 4px 0;font-size:12px;text-align:center}.wl-legal{margin:8px 0 0;font-size:13px;text-align:center}.wl-legal a{color:var(--mute)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .wl-top,:root:not([data-theme="light"]) .wl-band{box-shadow:0 1px 0 var(--line)}:root:not([data-theme="light"]) .wl-go{background:var(--mint);color:var(--night)}:root:not([data-theme="light"]) .wl-go svg{color:var(--night)}}
 :root[data-theme="dark"] .wl-top,:root[data-theme="dark"] .wl-band{box-shadow:0 1px 0 var(--line)}:root[data-theme="dark"] .wl-go{background:var(--mint);color:var(--night)}:root[data-theme="dark"] .wl-go svg{color:var(--night)}
@@ -400,6 +400,19 @@ html.splash-lock{overflow:hidden}
 .flash.bk{background:var(--g);color:var(--on)}.flash.bk .mute{color:var(--on)}
 .flash .h1{font-size:34px;font-weight:900;letter-spacing:-.02em}
 .cnt{padding:6px 12px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-weight:800;font-size:14px;color:var(--mute)}
+/* ===== Spiele, Mehr, Einstellungen, Statistiken im neuen Design ===== */
+h1,.h1{font-size:28px;font-weight:900;letter-spacing:-.03em}h2{font-weight:800}
+.card{border-radius:20px}
+.item{border-radius:20px;padding:12px 14px;min-height:64px}
+.item .ic{flex:none;width:40px;height:40px;border-radius:12px;background:var(--gl);color:var(--g)}
+.item.lock .ic{background:var(--line);color:var(--mute)}.item.main .ic{background:transparent;color:inherit}
+.item .ch{color:var(--mute);opacity:1}
+.gh{margin:22px 4px 8px;font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}.card>.gh:first-child{margin:0 0 8px}
+.grp{border-radius:20px}.set{min-height:52px;padding:14px 16px}
+.sw{width:50px;height:30px}.sw::after{width:24px;height:24px}.sw.on::after{left:23px}
+.tiles .card b{font-size:28px;font-weight:900;letter-spacing:-.02em}
+.chart i{background:var(--mint)}
+.w{border-radius:16px}
 /* ===== MUFRADAAT STARTBILDSCHIRM ===== */
 /* App-Start „Band entfaltet sich“: Ein Mint-Band schwingt herein, die Buchstaben des Logos klappen nacheinander auf (wie ein Band, das sich umfaltet),
    das Band wird zur feinen Ladelinie, auf der ein Lichtpunkt läuft, solange die App lädt. Alles in % des Wrappers (400×360 Einheiten der Band-Linie). */
@@ -1764,7 +1777,7 @@ function pushH(){
   if(view!=="home"){if(!hist)try{history.pushState({mfr:1},"");hist=true}catch(e){}}
   else if(hist&&history.state&&history.state.mfr){hist=false;popSkip=true;try{history.back()}catch(e){popSkip=false}} // per Tab zurück zum Start: Eintrag wieder entfernen, damit die Geste dort die App verlässt
 }
-const authOn=()=>!!document.querySelector("#app .wl"); // Anmeldebildschirme: Zurück wie im Browser üblich
+const authOn=()=>!!document.querySelector("#app .wel"); // Anmeldebildschirme: Zurück wie im Browser üblich
 addEventListener("popstate",()=>{if(popSkip){popSkip=false;return}hist=false;if(authOn())return;
   const d=document.querySelector("dialog[open]");
   if(d)d.close();
@@ -2218,23 +2231,23 @@ function stats(){
   const days=[...Array(7)].map((_,k)=>{const d=ago(6-k);return[["So","Mo","Di","Mi","Do","Fr","Sa"][d.getDay()],S.days[ymd(d)]||0]});
   const mx=Math.max(1,...days.map(d=>d[1]));
   const g=S.goal||100,xd=S.xpDays[today()]||0,es=KURS?KURS.stufen[0].etappen.filter(e=>KE[e.id]):[];
-  const rd=S.np&&KL.length?`<p><b>Lesen lernen</b></p><div class="tiles" style="margin-bottom:18px"><div class="card"><p class="mute">Lektionen</p><b>${KL.filter(l=>kDone(l.id)).length}</b><span class="mute">von ${KL.length} geschafft</span></div><div class="card"><p class="mute">Etappen</p><b>${es.filter(e=>kEDone(e.id)).length}</b><span class="mute">von ${es.length} geschafft</span></div><div class="card"><p class="mute">Buchstaben sicher</p><b>${alphaSure()}</b><span class="mute">von ${ALPHA.length}</span></div><div class="card"><p class="mute">Tagesziel</p><b>${Math.min(xd,g)} / ${g}</b><span class="mute">XP heute</span></div></div><p><b>Wörter</b></p>`:"";
+  const rd=S.np&&KL.length?`<p class="gh">Lesen lernen</p><div class="tiles" style="margin-bottom:18px"><div class="card"><p class="mute">Lektionen</p><b>${KL.filter(l=>kDone(l.id)).length}</b><span class="mute">von ${KL.length} geschafft</span></div><div class="card"><p class="mute">Etappen</p><b>${es.filter(e=>kEDone(e.id)).length}</b><span class="mute">von ${es.length} geschafft</span></div><div class="card"><p class="mute">Buchstaben sicher</p><b>${alphaSure()}</b><span class="mute">von ${ALPHA.length}</span></div><div class="card"><p class="mute">Tagesziel</p><b>${Math.min(xd,g)} / ${g}</b><span class="mute">XP heute</span></div></div><p class="gh">Wörter</p>`:"";
   paint(head("Statistiken",ui.from==="home"?"home":"more")+rd+`<div class="card row"><div><p class="mute">Lernfortschritt</p><p class="big">${pct()}%</p><p class="mute">${knownN()} von ${W.length} Wörtern</p></div><div class="ring" style="--p:${pct()};margin-left:auto"><span>${pct()}%</span></div></div>
   <div class="tiles"><div class="card"><p class="mute">Heute geübt</p><b>${S.days[today()]||0}</b><span class="mute">Wörter</span></div><div class="card"><p class="mute">Aktuelle Serie</p><b>${streak()}</b><span class="mute">Tage</span></div><div class="card"><p class="mute">Gefestigt</p><b>${Object.values(S.box).filter(b=>b>=3).length}</b><span class="mute">von ${W.length}</span></div><div class="card"><p class="mute">Gelernt gesamt</p><b>${knownN()}</b></div><div class="card"><p class="mute">Level</p><b>${lvl()}</b></div><div class="card"><p class="mute">XP gesamt</p><b>${S.xp||0}</b></div></div>
-  <div class="card" style="margin-top:10px"><p><b>Gedächtnis</b></p><p class="mute" style="margin-top:2px">Wie frisch deine angefangenen Wörter gerade sind.</p>${(()=>{const c=[0,0,0,0];W.forEach(w=>{const m=mem(w.i);if(m)c[m.k]++});const tot=c.reduce((a,b)=>a+b,0);
+  <div class="card" style="margin-top:10px"><p class="gh">Gedächtnis</p><p class="mute" style="margin-top:2px">Wie frisch deine angefangenen Wörter gerade sind.</p>${(()=>{const c=[0,0,0,0];W.forEach(w=>{const m=mem(w.i);if(m)c[m.k]++});const tot=c.reduce((a,b)=>a+b,0);
     return tot?[[3,"frisch","var(--g)"],[2,"wackelig","var(--amber)"],[1,"fällig","var(--amber)"],[0,"vergessen","var(--bad)"]].map(([k,n,col])=>`<div class="row sp" style="margin-top:10px"><span style="width:92px;font-size:14px">${n}</span><div class="bar"><i style="width:${Math.round(c[k]/tot*100)}%;background:${col}"></i></div><span class="mute" style="width:32px;text-align:right">${c[k]}</span></div>`).join(""):'<p class="mute" style="margin-top:10px">Noch keine Wörter angefangen.</p>'})()}</div>
-  <div class="card" style="margin-top:10px"><p><b>Lernverlauf</b></p><div class="chart" role="img" aria-label="Geübte Wörter der letzten 7 Tage: ${days.map(d=>d[0]+" "+d[1]).join(", ")}">${days.map(d=>`<div><i style="height:${d[1]/mx*80}px"></i>${d[0]}</div>`).join("")}</div></div><div class="card" style="margin-top:10px"><p><b>Nach Thema</b></p>${GROUPS.map(c=>{const t=W.filter(w=>w.cat===c),k=t.filter(w=>isLearned(w.i)).length;return `<div class="row sp" style="margin-top:10px"><span style="width:130px;font-size:14px">${c}</span><div class="bar"><i style="width:${k/t.length*100}%"></i></div><span class="mute">${k}/${t.length}</span></div>`}).join("")}</div>`);
+  <div class="card" style="margin-top:10px"><p class="gh">Lernverlauf</p><div class="chart" role="img" aria-label="Geübte Wörter der letzten 7 Tage: ${days.map(d=>d[0]+" "+d[1]).join(", ")}">${days.map(d=>`<div><i style="height:${d[1]/mx*80}px"></i>${d[0]}</div>`).join("")}</div></div><div class="card" style="margin-top:10px"><p class="gh">Nach Thema</p>${GROUPS.map(c=>{const t=W.filter(w=>w.cat===c),k=t.filter(w=>isLearned(w.i)).length;return `<div class="row sp" style="margin-top:10px"><span style="width:130px;font-size:14px">${c}</span><div class="bar"><i style="width:${k/t.length*100}%"></i></div><span class="mute">${k}/${t.length}</span></div>`}).join("")}</div>`);
 }
 const remOn=()=>{try{return !!S.rem&&typeof Notification!=="undefined"&&Notification.permission==="granted"}catch(e){return false}};
 function settings(){
   const row=(id,l,v,a="")=>`<button class="set" id="${id}" ${a}><span>${l}</span>${v}</button>`,sw=on=>`<span class="sw ${on?"on":""}" aria-hidden="true"></span>`,swr=(id,l,on)=>row(id,l,sw(on),`role="switch" aria-checked="${!!on}"`),
     pick=(id,l,opts,cur)=>`<label class="set"><span>${l}</span><select id="${id}">${opts.map(([v,t])=>`<option value="${v}" ${String(v)===String(cur)?"selected":""}>${t}</option>`).join("")}</select></label>`;
-  paint(head("Einstellungen","more")+`<p><b>Lernrichtung</b></p><div class="grp">${row("d1","Arabisch → Deutsch",S.dir==="ad"?ic("check",18):"",`aria-pressed="${S.dir==="ad"}"`)}${row("d2","Deutsch → Arabisch (Schreiben)",S.dir==="da"?ic("check",18):"",`aria-pressed="${S.dir==="da"}"`)}</div>
-  <p><b>Lernen</b></p><div class="grp">${S.np?pick("oz","Dein Ziel",OBZ.map(z=>[z[0],z[1]]),(S.ob&&S.ob.z)||"lesen"):""}${pick("gl","Tagesziel",[50,100,150,250].map(v=>[v,v+" XP"]),S.goal||100)}${pick("hk","Vokalzeichen",[[0,"immer zeigen"],[1,"automatisch"],[2,"immer ohne"]],hkSet())}</div>
+  paint(head("Einstellungen","more")+`<p class="gh">Lernrichtung</p><div class="grp">${row("d1","Arabisch → Deutsch",S.dir==="ad"?ic("check",18):"",`aria-pressed="${S.dir==="ad"}"`)}${row("d2","Deutsch → Arabisch (Schreiben)",S.dir==="da"?ic("check",18):"",`aria-pressed="${S.dir==="da"}"`)}</div>
+  <p class="gh">Lernen</p><div class="grp">${S.np?pick("oz","Dein Ziel",OBZ.map(z=>[z[0],z[1]]),(S.ob&&S.ob.z)||"lesen"):""}${pick("gl","Tagesziel",[50,100,150,250].map(v=>[v,v+" XP"]),S.goal||100)}${pick("hk","Vokalzeichen",[[0,"immer zeigen"],[1,"automatisch"],[2,"immer ohne"]],hkSet())}</div>
   <p class="mute" style="margin:-10px 0 18px">Bei „automatisch“ verschwinden die Vokalzeichen Schritt für Schritt, sobald ein Wort sicher sitzt – so wie in echten Texten. Antippen zeigt sie jederzeit wieder.</p>
-  <p><b>Spiel</b></p><div class="grp">${swr("sd","Töne",S.sound!==false)}${swr("vb","Vibration",S.vib!==false)}${swr("au","Aussprache automatisch",S.auto!==false)}</div>
-  <p><b>Benachrichtigungen</b></p><div class="grp">${swr("rm","Tägliche Lern-Erinnerung",remOn())}<label class="set"><span>Uhrzeit</span><input type="time" id="tm" value="${S.time}" style="border:0;background:none;color:var(--mute);font:inherit"></label></div>
-  <p class="mute" style="margin:-10px 0 18px">Die Erinnerung erscheint, solange die Seite geöffnet ist.</p><p><b>Darstellung und Konto</b></p><div class="grp">${pick("th","Darstellung",[["system","System"],["light","Hell"],["dark","Dunkel"]],S.theme)}${U!=="gast"?row("sy","Synchronisierung",`<span class="mute">${SY||"–"}</span>`):""}${row("lo",U==="gast"?"Anmelden oder registrieren":"Abmelden",`<span class="mute" style="max-width:50%;overflow:hidden;text-overflow:ellipsis">${U==="gast"?"Gast":esc(U)}</span>`)}${row("ex","Meine Daten exportieren",'<span class="mute">JSON</span>')}${row("lg","Datenschutz &amp; Impressum",ic("chev",18))}${row("rs","Fortschritt zurücksetzen",'<span class="mute">Löschen</span>')}${U!=="gast"?row("dl","Konto löschen",'<span class="mute" style="color:var(--bad)">Endgültig</span>'):""}</div>`);
+  <p class="gh">Spiel</p><div class="grp">${swr("sd","Töne",S.sound!==false)}${swr("vb","Vibration",S.vib!==false)}${swr("au","Aussprache automatisch",S.auto!==false)}</div>
+  <p class="gh">Benachrichtigungen</p><div class="grp">${swr("rm","Tägliche Lern-Erinnerung",remOn())}<label class="set"><span>Uhrzeit</span><input type="time" id="tm" value="${S.time}" style="border:0;background:none;color:var(--mute);font:inherit"></label></div>
+  <p class="mute" style="margin:-10px 0 18px">Die Erinnerung erscheint, solange die Seite geöffnet ist.</p><p class="gh">Darstellung und Konto</p><div class="grp">${pick("th","Darstellung",[["system","System"],["light","Hell"],["dark","Dunkel"]],S.theme)}${U!=="gast"?row("sy","Synchronisierung",`<span class="mute">${SY||"–"}</span>`):""}${row("lo",U==="gast"?"Anmelden oder registrieren":"Abmelden",`<span class="mute" style="max-width:50%;overflow:hidden;text-overflow:ellipsis">${U==="gast"?"Gast":esc(U)}</span>`)}${row("ex","Meine Daten exportieren",'<span class="mute">JSON</span>')}${row("lg","Datenschutz &amp; Impressum",ic("chev",18))}${row("rs","Fortschritt zurücksetzen",'<span class="mute">Löschen</span>')}${U!=="gast"?row("dl","Konto löschen",'<span class="mute" style="color:var(--bad)">Endgültig</span>'):""}</div>`);
   $("#sd").onclick=()=>{S.sound=S.sound===false;save();if(S.sound)sfx("good",1);settings()};
   $("#vb").onclick=()=>{S.vib=S.vib===false;save();if(S.vib)vib(30);settings()};
   $("#gl").onchange=e=>{S.goal=+e.target.value;save();settings()};
@@ -2386,7 +2399,7 @@ const wBand=back=>`<section class='wl-band'><span class='wl-c1' aria-hidden='tru
 function showAuth(m){
   $('#nav').hidden=true;
   if(m==='start'){
-    app.innerHTML=`<div class='wl'><section class='wl-top'><span class='wl-c1' aria-hidden='true'></span><span class='wl-c2' aria-hidden='true'></span><span class='wl-dot' aria-hidden='true'></span>
+    app.innerHTML=`<div class='wel'><section class='wl-top'><span class='wl-c1' aria-hidden='true'></span><span class='wl-c2' aria-hidden='true'></span><span class='wl-dot' aria-hidden='true'></span>
       <div class='wl-hd'>${LOGO_N}<button class='wl-lk' id='lgl'>Datenschutz</button></div>
       <div class='wl-st' role='img' aria-label='Von Buchstabe über Silbe und Wort bis zur Koranschrift'>${WSTEPS.map(([ar,c,t],k)=>`<div style='animation-delay:${wDelay(k)}'><span class='ar ${c}' lang='ar'>${ar}</span><small>${t}</small></div>`).join("")}</div>
       <div class='wl-tk' aria-hidden='true'>${["Buchstabe","Silbe","Wort","Koran"].map((t,k)=>`<span style='animation-delay:${wDelay(k)}'>${t}</span>`).join("")}</div></section>
@@ -2399,7 +2412,7 @@ function showAuth(m){
     $('#lgl').onclick=openLegal;
     return}
   const reg=m==='register';
-  app.innerHTML=`<div class='wl'>${wBand(true)}<div class='wl-pad'><h1>${reg?'Konto erstellen':'Willkommen zurück'}</h1><p class='mute'>${reg?'Speichere deinen Lernfortschritt.':'Melde dich an und lerne dort weiter, wo du warst.'}</p>
+  app.innerHTML=`<div class='wel'>${wBand(true)}<div class='wl-pad'><h1>${reg?'Konto erstellen':'Willkommen zurück'}</h1><p class='mute'>${reg?'Speichere deinen Lernfortschritt.':'Melde dich an und lerne dort weiter, wo du warst.'}</p>
 <div class='wl-tabs' role='tablist' aria-label='Konto erstellen oder anmelden'><button role='tab' id='treg' aria-selected='${reg}'>Konto erstellen</button><button role='tab' id='tlog' aria-selected='${!reg}'>Anmelden</button></div>
 <label for='em'>E-Mail-Adresse</label><input class='t' id='em' type='email' autocomplete='email' inputmode='email' placeholder='name@beispiel.de'>
 <label for='pw'>Passwort</label><div class='wl-pw'><input class='t' id='pw' type='password' autocomplete='${reg?'new-password':'current-password'}' placeholder='Mindestens 8 Zeichen'><button type='button' class='wl-eye' id='tp' aria-label='Passwort anzeigen' aria-pressed='false'>${EYE}</button></div>
@@ -2453,7 +2466,7 @@ async function logout(){
 }
 function showReset(){
   $('#nav').hidden=true;
-  app.innerHTML=`<div class='wl'>${wBand(false)}<div class='wl-pad'><h1>Neues Passwort</h1><p class='mute'>Danach bist du gleich angemeldet.</p><label for='pw'>Neues Passwort</label><input class='t' id='pw' type='password' autocomplete='new-password' placeholder='Mindestens 8 Zeichen'><p id='err' role='alert' style='color:var(--bad);font-size:14px;min-height:20px;margin:10px 0 0'></p></div><div class='wl-ac'><button class='btn' id='ok'>Speichern</button></div></div>`;
+  app.innerHTML=`<div class='wel'>${wBand(false)}<div class='wl-pad'><h1>Neues Passwort</h1><p class='mute'>Danach bist du gleich angemeldet.</p><label for='pw'>Neues Passwort</label><input class='t' id='pw' type='password' autocomplete='new-password' placeholder='Mindestens 8 Zeichen'><p id='err' role='alert' style='color:var(--bad);font-size:14px;min-height:20px;margin:10px 0 0'></p></div><div class='wl-ac'><button class='btn' id='ok'>Speichern</button></div></div>`;
   $('#ok').onclick=async()=>{const pw=$('#pw').value,er=$('#err');if(pw.length<8)return er.textContent='Das Passwort braucht mindestens 8 Zeichen.';
     const{error}=await sb.auth.updateUser({password:pw});if(error)return er.textContent=msgErr(error);
     const{data}=await sb.auth.getSession();recovering=false;enter(data.session.user)};
@@ -2468,7 +2481,7 @@ loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v38"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v39"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>
