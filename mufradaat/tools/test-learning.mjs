@@ -884,5 +884,25 @@ ok("… Ende nach 20 Wörtern: Geschafft, 15 / 20, Rekord bleibt",/Geschafft/.te
 run(`startBlitz(false);B.right=9;endBlitz()`);ok("… mit Zeit: neuer Rekord zählt",run(`S.st.blitz===9`)&&/Zeit abgelaufen/.test(run(`app.innerHTML`)));
 run(`clearInterval(gt);U="gast";loadS()`);
 
+// ---------- 19. Arabisch-Skala ----------
+{
+  const css=html.slice(html.indexOf("<style>"),html.indexOf("</style>")),js=html.slice(html.indexOf("<script>"));
+  const tok=css.match(/--ar1:20px;--ar2:24px;--ar3:30px;--ar4:44px;--ar5:64px;--ar6:96px/);
+  ok("Arabisch-Skala: sechs Schritte 20 / 24 / 30 / 44 / 64 / 96",!!tok);
+  const AR=/(\.ar\b|\.sent\b|\.tk\b|\.kgl|\.kwd|\.nha|\.zar|\.obar|\.kfa|\.ut\b|\.kqg|\.kb button)/,bad=[],low=[];
+  for(const m of css.matchAll(/([^{}]+)\{([^{}]*)\}/g)){
+    const sel=m[1].replace(/\/\*[\s\S]*?\*\//g,"").trim(),body=m[2];
+    if(!AR.test(sel)||!/font-size/.test(body))continue;
+    const fs=body.match(/font-size:\s*([^;}]+)/)[1].trim();
+    if(!/^var\(--ar[1-6]\)$/.test(fs)&&!/em$/.test(fs))bad.push(sel+" "+fs);
+    const lh=body.match(/line-height:\s*([0-9.]+)/);if(!lh||+lh[1]<1.4)low.push(sel+" "+(lh?lh[1]:"–"));
+  }
+  ok("… jede Arabisch-Regel nutzt die Skala (oder em)",!bad.length,bad);
+  ok("… Zeilenhöhe nie unter 1.4, Vokalzeichen schneiden nicht ab",!low.length,low);
+  const inl=[...js.matchAll(/<[a-z]+[^>]*(?:class="[^"]*\bar\b[^"]*"|lang="ar")[^>]*style="[^"]*font-size:[^"]*"/g)].map(x=>x[0].slice(0,80));
+  ok("… keine festen Pixelgrößen für Arabisch in den Vorlagen",!inl.length,inl);
+  ok("… arHead rundet auf die Skala",run(`arTok(64)`)==="as5"&&run(`arTok(110)`)==="as6"&&run(`arTok(22)`)==="as2"&&/class="ar as5"/.test(run(`arHead(BY.kitab,64)`)));
+}
+
 console.log("\n"+pass+" OK, "+fail+" FAIL");
 process.exit(fail?1:0);

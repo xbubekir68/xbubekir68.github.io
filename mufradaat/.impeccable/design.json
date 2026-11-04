@@ -38,10 +38,12 @@
       "dusk-violet-dark": { "role": "secondary", "displayName": "Dusk Violet (dark)", "canonical": "oklch(82.5% 0.1 297.7)", "cssVar": "--vil", "theme": "dark", "tonalRamp": ["#0d071a","#291c42","#48366b","#685492","#8975b6","#ab99d6","#cec0f2","#f0ebff"] }
     },
     "typographyMeta": {
-      "display-arabic": { "displayName": "Display Arabic", "purpose": "The word on a flashcard or quiz card; lessons go up to 96px for single letters." },
-      "headline-arabic": { "displayName": "Headline Arabic", "purpose": "Unit names on the learning path, in the unit's accent colour." },
-      "tile-arabic": { "displayName": "Tile Arabic", "purpose": "Sentence-builder tiles and Arabic answer options." },
-      "body-arabic": { "displayName": "Body Arabic", "purpose": "The Arabic word in word-list rows." },
+      "arabic-1": { "displayName": "Arabic 1 · 20px", "purpose": "Only inside small round shapes: long words on path stops, level and badge circles.", "cssVar": "--ar1" },
+      "arabic-2": { "displayName": "Arabic 2 · 24px", "purpose": "Running text and lists: word-list rows, Arabic in tips and feedback, the Arabic input.", "cssVar": "--ar2" },
+      "arabic-3": { "displayName": "Arabic 3 · 30px", "purpose": "Tiles and answers: Arabic options, builder tiles, pairs, Etappe names, goal sentences on signs.", "cssVar": "--ar3" },
+      "arabic-4": { "displayName": "Arabic 4 · 44px", "purpose": "Featured words: the next stop on Start, letter forms, the goal sentence in a lesson.", "cssVar": "--ar4" },
+      "arabic-5": { "displayName": "Arabic 5 · 64px", "purpose": "Display: flashcard, lesson word, Wort-Blitz and quiz word.", "cssVar": "--ar5" },
+      "arabic-6": { "displayName": "Arabic 6 · 96px", "purpose": "Single letters and vowel signs.", "cssVar": "--ar6" },
       "numeral": { "displayName": "Numeral", "purpose": "Big progress numbers." },
       "headline": { "displayName": "Headline", "purpose": "Screen titles." },
       "title": { "displayName": "Title", "purpose": "Sub-screen titles beside the back button." },
