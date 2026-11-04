@@ -35,25 +35,36 @@ colors:
   path-lilac-glow-dark: "#d4a0ff"
   dusk-violet-dark: "#cdb8ff"
 typography:
-  display-arabic:
+  arabic-1:
     fontFamily: "Noto Naskh Arabic, Geeza Pro, Segoe UI, Traditional Arabic, Arial, serif"
-    fontSize: "64px"
+    fontSize: "20px"
     fontWeight: 500
     lineHeight: 1.4
-  headline-arabic:
+  arabic-2:
+    fontFamily: "Noto Naskh Arabic, Geeza Pro, Segoe UI, Traditional Arabic, Arial, serif"
+    fontSize: "24px"
+    fontWeight: 500
+    lineHeight: 1.5
+  arabic-3:
     fontFamily: "Noto Naskh Arabic, Geeza Pro, Segoe UI, Traditional Arabic, Arial, serif"
     fontSize: "30px"
     fontWeight: 500
     lineHeight: 1.5
-  tile-arabic:
+  arabic-4:
     fontFamily: "Noto Naskh Arabic, Geeza Pro, Segoe UI, Traditional Arabic, Arial, serif"
-    fontSize: "26px"
+    fontSize: "44px"
     fontWeight: 500
     lineHeight: 1.5
-  body-arabic:
+  arabic-5:
     fontFamily: "Noto Naskh Arabic, Geeza Pro, Segoe UI, Traditional Arabic, Arial, serif"
-    fontSize: "24px"
+    fontSize: "64px"
     fontWeight: 500
+    lineHeight: 1.4
+  arabic-6:
+    fontFamily: "Noto Naskh Arabic, Geeza Pro, Segoe UI, Traditional Arabic, Arial, serif"
+    fontSize: "96px"
+    fontWeight: 500
+    lineHeight: 1.4
   numeral:
     fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
     fontSize: "30px"
@@ -181,7 +192,7 @@ components:
   word-tile:
     backgroundColor: "{colors.card-cream}"
     textColor: "{colors.garden-ink}"
-    typography: "{typography.tile-arabic}"
+    typography: "{typography.arabic-3}"
     rounded: "{rounded.lg}"
     padding: "6px 16px"
     height: "48px"
@@ -301,10 +312,18 @@ A warm, earthy neutral base (paper, cream, sand, sage) under a single deep green
 **Character:** A classical Naskh with full vowel-mark support carries all Arabic, while the UI speaks in the phone's own sans. The script is the star, and the German is the friendly guide beside it.
 
 ### Hierarchy
-- **Display Arabic** (500, 64px, line-height 1.4): the word on a flashcard or quiz card. The lesson variant goes up to 96px for single letters and 72–88px for vowel signs.
-- **Headline Arabic** (500, 30px, line-height 1.5): unit names on the path, in the unit's accent colour.
-- **Tile Arabic** (500, 26px, line-height 1.5): sentence-builder tiles and Arabic answer options. The goal sentence on the sign is 27px at line-height 1.7.
-- **Body Arabic** (500, 24px): the Arabic word in word-list rows.
+- **Arabic scale:** All Arabic uses one of six steps (weight 500). In code they are the CSS variables `--ar1` to `--ar6` and the helper classes `.as1` to `.as6`. Pixel sizes for Arabic are not allowed.
+
+| Step | Size | Line height | Use |
+|---|---|---|---|
+| `--ar1` | 20px | 1.4 | Only inside small round shapes: long words on path stops, level and badge circles, the preview list |
+| `--ar2` | 24px | 1.5 | Running text and lists: word-list rows, Arabic inside tips and feedback, the Arabic input |
+| `--ar3` | 30px | 1.5 | Tiles and answers: Arabic options, builder tiles, pairs, Etappe and unit names, goal sentences on signs |
+| `--ar4` | 44px | 1.5 | Featured words: the next stop on Start, letter forms, the goal sentence inside a lesson, the tip-card header |
+| `--ar5` | 64px | 1.4 | Display: flashcard, lesson word, Wort-Blitz and quiz word |
+| `--ar6` | 96px | 1.4 | Single letters and vowel signs |
+
+Multi-word lines may go up to line height 2. Arabic inside a German sentence can use `em` (for example 1.4em) instead of a step.
 - **Headline** (700, 26px): screen titles ("Lernpfad", "Ahlan wa Sahlan!").
 - **Numeral** (700, 30px): big progress numbers. The overview card goes up to 32px.
 - **Title** (700, 20px): sub-screen titles beside the back button.
@@ -315,9 +334,9 @@ A warm, earthy neutral base (paper, cream, sand, sage) under a single deep green
 - **Overline** (400, 11px, 0.12em, uppercase): the "LEVEL" label inside the level ring.
 
 ### Named Rules
-**The Script Leads Rule.** Arabic is always set larger than the German next to it, at a minimum of 22px in the UI and 24px in lists. It is always marked up with `lang="ar"` and `direction: rtl`.
+**The Script Leads Rule.** Arabic is always set larger than the German next to it, using a step of the Arabic scale: at least 24px (`--ar2`), and 20px (`--ar1`) only inside small round shapes. It is always marked up with `lang="ar"` and `direction: rtl`.
 
-**The Room for Harakat Rule.** Arabic line height never drops below 1.4, and runs from 1.5 to 2 for multi-word lines. Vowel marks and pause signs must never clip.
+**The Room for Harakat Rule.** Arabic line height never drops below 1.4, with no exceptions, and runs from 1.5 to 2 for multi-word lines. Vowel marks and pause signs must never clip. A container that is too small grows; the Arabic does not shrink below its step.
 
 ## Layout
 
@@ -381,7 +400,7 @@ Full-width rows: a 22–28px line icon, a bold title, a 13px sub-line and a trai
 ### Inputs / Fields
 - **Style:** cream fill, 1px sand hairline, 12px radius, 13px × 14px padding, inherits the 16px body font.
 - **Focus:** the shared 3px Fresh Garden Green outline.
-- **Arabic input:** uses the Arabic font at 24px, with an on-screen Arabic keyboard: a 7-column RTL grid of 22px Naskh keys with 8px corners.
+- **Arabic input:** uses the Arabic font at `--ar2`, with an on-screen Arabic keyboard: a 7-column RTL grid of `--ar2` Naskh keys with 8px corners.
 
 ### Answer Options
 Stacked full-width options with 12px corners, a 1.5px sand border and 15px padding. **Correct** turns mist green with a green border, pops, and pulses a green ring outward (0.55s). **Wrong** turns blush with a brick border and shakes 7px left and right (0.35s). Arabic options are centred at 26–34px.
@@ -406,9 +425,9 @@ The learning path is drawn as an SVG road of 30px stroke over each unit's landsc
 | th8 | Verbs | brick red | #a33a24 |
 | th9 | Daily life | stone | #6d5a3d |
 
-- **Stops:** 58px circles with a 3px accent border on cream, showing the stop's own Arabic word at 17px. **Done** stops are solid green with a check. The **current** stop grows to 76px, shows the app icon (a mint-green Mim on a night-garden disc), and carries the garden-mist halo. **Locked** stops use a dashed border at 50% accent, with muted text.
+- **Stops:** 58px circles with a 3px accent border on cream, showing the stop's own Arabic word at `--ar2` (long words at `--ar1`). If a word is too wide, the circle grows into a pill instead of clipping it. **Done** stops are solid green with a check. The **current** stop grows to 76px, shows the app icon (a mint-green Mim on a night-garden disc), and carries the garden-mist halo. **Locked** stops use a dashed border at 50% accent, with muted text.
 - **Unit header:** the Arabic unit name at 30px in the accent colour, then "Einheit N · Title" and a 13px description.
-- **Goal sign:** the unit's longest sentence in 27px Naskh. Words already begun turn green and unknown ones are muted. Below it sit the German translation, a listen link and a "Sätze üben" button.
+- **Goal sign:** the unit's longest sentence in Naskh at `--ar3`. Words already begun turn green and unknown ones are muted. Below it sit the German translation, a listen link and a "Sätze üben" button.
 - **Provisional:** the new course will cycle these ten surfaces and give each part of stage 2 its own accent colour.
 
 ### Celebration Layer
@@ -417,7 +436,7 @@ Toasts pop in as green pills at the top of the screen. Level-ups are a green bad
 ## Do's and Don'ts
 
 ### Do:
-- **Do** set every Arabic string in Noto Naskh Arabic with `lang="ar"`, at least 22px, with line height of 1.4 or more.
+- **Do** set every Arabic string in Noto Naskh Arabic with `lang="ar"`, on a step of the Arabic scale (`--ar1` to `--ar6`), with line height of 1.4 or more.
 - **Do** use Deep Garden Green for the single strongest action and for every "correct" or "done" state, and Garden Mist for its quieter partner.
 - **Do** keep surfaces flat: cream card on warm paper, 1px Sand Hairline, 14–16px corners.
 - **Do** make actions and small statuses pills (999px).
