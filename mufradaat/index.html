@@ -449,6 +449,33 @@ h1,.h1{font-size:28px;font-weight:900;letter-spacing:-.03em}h2{font-weight:800}
 @keyframes rgpop{to{scale:1.35;opacity:0}}
 .rgl{text-align:center;margin-top:8px;font-size:14px}
 @media (prefers-reduced-motion:reduce){.rgi{animation-duration:9s!important}.gday .gdf{animation:none;opacity:1;top:24px}}
+.gday .gda{font-family:var(--ar);font-size:var(--ar5);line-height:1.4;right:34px}
+.gtl .gia{font-family:var(--ar);font-size:var(--ar2);line-height:1.5}
+/* Kalligrafie */
+.kacs{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px;margin:0 -2px;scrollbar-width:none}.kacs::-webkit-scrollbar{display:none}
+.kac{flex:none;width:52px;min-height:60px;display:grid;place-items:center;align-content:center;gap:0;padding:2px 0 4px;border:2px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);box-shadow:0 4px 0 var(--line-d);cursor:pointer}
+.kac .ar{font-size:var(--ar2);line-height:1.5}.kac small{font-size:11px;line-height:1;letter-spacing:1px;color:var(--star)}
+.kac.on{background:var(--night);border-color:var(--night);color:var(--mint);box-shadow:0 4px 0 var(--band-d)}
+.kat1{margin-top:8px;text-align:center;font-size:20px;font-weight:800}.kat1 .ar{font-size:var(--ar2);line-height:1.5;color:var(--g)}
+.kat2{text-align:center;font-size:14px;margin-top:2px}
+.kaw{width:min(100%,340px);aspect-ratio:1;margin:12px auto 0;border:1px solid var(--line);border-radius:32px;background:var(--card);overflow:hidden}
+#kas{display:block;width:100%;height:100%;touch-action:none;user-select:none;-webkit-user-select:none;cursor:crosshair}
+.kab{stroke:var(--line);stroke-width:2}
+.katr,.kag,.kau,.kaa{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.katr{stroke:var(--deck1);stroke-width:40}
+.kag{stroke:var(--mint);stroke-width:3;stroke-dasharray:6 14;animation:kadash 1.2s linear infinite}
+@keyframes kadash{to{stroke-dashoffset:-20}}
+.kam circle{fill:var(--night)}.kam text{fill:var(--mint);font:900 14px var(--sans)}
+.kaa{stroke:var(--ink);stroke-width:3}.kaah{fill:var(--ink)}
+.kau{stroke:var(--mint);stroke-width:20}.kau.ok{stroke:var(--g)}.kau.no{stroke:var(--bad)}
+.kad{fill:none;stroke:var(--mint);stroke-width:3;stroke-dasharray:5 5}.kad.on{fill:var(--ink);stroke:var(--ink);stroke-dasharray:none}
+#kas .dim{opacity:.25}
+.kst{color:var(--star);letter-spacing:2px;font-size:17px;white-space:nowrap;margin-right:4px}
+.kar{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.kar .btn{margin:0}
+.kah{text-align:center;margin-top:10px;font-size:14px}.kah .lnk{display:inline-flex;align-items:center;gap:4px;padding:4px 0}
+@media (prefers-reduced-motion:reduce){.kag{animation:none}}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .kac.on{background:var(--mint);border-color:var(--mint);color:var(--night)}:root:not([data-theme="light"]) .kam circle{fill:var(--mint)}:root:not([data-theme="light"]) .kam text{fill:var(--night)}}
+:root[data-theme="dark"] .kac.on{background:var(--mint);border-color:var(--mint);color:var(--night)}:root[data-theme="dark"] .kam circle{fill:var(--mint)}:root[data-theme="dark"] .kam text{fill:var(--night)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .gday,:root:not([data-theme="light"]) .rgs{box-shadow:0 0 0 1px var(--line)}}
 :root[data-theme="dark"] .gday,:root[data-theme="dark"] .rgs{box-shadow:0 0 0 1px var(--line)}
 /* ===== MUFRADAAT STARTBILDSCHIRM ===== */
@@ -1778,7 +1805,7 @@ function kpath(){
 // ===== Navigation =====
 let view="home",ui={cat:"Alle",q:""},gt=0;
 const TABS=[["home","home","Start"],["games","pad","Spiele"],["path","path","Lernpfad"],["cards","cards","Karten"],["more","more","Mehr"]];
-const SUB={more:["stats","fav","settings","list","badges","legal"],games:["pairs","blitz","listen","regen"],path:["quiz","lesson","alphabet","letter","aquiz","satz","klek"]};
+const SUB={more:["stats","fav","settings","list","badges","legal"],games:["pairs","blitz","listen","regen","kalli"],path:["quiz","lesson","alphabet","letter","aquiz","satz","klek"]};
 const pHint=a=>{if(view!=="path"){ui.hint=a;return go("path")}ui.hint=ui.hint===a?null:a;ui.keep=true;path()}; // gesperrte Station: Grund direkt darunter zeigen statt als Toast
 function go(v){
   if(view==="klek"&&K&&K.l&&!K.test&&!K.fin&&(K.n||K.fb)){kSnap();const r=kSnapGet(K.l.id);if(r)toast(kRepAt(r)?"Gespeichert · du machst mit deinen Fehlern weiter":`Gespeichert · du machst bei ${kResTxt(r)} weiter`)} // X oder Zurück mitten in der Lektion
@@ -1803,8 +1830,8 @@ function fx(){requestAnimationFrame(()=>requestAnimationFrame(()=>document.query
 function render(){
   clearInterval(gt);
   $("#nav").innerHTML=TABS.map(t=>`<button class="${(view===t[0]||(SUB[t[0]]||[]).includes(view))?"on":""}${t[0]==="path"?" main":""}" data-go="${t[0]}" ${(view===t[0]||(SUB[t[0]]||[]).includes(view))?'aria-current="page"':""}><span>${ic(t[1])}</span>${t[2]}</button>`).join("");
-  $("#nav").hidden=["quiz","pairs","blitz","aquiz","listen","satz","klek","regen"].includes(view)||(view==="legal"&&!U);
-  ({home,path,lesson,alphabet,letter,aquiz,listen,satz,cards,more,list,stats,settings,quiz,fav,games,badges,pairs,blitz,legal,klek,regen})[view]();
+  $("#nav").hidden=["quiz","pairs","blitz","aquiz","listen","satz","klek","regen","kalli"].includes(view)||(view==="legal"&&!U);
+  ({home,path,lesson,alphabet,letter,aquiz,listen,satz,cards,more,list,stats,settings,quiz,fav,games,badges,pairs,blitz,legal,klek,regen,kalli})[view]();
   app.classList.remove("enter");void app.offsetWidth;app.classList.add("enter");
   window.scrollTo(0,0);pushH();
 }
@@ -1824,7 +1851,7 @@ addEventListener("popstate",()=>{if(popSkip){popSkip=false;return}hist=false;if(
   if(!authOn())pushH()});
 document.addEventListener("click",e=>{
   const g=e.target.closest("[data-go]");
-  if(g){const t=g.dataset.go;sfx("tap");if(t==="review")return startQuiz(null);if(t==="mix")return startMix();if(t==="satz")return startSatz();if(t==="pairs")return startPairs();if(t==="blitz")return startBlitz();if(t==="aquiz")return startAQ();if(t==="listen")return startListen();if(t==="regen")return startRegen();return go(t)}
+  if(g){const t=g.dataset.go;sfx("tap");if(t==="review")return startQuiz(null);if(t==="mix")return startMix();if(t==="satz")return startSatz();if(t==="pairs")return startPairs();if(t==="blitz")return startBlitz();if(t==="aquiz")return startAQ();if(t==="listen")return startListen();if(t==="regen")return startRegen();if(t==="kalli")return startKalli();return go(t)}
   const ab=e.target.closest("[data-ab]");
   if(ab){const b=+ab.dataset.ab;sfx("tap");if(aLocked(b))return pHint(`data-ab="${b}"`);return startAQ(b,false,"path")}
   const kl=e.target.closest("[data-kl]");
@@ -2023,6 +2050,7 @@ function fFreeOn(again){const b=$("#ffree");if(b)b.onclick=()=>{S.aok="skip";sav
 // Gesperrte Kacheln zeigen, nach welcher Etappe sie aufgehen; Antippen erklärt es direkt darunter.
 const GAMES=[
   {k:"regen",g:"b",t:"Buchstaben-Regen",d:()=>"Namen hören, Buchstaben fangen"+(S.st.regen?" · Rekord: "+S.st.regen:""),ic:"rain"},
+  {k:"kalli",g:"b",t:"Kalligrafie",d:()=>{const n=KALI.filter(x=>S.st["kal_"+x.i]===3).length;return "Buchstaben nachfahren"+(n?` · ${n} von ${KALI.length} mit drei Sternen`:"")},ar:"ب"},
   {k:"listen",g:"w",t:"Hörübung",d:()=>!canSpeak()?"Braucht eine arabische Stimme auf dem Gerät":"Hören und die Bedeutung wählen",ic:"speaker"},
   {k:"pairs",g:"w",t:"Paare zuordnen",d:()=>"6 Wortpaare, so schnell du kannst",ic:"pairs"},
   {k:"blitz",g:"w",t:"Wort-Blitz",d:()=>"60 Sekunden oder ohne Zeitlimit · Rekord: "+(S.st.blitz||0)+" Treffer",ic:"bolt"}
@@ -2034,10 +2062,11 @@ function gDay(day=today()){ // gleiches Spiel den ganzen Tag, morgen das nächst
 }
 function games(){
   const d=gDay(),lk=GAMES.filter(x=>fGate(x.k)).length;
-  const deco=x=>x.k==="regen"?rgPool().slice(0,3).map((a,i)=>`<span class="gdf" lang="ar" style="right:${18+i*44}px;animation-delay:${[0,.9,1.6][i]}s">${a.c}</span>`).join(""):`<span class="gdx">${ic(x.ic,56)}</span>`;
+  const deco=x=>x.k==="regen"?rgPool().slice(0,3).map((a,i)=>`<span class="gdf" lang="ar" style="right:${18+i*44}px;animation-delay:${[0,.9,1.6][i]}s">${a.c}</span>`).join(""):x.ar?`<span class="gdx gda" lang="ar">${x.ar}</span>`:`<span class="gdx">${ic(x.ic,56)}</span>`;
+  const gi=x=>x.ar?`<span class="gi gia" lang="ar">${x.ar}</span>`:`<span class="gi">${ic(x.ic)}</span>`;
   const tile=x=>{const e=fGate(x.k);
     return e?`<button class="gtl lock" data-fl="${x.k}" aria-expanded="${ui.fl===x.k}"><span class="gi">${ic("lock",20)}</span><b>${x.t}</b><small>${fWhy(e)}</small>${ui.fl===x.k?`<small class="hint" role="status">Lerne im Lernpfad weiter, dann geht das Spiel von selbst auf.</small>`:""}</button>`
-      :`<button class="gtl" data-go="${x.k}"><span class="gi">${ic(x.ic)}</span><b>${x.t}</b><small>${x.d()}</small></button>`};
+      :`<button class="gtl" data-go="${x.k}">${gi(x)}<b>${x.t}</b><small>${x.d()}</small></button>`};
   paint(`<div class="ghd"><h1>Spiele</h1>${lk?`<span class="mute">${GAMES.length-lk} von ${GAMES.length} offen</span>`:""}</div>
   ${d?`<button class="gday" data-go="${d.k}"><span class="gdc" aria-hidden="true"></span><span class="gdd" aria-hidden="true">${deco(d)}</span><span class="gdl">Spiel des Tages</span><b>${d.t}</b><small>${d.d()}</small><span class="gdp" aria-hidden="true">Spielen ${ic("play",16,true)}</span></button>`:""}
   ${GGRP.map(([g,t])=>`<p class="gh">${t}</p><div class="gtg">${GAMES.filter(x=>x.g===g).map(tile).join("")}</div>`).join("")}${lk?fFree():""}`);
@@ -2371,6 +2400,80 @@ function regen(){
   $("#rgs").onclick=()=>speak(R.tgt.sp);
 }
 
+
+// ===== Spiel 5: Kalligrafie (Grundform nachfahren, dann die Punkte setzen) =====
+// Formen als Bézier-Kurven in einer 320er-Fläche, Grundlinie bei y=196. Bewertet wird, wie nah der Strich an der Form bleibt (Genauigkeit),
+// wie viel der Form er abdeckt (Abdeckung) und ob er am richtigen Ende beginnt (Richtung: Arabisch von rechts nach links).
+const KBASE=[[[254,118],[256,150],[254,178],[232,190]],[[232,190],[180,194],[130,194],[96,190]],[[96,190],[70,186],[56,170],[60,146]]],
+  KDAL=[[[150,112],[170,140],[196,168],[196,186]],[[196,186],[170,196],[140,196],[112,192]]],
+  KRA=[[[196,150],[206,192],[186,236],[118,254]]],
+  KNUN=[[[228,138],[236,200],[210,246],[160,246]],[[160,246],[110,246],[84,206],[92,150]]];
+const KALI=[["ba",KBASE,[[160,240]],"einen Punkt unten"],["ta",KBASE,[[143,150],[177,150]],"zwei Punkte oben"],["tha",KBASE,[[143,154],[177,154],[160,124]],"drei Punkte oben"],
+  ["dal",KDAL,[]],["dhal",KDAL,[[150,76]],"einen Punkt oben"],["ra",KRA,[]],["zay",KRA,[[198,112]],"einen Punkt oben"],["nun",KNUN,[[160,168]],"einen Punkt oben"]
+].map(([i,seg,dots,where])=>{
+  const P=[];for(const [p0,p1,p2,p3] of seg)for(let n=0;n<=20;n++){const t=n/20,u=1-t;P.push([0,1].map(c=>u*u*u*p0[c]+3*u*u*t*p1[c]+3*u*t*t*p2[c]+t*t*t*p3[c]))}
+  const c=P.reduce((a,p)=>[a[0]+p[0]/P.length,a[1]+p[1]/P.length],[0,0]),v=[P[5][0]-P[0][0],P[5][1]-P[0][1]],l=Math.hypot(...v)||1,nv=[-v[1]/l,v[0]/l],sg=((P[0][0]-c[0])*nv[0]+(P[0][1]-c[1])*nv[1])>=0?1:-1;
+  const off=p=>(p[0]+sg*30*nv[0]).toFixed(1)+" "+(p[1]+sg*30*nv[1]).toFixed(1); // Pfeil neben dem Anfang, auf der Außenseite der Form
+  return{i,a:ALBY[i],S:P,dots,where:where||"",d:"M"+seg[0][0].join(" ")+seg.map(x=>"C"+x.slice(1).map(p=>p.join(" ")).join(" ")).join(""),arr:"M"+off(P[1])+"L"+off(P[7])};
+});
+let KA=null;
+const kaNear=(p,l)=>Math.min(...l.map(q=>Math.hypot(p[0]-q[0],p[1]-q[1])));
+function startKalli(k){KA={k:k===undefined?Math.max(0,KALI.findIndex(x=>(S.st["kal_"+x.i]||0)<3)):k,pts:[],phase:"draw",score:0,dots:[],dir:true,drawing:false,stars:0,xp:0};view="kalli";render()}
+function kaDown(p){
+  if(KA.phase==="draw"){KA.drawing=true;KA.pts=[p];kaInk();return}
+  if(KA.phase!=="dots")return;
+  const L=KALI[KA.k],j=L.dots.findIndex((d,j)=>!KA.dots.includes(j)&&Math.hypot(d[0]-p[0],d[1]-p[1])<30);
+  if(j<0){sfx("bad");return}
+  KA.dots.push(j);sfx("tap");vib(8);if(KA.dots.length===L.dots.length)kaRate();else kalli();
+}
+function kaMove(p){if(!KA.drawing)return;const l=KA.pts[KA.pts.length-1];if(Math.hypot(p[0]-l[0],p[1]-l[1])>3){KA.pts.push(p);kaInk()}}
+function kaInk(){const u=$("#kau");if(u&&u.setAttribute)u.setAttribute("d",KA.pts.length?"M"+KA.pts.map(p=>p[0].toFixed(1)+" "+p[1].toFixed(1)).join("L"):"")}
+function kaUp(){
+  if(!KA||!KA.drawing)return;KA.drawing=false;
+  if(KA.pts.length<6){KA.pts=[];kaInk();return} // nur angetippt: nichts bewerten
+  const L=KALI[KA.k],tol=24,prec=KA.pts.filter(p=>kaNear(p,L.S)<tol).length/KA.pts.length,cov=L.S.filter(q=>kaNear(q,KA.pts)<tol).length/L.S.length;
+  KA.dir=kaNear(KA.pts[0],[L.S[0]])<kaNear(KA.pts[0],[L.S[L.S.length-1]]);
+  KA.score=Math.round(100*prec*cov*(KA.dir?1:.7));
+  if(KA.score>=45&&L.dots.length){KA.phase="dots";sfx("good",2);kalli()}else kaRate();
+}
+function kaRate(){
+  const L=KALI[KA.k],good=KA.score>=45;KA.phase="rated";KA.stars=KA.score>=80?3:KA.score>=60?2:good?1:0;KA.xp=0;
+  if(good){const key="kal_"+L.i;S.st[key]=Math.max(S.st[key]||0,KA.stars);S.st.kal=(S.st.kal||0)+1;KA.xp=Math.round(KA.score/20);sfx(KA.stars===3?"win":"good",3);vib(12);if(KA.stars===3)confetti();if(KA.xp)addXP(KA.xp);else save()}
+  else{sfx("bad");vib([40,30,40])}
+  kalli();
+}
+function kalli(){
+  const L=KALI[KA.k],a=L.a,ph=KA.phase,good=KA.score>=45,st=x=>S.st["kal_"+x.i]||0,dim=ph==="draw"?"":" dim";
+  const ud=KA.pts.length?"M"+KA.pts.map(p=>p[0].toFixed(1)+" "+p[1].toFixed(1)).join("L"):"";
+  const msg=!KA.dir?(good?"Die Form passt, aber Arabisch schreibt man von rechts nach links. Beginne bei der 1.":"Arabisch schreibt man von rechts nach links. Beginne bei der 1."):good?(KA.score>=80?"Wunderschön geschrieben!":"Gut! Noch etwas runder?"):"Noch nicht ganz. Bleib nah an der Form.";
+  paint(`<div class="top">${xbtn("games")}<h2 style="flex:1">Kalligrafie</h2></div>
+  <div class="kacs">${KALI.map((x,k)=>`<button class="kac${k===KA.k?" on":""}" data-kk="${k}" aria-pressed="${k===KA.k}" aria-label="${x.a.n}${st(x)?`, ${st(x)} von 3 Sternen`:""}"><span class="ar" lang="ar">${x.a.c}</span><small aria-hidden="true">${"★".repeat(st(x))||"&nbsp;"}</small></button>`).join("")}</div>
+  <p class="kat1" data-fq>${ph==="dots"?`Jetzt ${L.where}`:`Schreib ${a.n} <span class="ar" lang="ar">${a.c}</span>`}</p>
+  <p class="mute kat2">${ph==="dots"?"Tippe auf die Stellen, an denen die Punkte stehen.":ph==="draw"?"Mit dem Finger nachfahren, am PC mit gedrückter Maustaste.":esc(a.n)+" · "+a.s+" · "+KA.score+" % getroffen"}</p>
+  <div class="kaw"><svg id="kas" viewBox="0 0 320 320" role="img" aria-label="Zeichenfläche: ${a.n} nachfahren">
+    <defs><marker id="kaah" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path class="kaah" d="M0 0L10 5L0 10z"/></marker></defs>
+    <path class="kab" d="M0 196H320"/><path class="katr" d="${L.d}"/><path class="kag${dim}" d="${L.d}"/>
+    <g class="kam${dim}"><circle cx="${L.S[0][0]}" cy="${L.S[0][1]}" r="14"/><text x="${L.S[0][0]}" y="${L.S[0][1]+5}" text-anchor="middle">1</text></g><path class="kaa${dim}" d="${L.arr}" marker-end="url(#kaah)"/>
+    <path id="kau" class="kau${ph==="draw"?"":good?" ok":" no"}" d="${ud}"/>
+    ${ph==="draw"?"":L.dots.map((d,j)=>`<circle class="kad${KA.dots.includes(j)?" on":""}" cx="${d[0]}" cy="${d[1]}" r="14"/>`).join("")}
+  </svg></div>
+  ${ph==="rated"?`<div class="fb ${good?"ok":"no"}" role="status"><span><span class="kst" role="img" aria-label="${KA.stars} von 3 Sternen">${"★".repeat(KA.stars)}${"☆".repeat(3-KA.stars)}</span> ${msg}</span>${KA.xp?`<span class="xpf">+${KA.xp} XP</span>`:""}</div>
+    ${good?`<div class="kar"><button class="btn alt" id="kre">Nochmal</button><button class="btn" id="knx">${KA.k+1<KALI.length?"Weiter":"Von vorn"}</button></div>`:`<button class="btn" id="knx">Nochmal versuchen</button>`}`
+  :ph==="draw"?`<p class="kah"><span class="mute">Beginne bei der 1 und fahre in einem Zug nach.</span> <button class="lnk" id="kasp">${ic("speaker",16)} ${a.n} anhören</button></p>`:""}`);
+  const sv=$("#kas");
+  if(sv&&sv.addEventListener){
+    const pos=e=>{const r=sv.getBoundingClientRect();return[(e.clientX-r.left)*320/r.width,(e.clientY-r.top)*320/r.height]};
+    sv.addEventListener("pointerdown",e=>{e.preventDefault();try{sv.setPointerCapture(e.pointerId)}catch(_){}kaDown(pos(e))});
+    sv.addEventListener("pointermove",e=>kaMove(pos(e)));
+    ["pointerup","pointercancel","lostpointercapture"].forEach(t=>sv.addEventListener(t,kaUp));
+  }
+  document.querySelectorAll("[data-kk]").forEach(b=>b.onclick=()=>{sfx("tap");startKalli(+b.dataset.kk)});
+  const on=document.querySelector(".kac.on");if(on&&on.scrollIntoView)try{on.scrollIntoView({block:"nearest",inline:"center"})}catch(e){}
+  if($("#kasp"))$("#kasp").onclick=()=>speak(a.sp);
+  if($("#kre"))$("#kre").onclick=()=>startKalli(KA.k);
+  if($("#knx"))$("#knx").onclick=()=>startKalli(good?(KA.k+1)%KALI.length:KA.k);
+}
+
 // ===== Statistik und Einstellungen =====
 function stats(){
   const days=[...Array(7)].map((_,k)=>{const d=ago(6-k);return[["So","Mo","Di","Mi","Do","Fr","Sa"][d.getDay()],S.days[ymd(d)]||0]});
@@ -2626,7 +2729,7 @@ loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v40"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v41"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>

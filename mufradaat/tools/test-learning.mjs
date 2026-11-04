@@ -971,8 +971,8 @@ run(`U="gast";loadS()`);
 
 // ---------- 25. Spiele-Übersicht und Buchstaben-Regen ----------
 run(`U="sp25";loadS();S.ob={z:"lesen",d:today()};ui.fl=null;games()`);let g25=run(`app.innerHTML`);
-ok("Übersicht: Spiel des Tages als dunkle Karte, Kacheln in zwei Gruppen, Zähler der offenen Spiele",/<button class="gday" data-go="(regen|listen)">/.test(g25)&&/<p class="gh">Buchstaben<\/p><div class="gtg"><button class="gtl" data-go="regen">/.test(g25)&&/<p class="gh">Wörter und Sätze<\/p>/.test(g25)&&/2 von 4 offen/.test(g25),g25.slice(0,300));
-ok("… Spiel des Tages bleibt am selben Tag gleich und ist nie gesperrt",run(`gDay()===gDay()`)&&run(`!fGate(gDay().k)`)&&run(`(()=>{const ks=new Set();for(let d=1;d<31;d++){const x=gDay("2026-11-"+String(d).padStart(2,"0"));if(fGate(x.k))return false;ks.add(x.k)}return ks.size===2})()`));
+ok("Übersicht: Spiel des Tages als dunkle Karte, Kacheln in zwei Gruppen, Zähler der offenen Spiele",/<button class="gday" data-go="(regen|listen)">/.test(g25)&&/<p class="gh">Buchstaben<\/p><div class="gtg"><button class="gtl" data-go="regen">/.test(g25)&&/<p class="gh">Wörter und Sätze<\/p>/.test(g25)&&/3 von 5 offen/.test(g25),g25.slice(0,300));
+ok("… Spiel des Tages bleibt am selben Tag gleich und ist nie gesperrt",run(`gDay()===gDay()`)&&run(`!fGate(gDay().k)`)&&run(`(()=>{const ks=new Set();for(let d=1;d<31;d++){const x=gDay("2026-11-"+String(d).padStart(2,"0"));if(fGate(x.k))return false;ks.add(x.k)}return ks.size===3})()`));
 ok("… gesperrte Kachel mit Grund, Antippen zeigt den Hinweis",/<button class="gtl lock" data-fl="pairs" aria-expanded="false">/.test(g25)&&(run(`(ui.fl="pairs",games(),app.innerHTML)`).match(/Lerne im Lernpfad weiter/g)||[]).length===1);run(`ui.fl=null`);
 ok("… ohne Stimme und Aufnahmen ist die Hörübung nie das Spiel des Tages",run(`(()=>{const a=ARV,n=AUDN;ARV=false;AUDN=0;let ok=true;for(let d=1;d<31;d++){if(gDay("2026-12-"+String(d).padStart(2,"0")).k==="listen")ok=false}ARV=a;AUDN=n;return ok})()`));
 ok("Regen: Buchstaben-Auswahl für Anfänger sind die ersten sechs aus S1",run(`rgPool().map(a=>a.i).join()`)==="alif,ba,ta,tha,jim,hha",run(`rgPool().map(a=>a.i).join()`));
@@ -993,7 +993,31 @@ run(`R.score=12;S.st.regen=5;const xp0=S.xp||0;R.t0=Date.now()-61000;rTick();glo
 ok("… nach 60 Sekunden: Rekord, 2 XP je Treffer, Ergebnis",run(`R.end&&S.st.regen===12&&R.xp===24&&R.rec`)&&run(`S.xp-xp25`)===24&&/Zeit um!/.test(run(`app.innerHTML`))&&/Neuer Rekord/.test(run(`app.innerHTML`)));
 run(`rTap(0,R.items[0].id)`);ok("… nach dem Ende zählen Taps nicht mehr",run(`R.score`)===12);
 ok("… Rekord wird beim Synchronisieren nicht verloren",run(`mergeS({st:{regen:3}},{st:{regen:12}}).st.regen`)===12);
-ok("Regen: Navigation, Ansicht und Leiste",/games:\["pairs","blitz","listen","regen"\]/.test(html)&&/"klek","regen"\]\.includes\(view\)/.test(html)&&/if\(t==="regen"\)return startRegen\(\)/.test(html));
+ok("Regen: Navigation, Ansicht und Leiste",/games:\["pairs","blitz","listen","regen"/.test(html)&&/"klek","regen"[,\]]/.test(html)&&/if\(t==="regen"\)return startRegen\(\)/.test(html));
+run(`U="gast";loadS()`);
+
+// ---------- 26. Kalligrafie ----------
+run(`U="ka26";loadS();S.ob={z:"lesen",d:today()};ui.fl=null;games()`);let g26=run(`app.innerHTML`);
+ok("Kalligrafie: Kachel in „Buchstaben“ mit Zeichen statt Symbol, sofort offen",/<button class="gtl" data-go="kalli"><span class="gi gia" lang="ar">ب<\/span><b>Kalligrafie<\/b><small>Buchstaben nachfahren<\/small>/.test(g26)&&run(`fGate("kalli")`)===null);
+ok("… acht Formen in Kursreihenfolge, jede mit Pfad, Abtastpunkten und Pfeil",run(`KALI.map(x=>x.i).join()`)==="ba,ta,tha,dal,dhal,ra,zay,nun"&&run(`KALI.every(x=>x.a&&/^M[\\d. ]+C/.test(x.d)&&x.S.length>=21&&/^M[\\d.\\- ]+L[\\d.\\- ]+$/.test(x.arr))`));
+ok("… Punkte liegen in der Fläche und nicht auf dem Strich",run(`KALI.every(x=>x.dots.every(d=>d[0]>20&&d[0]<300&&d[1]>20&&d[1]<300&&kaNear(d,x.S)>34))`),run(`KALI.map(x=>x.i+":"+x.dots.map(d=>Math.round(kaNear(d,x.S))).join("/")).join(" ")`));
+run(`startKalli()`);ok("… Start beim ersten Buchstaben ohne drei Sterne, Leiste aus",run(`view==="kalli"&&KA.k===0&&KA.phase==="draw"`)&&/Schreib Bāʾ <span class="ar" lang="ar">ب<\/span>/.test(run(`app.innerHTML`))&&/"klek","regen","kalli"\]\.includes\(view\)/.test(html));
+const trace=(k,rev,jit=0)=>run(`(()=>{const P=KALI[${k}].S.slice();${rev?"P.reverse();":""}kaDown(P[0]);P.forEach((p,n)=>kaMove([p[0]+(n%2?${jit}:-${jit}),p[1]]));kaUp();return KA.score})()`);
+let sc=trace(0,false);
+ok("… sauber nachgefahren: volle Punktzahl, dann Punkte setzen",sc>=95&&run(`KA.phase`)==="dots"&&/Jetzt einen Punkt unten/.test(run(`app.innerHTML`)),sc);
+run(`kaDown([20,20])`);ok("… Tippen neben die Stelle zählt nicht",run(`KA.dots.length===0&&KA.phase==="dots"`));
+run(`globalThis.x26=S.xp||0;kaDown([162,238])`);
+ok("… Punkt gesetzt: drei Sterne, 5 XP, Bestwert gespeichert",run(`KA.phase==="rated"&&KA.stars===3&&KA.xp===5&&S.st.kal_ba===3&&S.xp-x26===5`)&&/Wunderschön geschrieben!/.test(run(`app.innerHTML`))&&/id="knx">Weiter</.test(run(`app.innerHTML`))&&/100 % getroffen/.test(run(`app.innerHTML`)));
+run(`startKalli(1)`);sc=trace(1,true);
+ok("… falsche Richtung kostet 30 % und wird erklärt",sc>=60&&sc<=72&&run(`KA.dir===false`),sc);
+run(`KA.dots=[0,1];kaRate()`);ok("… Hinweis auf rechts nach links",/Arabisch schreibt man von rechts nach links/.test(run(`app.innerHTML`))&&run(`KA.stars`)===2);
+run(`startKalli(2);kaDown([20,300]);for(let n=0;n<30;n++)kaMove([20+n*9,300-((n%3)*5)]);kaUp()`);
+ok("… gekritzelt: durchgefallen, keine XP, kein Bestwert",run(`KA.phase==="rated"&&KA.score<45&&KA.xp===0&&!S.st.kal_tha`)&&/Nochmal versuchen/.test(run(`app.innerHTML`)));
+run(`startKalli(3);kaDown([150,112]);kaMove([151,113]);kaUp()`);ok("… nur angetippt: nichts bewertet",run(`KA.phase==="draw"&&KA.pts.length===0`));
+sc=trace(3,false,6);ok("… Dāl ohne Punkte: gleich bewertet, auch mit leichtem Zittern",run(`KA.phase==="rated"`)&&sc>=80,sc);
+ok("… Bestwert sinkt nicht",run(`(S.st.kal_ba=3,startKalli(0),(()=>{const P=KALI[0].S;kaDown(P[0]);P.slice(0,30).forEach(kaMove);kaUp();if(KA.phase==="dots")KA.dots=[0],kaRate();return S.st.kal_ba})())`)===3);
+ok("… Kachel zählt Buchstaben mit drei Sternen",(run(`(S.st.kal_dal=3,games(),app.innerHTML)`).match(/Buchstaben nachfahren · 2 von 8 mit drei Sternen/)||[]).length===1);
+ok("… Bestwerte überleben das Synchronisieren",run(`mergeS({st:{kal_ba:2}},{st:{kal_ba:3}}).st.kal_ba`)===3);
 run(`U="gast";loadS()`);
 
 console.log("\n"+pass+" OK, "+fail+" FAIL");
