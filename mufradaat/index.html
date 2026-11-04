@@ -1800,7 +1800,7 @@ function miniStats(o){
 function home(){
   if(S.np)return homeNp();
   const g=S.goal||100,xd=S.xpDays[today()]||0,gp=Math.min(100,Math.round(xd/g*100)),L=lvl(),lo=xpFor(L),hi=xpFor(L+1),xp=S.xp||0,lp=Math.round((xp-lo)/(hi-lo)*100),st=streak(),lit=S.last===today(),ns=nextStep(),cur=currentLesson(),due=dueN();
-  paint(`<div class="mark"><img class="wm" src="brand/mufradaat.webp" width="720" height="194" alt="Mufradaat"></div>
+  paint(`<div class="mark"><img class="wm" src="brand/mufradaat.webp" width="720" height="200" alt="Mufradaat"></div>
   <div class="row sp" style="margin-top:8px"><div><h1 style="margin:0">Ahlan wa Sahlan${U&&U!=="gast"?", "+esc(U.split("@")[0]):""}!</h1></div><span class="flame ${lit?"on":"off"}" role="img" aria-label="Serie: ${st} Tage">${ic("flame",18,true)} ${st}</span></div>
   ${!canSpeak()&&!hintOff?`<div class="card hint" role="note"><p>Auf diesem Gerät ist keine arabische Stimme installiert. Die Aussprache fehlt oder klingt falsch. Du kannst in den Systemeinstellungen (Sprachausgabe) eine arabische Stimme hinzufügen.</p><button class="x" id="hx" aria-label="Hinweis schließen">${ic("close")}</button></div>`:""}${miniStats({g,xd,gp,L,lp,hi,xp,lit})}${due?`<button class="cta" data-go="review">${due} Wörter wiederholen</button>`:""}
   <div class="menu">
@@ -1821,7 +1821,7 @@ const kEDone=e=>{const ls=KL.filter(l=>l.e===e);return ls.length>0&&ls.every(l=>
 function welcome(){
   $("#nav").hidden=true;const st=ui.ob||1;
   const opt=(k,t,sub)=>`<button class="opt obo" data-ob="${k}"><b>${t}</b><small>${sub}</small></button>`;
-  paint(st===1?`<div class="obw"><div class="mark"><img class="wm" src="brand/mufradaat.webp" width="720" height="194" alt="Mufradaat"></div>
+  paint(st===1?`<div class="obw"><div class="mark"><img class="wm" src="brand/mufradaat.webp" width="720" height="200" alt="Mufradaat"></div>
     <p class="ar obar" lang="ar">أَهْلًا وَسَهْلًا</p><h1>Willkommen!</h1><p class="mute">Mufradaat bringt dir Schritt für Schritt das Lesen bei, von den Buchstaben bis zur Koranschrift. Danach geht es mit Wörtern und Sätzen weiter.</p>
     <h2 id="obq">Was ist dein Ziel?</h2><div role="group" aria-labelledby="obq">${OBZ.map(z=>opt(...z)).join("")}</div></div>`
    :`<div class="obw"><div class="top"><button class="x" id="obb" aria-label="Zurück">${ic("back")}</button></div>
@@ -1837,7 +1837,7 @@ function welcome(){
 function homeNp(){
   if(obNeed())return welcome();
   const st=streak(),due=dueN(),name=U&&U!=="gast"?", "+esc(U.split("@")[0]):"";
-  const top=`<div class="hhd"><img class="wm" src="brand/mufradaat.webp" width="720" height="194" alt="Mufradaat"><div class="chips">${st?`<span class="flame on" role="img" aria-label="Serie: ${st} ${st===1?"Tag":"Tage"}">${ic("flame",16,true)} ${st}</span>`:""}${S.xp?`<span class="xpc">${S.xp} XP</span>`:""}</div></div>
+  const top=`<div class="hhd"><img class="wm" src="brand/mufradaat.webp" width="720" height="200" alt="Mufradaat"><div class="chips">${st?`<span class="flame on" role="img" aria-label="Serie: ${st} ${st===1?"Tag":"Tage"}">${ic("flame",16,true)} ${st}</span>`:""}${S.xp?`<span class="xpc">${S.xp} XP</span>`:""}</div></div>
   <h1 class="hi">Ahlan wa Sahlan${name}!</h1>
   ${!canSpeak()&&!hintOff?`<div class="card hint" role="note"><p>Auf diesem Gerät ist keine arabische Stimme installiert. Die Aussprache fehlt oder klingt falsch. Du kannst in den Systemeinstellungen (Sprachausgabe) eine arabische Stimme hinzufügen.</p><button class="x" id="hx" aria-label="Hinweis schließen">${ic("close")}</button></div>`:""}`;
   if(!KL.length){paint(top+`<div class="card nh">${KURS===false?`<p>Der Lernpfad konnte nicht geladen werden. Prüfe die Verbindung.</p><button class="btn alt" id="kr">Nochmal versuchen</button>`:`<p class="mute">Lernpfad lädt …</p>`}</div>`);
@@ -2447,7 +2447,7 @@ loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v36"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v37"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>
