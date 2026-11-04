@@ -280,7 +280,7 @@ ok("Pfad zeigt alle 38 Lektionen",(ph.match(/data-open="/g)||[]).length===38);
 ok("Pfad zeigt eine Satzrunde je Einheit mit Sätzen",(ph.match(/data-sat="/g)||[]).length===run(`Object.keys(SSTA).length`));
 ok("Pfad zeigt 10 Einheiten, die Buchstaben liegen im neuen Lernpfad",(ph.match(/class="pgr"/g)||[]).length===10);
 ok("erste Lektion ist gesperrt, solange die Buchstaben offen sind",/aria-label="Lektion 1: Hallo sagen, gesperrt"/.test(ph));
-ok("Satzrunden sind am Anfang gesperrt",/noch gesperrt, 0 von/.test(ph));
+ok("Satzrunden sind am Anfang gesperrt",/gesperrt, erst 0 von \d+ nötigen Sätzen frei/.test(ph));
 ok("Buchstaben-Karte: Weg in den neuen Lernpfad oder überspringen",/Zuerst die Buchstaben/.test(ph)&&/data-kn/.test(ph)&&/id="sk2"[^>]*>Ich kann die Buchstaben schon/.test(ph));
 ok("kein eigener Kurztest mehr",!/data-atest/.test(ph)&&!/Kurztest/.test(ph));
 run(`S.aok="skip";path()`);ph=run(`app.innerHTML`);
@@ -916,6 +916,29 @@ run(`for(const l of KL)S.kp.d[l.id]=1;checkBadges()`);
 ok("… alle Etappen: alle acht und „Lesen gelernt“",run(`EBDG.every(([e])=>S.badges.includes("e-"+e))&&S.badges.includes("st1")`));
 run(`view="badges";badges()`);let bgh=run(`app.innerHTML`);
 ok("Abzeichen-Seite: zuerst „Lesen lernen“, dann „Wörter und Übung“",bgh.indexOf("Lesen lernen")>0&&bgh.indexOf("Lesen lernen")<bgh.indexOf("Wörter und Übung")&&/Lesen lernen <small class="mute">\d+ von 11<\/small>/.test(bgh)&&bgh.indexOf("Die Buchstaben")<bgh.indexOf("Wörter und Übung"));
+run(`U="gast";loadS()`);
+
+// ---------- 21. Kleinkram aus der Critique ----------
+run(`U="klein1";loadS()`);
+ok("Neues Profil: Erinnerung aus",run(`S.rem===false`));
+run(`ARV=false;AUDN=5;S.aok="skip";games()`);ok("Hörübung: mit Aufnahmen kein Hinweis auf fehlende Stimme",!/Braucht eine arabische Stimme/.test(run(`app.innerHTML`)));
+run(`AUDN=0;games()`);ok("… ohne Stimme und ohne Aufnahmen: Hinweis",/Braucht eine arabische Stimme/.test(run(`app.innerHTML`)));run(`ARV=null;AUDN=5`);
+ok("Hörübung fragt nach der Bedeutung, nicht nach „dem Wort“",html.includes("Was bedeutet das, was du hörst?")&&!html.includes("Was bedeutet das Wort, das du hörst?"));
+run(`legal()`);ok("Datenschutz nennt die mitgelieferten Aufnahmen",/Aufnahmen, die vorab mit einer Sprachsynthese erzeugt wurden/.test(run(`app.innerHTML`))&&/Stand: November 2026/.test(run(`app.innerHTML`)));
+run(`Notification.permission="denied";S.rem=true;settings()`);ok("Erinnerung: blockiert im Browser → Schalter aus, auch wenn gewünscht",/id="rm" role="switch" aria-checked="false"/.test(run(`app.innerHTML`)));
+run(`Notification.permission="granted";settings()`);ok("… erlaubt und gewünscht → an",/id="rm" role="switch" aria-checked="true"/.test(run(`app.innerHTML`)));run(`Notification.permission="denied"`);
+let st=run(`app.innerHTML`);ok("Einstellungen: Tagesziel unter „Lernen“, nicht unter „Spiel“",st.indexOf("<b>Lernen</b>")<st.indexOf('id="gl"')&&st.indexOf('id="gl"')<st.indexOf("<b>Spiel</b>"));
+run(`view="more";ui.from=null;go("list")`);ok("Wortliste aus Mehr: Zurück zu Mehr",/class="x" data-go="more"/.test(run(`app.innerHTML`)));
+run(`view="home";go("list")`);ok("… aus Start: Zurück zu Start",/class="x" data-go="home"/.test(run(`app.innerHTML`)));
+run(`more()`);ok("Mehr: jede Zeile hat eine Unterzeile",(run(`app.innerHTML`).match(/<small>[^<]+<\/small>/g)||[]).length===7);
+{
+  const css=html.slice(html.indexOf("<style>"),html.indexOf("</style>")),hex=[];
+  for(const m of css.matchAll(/#[0-9a-fA-F]{3,8}\b/g)){const pre=css.slice(Math.max(0,m.index-40),m.index);if(/--[\w-]+:\s*$/.test(pre)||/^#(000|fff)$/i.test(m[0]))continue;hex.push(m[0])}
+  ok("Farben: keine festen Farbwerte außerhalb der Tokens (außer Schwarz/Weiß für Masken)",!hex.length,[...new Set(hex)]);
+  const rad=[...css.matchAll(/border-radius:\s*([^;}]+)/g)].map(m=>m[1].trim()).filter(v=>!v.split(/\s+/).every(x=>["0","2px","6px","8px","12px","14px","16px","20px","99px","999px","50%"].includes(x)));
+  ok("Radien: alle auf der Skala",!rad.length,rad);
+  const js=html.slice(html.indexOf("<script>"));ok("… auch im Skript keine festen Farben mehr",!/#[0-9a-fA-F]{6}\b/.test(js),js.match(/#[0-9a-fA-F]{6}\b/g));
+}
 run(`U="gast";loadS()`);
 
 console.log("\n"+pass+" OK, "+fail+" FAIL");

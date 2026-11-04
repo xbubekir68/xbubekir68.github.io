@@ -13,6 +13,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <style>
+:root{--amber:#c99a2e;--spark:#e8b64c;--star:#e0a82e;--sky:#2f6fa8;--glint:#c4ffe9;--wm-line:#0b3d2e;--dawn:#f2cf9f;--dawn2:#ead9bd;--pine:#2d7059;--pine2:#0f3a2c;--pine3:#12332a;--chip-s:#f3e6c4;--chip-s-ink:#6b5210}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--chip-s:#3a3217;--chip-s-ink:#e8c970}}:root[data-theme="dark"]{--chip-s:#3a3217;--chip-s-ink:#e8c970}
 :root{--ar1:20px;--ar2:24px;--ar3:30px;--ar4:44px;--ar5:64px;--ar6:96px} /* Arabisch-Skala, siehe DESIGN.md */
 .as1{font-size:var(--ar1);line-height:1.4}.as2{font-size:var(--ar2);line-height:1.5}.as3{font-size:var(--ar3);line-height:1.5}.as4{font-size:var(--ar4);line-height:1.5}.as5{font-size:var(--ar5);line-height:1.4}.as6{font-size:var(--ar6);line-height:1.4}
 
@@ -105,12 +107,12 @@ nav button.main.on span svg{filter:drop-shadow(0 0 2px var(--vn)) drop-shadow(0 
 @media (prefers-reduced-motion:reduce){nav button.main.on span,nav button.main.on span svg{animation:none}}
 nav button.main.on{font-weight:700}
 nav button.main:focus-visible{outline:none}nav button.main:focus-visible span{outline:2px solid var(--ink);outline-offset:1px}
-.wm{filter:drop-shadow(1px 0 0 #0b3d2e) drop-shadow(-1px 0 0 #0b3d2e) drop-shadow(0 1px 0 #0b3d2e) drop-shadow(0 -1px 0 #0b3d2e)}
+.wm{filter:drop-shadow(1px 0 0 var(--wm-line)) drop-shadow(-1px 0 0 var(--wm-line)) drop-shadow(0 1px 0 var(--wm-line)) drop-shadow(0 -1px 0 var(--wm-line))}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .wm{filter:none}}:root[data-theme="dark"] .wm{filter:none}
-.auth .wm{filter:drop-shadow(1px 0 0 #0b3d2e) drop-shadow(-1px 0 0 #0b3d2e) drop-shadow(0 1px 0 #0b3d2e) drop-shadow(0 -1px 0 #0b3d2e)}
+.auth .wm{filter:drop-shadow(1px 0 0 var(--wm-line)) drop-shadow(-1px 0 0 var(--wm-line)) drop-shadow(0 1px 0 var(--wm-line)) drop-shadow(0 -1px 0 var(--wm-line))}
 .hero{text-align:center;padding:40px 10px 10px}.hero .ar{font-size:var(--ar5);color:var(--g);line-height:1.4}
 nav[hidden]{display:none}
-.auth{position:fixed;inset:0;z-index:10;overflow:auto;display:flex;flex-direction:column;align-items:center;background:linear-gradient(#f2cf9f,#ead9bd 36%,#2d7059 80%,#0f3a2c);padding:max(24px,env(safe-area-inset-top)) 22px max(24px,env(safe-area-inset-bottom));color:#12332a}
+.auth{position:fixed;inset:0;z-index:10;overflow:auto;display:flex;flex-direction:column;align-items:center;background:linear-gradient(var(--dawn),var(--dawn2) 36%,var(--pine) 80%,var(--pine2));padding:max(24px,env(safe-area-inset-top)) 22px max(24px,env(safe-area-inset-bottom));color:var(--pine3)}
 .auth>*{width:100%;max-width:400px;position:relative;z-index:1}
 .auth svg{position:absolute;left:0;right:0;bottom:0;width:100%;max-width:none;height:46%;z-index:0}
 .hero2{text-align:center;margin-top:8vh}.hero2 .wm{width:min(320px,80vw)}.wmh{margin:0 0 10px;line-height:0}
@@ -157,7 +159,7 @@ nav[hidden]{display:none}
 .fb{display:flex;justify-content:space-between;align-items:center;gap:10px;position:relative;overflow:hidden}
 .xpf{font-weight:700;animation:floatup 1s ease-out both}@keyframes floatup{0%{transform:translateY(10px) scale(.8);opacity:0}25%{opacity:1;transform:translateY(0) scale(1.1)}100%{transform:translateY(-3px) scale(1);opacity:1}}
 .opt.ok{animation:okpulse .55s ease-out}@keyframes okpulse{0%{transform:scale(.96);box-shadow:0 0 0 0 rgba(47,143,111,.55)}50%{transform:scale(1.025)}100%{transform:scale(1);box-shadow:0 0 0 14px rgba(47,143,111,0)}}
-.stars{display:flex;justify-content:center;gap:6px;color:var(--mute)}.star{display:grid}.star.on{color:#e0a82e;animation:starin .5s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(var(--k)*.2s + .15s)}
+.stars{display:flex;justify-content:center;gap:6px;color:var(--mute)}.star{display:grid}.star.on{color:var(--star);animation:starin .5s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(var(--k)*.2s + .15s)}
 @keyframes starin{from{transform:scale(0) rotate(-40deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
 .agrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px;direction:rtl}.at{direction:ltr;display:grid;gap:2px;justify-items:center;padding:10px 4px;text-align:center}.at .ar{font-size:var(--ar3);line-height:1.5}.at b{font-size:12px}.dots{display:flex;gap:3px;margin-top:2px}.dots i{width:6px;height:6px;border-radius:50%;background:var(--line)}.dots i.on{background:var(--g)}
 .forms{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;direction:rtl}.forms .card{direction:ltr;display:grid;justify-items:center;gap:2px;padding:10px 4px}.forms .ar{font-size:var(--ar4);line-height:1.5}.forms small{font-size:12px;color:var(--mute)}.gt{font-weight:700;font-size:15px;margin:22px 0 8px}.rdir{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--mute);margin:0 2px 6px}.rdir i{flex:1;height:1px;background:var(--line);margin:0 8px}.nav2{direction:rtl}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.og{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -173,7 +175,7 @@ nav[hidden]{display:none}
 .pn.abl .nd .ar{font-size:var(--ar2);line-height:1.5}.pn.abl .nd .ar.lng{font-size:var(--ar1);line-height:1.4}
 .askip{margin-top:12px}.askip .btn{margin-top:10px}.askip p{margin-top:4px}.note{margin-top:12px;border-color:var(--g);background:var(--gl)}.note p{font-size:14px;line-height:1.45}
 details.rule{display:block;margin-top:12px}details.rule>ol,details.rule>p{margin-top:10px}details.rule summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between}details.rule summary::-webkit-details-marker{display:none}details.rule summary::after{content:"+";font-size:20px;color:var(--mute);line-height:1}details.rule[open] summary::after{content:"–"}details.rule[open] summary{margin-bottom:8px}
-.pn:not(.cur) .nd{width:auto;min-width:58px;padding:0 6px;border-radius:29px} /* lange Stationswörter: der Kreis wird zur Pille, statt Zeichen abzuschneiden */
+.pn:not(.cur) .nd{width:auto;min-width:58px;padding:0 6px;border-radius:999px} /* lange Stationswörter: der Kreis wird zur Pille, statt Zeichen abzuschneiden */
 .pn.done .nd{background:var(--g);color:var(--on)}.pn.cur .nd{width:76px;height:76px;border:0;box-shadow:0 0 0 6px var(--gl)}.pn.cur .nd img{width:100%;height:100%}.pn.cur .lb.r{left:calc(100% + 18px)}.pn.cur .lb.l{right:calc(100% + 18px)}.pn.cur b{font-size:16px}
 .pn.lock .nd{border:3px dashed color-mix(in srgb,var(--ac,var(--mute)) 50%,transparent);color:var(--mute);background:var(--card)}.pn.lock b{color:var(--mute);font-weight:500}
 .sgn{position:absolute;left:50%;transform:translateX(-50%);width:min(320px,96%);display:grid;justify-items:center;gap:2px;text-align:center;background:var(--card);border:2px solid var(--line);border-radius:20px;padding:10px 14px 12px}.sgn.all,.sgn.done{border-color:var(--g)}
@@ -186,20 +188,19 @@ details.rule{display:block;margin-top:12px}details.rule>ol,details.rule>p{margin
 .pth .kjp{position:relative;z-index:1;white-space:nowrap;margin-top:8px}
 .kwt .lnk{display:block;margin:8px auto 0}
 .rule>.lnk{margin:4px 0 0 2px}
-.st{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;white-space:nowrap;background:var(--line);color:var(--mute)}.st.s{background:#f3e6c4;color:#6b5210}.st.l{background:var(--gl);color:var(--g)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .st.s{background:#3a3217;color:#e8c970}}:root[data-theme="dark"] .st.s{background:#3a3217;color:#e8c970}
+.st{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;white-space:nowrap;background:var(--line);color:var(--mute)}.st.s{background:var(--chip-s);color:var(--chip-s-ink)}.st.l{background:var(--gl);color:var(--g)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn.alt{color:var(--g2)}}:root[data-theme="dark"] .btn.alt{color:var(--g2)}
 .set select{border:0;background:none;color:var(--mute);font:inherit;text-align:right;cursor:pointer}
 .wl .w{cursor:default;align-items:flex-start}.wl .w .ar{padding-top:4px}.wl .w .tr{display:block}.wl .sl{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;margin-top:6px}.wl .sl .tr{font-size:12px}
 .pg3{display:inline-flex;gap:3px;align-items:center;vertical-align:middle}
 .pg3 i{width:9px;height:5px;border-radius:2px;background:var(--line)}
 .pg3.p0 i:first-child{background:var(--bad)}
-.pg3.p1 i:first-child,.pg3.p2 i:nth-child(-n+2){background:#c99a2e}
+.pg3.p1 i:first-child,.pg3.p2 i:nth-child(-n+2){background:var(--amber)}
 .pg3.p3 i{background:var(--g)}
 .arw.off .a2,.arw.off .t2{display:none}.arw:not(.off) .a1,.arw:not(.off) .hkb{display:none}
 .hkb{margin-left:4px}
 /* Übersicht: Level-Ring, Tagesziel und Woche in einer Karte (Maße aus der Vorlage, alles in px bei 1×) */
-.ov{--line2:var(--line);--mint:var(--g);--bar:color-mix(in srgb,var(--g) 38%,var(--card));--n0:#6fb89c;--n1:#2f8f6f;--n2:#1f6f55;--rt:var(--line);--glow:0;container-type:inline-size;display:block;margin-top:14px;padding:28px;border-radius:18px;border-color:var(--line2);text-align:left}
+.ov{--line2:var(--line);--mint:var(--g);--bar:color-mix(in srgb,var(--g) 38%,var(--card));--n0:#6fb89c;--n1:#2f8f6f;--n2:#1f6f55;--rt:var(--line);--glow:0;container-type:inline-size;display:block;margin-top:14px;padding:28px;border-radius:20px;border-color:var(--line2);text-align:left}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .ov{--line2:#23322b;--mint:#7fdcb8;--bar:#3f7d65;--n0:#247058;--n1:#32bf8c;--n2:#3dfbb3;--rt:rgba(240,255,248,.065);--rt2:rgba(240,255,248,.07);--glow:1}}
 :root[data-theme="dark"] .ov{--line2:#23322b;--mint:#7fdcb8;--bar:#3f7d65;--n0:#247058;--n1:#32bf8c;--n2:#3dfbb3;--rt:rgba(240,255,248,.065);--rt2:rgba(240,255,248,.07);--glow:1}
 .ovtop{display:flex;align-items:center;gap:28px}
@@ -247,7 +248,7 @@ details.rule{display:block;margin-top:12px}details.rule>ol,details.rule>p{margin
 @container (max-width:430px){.ovtop{gap:16px}.ovr{--rs:112px;--rw:8px}.ovb{font-size:min(32px,8.2cqi)}.ovt .ovd{margin:14px 0 13px}}
 .mbars{display:flex;align-items:flex-end;gap:6px;height:58px;margin-top:10px}
 .mbars div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:100%}
-.mbars i{display:block;width:100%;max-width:26px;border-radius:5px;background:var(--line)}
+.mbars i{display:block;width:100%;max-width:26px;border-radius:6px;background:var(--line)}
 .mbars .t i{background:var(--g)}
 .mbars span{font-size:11px;color:var(--mute)}
 .mnums{display:flex;margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
@@ -268,7 +269,7 @@ details.rule{display:block;margin-top:12px}details.rule>ol,details.rule>p{margin
 .lvfx{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 10px);transform:translateX(-50%);z-index:70;pointer-events:none;animation:lvin .45s cubic-bezier(.3,1.4,.5,1) both,lvout .4s ease-in 2.35s forwards}
 .lvc{position:relative;display:flex;align-items:center;gap:10px;background:var(--g);color:var(--on);border-radius:999px;padding:6px 18px 6px 8px;box-shadow:0 6px 18px rgba(0,0,0,.2)}.lvc .ar{width:34px;height:34px;border-radius:50%;background:var(--on);color:var(--g);display:grid;place-items:center;font-size:var(--ar1);line-height:1.4}.lvc b{font-size:16px}
 .lvr{position:absolute;left:50%;top:50%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:3px solid var(--g2);animation:lvring 1s ease-out .15s both}
-.lvfx i{position:absolute;left:50%;top:50%;width:7px;height:7px;margin:-3px;border-radius:50%;background:#e8b64c;animation:lvspark .9s ease-out .15s both;transform:rotate(var(--a)) translateY(0)}
+.lvfx i{position:absolute;left:50%;top:50%;width:7px;height:7px;margin:-3px;border-radius:50%;background:var(--spark);animation:lvspark .9s ease-out .15s both;transform:rotate(var(--a)) translateY(0)}
 .cheer{animation:cheer .8s ease-out}
 @keyframes lvin{from{transform:translate(-50%,-70px);opacity:0}to{transform:translate(-50%,0);opacity:1}}@keyframes lvout{to{opacity:0;transform:translate(-50%,-30px)}}
 @keyframes lvring{from{transform:scale(.6);opacity:.9}to{transform:scale(3);opacity:0}}@keyframes lvspark{from{transform:rotate(var(--a)) translateY(0);opacity:1}to{transform:rotate(var(--a)) translateY(-70px);opacity:0}}
@@ -362,7 +363,7 @@ html.splash-lock{overflow:hidden}
 
 .sp-bar{position:relative;width:min(200px,56vw);height:3px;border-radius:2px;background:var(--track);overflow:hidden;opacity:0;animation:sp-fadein .6s ease 1.1s forwards}
 .sp-bar::before{content:"";position:absolute;top:0;bottom:0;left:0;width:38%;border-radius:2px;
-  background:linear-gradient(90deg,transparent,var(--neon) 60%,#c4ffe9);box-shadow:0 0 10px rgba(61,255,181,.8);
+  background:linear-gradient(90deg,transparent,var(--neon) 60%,var(--glint));box-shadow:0 0 10px rgba(61,255,181,.8);
   animation:sp-shuttle 1.5s cubic-bezier(.65,0,.35,1) infinite}
 
 @keyframes sp-rv{from{--spp:-2%}to{--spp:126%}}
@@ -556,7 +557,7 @@ const sentAr=s=>s.ar+(s.q?" ؟":" .");
 const sentDone=()=>Object.values(S.sent||{}).filter(n=>n>0).length;
 
 // ===== Zustand =====
-let S={v:2,days:{},fav:[],dir:"ad",rem:true,time:"19:00",theme:"system",streak:0,last:"",box:{},due:{},ef:{},sent:{},hk:1,seen:[],seenDay:"",notified:"",xp:0,xpDays:{},badges:[],alpha:{},aok:"",goal:100,goalv:1,sound:true,vib:true,auto:true,epoch:0,np:false,kp:{d:{}},st:{perfect:0,rounds:0,goals:0,pairs:0,blitz:0,mix:0,sent:0}};
+let S={v:2,days:{},fav:[],dir:"ad",rem:false,time:"19:00",theme:"system",streak:0,last:"",box:{},due:{},ef:{},sent:{},hk:1,seen:[],seenDay:"",notified:"",xp:0,xpDays:{},badges:[],alpha:{},aok:"",goal:100,goalv:1,sound:true,vib:true,auto:true,epoch:0,np:false,kp:{d:{}},st:{perfect:0,rounds:0,goals:0,pairs:0,blitz:0,mix:0,sent:0}};
 const DEF=JSON.stringify(S);let U=null;const SK=()=>"mfr:"+(UID||U);
 function migrate(st){
   if((st.v||1)<2){ // v1: Fortschritt hing am Array-Index -> auf feste IDs umstellen
@@ -768,7 +769,7 @@ function toast(m){
 }
 function confetti(){
   if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;
-  const c=document.createElement("div"),cols=["#1f6f55","#e8b64c","#c4513f","#4fbd95","#f2cf9f","#2f6fa8"];c.className="conf";c.setAttribute("aria-hidden","true");
+  const c=document.createElement("div"),cols=["--g","--spark","--bad","--g2","--dawn","--sky"].map(v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim()||"currentColor");c.className="conf";c.setAttribute("aria-hidden","true");
   for(let i=0;i<46;i++){const p=document.createElement("i");p.style.cssText=`left:${Math.random()*100}%;background:${cols[i%6]};animation-delay:${Math.random()*.4}s;animation-duration:${1.4+Math.random()*1.2}s;--dx:${(Math.random()*160-80)|0}px;--r:${(Math.random()*720-360)|0}deg`;c.appendChild(p)}
   document.body.appendChild(c);setTimeout(()=>c.remove(),3200);
 }
@@ -839,7 +840,7 @@ function listen(){
   }
   const w=LN.ws[LN.n],p=LN.picked,done=p!==null;fTask(LN,LN.n);if(!LN.opts)LN.opts=options(w);
   paint(`<div class="top">${xbtn("games")}<div class="bar"><i style="width:${LN.n/LN.ws.length*100}%"></i></div><span class="mute">${LN.n+1} / ${LN.ws.length}</span></div>
-  <p style="text-align:center;font-weight:600;margin-top:12px">Was bedeutet das Wort, das du hörst?</p>
+  <p style="text-align:center;font-weight:600;margin-top:12px">Was bedeutet das, was du hörst?</p>
   <div style="text-align:center;margin:18px 0">${done?`<div class="ar as5" lang="ar">${w.ar}</div><p class="mute">(${w.tr})</p>`:""}<button class="btn alt" id="rp" style="width:auto;padding:14px 26px">${ic("speaker",22)} ${done?"Nochmal hören":"Anhören"}</button></div>
   ${LN.opts.map(o=>`<button class="opt ${done?(o.i===w.i?"ok":o.i===p?"no":""):""}" data-o="${o.i}" ${done?"disabled":""}>${o.de}</button>`).join("")}
   ${done?`<div class="fb ${p===w.i?"ok":"no"}" role="status"><span>${p===w.i?"Richtig":"Das war: "+w.de}</span></div>`:""}
@@ -1888,7 +1889,7 @@ function path(){
     nodes.push(`<div class="sgn ${all?"all":""} ${dn?"done":""} ${th}" style="top:${y}px"><span class="eta">Ziel der Einheit</span>
       <button class="sent ar" lang="ar" data-goal="${s.k}" aria-label="Zielsatz anhören: ${s.de}">${s.t.map(x=>`<span class="${has(x.i)?"k":"u"}">${x.a}</span>`).join(" ")}</button>
       <span class="de">${s.de}</span><small>${all?"Alle Wörter begonnen. Lies den Satz laut vor.":n?`${n} von ${s.t.length} Wörtern begonnen`:"Diesen Satz liest du am Ende der Einheit."}</small>
-      <span class="row" style="justify-content:center;gap:10px;margin-top:8px"><button class="lnk" data-goal="${s.k}">${ic("speaker",16)} Anhören</button><button class="sbt ${lock?"lock":""}" ${attr} aria-label="Satzrunde zu ${u.t}: ${lock?"noch gesperrt, "+o+" von "+sl.length+" Sätzen frei":pr+" von "+sl.length+" Sätzen geübt"}">Sätze üben <span class="ar" lang="ar">جُمَل</span><small>${lock?o+" von "+sl.length+" frei":pr+" von "+sl.length+" geübt"}</small></button></span>
+      <span class="row" style="justify-content:center;gap:10px;margin-top:8px"><button class="lnk" data-goal="${s.k}">${ic("speaker",16)} Anhören</button><button class="sbt ${lock?"lock":""}" ${attr} aria-label="Satzrunde zu ${u.t}: ${lock?"gesperrt, erst "+o+" von "+SMIN+" nötigen Sätzen frei":pr+" von "+sl.length+" Sätzen geübt"}">Sätze üben <span class="ar" lang="ar">جُمَل</span><small>${lock?o+" von "+sl.length+" frei":pr+" von "+sl.length+" geübt"}</small></button></span>
       ${lock&&hint===attr?`<small class="hint" role="status">Noch zu wenige Sätze frei (${o} von ${SMIN}). Lerne weiter Wörter aus dieser Einheit.</small>`:""}</div>`);
     y+=212};
   UNITS.forEach((u,ui)=>{
@@ -1927,7 +1928,8 @@ function lesson(){
   <div class="wl">${ws.map(w=>{const t=wordState(w.i),nt=noteOf(w);return `<button class="w" data-say="${w.i}"><span class="ar" lang="ar">${w.ar}</span><span style="flex:1"><b>${w.de}</b><span class="tr">(${w.tr})${nt?" · "+esc(nt):""}</span><span class="sl"><span class="st ${t.k}">${t.k==="l"?ic("check",14)+" ":""}${t.t}</span>${memBar(w.i)}<span class="tr">${t.h}</span></span></span></button>`}).join("")}</div>`);
 }
 function more(){
-  paint(`<h1>Mehr</h1><div class="menu">${[["alphabet","list","Alphabet"],["badges","medal","Abzeichen"],["list","list","Wortliste"],["stats","chart","Statistiken"],["fav","star","Favoriten"],["settings","gear","Einstellungen"],["legal","lock","Datenschutz &amp; Impressum"]].map(m=>itm(`data-go="${m[0]}"`,m[1],m[2],"")).join("")}</div>`);
+  const nf=(S.fav||[]).length;
+  paint(`<h1>Mehr</h1><div class="menu">${[["alphabet","list","Alphabet",alphaSure()+" von "+ALPHA.length+" Buchstaben sicher"],["badges","medal","Abzeichen",(S.badges||[]).length+" von "+BADGES.length+" freigeschaltet"],["list","list","Wortliste",W.length+" Wörter mit Aussprache"],["stats","chart","Statistiken","Lektionen, Buchstaben, Wörter, Serie"],["fav","star","Favoriten",nf?nf+" gespeichert":"In den Karten mit dem Stern markieren"],["settings","gear","Einstellungen","Ziel, Vokalzeichen, Töne, Konto"],["legal","lock","Datenschutz &amp; Impressum","Was mit deinen Daten passiert"]].map(m=>itm(`data-go="${m[0]}"`,m[1],m[2],m[3])).join("")}</div>`);
 }
 function badges(){
   const have=S.badges||[];
@@ -1946,7 +1948,7 @@ const fFree=()=>`<button class="lnk ffree" id="ffree">Ich kann schon lesen: alle
 function fFreeOn(again){const b=$("#ffree");if(b)b.onclick=()=>{S.aok="skip";save();sfx("tap");toast("Karten und Spiele sind frei.");again()}}
 function games(){
   const g=k=>fGate(k),row=(k,icon,t,sub)=>{const e=g(k);return e?`<button class="item lock" data-fl="${k}" aria-expanded="${ui.fl===k}"><span class="ic">${ic("lock")}</span><span><b>${t}</b><small>${fWhy(e)}</small>${ui.fl===k?`<small class="hint" role="status">Lerne im Lernpfad weiter, dann geht das Spiel von selbst auf.</small>`:""}</span></button>`:itm(`data-go="${k}"`,icon,t,sub)};
-  paint(`<h1>Spiele</h1><div class="menu">${itm('data-go="listen"',"speaker","Hörübung",ARV===false?"Braucht eine arabische Stimme auf dem Gerät":"Wort hören, Bedeutung wählen")}${row("pairs","pairs","Paare zuordnen","6 Wortpaare, so schnell du kannst")}${row("blitz","bolt","Wort-Blitz","60 Sekunden oder ohne Zeitlimit · Rekord: "+(S.st.blitz||0)+" Treffer")}</div>${g("pairs")||g("blitz")?fFree():""}`);
+  paint(`<h1>Spiele</h1><div class="menu">${itm('data-go="listen"',"speaker","Hörübung",!canSpeak()?"Braucht eine arabische Stimme auf dem Gerät":"Hören und die Bedeutung wählen")}${row("pairs","pairs","Paare zuordnen","6 Wortpaare, so schnell du kannst")}${row("blitz","bolt","Wort-Blitz","60 Sekunden oder ohne Zeitlimit · Rekord: "+(S.st.blitz||0)+" Treffer")}</div>${g("pairs")||g("blitz")?fFree():""}`);
   document.querySelectorAll("[data-fl]").forEach(b=>b.onclick=()=>{ui.fl=ui.fl===b.dataset.fl?null:b.dataset.fl;sfx("tap");games()});
   fFreeOn(games);
 }
@@ -1956,7 +1958,7 @@ function list(){
   const q=ui.q.toLowerCase();
   const ws=W.filter(w=>(ui.cat==="Alle"||w.cat===ui.cat)&&(!q||w.de.toLowerCase().includes(q)||w.tr.toLowerCase().includes(q)||norm(w.ar).includes(norm(q))));
   const keep=(document.querySelector(".chips")||{}).scrollLeft;
-  paint(head("Wortliste")+`<input type="search" id="q" placeholder="Wörter suchen …" value="${esc(ui.q)}" aria-label="Wörter suchen"><div class="chips">${cats.map(c=>`<button class="chip ${ui.cat===c?"on":""}" data-cat="${c}">${c}</button>`).join("")}</div><div id="ws">${ws.map(wordRow).join("")||'<p class="mute">Keine Treffer. Versuch einen anderen Suchbegriff.</p>'}</div>`);
+  paint(head("Wortliste",ui.from||"more")+`<input type="search" id="q" placeholder="Wörter suchen …" value="${esc(ui.q)}" aria-label="Wörter suchen"><div class="chips">${cats.map(c=>`<button class="chip ${ui.cat===c?"on":""}" data-cat="${c}">${c}</button>`).join("")}</div><div id="ws">${ws.map(wordRow).join("")||'<p class="mute">Keine Treffer. Versuch einen anderen Suchbegriff.</p>'}</div>`);
   $("#q").oninput=e=>{ui.q=e.target.value;const pos=e.target.selectionStart;list();const el=$("#q");el.focus();el.setSelectionRange(pos,pos)};
   const ch=$(".chips"),on=ch.querySelector(".on");
   ch.scrollLeft=keep===undefined?0:keep; // Leiste bleibt beim Antippen und Suchen an ihrer Stelle
@@ -2199,17 +2201,18 @@ function stats(){
   paint(head("Statistiken",ui.from==="home"?"home":"more")+rd+`<div class="card row"><div><p class="mute">Lernfortschritt</p><p class="big">${pct()}%</p><p class="mute">${knownN()} von ${W.length} Wörtern</p></div><div class="ring" style="--p:${pct()};margin-left:auto"><span>${pct()}%</span></div></div>
   <div class="tiles"><div class="card"><p class="mute">Heute geübt</p><b>${S.days[today()]||0}</b><span class="mute">Wörter</span></div><div class="card"><p class="mute">Aktuelle Serie</p><b>${streak()}</b><span class="mute">Tage</span></div><div class="card"><p class="mute">Gefestigt</p><b>${Object.values(S.box).filter(b=>b>=3).length}</b><span class="mute">von ${W.length}</span></div><div class="card"><p class="mute">Gelernt gesamt</p><b>${knownN()}</b></div><div class="card"><p class="mute">Level</p><b>${lvl()}</b></div><div class="card"><p class="mute">XP gesamt</p><b>${S.xp||0}</b></div></div>
   <div class="card" style="margin-top:10px"><p><b>Gedächtnis</b></p><p class="mute" style="margin-top:2px">Wie frisch deine angefangenen Wörter gerade sind.</p>${(()=>{const c=[0,0,0,0];W.forEach(w=>{const m=mem(w.i);if(m)c[m.k]++});const tot=c.reduce((a,b)=>a+b,0);
-    return tot?[[3,"frisch","var(--g)"],[2,"wackelig","#c99a2e"],[1,"fällig","#c99a2e"],[0,"vergessen","var(--bad)"]].map(([k,n,col])=>`<div class="row sp" style="margin-top:10px"><span style="width:92px;font-size:14px">${n}</span><div class="bar"><i style="width:${Math.round(c[k]/tot*100)}%;background:${col}"></i></div><span class="mute" style="width:32px;text-align:right">${c[k]}</span></div>`).join(""):'<p class="mute" style="margin-top:10px">Noch keine Wörter angefangen.</p>'})()}</div>
+    return tot?[[3,"frisch","var(--g)"],[2,"wackelig","var(--amber)"],[1,"fällig","var(--amber)"],[0,"vergessen","var(--bad)"]].map(([k,n,col])=>`<div class="row sp" style="margin-top:10px"><span style="width:92px;font-size:14px">${n}</span><div class="bar"><i style="width:${Math.round(c[k]/tot*100)}%;background:${col}"></i></div><span class="mute" style="width:32px;text-align:right">${c[k]}</span></div>`).join(""):'<p class="mute" style="margin-top:10px">Noch keine Wörter angefangen.</p>'})()}</div>
   <div class="card" style="margin-top:10px"><p><b>Lernverlauf</b></p><div class="chart" role="img" aria-label="Geübte Wörter der letzten 7 Tage: ${days.map(d=>d[0]+" "+d[1]).join(", ")}">${days.map(d=>`<div><i style="height:${d[1]/mx*80}px"></i>${d[0]}</div>`).join("")}</div></div><div class="card" style="margin-top:10px"><p><b>Nach Thema</b></p>${GROUPS.map(c=>{const t=W.filter(w=>w.cat===c),k=t.filter(w=>isLearned(w.i)).length;return `<div class="row sp" style="margin-top:10px"><span style="width:130px;font-size:14px">${c}</span><div class="bar"><i style="width:${k/t.length*100}%"></i></div><span class="mute">${k}/${t.length}</span></div>`}).join("")}</div>`);
 }
+const remOn=()=>{try{return !!S.rem&&typeof Notification!=="undefined"&&Notification.permission==="granted"}catch(e){return false}};
 function settings(){
   const row=(id,l,v,a="")=>`<button class="set" id="${id}" ${a}><span>${l}</span>${v}</button>`,sw=on=>`<span class="sw ${on?"on":""}" aria-hidden="true"></span>`,swr=(id,l,on)=>row(id,l,sw(on),`role="switch" aria-checked="${!!on}"`),
     pick=(id,l,opts,cur)=>`<label class="set"><span>${l}</span><select id="${id}">${opts.map(([v,t])=>`<option value="${v}" ${String(v)===String(cur)?"selected":""}>${t}</option>`).join("")}</select></label>`;
   paint(head("Einstellungen","more")+`<p><b>Lernrichtung</b></p><div class="grp">${row("d1","Arabisch → Deutsch",S.dir==="ad"?ic("check",18):"",`aria-pressed="${S.dir==="ad"}"`)}${row("d2","Deutsch → Arabisch (Schreiben)",S.dir==="da"?ic("check",18):"",`aria-pressed="${S.dir==="da"}"`)}</div>
-  <p><b>Lesen</b></p><div class="grp">${S.np?pick("oz","Dein Ziel",OBZ.map(z=>[z[0],z[1]]),(S.ob&&S.ob.z)||"lesen"):""}${pick("hk","Vokalzeichen",[[0,"immer zeigen"],[1,"automatisch"],[2,"immer ohne"]],hkSet())}</div>
+  <p><b>Lernen</b></p><div class="grp">${S.np?pick("oz","Dein Ziel",OBZ.map(z=>[z[0],z[1]]),(S.ob&&S.ob.z)||"lesen"):""}${pick("gl","Tagesziel",[50,100,150,250].map(v=>[v,v+" XP"]),S.goal||100)}${pick("hk","Vokalzeichen",[[0,"immer zeigen"],[1,"automatisch"],[2,"immer ohne"]],hkSet())}</div>
   <p class="mute" style="margin:-10px 0 18px">Bei „automatisch“ verschwinden die Vokalzeichen Schritt für Schritt, sobald ein Wort sicher sitzt – so wie in echten Texten. Antippen zeigt sie jederzeit wieder.</p>
-  <p><b>Spiel</b></p><div class="grp">${swr("sd","Töne",S.sound!==false)}${swr("vb","Vibration",S.vib!==false)}${swr("au","Aussprache automatisch",S.auto!==false)}${pick("gl","Tagesziel",[50,100,150,250].map(v=>[v,v+" XP"]),S.goal||100)}</div>
-  <p><b>Benachrichtigungen</b></p><div class="grp">${swr("rm","Tägliche Lern-Erinnerung",S.rem)}<label class="set"><span>Uhrzeit</span><input type="time" id="tm" value="${S.time}" style="border:0;background:none;color:var(--mute);font:inherit"></label></div>
+  <p><b>Spiel</b></p><div class="grp">${swr("sd","Töne",S.sound!==false)}${swr("vb","Vibration",S.vib!==false)}${swr("au","Aussprache automatisch",S.auto!==false)}</div>
+  <p><b>Benachrichtigungen</b></p><div class="grp">${swr("rm","Tägliche Lern-Erinnerung",remOn())}<label class="set"><span>Uhrzeit</span><input type="time" id="tm" value="${S.time}" style="border:0;background:none;color:var(--mute);font:inherit"></label></div>
   <p class="mute" style="margin:-10px 0 18px">Die Erinnerung erscheint, solange die Seite geöffnet ist.</p><p><b>Darstellung und Konto</b></p><div class="grp">${pick("th","Darstellung",[["system","System"],["light","Hell"],["dark","Dunkel"]],S.theme)}${U!=="gast"?row("sy","Synchronisierung",`<span class="mute">${SY||"–"}</span>`):""}${row("lo",U==="gast"?"Anmelden oder registrieren":"Abmelden",`<span class="mute" style="max-width:50%;overflow:hidden;text-overflow:ellipsis">${U==="gast"?"Gast":esc(U)}</span>`)}${row("ex","Meine Daten exportieren",'<span class="mute">JSON</span>')}${row("lg","Datenschutz &amp; Impressum",ic("chev",18))}${row("rs","Fortschritt zurücksetzen",'<span class="mute">Löschen</span>')}${U!=="gast"?row("dl","Konto löschen",'<span class="mute" style="color:var(--bad)">Endgültig</span>'):""}</div>`);
   $("#sd").onclick=()=>{S.sound=S.sound===false;save();if(S.sound)sfx("good",1);settings()};
   $("#vb").onclick=()=>{S.vib=S.vib===false;save();if(S.vib)vib(30);settings()};
@@ -2217,7 +2220,10 @@ function settings(){
   $("#hk").onchange=e=>{S.hk=+e.target.value;save();settings()};
   if($("#oz"))$("#oz").onchange=e=>{S.ob={...(S.ob||{d:today()}),z:e.target.value};save()};
   $("#d1").onclick=()=>{S.dir="ad";save();settings()};$("#d2").onclick=()=>{S.dir="da";save();settings()};
-  $("#rm").onclick=()=>{S.rem=!S.rem;save();if(S.rem)try{Notification.requestPermission()}catch(e){}settings()};$("#tm").onchange=e=>{S.time=e.target.value;save()};
+  $("#rm").onclick=async()=>{ // an nur mit Erlaubnis des Browsers, sonst bleibt der Schalter aus
+    if(remOn()){S.rem=false;save();return settings()}
+    let pm="denied";try{pm=Notification.permission==="granted"?"granted":await Notification.requestPermission()}catch(e){}
+    S.rem=pm==="granted";save();if(!S.rem)toast("Benachrichtigungen sind im Browser blockiert. Du kannst sie in den Website-Einstellungen erlauben.");settings()};$("#tm").onchange=e=>{S.time=e.target.value;save()};
   $("#th").onchange=e=>{S.theme=e.target.value;save();applyTheme();settings()};
   $("#lo").onclick=logout;if($("#sy"))$("#sy").onclick=()=>sync();
   $("#lg").onclick=()=>go("legal");$("#au").onclick=()=>{S.auto=S.auto===false;save();settings()};
@@ -2342,16 +2348,16 @@ function legal(){
   sec("Wer ist verantwortlich?",`${miss(LEGAL.name)}<br>Kontakt: ${miss(LEGAL.kontakt)}<br>Wohnsitz: Österreich (Salzburg)<br>Art und Richtung: private, nicht kommerzielle Lern-App für arabische Vokabeln, ohne Einnahmen.`)+
   sec("Was gespeichert wird",`<b>Ohne Konto (Gast):</b> Lernstand und Einstellungen liegen nur in deinem Browser (lokaler Speicher) und werden nicht übertragen.<br><b>Mit Konto:</b> deine E-Mail-Adresse, dein Passwort (nur als Hash), dein Lernstand (z. B. Wörter, XP, Serie, Abzeichen), deine Einstellungen und der Zeitpunkt der letzten Änderung.`)+
   sec("Dienstleister",`<b>Supabase</b> (Anmeldung und Datenbank), Serverstandort: ${miss(LEGAL.region)}.<br><b>GitHub Pages</b> liefert diese Seite aus. Beim Aufruf verarbeitet GitHub technisch notwendige Verbindungsdaten wie deine IP-Adresse.<br>Schriften und Programmteile werden von dieser Seite selbst ausgeliefert.`)+
-  sec("Sprachausgabe","Die Aussprache nutzt die Sprachausgabe deines Geräts. Manche Browser (z. B. Chrome) greifen dafür auf Online-Dienste des Herstellers zurück, dabei kann das gesprochene Wort übertragen werden.")+
+  sec("Aussprache","Die Aussprache kommt meist aus Aufnahmen, die vorab mit einer Sprachsynthese erzeugt wurden. Sie werden mit der App geladen und auf deinem Gerät gespeichert, dabei wird nichts von dir übertragen. Nur wenn eine Aufnahme fehlt, nutzt die App die Sprachausgabe deines Geräts. Manche Browser (z. B. Chrome) greifen dafür auf Online-Dienste des Herstellers zurück, dabei kann das gesprochene Wort übertragen werden.")+
   sec("Mikrofon und Spracherkennung","Beim Nachsprechen nimmst du dich mit dem Mikrofon auf. Die Aufnahme bleibt auf deinem Gerät und wird nicht gespeichert. Ab Etappe 8 kann zusätzlich die Spracherkennung deines Browsers zuhören, aber nur, wenn du vorher zustimmst. Dabei schickt der Browser deine Stimme an den Dienst seines Herstellers (bei Chrome an Google, bei Safari an Apple), der Text daraus kommt zurück und wird nur auf deinem Gerät verglichen. Die App selbst speichert davon nichts.")+
   sec("Cookies und lokaler Speicher","Es gibt keine Werbe- oder Analyse-Cookies und kein Tracking. Der lokale Speicher deines Browsers dient nur der Anmeldung und dem Lernstand und ist dafür technisch notwendig.")+
   sec("Deine Rechte","<b>Auskunft und Export:</b> Einstellungen → „Meine Daten exportieren“.<br><b>Löschung:</b> Einstellungen → „Konto löschen“ entfernt dein Konto und deinen Lernstand dauerhaft.<br>Du kannst außerdem Berichtigung, Einschränkung der Verarbeitung und Widerspruch verlangen und dich bei einer Datenschutz-Aufsichtsbehörde beschweren.")+
   sec("Speicherdauer","Deine Daten bleiben gespeichert, bis du dein Konto löschst.")+
-  `<p class="mute" style="margin-top:12px">Stand: Oktober 2026</p>`);
+  `<p class="mute" style="margin-top:12px">Stand: November 2026</p>`);
   if(!U)$("#lback").onclick=()=>showAuth("start");
 }
 
-const SKY=`<svg viewBox='0 0 400 170' preserveAspectRatio='xMidYMax slice' aria-hidden='true'><g fill='#0f3a2c' opacity='.9'><rect y='140' width='400' height='30'/><path d='M130 140v-30a70 70 0 0 1 140 0v30z'/><rect x='198' y='22' width='4' height='18'/><rect x='95' y='60' width='14' height='80'/><path d='M95 60l7-24 7 24z'/><rect x='291' y='60' width='14' height='80'/><path d='M291 60l7-24 7 24z'/></g></svg>`;
+const SKY=`<svg viewBox='0 0 400 170' preserveAspectRatio='xMidYMax slice' aria-hidden='true'><g style='fill:var(--pine2)' opacity='.9'><rect y='140' width='400' height='30'/><path d='M130 140v-30a70 70 0 0 1 140 0v30z'/><rect x='198' y='22' width='4' height='18'/><rect x='95' y='60' width='14' height='80'/><path d='M95 60l7-24 7 24z'/><rect x='291' y='60' width='14' height='80'/><path d='M291 60l7-24 7 24z'/></g></svg>`;
 function showAuth(m){
   $('#nav').hidden=true;
   if(m==='start'){
@@ -2430,7 +2436,7 @@ loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v32"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v33"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>
