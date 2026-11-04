@@ -125,7 +125,7 @@ nav[hidden]{display:none}
 .opt.ok{animation:pop .35s}.opt.no{animation:shake .35s}
 @keyframes pop{0%{transform:scale(.92)}60%{transform:scale(1.04)}100%{transform:scale(1)}}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
-.bg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.bdg{text-align:center;padding:14px 8px}.bdg .ic{font-size:34px;display:block;margin-bottom:4px}.bdg b{display:block;font-size:15px}.bdg small{display:block;color:var(--mute);font-size:12px;margin-top:2px}.bdg.lock .med{opacity:.45;filter:grayscale(1)}.bdg.lock b{color:var(--mute)}
+.bg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.bdg{text-align:center;padding:14px 8px}.bgh{font-size:17px;margin:20px 0 0}.bgh small{font-size:13px;font-weight:400;margin-left:6px}.bdg .ic{font-size:34px;display:block;margin-bottom:4px}.bdg b{display:block;font-size:15px}.bdg small{display:block;color:var(--mute);font-size:12px;margin-top:2px}.bdg.lock .med{opacity:.45;filter:grayscale(1)}.bdg.lock b{color:var(--mute)}
 .pg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.pg button{padding:12px 8px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);min-height:60px;font-size:16px}.pg button.ar{font-size:var(--ar3);line-height:1.5}.pg .sel{border-color:var(--g);background:var(--gl)}.pg .done{border-color:var(--g);color:var(--mute)}.pg .bad{border-color:var(--bad);background:var(--badl);animation:shake .3s}
 #toasts{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:60;pointer-events:none}
 #upd{position:fixed;left:12px;right:12px;top:calc(10px + env(safe-area-inset-top));z-index:60;display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--g);color:var(--on);padding:10px 12px 10px 18px;border-radius:16px;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.25);animation:pop .3s}#upd .btn{width:auto;margin:0;padding:8px 16px;min-height:0;background:var(--on);color:var(--g)}
@@ -784,6 +784,9 @@ const medal=i=>i.startsWith("<svg")?i:`<span class="ar" lang="ar">${i}</span>`;
 
 // ===== XP, Level, Abzeichen =====
 const xpFor=L=>40*(L-1)*(L-1),lvl=()=>1+Math.floor(Math.sqrt((S.xp||0)/40));
+// Lesen lernen: je Etappe ein Abzeichen mit dem Zeichen, um das es geht (Titel wie in kurs/kurs.json, prüft tools/test-learning.mjs)
+const EBDG=[["s1","أ ب","Die Buchstaben"],["s2","ـبـ","Buchstaben verbinden"],["s3","بَ","Kurze Vokale"],["s4","بٌ","Tanwin"],["s5","بَا","Lange Vokale"],["s6","بْ","Sukun"],["s7","بّ","Schadda"],["s8","بِسۡمِ","Alles zusammen"]];
+const BREAD=["first","alpha",...EBDG.map(([e])=>"e-"+e),"st1"]; // Abzeichen zum Lesen, auf der Abzeichen-Seite zuerst
 const BADGES=[
 ["first","بداية","Erster Schritt","Die erste richtige Antwort",()=>(S.xp||0)>0],
 ["w10","١٠","10 Wörter","10 Wörter gelernt",()=>knownN()>=10],
@@ -803,6 +806,8 @@ const BADGES=[
 ["blitz","برق","Blitzdenker","10 Treffer im Wort-Blitz",()=>(S.st.blitz||0)>=10],
 ["mix7","٧","Sieben Mischungen","7 Tages-Mischungen abgeschlossen",()=>(S.st.mix||0)>=7],
 ["sent10","جملة","Satzbauer","10 verschiedene Sätze richtig",()=>sentDone()>=10],
+...EBDG.map(([e,ar,t])=>["e-"+e,ar,t,"Etappe "+e.toUpperCase()+" im Lernpfad geschafft",()=>kEDone(e)]),
+["st1","اقْرَأْ","Lesen gelernt","Alle 8 Etappen von Stufe 1 geschafft",()=>EBDG.every(([e])=>kEDone(e))],
 ...GROUPS.map(g=>["g-"+g,GA[g]||"✓",g+" gemeistert","Alle Wörter im Thema „"+g+"“ gelernt",()=>W.filter(w=>w.cat===g).every(w=>isLearned(w.i))])
 ].map(a=>({id:a[0],ic:a[1],n:a[2],d:a[3],t:a[4]}));
 function checkBadges(){
@@ -1926,7 +1931,10 @@ function more(){
 }
 function badges(){
   const have=S.badges||[];
-  paint(head("Abzeichen","more")+`<p class="mute">${have.length} von ${BADGES.length} freigeschaltet</p><div class="bg">${BADGES.map(b=>`<div class="card bdg ${have.includes(b.id)?"":"lock"}"><span class="med">${medal(b.ic)}</span><b>${b.n}</b><small>${b.d}</small></div>`).join("")}</div>`);
+  const card=b=>`<div class="card bdg ${have.includes(b.id)?"":"lock"}"><span class="med">${medal(b.ic)}</span><b>${b.n}</b><small>${b.d}</small></div>`,rd=BADGES.filter(b=>BREAD.includes(b.id)),rest=BADGES.filter(b=>!BREAD.includes(b.id)),cnt=l=>l.filter(b=>have.includes(b.id)).length;
+  paint(head("Abzeichen","more")+`<p class="mute">${have.length} von ${BADGES.length} freigeschaltet</p>
+  <h2 class="bgh">Lesen lernen <small class="mute">${cnt(rd)} von ${rd.length}</small></h2><div class="bg">${rd.map(card).join("")}</div>
+  <h2 class="bgh">Wörter und Übung <small class="mute">${cnt(rest)} von ${rest.length}</small></h2><div class="bg">${rest.map(card).join("")}</div>`);
 }
 // Karten und Spiele gehen im neuen Lernpfad Etappe für Etappe auf: Hören sofort, Karten und Paare nach S3 (Wörter mit Vokalzeichen), Wort-Blitz nach S5 (flüssig lesen).
 // Nie gesperrt: bisheriger Pfad, wer schon Wörter übt oder „kann schon lesen“ gewählt hat (S.aok), Einstufung markiert Etappen als geschafft.
@@ -2422,7 +2430,7 @@ loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v31"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v32"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>
