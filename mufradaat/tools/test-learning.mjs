@@ -935,7 +935,7 @@ run(`more()`);ok("Mehr: jede Zeile hat eine Unterzeile",(run(`app.innerHTML`).ma
   const css=html.slice(html.indexOf("<style>"),html.indexOf("</style>")),hex=[];
   for(const m of css.matchAll(/#[0-9a-fA-F]{3,8}\b/g)){const pre=css.slice(Math.max(0,m.index-40),m.index);if(/--[\w-]+:\s*$/.test(pre)||/^#(000|fff)$/i.test(m[0]))continue;hex.push(m[0])}
   ok("Farben: keine festen Farbwerte außerhalb der Tokens (außer Schwarz/Weiß für Masken)",!hex.length,[...new Set(hex)]);
-  const rad=[...css.matchAll(/border-radius:\s*([^;}]+)/g)].map(m=>m[1].trim()).filter(v=>!v.split(/\s+/).every(x=>["0","2px","6px","8px","12px","14px","16px","20px","99px","999px","50%"].includes(x)));
+  const rad=[...css.matchAll(/border-radius:\s*([^;}]+)/g)].map(m=>m[1].trim()).filter(v=>!v.split(/\s+/).every(x=>["0","2px","6px","8px","12px","14px","16px","20px","32px","40px","99px","999px","50%"].includes(x)));
   ok("Radien: alle auf der Skala",!rad.length,rad);
   const js=html.slice(html.indexOf("<script>"));ok("… auch im Skript keine festen Farben mehr",!/#[0-9a-fA-F]{6}\b/.test(js),js.match(/#[0-9a-fA-F]{6}\b/g));
 }

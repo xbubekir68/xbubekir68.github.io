@@ -1,16 +1,24 @@
 ---
 name: Mufradaat
-description: Hocharabisch für Deutschsprachige – a winding learning road on warm paper, inked in deep garden green.
+description: Hocharabisch für Deutschsprachige – a winding learning road in the logo's colours: mint on night green, with cool light pages for reading.
 colors:
-  deep-garden-green: "#1f6f55"
-  fresh-garden-green: "#2f8f6f"
-  garden-mist: "#dcefe5"
+  deep-garden-green: "#007a62"
+  fresh-garden-green: "#00a383"
+  garden-mist: "#d2f5ea"
   on-green: "#ffffff"
-  warm-primer-paper: "#f6f3ec"
-  card-cream: "#fffdf9"
-  garden-ink: "#1c2a24"
-  sage-grey: "#5a6760"
-  sand-hairline: "#e6e1d5"
+  logo-night: "#010d0b"
+  logo-mint: "#00dab0"
+  night-circle: "#04241d"
+  night-circle-deep: "#021813"
+  night-mute: "#9db8af"
+  green-depth: "#005e4b"
+  mist-depth: "#a6e6d4"
+  brick-depth: "#7e2c1f"
+  warm-primer-paper: "#f1f6f4"
+  card-cream: "#ffffff"
+  garden-ink: "#0a1c16"
+  sage-grey: "#4f635c"
+  sand-hairline: "#dce6e1"
   brick-red: "#b0402e"
   brick-blush: "#f7dfd9"
   night-path-violet: "#231a45"
@@ -30,15 +38,15 @@ colors:
   confetti-sky: "#2f6fa8"
   neon-glint: "#c4ffe9"
   night-mint-neon: "#3dffb5"
-  deep-garden-green-dark: "#3aa57f"
-  fresh-garden-green-dark: "#4fbd95"
-  garden-mist-dark: "#1d3a2f"
-  on-green-dark: "#0b1511"
-  night-garden: "#111a16"
-  card-night: "#18241f"
-  moonlit-ink: "#e8efe9"
-  sage-grey-dark: "#93a39a"
-  night-hairline: "#26352e"
+  deep-garden-green-dark: "#00dab0"
+  fresh-garden-green-dark: "#3de6c1"
+  garden-mist-dark: "#0c352b"
+  on-green-dark: "#010d0b"
+  night-garden: "#020f0c"
+  card-night: "#0b1e18"
+  moonlit-ink: "#e6f2ee"
+  sage-grey-dark: "#94ada5"
+  night-hairline: "#18332b"
   brick-red-dark: "#e27a68"
   brick-blush-dark: "#3a1f1a"
   night-path-violet-dark: "#21193f"
@@ -78,40 +86,40 @@ typography:
     fontWeight: 500
     lineHeight: 1.4
   numeral:
-    fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
+    fontFamily: "Figtree, system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
     fontSize: "30px"
     fontWeight: 700
   headline:
-    fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
+    fontFamily: "Figtree, system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
     fontSize: "26px"
     fontWeight: 700
   title:
-    fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
+    fontFamily: "Figtree, system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
     fontSize: "20px"
     fontWeight: 700
   button:
-    fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
+    fontFamily: "Figtree, system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
     fontSize: "16px"
     fontWeight: 600
   body:
-    fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
+    fontFamily: "Figtree, system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
     fontSize: "16px"
     fontWeight: 400
   body-small:
-    fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
+    fontFamily: "Figtree, system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
     fontSize: "14px"
     fontWeight: 400
     lineHeight: 1.45
   caption:
-    fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
+    fontFamily: "Figtree, system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
     fontSize: "13px"
     fontWeight: 400
   label:
-    fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
+    fontFamily: "Figtree, system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
     fontSize: "12px"
     fontWeight: 600
   overline:
-    fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
+    fontFamily: "Figtree, system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
     fontSize: "11px"
     fontWeight: 400
     lineHeight: 1.4
@@ -124,6 +132,8 @@ rounded:
   lg: "14px"
   xl: "16px"
   2xl: "20px"
+  3xl: "32px"
+  4xl: "40px"
   pill: "999px"
 spacing:
   xs: "4px"
@@ -284,6 +294,11 @@ Four looks are ruled out on purpose: cartoon mascots, decorative ornament such a
 
 ## Colors
 
+**Logo palette (since November 2026).** The colours come from the mufradaat logo: Logo Mint (#00dab0) on Logo Night (#010d0b).
+- **Brand surfaces** (welcome, sign-in band, splash) are Logo Night with Night Circles (#04241d, #021813), mint for Arabic and accents, and Night Mute (#9db8af) for small text. The logo file `brand/mufradaat-nacht.webp` has a Logo Night background, so it only sits on Logo Night, never over a circle.
+- **Reading pages** stay light and cool (#f1f6f4, white cards) because Arabic reads best on a light ground over a whole lesson. Green text on light pages uses Deep Garden Green (#007a62); Logo Mint is too pale for text there and only fills bars, rings and dark surfaces.
+- **Dark mode** uses Logo Mint as the primary green.
+
 A warm, earthy neutral base (paper, cream, sand, sage) under a single deep green. Brick red marks errors, and a night violet belongs to the path alone.
 
 ### Primary
@@ -325,7 +340,7 @@ A warm, earthy neutral base (paper, cream, sand, sage) under a single deep green
 ## Typography
 
 **Arabic Font:** Noto Naskh Arabic, self-hosted at weights 500 and 700 (falls back to Geeza Pro, Segoe UI, Traditional Arabic, Arial, serif)
-**UI Font:** system-ui (falls back to -apple-system, Segoe UI, Roboto, sans-serif)
+**UI Font:** Figtree, self-hosted at weights 400, 600, 800 and 900, Latin and Latin Extended so transliteration (ā, ʾ, ḥ) renders in the same face (falls back to system-ui, -apple-system, Segoe UI, Roboto, sans-serif). Headlines use 900 with tight tracking (−0.035em at 44px).
 
 **Character:** A classical Naskh with full vowel-mark support carries all Arabic, while the UI speaks in the phone's own sans. The script is the star, and the German is the friendly guide beside it.
 
@@ -391,10 +406,12 @@ Icons are line icons on a 24px grid with a 1.8 stroke and round caps and joins, 
 ## Components
 
 ### Buttons
-Big, friendly, full-width pills with a 15px tap area.
-- **Shape:** fully rounded (999px).
-- **Primary:** Deep Garden Green on white, 16px semibold, full width, 16px above the previous block.
+Big, friendly, full-width buttons with depth and a 15px tap area.
+- **Shape:** 16px corners (the welcome screen's main button: 20px, 60px tall).
+- **Depth:** a 5px solid bottom edge in the button's depth colour (green-depth, mist-depth, brick-depth). Pressed, the button moves down 3px and the edge shrinks to 2px.
+- **Primary:** Deep Garden Green with white text, 17px extra bold (800), full width, 16px above the previous block. In dark mode it is Logo Mint with night text.
 - **Secondary:** Garden Mist fill with green text. In dark mode the text uses the brighter green.
+- **Welcome:** "Kostenlos starten" is Logo Night with white text and a mint arrow (Logo Mint with night text in dark mode).
 - **Call to action:** a 16px-rounded green block with bold 16px text, used for "N Wörter wiederholen" on the home screen.
 - **Link button:** underlined green text, 14px, for low-weight actions.
 - **Disabled:** 40% opacity.
