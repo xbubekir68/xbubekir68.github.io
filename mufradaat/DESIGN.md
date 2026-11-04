@@ -446,6 +446,12 @@ A 16px-rounded bar under the task: a 30px circle with ✓ (green) or ✕ (brick)
 ### Flashcards
 A 32px-rounded card on a stack of two offset cards (deck1, deck2). The front is white; the back (after tapping) is Deep Garden Green with white text (Logo Mint with night text in dark mode). The counter sits in a pill chip.
 
+### Lists and Settings
+- **Menu items:** 20px-rounded white rows (64px tall) with a 40px icon tile (12px corners, mist fill, green icon) on the left and a chevron on the right; locked items use a hairline-grey tile.
+- **Section titles** (settings, statistics): 13px extra bold, uppercase, 0.06em tracking, sage grey.
+- **Settings groups:** 20px-rounded cards with 52px rows; switches are 50×30 with a white knob, green when on (Logo Mint in dark mode).
+- **Statistic tiles:** numbers at 28px/900.
+
 ### Navigation
 A cream bar fixed to the bottom with a hairline top border. It has five tabs (Start, Spiele, Lernpfad, Karten, Mehr), each a 20px line icon over a 12px label. Inactive tabs are sage grey, and the active tab is green and bold. The centre **Lernpfad** tab is a 46px Logo Night orb with a mint icon, raised out of the bar, wrapped in a 5px card-coloured ring and resting on a 4px Ribbon Depth edge (in dark mode a Logo Mint orb with a night icon). When active, its icon scales in (0.9 → 1) and gains a soft mint glow; the label turns green. Violet is no longer used.
 

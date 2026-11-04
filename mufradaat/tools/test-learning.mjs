@@ -927,7 +927,7 @@ ok("Hörübung fragt nach der Bedeutung, nicht nach „dem Wort“",html.include
 run(`legal()`);ok("Datenschutz nennt die mitgelieferten Aufnahmen",/Aufnahmen, die vorab mit einer Sprachsynthese erzeugt wurden/.test(run(`app.innerHTML`))&&/Stand: November 2026/.test(run(`app.innerHTML`)));
 run(`Notification.permission="denied";S.rem=true;settings()`);ok("Erinnerung: blockiert im Browser → Schalter aus, auch wenn gewünscht",/id="rm" role="switch" aria-checked="false"/.test(run(`app.innerHTML`)));
 run(`Notification.permission="granted";settings()`);ok("… erlaubt und gewünscht → an",/id="rm" role="switch" aria-checked="true"/.test(run(`app.innerHTML`)));run(`Notification.permission="denied"`);
-let st=run(`app.innerHTML`);ok("Einstellungen: Tagesziel unter „Lernen“, nicht unter „Spiel“",st.indexOf("<b>Lernen</b>")<st.indexOf('id="gl"')&&st.indexOf('id="gl"')<st.indexOf("<b>Spiel</b>"));
+let st=run(`app.innerHTML`);ok("Einstellungen: Tagesziel unter „Lernen“, nicht unter „Spiel“",st.indexOf('class="gh">Lernen<')>0&&st.indexOf('class="gh">Lernen<')<st.indexOf('id="gl"')&&st.indexOf('id="gl"')<st.indexOf('class="gh">Spiel<'));
 run(`view="more";ui.from=null;go("list")`);ok("Wortliste aus Mehr: Zurück zu Mehr",/class="x" data-go="more"/.test(run(`app.innerHTML`)));
 run(`view="home";go("list")`);ok("… aus Start: Zurück zu Start",/class="x" data-go="home"/.test(run(`app.innerHTML`)));
 run(`more()`);ok("Mehr: jede Zeile hat eine Unterzeile",(run(`app.innerHTML`).match(/<small>[^<]+<\/small>/g)||[]).length===7);
@@ -960,6 +960,13 @@ ok("Rückmeldung mit Symbol (✓/✕) und XP rechts",/\.fb\.ok::before\{content:
 run(`U="karte23";loadS();S.np=false;S.dir="ad";cd.order=["kitab"];cd.n=0;cd.flip=false;cards()`);
 ok("Karteikarten: Zähler als Chip, Vorderseite hell",/class="cnt">1 \/ 1</.test(run(`app.innerHTML`))&&/class="card flash  " id="fl">/.test(run(`app.innerHTML`)));
 run(`cd.flip=true;cards()`);ok("… Rückseite farbig",/class="card flash  bk" id="fl">/.test(run(`app.innerHTML`)));
+run(`U="gast";loadS()`);
+
+// ---------- 24. Spiele, Mehr, Einstellungen; Willkommen kollidiert nicht mit der Wortliste ----------
+ok("Willkommen nutzt eine eigene Klasse (.wel), die Wortliste der Lektion (.wl) bleibt unberührt",/\.wel\{position:fixed/.test(html)&&!/\n\.wl\{/.test(html)&&!/[}\n]\.wl\{position/.test(html)&&/authOn=\(\)=>!!document\.querySelector\("#app \.wel"\)/.test(html));
+run(`U="gast";loadS();S.np=false;view="lesson";ui.les=0;try{lesson()}catch(e){}`);ok("… bisherige Lektion: Wortliste ist da und gilt nicht als Anmeldeseite",/class="wl"/.test(run(`app.innerHTML`)));
+run(`settings()`);ok("Einstellungen: Abschnittstitel als eigene Klasse",(run(`app.innerHTML`).match(/class="gh"/g)||[]).length>=5&&!/<p><b>Lernen<\/b><\/p>/.test(run(`app.innerHTML`)));
+ok("Listen: Symbol-Kacheln",/\.item \.ic\{flex:none;width:40px;height:40px;border-radius:12px;background:var\(--gl\)/.test(html));
 run(`U="gast";loadS()`);
 
 console.log("\n"+pass+" OK, "+fail+" FAIL");
