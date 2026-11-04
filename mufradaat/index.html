@@ -77,7 +77,7 @@ input[type=search],input.t{width:100%;padding:13px 14px;border-radius:12px;borde
 .obz{margin:12px 2px 0;font-size:14px}
 .cta.alt2{background:var(--gl);color:var(--g)}
 .item.lock{color:var(--mute)}.item.lock b{color:var(--ink)}.item.lock small.hint{display:block;border:0;margin-top:6px;color:var(--ink)}
-.ffree{display:block;margin:14px auto 0}.nhl .i{display:inline-block;vertical-align:-3px;margin-right:4px}
+.ffree{display:block;margin:14px auto 0}.bzh{margin:6px 4px 0;font-size:14px}.nhl .i{display:inline-block;vertical-align:-3px;margin-right:4px}
 .obw h1{margin:14px 0 6px}.obw h2{margin:22px 0 4px;font-size:18px}.obw .top{margin-bottom:4px}
 .obar{font-size:30px;line-height:1.5;text-align:center;margin:18px 0 0;color:var(--g)}
 .obo b{display:block}.obo small{display:block;color:var(--mute);font-size:14px;margin-top:2px}
@@ -123,7 +123,7 @@ nav[hidden]{display:none}
 @keyframes pop{0%{transform:scale(.92)}60%{transform:scale(1.04)}100%{transform:scale(1)}}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
 .bg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.bdg{text-align:center;padding:14px 8px}.bdg .ic{font-size:34px;display:block;margin-bottom:4px}.bdg b{display:block;font-size:15px}.bdg small{display:block;color:var(--mute);font-size:12px;margin-top:2px}.bdg.lock .med{opacity:.45;filter:grayscale(1)}.bdg.lock b{color:var(--mute)}
-.pg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.pg button{padding:12px 8px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);min-height:60px;font-size:16px}.pg button.ar{font-size:26px}.pg .sel{border-color:var(--g);background:var(--gl)}.pg .done{opacity:.35;border-color:var(--g)}.pg .bad{border-color:var(--bad);background:var(--badl);animation:shake .3s}
+.pg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.pg button{padding:12px 8px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);min-height:60px;font-size:16px}.pg button.ar{font-size:26px}.pg .sel{border-color:var(--g);background:var(--gl)}.pg .done{border-color:var(--g);color:var(--mute)}.pg .bad{border-color:var(--bad);background:var(--badl);animation:shake .3s}
 #toasts{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:60;pointer-events:none}
 #upd{position:fixed;left:12px;right:12px;top:calc(10px + env(safe-area-inset-top));z-index:60;display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--g);color:var(--on);padding:10px 12px 10px 18px;border-radius:16px;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.25);animation:pop .3s}#upd .btn{width:auto;margin:0;padding:8px 16px;min-height:0;background:var(--on);color:var(--g)}
 .toast{background:var(--g);color:var(--on);padding:10px 18px;border-radius:999px;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.25);animation:pop .3s}
@@ -827,7 +827,7 @@ function listen(){
     paint(`<div style="text-align:center;margin-top:30px"><h1>Runde beendet</h1></div><div class="tiles"><div class="card"><p class="mute">Richtig</p><b>${LN.right} / ${LN.ws.length}</b></div><div class="card"><p class="mute">XP verdient</p><b>+${LN.xp}</b></div></div><button class="btn" id="again">Nochmal</button><button class="btn alt" data-go="games">Zu den Spielen</button>`);
     $("#again").onclick=startListen;return;
   }
-  const w=LN.ws[LN.n],p=LN.picked,done=p!==null;if(!LN.opts)LN.opts=options(w);
+  const w=LN.ws[LN.n],p=LN.picked,done=p!==null;fTask(LN,LN.n);if(!LN.opts)LN.opts=options(w);
   paint(`<div class="top">${xbtn("games")}<div class="bar"><i style="width:${LN.n/LN.ws.length*100}%"></i></div><span class="mute">${LN.n+1} / ${LN.ws.length}</span></div>
   <p style="text-align:center;font-weight:600;margin-top:12px">Was bedeutet das Wort, das du hörst?</p>
   <div style="text-align:center;margin:18px 0">${done?`<div class="ar" lang="ar" style="font-size:56px">${w.ar}</div><p class="mute">(${w.tr})</p>`:""}<button class="btn alt" id="rp" style="width:auto;padding:14px 26px">${ic("speaker",22)} ${done?"Nochmal hören":"Anhören"}</button></div>
@@ -882,7 +882,7 @@ function satz(){
     <button class="btn" id="again">Noch eine Runde</button><button class="btn alt" data-go="${Z.back}">${Z.back==="path"?"Zurück zum Lernpfad":"Zur Startseite"}</button>`);
     $("#again").onclick=()=>startSatz(Z.u);return;
   }
-  const it=Z.items[Z.n],s=it.s,done=Z.fb!==null,last=Z.n+1>=Z.items.length;
+  fTask(Z,Z.n);const it=Z.items[Z.n],s=it.s,done=Z.fb!==null,last=Z.n+1>=Z.items.length;
   const bar=`<div class="top">${xbtn(Z.back)}<div class="bar"><i style="width:${Z.n/Z.items.length*100}%"></i></div><span class="mute">${Z.n+1} / ${Z.items.length}</span></div>`;
   const fb=done?`<div class="fb ${Z.fb.ok?"ok":"no"}" role="status"><span>${Z.fb.ok?pick(GOOD):"Richtig wäre:"}</span>${Z.fb.ok?`<span class="xpf">+${Z.fb.x} XP</span>`:""}</div>
     <div class="card sans"><div class="ar" lang="ar" style="font-size:30px;text-align:center">${sentAr(s)}</div><p class="mute" style="text-align:center;margin-top:4px">${esc(s.tr)}</p><p style="text-align:center;margin-top:4px"><b>${esc(s.de)}</b></p><p style="text-align:center"><button class="lnk" id="hear">${ic("speaker",16)} Anhören</button></p></div>`:"";
@@ -991,7 +991,7 @@ function startAQ(b,test,back){
 }
 function aquiz(){
   if(AQ.n>=AQ.qs.length)return aEnd();
-  const q=AQ.qs[AQ.n],a=q.a,p=AQ.picked,done=p!==null,top=`<div class="top">${xbtn(AQ.back)}<div class="bar"><i style="width:${AQ.n/AQ.qs.length*100}%"></i></div><span class="mute">${AQ.n+1} / ${AQ.qs.length}</span></div>`;
+  fTask(AQ,AQ.n);const q=AQ.qs[AQ.n],a=q.a,p=AQ.picked,done=p!==null,top=`<div class="top">${xbtn(AQ.back)}<div class="bar"><i style="width:${AQ.n/AQ.qs.length*100}%"></i></div><span class="mute">${AQ.n+1} / ${AQ.qs.length}</span></div>`;
   const prompt={name:"Wie heißt dieser Buchstabe?",form:"Wie heißt dieser Buchstabe in dieser Form?",start:"Mit welchem Buchstaben beginnt dieses Wort?",hear:"Welcher Buchstabe wird genannt?"}[q.t];
   const stage=q.t==="name"?`<div class="ar" lang="ar" style="font-size:96px;line-height:1.4">${a.c}</div>`:q.t==="form"?`<div class="ar" lang="ar" style="font-size:96px;line-height:1.4">${aform(a,q.fm)}</div>`:q.t==="start"?`<div class="ar" lang="ar" style="font-size:64px">${a.ea}</div>`:`<button class="btn alt" id="rp" style="width:auto;padding:14px 26px">${ic("speaker",22)} Nochmal hören</button>`;
   const opt=o=>`<button class="opt ${q.byLetter?"ar":""} ${done?(o===a?"ok":o.i===p?"no":""):""}" ${q.byLetter?'lang="ar"':""} data-o="${o.i}" ${done?"disabled":""} ${q.byLetter?'style="font-size:34px;line-height:1.4"':""}>${q.byLetter?o.c:o.n}</button>`;
@@ -1490,7 +1490,7 @@ function kAns(ok){ // Bewertung: Fehler kommen am Ende noch einmal (außer im Te
 function klek(){
   if(K.n>=K.T.length&&!(K.test&&K.test.kind==="wissen"&&!K.fin&&kWNext()))return kEnd();
   const it=K.T[K.n],a=it.a,s=it.s,done=K.fb!==null,p=K.picked;
-  if(it.t==="sprechen"&&!K.rec&&!(it.sr&&kSrUse())&&(!kSpOk()||it.sr&&!kHearT(it.wo.w))){K.n++;return klek()} // ohne Mikrofon oder gerade pausiert; ohne Spracherkennung nur mit Vorbild
+  if(it.t==="sprechen"&&!K.rec&&!(it.sr&&kSrUse())&&(!kSpOk()||it.sr&&!kHearT(it.wo.w))){K.n++;return klek()}fTask(K,K.n); // ohne Mikrofon oder gerade pausiert; ohne Spracherkennung nur mit Vorbild
   const top=`<div class="top">${xbtn("path",K.test?"Test beenden":"Lektion beenden")}<div class="bar"><i style="width:${Math.round(K.n/(K.test&&K.test.kind==="wissen"?Math.max(K.T.length,12):K.T.length)*100)}%"></i></div></div>${it.rep?'<p class="mute kre">Noch einmal</p>':K.test?`<p class="mute kre">${K.test.kind==="wissen"?"Einstufung":"Test"} · Aufgabe ${K.n+1}${K.test.kind==="wissen"?"":" von "+K.T.length}</p>`:""}`;
   const nx=`<button class="btn" id="nx" ${done||KCARD.includes(it.t)?"":"disabled"}>Weiter</button>`;
   const again=K.test?"":". Das kommt am Ende noch einmal."; // im Test gibt es keine zweite Runde
@@ -1555,7 +1555,7 @@ function klek(){
   }else if(it.t==="paare"){
     const P=K.ps=K.ps||{L:shuffle(it.set),R:shuffle(it.set),sel:null,done:[],bad:null,last:null,miss:0};
     const cell=(x,side)=>{const d=P.done.includes(x.i),s=P.sel&&P.sel.id===x.i&&P.sel.side===side,b=P.bad&&P.bad.includes(side+x.i);
-      return `<button class="${side==="L"?"ar":""} ${d?"done":s?"sel":""} ${b?"bad":""} ${P.last===x.i?"just":""}" ${side==="L"?'lang="ar"':""} data-p="${side}${x.i}" ${d?"disabled":""}>${side==="L"?x.c:x.n}</button>`};
+      return `<button class="${side==="L"?"ar":""} ${d?"done":s?"sel":""} ${b?"bad":""} ${P.last===x.i?"just":""}" ${side==="L"?'lang="ar"':""} data-p="${side}${x.i}" aria-pressed="${!!(s||d)}" ${d?"disabled":""}>${side==="L"?x.c:x.n}</button>`};
     paint(top+`<p class="kq">${it.syl?"Ordne jeder Silbe ihre Umschrift zu":it.wd?"Ordne jedem Wort seine Umschrift zu":it.forms?"Ordne jeder Form ihren Buchstaben zu":"Ordne jedem Buchstaben seinen Namen zu"}</p><div class="pg kpg">${P.L.map((x,k)=>cell(x,"L")+cell(P.R[k],"R")).join("")}</div>
     ${done?`<div class="fb ok" role="status"><span>Alle zugeordnet</span><span class="xpf">+${K.fb.x} XP</span></div>`:""}${nx}`);
     if(!done)document.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{
@@ -1571,7 +1571,7 @@ function klek(){
     paint(top+`<p class="kq">${bau?"Setze zusammen":"Aus welchen Buchstaben besteht das?"}</p>${bau?`<p class="klaut kla">„${esc(wo.lat)}“<small>${esc(wo.de)}</small></p>`:`<div class="ar kgl kwd" lang="ar">${it.w}</div>`}
     <div class="sb ${done?(K.fb.ok?"ok":"no"):""}" aria-label="${bau?"Deine Auswahl":"Deine Buchstaben"}" aria-live="polite">${K.sel.length?K.sel.map(u=>`<button class="tk" lang="ar" data-rm="${u}" ${done?"disabled":""}>${it.bank[u].c}</button>`).join(""):`<span class="mute sbh">Tippe die ${L.length} ${unit} der Reihe nach an, von rechts nach links</span>`}</div>
     ${bad?`<p class="mute kzr">Richtig ist:</p><div class="sb ok kzs" aria-label="Richtige Reihenfolge">${L.map(x=>`<span class="tk" lang="ar">${x.c}</span>`).join("")}</div>` // Lösung in derselben Richtung wie die eigene Antwort
-      :`<div class="sbk" aria-label="${unit} zur Auswahl">${it.bank.map(x=>`<button class="tk" lang="ar" data-add="${x.u}" ${x.n?`aria-label="${x.n}"`:""} ${used.has(x.u)||done?"disabled":""}>${x.c}</button>`).join("")}</div>`}
+      :`<div class="sbk" aria-label="${unit} zur Auswahl">${it.bank.map(x=>`<button class="tk" lang="ar" data-add="${x.u}" ${x.n?`aria-label="${x.n}"`:""} aria-pressed="${used.has(x.u)}" ${used.has(x.u)||done?"disabled":""}>${x.c}</button>`).join("")}</div>`}
     ${done?(bad?`<div class="fb no" role="status"><span>Nicht ganz.${K.test?"":" Das kommt am Ende noch einmal."}</span></div>`:fb(bau?`<span class="ar kfa" lang="ar">${wo.w}</span> ${esc(wo.lat)} · ${esc(wo.de)}`:`<span class="ar kfa" lang="ar">${it.w}</span>`))+nx:`<button class="btn" id="chk" ${K.sel.length===L.length?"":"disabled"}>Prüfen</button>`}`);
     if(!done){
       document.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>{if(K.sel.length<L.length){K.sel.push(+b.dataset.add);sfx("tap")}klek()});
@@ -1704,7 +1704,21 @@ function go(v){
   if(view==="klek"&&K&&K.l&&!K.test&&!K.fin&&(K.n||K.fb)){kSnap();const r=kSnapGet(K.l.id);if(r)toast(kRepAt(r)?"Gespeichert · du machst mit deinen Fehlern weiter":`Gespeichert · du machst bei ${kResTxt(r)} weiter`)} // X oder Zurück mitten in der Lektion
   if(TABS.some(t=>t[0]===view))ui.from=view; // Zurück führt zum Tab, von dem man kam (Alphabet und Statistiken gibt es an mehreren Stellen)
   if(v!=="path")ui.hint=null;view=v;render();const m=$("#app");if(m){m.setAttribute("tabindex","-1");try{m.focus({preventScroll:true})}catch(e){}}} // Fokus an den Seitenanfang, damit Screenreader den Wechsel bemerken
-const paint=h=>{app.innerHTML=h;fx()};
+// Fokus nach dem Neuzeichnen (Tastatur, Screenreader): Neue Aufgabe → Fokus auf die Frage. Sonst zurück auf dasselbe Element,
+// ist es weg oder gesperrt, auf ein gleichartiges, dann auf „Weiter“, dann auf die Überschrift. Beim Wechsel des Bildschirms setzt go() den Fokus.
+let pView=null;
+const FQ=".kq,[data-fq],h1,h2";
+const fSel=el=>{if(!el||el===app||!app.contains(el))return null;if(el.id)return{s:"#"+el.id};const a=el.getAttributeNames().find(n=>n.startsWith("data-"));return a?{s:`[${a}="${String(el.getAttribute(a)).replace(/["\\]/g,"\\$&")}"]`,g:`[${a}]`}:null};
+const fTask=(o,n)=>{if(o.fn!==n){o.fn=n;ui.ff=FQ}}; // in jedem Spiel beim Zeichnen aufrufen: o = Zustand, n = Nummer der Aufgabe
+const paint=h=>{
+  const same=pView===view,k=same?fSel(document.activeElement):null,ff=ui.ff;pView=view;ui.ff=null;
+  app.innerHTML=h;fx();
+  const en=q=>{if(!q)return null;try{return [...app.querySelectorAll(q)].find(e=>!e.disabled)||null}catch(e){return null}};
+  const t=ff?app.querySelector(ff):k?en(k.s)||en(k.g)||en("#nx")||app.querySelector(FQ):null;
+  if(!t||!t.focus)return;
+  if(!t.matches("button,a,input,select,textarea,[tabindex]"))t.setAttribute("tabindex","-1");
+  try{t.focus({preventScroll:true})}catch(e){}
+};
 function fx(){requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelectorAll("[data-to]").forEach(e=>{e.style.width=e.dataset.to+"%"})))}
 function render(){
   clearInterval(gt);
@@ -1919,7 +1933,7 @@ const fFree=()=>`<button class="lnk ffree" id="ffree">Ich kann schon lesen: alle
 function fFreeOn(again){const b=$("#ffree");if(b)b.onclick=()=>{S.aok="skip";save();sfx("tap");toast("Karten und Spiele sind frei.");again()}}
 function games(){
   const g=k=>fGate(k),row=(k,icon,t,sub)=>{const e=g(k);return e?`<button class="item lock" data-fl="${k}" aria-expanded="${ui.fl===k}"><span class="ic">${ic("lock")}</span><span><b>${t}</b><small>${fWhy(e)}</small>${ui.fl===k?`<small class="hint" role="status">Lerne im Lernpfad weiter, dann geht das Spiel von selbst auf.</small>`:""}</span></button>`:itm(`data-go="${k}"`,icon,t,sub)};
-  paint(`<h1>Spiele</h1><div class="menu">${itm('data-go="listen"',"speaker","Hörübung",ARV===false?"Braucht eine arabische Stimme auf dem Gerät":"Wort hören, Bedeutung wählen")}${row("pairs","pairs","Paare zuordnen","6 Wortpaare, so schnell du kannst")}${row("blitz","bolt","Wort-Blitz","60 Sekunden · Rekord: "+(S.st.blitz||0)+" Treffer")}</div>${g("pairs")||g("blitz")?fFree():""}`);
+  paint(`<h1>Spiele</h1><div class="menu">${itm('data-go="listen"',"speaker","Hörübung",ARV===false?"Braucht eine arabische Stimme auf dem Gerät":"Wort hören, Bedeutung wählen")}${row("pairs","pairs","Paare zuordnen","6 Wortpaare, so schnell du kannst")}${row("blitz","bolt","Wort-Blitz","60 Sekunden oder ohne Zeitlimit · Rekord: "+(S.st.blitz||0)+" Treffer")}</div>${g("pairs")||g("blitz")?fFree():""}`);
   document.querySelectorAll("[data-fl]").forEach(b=>b.onclick=()=>{ui.fl=ui.fl===b.dataset.fl?null:b.dataset.fl;sfx("tap");games()});
   fFreeOn(games);
 }
@@ -1959,7 +1973,7 @@ function cards(){
   paint(`<div class="row sp"><h1>Karteikarten</h1><span class="mute">${cd.n%cd.order.length+1} / ${cd.order.length}</span></div>
   <button class="card flash ${cd.anim?"flipped":""}" id="fl">${cd.flip?back:front}</button>
   <p class="mute hintf">${cd.flip?"Tippen zum Zurückdrehen":"Tippen zum Umdrehen"}</p>
-  <div class="row" style="margin-top:12px"><button class="btn alt" id="sp" style="margin:0">${ic("speaker",18)} Anhören</button><button class="btn alt" id="fv" style="margin:0" aria-label="Favorit">${ic("star",18,isF)} Favorit</button></div>
+  <div class="row" style="margin-top:12px"><button class="btn alt" id="sp" style="margin:0">${ic("speaker",18)} Anhören</button><button class="btn alt" id="fv" style="margin:0" aria-pressed="${isF}">${ic("star",18,isF)} Favorit</button></div>
   <div class="row" style="margin-top:0"><button class="btn alt" id="again">Nochmal</button><button class="btn" id="got">Gewusst</button></div>`);
   cd.anim=false;
   $("#fl").onclick=()=>{cd.flip=!cd.flip;cd.anim=true;sfx("flip");cards()};
@@ -2059,7 +2073,7 @@ function roundEnd(){
 function quiz(){
   if(Q.ph==="intro")return intro();
   if(Q.n>=Q.ws.length)return roundEnd();
-  const h=Math.max(0,Q.hearts),it=Q.ws[Q.n],w=it.w,last=h<=0?"Ergebnis ansehen":"Weiter",lost=Q.fb&&!Q.fb.ok,from=Q.pct,to=Math.round(Q.n/Q.ws.length*100);Q.pct=to;
+  fTask(Q,Q.n);const h=Math.max(0,Q.hearts),it=Q.ws[Q.n],w=it.w,last=h<=0?"Ergebnis ansehen":"Weiter",lost=Q.fb&&!Q.fb.ok,from=Q.pct,to=Math.round(Q.n/Q.ws.length*100);Q.pct=to;
   const bar=`<div class="top">${xbtn("path")}<div class="bar"><i style="width:${from}%" data-to="${to}"></i></div><span class="hearts" role="img" aria-label="${h} Herzen übrig">${[0,1,2].map(i=>`<span class="hrt ${i<h?"":"off"} ${lost&&i===h?"lost":""}">${ic("heart",20,i<h)}</span>`).join("")}</span></div>
   <div class="qmeta"><span class="mute">${Q.n+1} / ${Q.ws.length}${it.rep?" · Wiederholung":it.old?" · aus Lektion "+(LESOF[w.i]+1):""}</span>${Q.combo>=3?`<span class="combo">${ic("flame",14,true)} ${Q.combo}</span>`:""}</div>`;
   const fbHtml=Q.fb?`<div class="fb ${Q.fb.ok?"ok":"no"}" role="status"><span>${Q.fb.msg}${S.dir==="da"&&Q.res===false?` <span class="ar" lang="ar" style="font-size:22px">${w.ar}</span>`:""}</span>${Q.fb.ok?`<span class="xpf">+${Q.fb.x} XP</span>`:""}</div>`:"";
@@ -2104,7 +2118,7 @@ function pairs(){
     $("#again").onclick=startPairs;return;
   }
   const cell=(w,side)=>{const d=G.done.includes(w.i),s=G.sel&&G.sel.id===w.i&&G.sel.side===side,b=G.bad&&G.bad.includes(side+w.i);
-    return `<button class="${side==="L"?"ar":""} ${d?"done":s?"sel":""} ${b?"bad":""} ${G.last===w.i?"just":""}" ${side==="L"?'lang="ar"':""} data-p="${side}${w.i}" ${d?"disabled":""}>${side==="L"?w.ar:w.de}</button>`};
+    return `<button class="${side==="L"?"ar":""} ${d?"done":s?"sel":""} ${b?"bad":""} ${G.last===w.i?"just":""}" ${side==="L"?'lang="ar"':""} data-p="${side}${w.i}" aria-pressed="${!!(s||d)}" ${d?"disabled":""}>${side==="L"?w.ar:w.de}</button>`};
   paint(`<div class="top">${xbtn("games")}<h2 style="flex:1">Paare zuordnen</h2><span class="mute" id="pt">${Math.floor((Date.now()-G.t0)/1000)} s</span></div>
   <p class="mute">Tippe ein arabisches Wort und dann die passende Bedeutung. ${G.done.length} / ${G.L.length}</p>
   <div class="pg">${G.L.map((w,k)=>cell(w,"L")+cell(G.R[k],"R")).join("")}</div>`);
@@ -2116,12 +2130,15 @@ function pairs(){
   });
 }
 
-// ===== Spiel 2: Wort-Blitz (60 Sekunden) =====
-function nextB(){const pool=gamePool(8);B.w=pool[Math.floor(Math.random()*pool.length)];B.opts=options(B.w);B.pick=null;B.locked=false}
+// ===== Spiel 2: Wort-Blitz (60 Sekunden oder ohne Zeitlimit mit 20 Wörtern) =====
+const BFREE=20;
+function nextB(){const pool=gamePool(8);B.w=pool[Math.floor(Math.random()*pool.length)];B.opts=options(B.w);B.pick=null;B.locked=false;B.q=(B.q||0)+1}
 const leftB=()=>Math.max(0,60-(Date.now()-B.t0)/1000);
-function startBlitz(){
+function startBlitz(free){ // ohne Angabe: erst wählen, mit oder ohne Zeit
   if(fGate("blitz"))return go("games");
-  B={right:0,wrong:0,combo:0,t0:Date.now(),end:false,xp:0,tick:0};nextB();view="blitz";render();
+  if(free===undefined){B={intro:true};view="blitz";return render()}
+  B={right:0,wrong:0,combo:0,t0:Date.now(),end:false,xp:0,tick:0,free:!!free,n:0};nextB();view="blitz";render();
+  if(B.free)return;
   gt=setInterval(()=>{
     if(view!=="blitz")return clearInterval(gt);const l=leftB();if(l<=0)return endBlitz();
     const bb=$("#bb"),bt=$("#bt"),s=Math.ceil(l);
@@ -2130,26 +2147,33 @@ function startBlitz(){
   },250);
 }
 function endBlitz(){
-  clearInterval(gt);B.end=true;S.st.blitz=Math.max(S.st.blitz||0,B.right);B.xp=B.right*3;
+  clearInterval(gt);B.end=true;if(!B.free)S.st.blitz=Math.max(S.st.blitz||0,B.right);B.xp=B.right*3; // Rekord nur mit Zeit
   if(B.xp)addXP(B.xp);else{save();checkBadges()}
   if(B.right>=10){confetti();sfx("win")}else sfx("lose");
   if(view==="blitz")blitz();
 }
 function blitz(){
-  if(B.end){
-    paint(`<div style="text-align:center;margin-top:30px"><h1>Zeit abgelaufen</h1></div>
-    <div class="tiles"><div class="card"><p class="mute">Treffer</p><b>${B.right}</b></div><div class="card"><p class="mute">Fehler (−3 s je Fehler)</p><b>${B.wrong}</b></div><div class="card"><p class="mute">Rekord</p><b>${S.st.blitz||0}</b></div><div class="card"><p class="mute">XP verdient</p><b>+${B.xp}</b></div></div>
-    <button class="btn" id="again">Nochmal</button><button class="btn alt" data-go="games">Zu den Spielen</button>`);
-    $("#again").onclick=startBlitz;return;
+  if(B.intro){
+    paint(`<div class="top">${xbtn("games")}<h2 style="flex:1">Wort-Blitz</h2></div><p class="mute">Ein arabisches Wort, vier Bedeutungen: Tippe die richtige.</p>
+    <button class="btn" id="bz60">60 Sekunden · Rekord: ${S.st.blitz||0}</button><p class="mute bzh">So viele Treffer wie möglich. Jeder Fehler kostet 3 Sekunden.</p>
+    <button class="btn alt" id="bzf">Ohne Zeitlimit · ${BFREE} Wörter</button><p class="mute bzh">In deinem Tempo, ohne Rekord.</p>`);
+    $("#bz60").onclick=()=>startBlitz(false);$("#bzf").onclick=()=>startBlitz(true);return;
   }
-  const w=B.w,l=leftB();
-  paint(`<div class="top">${xbtn("games")}<div class="bar ${l<10?"low":""}"><i id="bb" style="width:${l/60*100}%"></i></div><span class="mute" id="bt">${Math.ceil(l)} s</span></div>
-  <div class="qmeta"><span class="mute">Treffer: ${B.right}</span>${B.combo>=3?`<span class="combo">${ic("flame",14,true)} ${B.combo}</span>`:""}</div><div style="text-align:center;margin:14px 0"><div class="ar" lang="ar" style="font-size:60px">${w.ar}</div></div>
+  if(B.end){
+    paint(`<div style="text-align:center;margin-top:30px"><h1>${B.free?"Geschafft":"Zeit abgelaufen"}</h1></div>
+    <div class="tiles"><div class="card"><p class="mute">Treffer</p><b>${B.right}${B.free?" / "+BFREE:""}</b></div><div class="card"><p class="mute">${B.free?"Fehler":"Fehler (−3 s je Fehler)"}</p><b>${B.wrong}</b></div>${B.free?"":`<div class="card"><p class="mute">Rekord</p><b>${S.st.blitz||0}</b></div>`}<div class="card"><p class="mute">XP verdient</p><b>+${B.xp}</b></div></div>
+    <button class="btn" id="again">Nochmal</button><button class="btn alt" data-go="games">Zu den Spielen</button>`);
+    $("#again").onclick=()=>startBlitz(B.free);return;
+  }
+  fTask(B,B.q);const w=B.w,l=leftB();
+  paint(`<div class="top">${xbtn("games")}${B.free?`<div class="bar"><i style="width:${B.n/BFREE*100}%"></i></div><span class="mute">${Math.min(B.n+1,BFREE)} / ${BFREE}</span>`:`<div class="bar ${l<10?"low":""}"><i id="bb" style="width:${l/60*100}%"></i></div><span class="mute" id="bt">${Math.ceil(l)} s</span>`}</div>
+  <div class="qmeta"><span class="mute">Treffer: ${B.right}</span>${B.combo>=3?`<span class="combo">${ic("flame",14,true)} ${B.combo}</span>`:""}</div><div style="text-align:center;margin:14px 0"><div class="ar" lang="ar" style="font-size:60px" data-fq>${w.ar}</div></div>
   ${B.opts.map(o=>`<button class="opt ${B.pick!==null?(o.i===w.i?"ok":o.i===B.pick?"no":""):""}" data-o="${o.i}" ${B.pick!==null?"disabled":""}>${o.de}</button>`).join("")}`);
   document.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{
     if(B.locked)return;B.locked=true;B.pick=b.dataset.o;const ok=B.pick===w.i;
-    if(ok){B.right++;B.combo++;sfx("good",B.combo);vib(10)}else{B.wrong++;B.combo=0;B.t0-=3000;B.lost=(B.lost||0)+3;sfx("bad");vib([40,30,40])}
-    blitz();setTimeout(()=>{if(B.end||view!=="blitz")return;nextB();blitz()},ok?260:700);
+    if(ok){B.right++;B.combo++;sfx("good",B.combo);vib(10)}else{B.wrong++;B.combo=0;if(!B.free){B.t0-=3000;B.lost=(B.lost||0)+3}sfx("bad");vib([40,30,40])}
+    if(B.free)B.n++;
+    blitz();setTimeout(()=>{if(B.end||view!=="blitz")return;if(B.free&&B.n>=BFREE)return endBlitz();nextB();blitz()},ok?260:700);
   });
 }
 
@@ -2393,7 +2417,7 @@ loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v29"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v30"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>

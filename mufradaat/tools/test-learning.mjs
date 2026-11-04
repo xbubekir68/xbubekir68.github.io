@@ -866,5 +866,23 @@ run(`U="frei4";loadS();S.np=false`);ok("Bisheriger Lernpfad: nichts gesperrt",ru
 run(`U="frei5";loadS();for(const l of KL.filter(l=>["s1","s2","s3","s4","s5"].includes(l.e)&&l.art!=="test"))S.kp.d[l.id]=1`);ok("Einstufung bis S6: alles offen",run(`["cards","pairs","blitz"].every(k=>fGate(k)===null)`));
 run(`U="gast";loadS()`);
 
+// ---------- 18. Fokus, gedrückte Zustände, Wort-Blitz ohne Zeit ----------
+run(`ui.ff=null;globalThis.fo={};fTask(fo,0)`);ok("Fokus: neue Aufgabe setzt das Fokusziel auf die Frage",run(`ui.ff===FQ&&fo.fn===0`));
+run(`ui.ff=null;fTask(fo,0)`);ok("… dieselbe Aufgabe nicht noch einmal",run(`ui.ff===null`));
+run(`U="fok1";loadS();S.aok="skip";startPairs()`);let fph=run(`app.innerHTML`);
+ok("Paare: Kacheln melden ihren Zustand (aria-pressed)",(fph.match(/aria-pressed="false"/g)||[]).length===12);
+run(`G.sel={side:"L",id:G.L[0].i};pairs()`);ok("… gewählte Kachel ist gedrückt",(run(`app.innerHTML`).match(/aria-pressed="true"/g)||[]).length===1);
+run(`G.sel=null;G.done=[G.L[0].i];pairs()`);fph=run(`app.innerHTML`);ok("… zugeordnete Paare bleiben lesbar (kein Ausblenden auf 35 %)",(fph.match(/aria-pressed="true" disabled/g)||[]).length===2&&!/\.pg \.done\{opacity:\.35/.test(html));
+run(`cd.order=[];S.fav=[];cards()`);ok("Karten: Favorit meldet seinen Zustand",/id="fv"[^>]*aria-pressed="false"/.test(run(`app.innerHTML`)));
+run(`S.fav=[cd.order[cd.n%cd.order.length]];cards()`);ok("… gesetzter Favorit ist gedrückt",/id="fv"[^>]*aria-pressed="true"/.test(run(`app.innerHTML`)));
+run(`startBlitz()`);let fbh=run(`app.innerHTML`);
+ok("Wort-Blitz: erst wählen, 60 Sekunden oder ohne Zeitlimit, Zeit läuft noch nicht",run(`B.intro===true&&view==="blitz"`)&&/id="bz60"/.test(fbh)&&/id="bzf"/.test(fbh)&&/Ohne Zeitlimit · 20 Wörter/.test(fbh));
+run(`S.st.blitz=7;startBlitz(true)`);fbh=run(`app.innerHTML`);
+ok("… ohne Zeitlimit: Fortschritt 1 / 20 statt Sekunden, Wort ist Fokusziel",run(`B.free===true`)&&/1 \/ 20/.test(fbh)&&!/id="bt"/.test(fbh)&&/data-fq/.test(fbh));
+run(`B.right=15;B.wrong=5;B.n=20;endBlitz()`);fbh=run(`app.innerHTML`);
+ok("… Ende nach 20 Wörtern: Geschafft, 15 / 20, Rekord bleibt",/Geschafft/.test(fbh)&&/15 \/ 20/.test(fbh)&&run(`S.st.blitz===7`)&&!/Rekord/.test(fbh));
+run(`startBlitz(false);B.right=9;endBlitz()`);ok("… mit Zeit: neuer Rekord zählt",run(`S.st.blitz===9`)&&/Zeit abgelaufen/.test(run(`app.innerHTML`)));
+run(`clearInterval(gt);U="gast";loadS()`);
+
 console.log("\n"+pass+" OK, "+fail+" FAIL");
 process.exit(fail?1:0);
