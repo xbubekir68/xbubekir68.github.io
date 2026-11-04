@@ -904,5 +904,19 @@ run(`clearInterval(gt);U="gast";loadS()`);
   ok("… arHead rundet auf die Skala",run(`arTok(64)`)==="as5"&&run(`arTok(110)`)==="as6"&&run(`arTok(22)`)==="as2"&&/class="ar as5"/.test(run(`arHead(BY.kitab,64)`)));
 }
 
+// ---------- 20. Abzeichen pro Etappe ----------
+run(`U="bdg1";loadS();S.badges=[];checkBadges()`);
+ok("Abzeichen: je Etappe eins und „Lesen gelernt“, Titel wie im Kurs",run(`EBDG.length===8&&EBDG.every(([e,ar,t])=>kEtap(e)&&kEtap(e).titel===t&&BADGES.some(b=>b.id==="e-"+e))&&BADGES.some(b=>b.id==="st1")`));
+ok("… frisch: keins davon",run(`!S.badges.some(b=>b.startsWith("e-")||b==="st1")`));
+run(`startK(KL.find(l=>l.id==="s1-1"));for(const l of KL.filter(l=>l.e==="s1"&&l.id!=="s1-6"))S.kp.d[l.id]=1;checkBadges()`);
+ok("… vor der letzten Lektion noch nicht",!run(`S.badges.includes("e-s1")`));
+run(`K=null;startK(KL.find(l=>l.id==="s1-6"));finishK()`);
+ok("… letzte Lektion der Etappe geschafft: Abzeichen „Die Buchstaben“",run(`S.badges.includes("e-s1")&&!S.badges.includes("e-s2")`));
+run(`for(const l of KL)S.kp.d[l.id]=1;checkBadges()`);
+ok("… alle Etappen: alle acht und „Lesen gelernt“",run(`EBDG.every(([e])=>S.badges.includes("e-"+e))&&S.badges.includes("st1")`));
+run(`view="badges";badges()`);let bgh=run(`app.innerHTML`);
+ok("Abzeichen-Seite: zuerst „Lesen lernen“, dann „Wörter und Übung“",bgh.indexOf("Lesen lernen")>0&&bgh.indexOf("Lesen lernen")<bgh.indexOf("Wörter und Übung")&&/Lesen lernen <small class="mute">\d+ von 11<\/small>/.test(bgh)&&bgh.indexOf("Die Buchstaben")<bgh.indexOf("Wörter und Übung"));
+run(`U="gast";loadS()`);
+
 console.log("\n"+pass+" OK, "+fail+" FAIL");
 process.exit(fail?1:0);
