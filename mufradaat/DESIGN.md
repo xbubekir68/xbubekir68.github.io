@@ -17,8 +17,18 @@ colors:
   path-lilac-glow: "#c98bff"
   dusk-violet: "#5a49a6"
   star-saffron: "#e0a82e"
+  shaky-amber: "#c99a2e"
+  spark-gold: "#e8b64c"
+  begun-chip: "#f3e6c4"
+  begun-chip-ink: "#6b5210"
   dusk-sand: "#f2cf9f"
+  dusk-sand-light: "#ead9bd"
+  dusk-pine-light: "#2d7059"
   dusk-pine: "#0f3a2c"
+  dusk-pine-ink: "#12332a"
+  wordmark-line: "#0b3d2e"
+  confetti-sky: "#2f6fa8"
+  neon-glint: "#c4ffe9"
   night-mint-neon: "#3dffb5"
   deep-garden-green-dark: "#3aa57f"
   fresh-garden-green-dark: "#4fbd95"
@@ -34,6 +44,8 @@ colors:
   night-path-violet-dark: "#21193f"
   path-lilac-glow-dark: "#d4a0ff"
   dusk-violet-dark: "#cdb8ff"
+  begun-chip-dark: "#3a3217"
+  begun-chip-ink-dark: "#e8c970"
 typography:
   arabic-1:
     fontFamily: "Noto Naskh Arabic, Geeza Pro, Segoe UI, Traditional Arabic, Arial, serif"
@@ -105,6 +117,7 @@ typography:
     lineHeight: 1.4
     letterSpacing: "0.12em"
 rounded:
+  hair: "2px"
   xs: "6px"
   sm: "8px"
   md: "12px"
@@ -284,7 +297,12 @@ A warm, earthy neutral base (paper, cream, sand, sage) under a single deep green
 - **Dusk Violet** (dusk-violet): the Lernpfad tab's label.
 
 ### Tertiary
-- **Star Saffron** (star-saffron): earned stars and level-up sparks. Related golds are the "shaky" memory bar (#c99a2e) and the "begonnen" status chip (#f3e6c4 on #6b5210).
+- **Star Saffron** (star-saffron, `--star`): earned stars. Related golds:
+  - **Shaky Amber** (`--amber`): the "wackelig"/"fällig" memory bars and progress pips.
+  - **Spark Gold** (`--spark`): level-up sparks and confetti.
+  - **Begun Chip** (`--chip-s` on `--chip-s-ink`, with dark variants): the "begonnen" status chip.
+- **Start screen:** the dusk gradient runs `--dawn` → `--dawn2` → `--pine` → `--pine2`, with `--pine3` text. The wordmark outline is `--wm-line`.
+- **Confetti** reads its colours from the tokens (`--g`, `--spark`, `--bad`, `--g2`, `--dawn`, `--sky`). Fixed hex values outside `:root` are not allowed; pure black/white only appears in masks.
 - **Dusk Sand → Dusk Pine** (dusk-sand, dusk-pine): the start-screen sky gradient (#f2cf9f → #ead9bd 36% → #2d7059 80% → #0f3a2c) and the mosque silhouette, with text in #12332a. The wordmark gets a 1px #0b3d2e outline in light contexts.
 - **Night Mint Neon** (night-mint-neon): the splash screen's glow, halo, ring and loading shuttle. In dark mode it is echoed by the level ring's gradient end (#3dfbb3).
 
