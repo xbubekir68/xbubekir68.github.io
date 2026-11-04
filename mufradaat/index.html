@@ -413,6 +413,44 @@ h1,.h1{font-size:28px;font-weight:900;letter-spacing:-.03em}h2{font-weight:800}
 .tiles .card b{font-size:28px;font-weight:900;letter-spacing:-.02em}
 .chart i{background:var(--mint)}
 .w{border-radius:16px}
+/* Spiele-Übersicht: Spiel des Tages (dunkle Karte wie „Nächster Halt“) und Kacheln */
+.ghd{display:flex;align-items:baseline;justify-content:space-between;gap:10px}.ghd .mute{font-size:13px}
+.gday{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:flex-start;gap:4px;width:100%;margin-top:14px;padding:18px 20px;border:0;border-radius:20px;background:var(--night);color:var(--on-night);text-align:left;font:inherit;cursor:pointer}
+.gday>*{position:relative}.gday .gdc{position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;background:var(--night2)}
+.gday .gdd{position:absolute;inset:0;pointer-events:none}
+.gday .gdf{position:absolute;top:0;font-family:var(--ar);font-size:var(--ar3);line-height:1.5;color:var(--mint);animation:gfall 2.6s linear infinite;opacity:0}
+.gday .gdf:nth-child(2){color:var(--g2)}.gday .gdf:nth-child(3){color:var(--night-mute)}
+.gday .gdx{position:absolute;right:30px;top:50%;transform:translateY(-50%);color:var(--mint)}
+.gday .gdl{font-size:13px;font-weight:800;color:var(--mint)}
+.gday b{font-size:22px;font-weight:900;letter-spacing:-.02em;line-height:1.15;max-width:62%}
+.gday small{font-size:14px;line-height:1.4;color:var(--night-mute);max-width:62%}
+.gday .gdp{margin-top:10px;display:inline-flex;align-items:center;gap:8px;background:var(--mint);color:var(--night);font-weight:900;font-size:15px;padding:9px 16px;border-radius:14px;box-shadow:0 4px 0 var(--band-d);transition:transform .08s,box-shadow .08s}
+.gday:active .gdp{transform:translateY(4px);box-shadow:0 0 0 var(--band-d)}
+@keyframes gfall{0%{transform:translateY(-40px);opacity:0}15%{opacity:1}85%{opacity:1}100%{transform:translateY(150px);opacity:0}}
+.gtg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gtl{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px;color:var(--ink);font:inherit;cursor:pointer;min-height:44px}
+.gtl .gi{width:44px;height:44px;border-radius:12px;background:var(--gl);color:var(--g);display:grid;place-items:center;margin-bottom:4px}
+.gtl b{font-size:15px}.gtl small{font-size:13px;line-height:1.35;color:var(--mute)}
+.gtl.lock{border:1px dashed var(--line-d)}.gtl.lock .gi{background:var(--line);color:var(--mute)}
+.gtl small.hint{display:block;border:0;margin:4px 0 0;color:var(--ink);font-weight:600}
+/* Buchstaben-Regen */
+.rgin{text-align:center;margin-top:6px}.rgin .ar{color:var(--g)}.rgin p+p{margin-top:8px}
+.rgh{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.rgs{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:10px 16px;border:0;border-radius:16px;background:var(--night);color:var(--on-night);font:inherit;font-size:15px;cursor:pointer}
+.rgs svg{color:var(--mint);flex:none}.rgs b{color:var(--mint);font-size:18px}
+.rgc{font-size:24px;font-weight:900;color:var(--g)}
+.rgf{position:relative;height:clamp(300px,calc(100vh - 200px),680px);height:clamp(300px,calc(100dvh - 200px),680px);margin:12px -16px 0;overflow:hidden;touch-action:manipulation}
+.rgf::after{content:"";position:absolute;left:0;right:0;bottom:0;height:56px;border-radius:32px 32px 0 0;background:var(--gl)}
+.rgf.shake{animation:shake .3s}
+.rgi{position:absolute;top:0;z-index:1;width:64px;height:64px;margin-left:-32px;border-radius:50%;border:2px solid var(--line);background:var(--card);color:var(--ink);font-family:var(--ar);font-size:var(--ar3);line-height:1.5;box-shadow:0 5px 0 var(--line-d);cursor:pointer;animation:rgfall 5s linear both}
+.rgi.no{border-color:var(--bad);color:var(--bad)}
+.rgi.hit{animation:rgpop .25s ease-out forwards;border-color:var(--g);background:var(--gl);color:var(--g);pointer-events:none}
+@keyframes rgfall{from{transform:translateY(-80px)}to{transform:translateY(var(--fall,640px))}}
+@keyframes rgpop{to{scale:1.35;opacity:0}}
+.rgl{text-align:center;margin-top:8px;font-size:14px}
+@media (prefers-reduced-motion:reduce){.rgi{animation-duration:9s!important}.gday .gdf{animation:none;opacity:1;top:24px}}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .gday,:root:not([data-theme="light"]) .rgs{box-shadow:0 0 0 1px var(--line)}}
+:root[data-theme="dark"] .gday,:root[data-theme="dark"] .rgs{box-shadow:0 0 0 1px var(--line)}
 /* ===== MUFRADAAT STARTBILDSCHIRM ===== */
 /* App-Start „Band entfaltet sich“: Ein Mint-Band schwingt herein, die Buchstaben des Logos klappen nacheinander auf (wie ein Band, das sich umfaltet),
    das Band wird zur feinen Ladelinie, auf der ein Lichtpunkt läuft, solange die App lädt. Alles in % des Wrappers (400×360 Einheiten der Band-Linie). */
@@ -744,7 +782,8 @@ repeat:'<path d="M4 12a8 8 0 0 1 14-5l2 2M20 4v5h-5M20 12a8 8 0 0 1-14 5l-2-2M4 
 chev:'<path d="M9 6l6 6-6 6"/>',
 mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
 stop:'<rect x="7" y="7" width="10" height="10" rx="1.5"/>',
-play:'<path d="M8 5v14l11-7z"/>'
+play:'<path d="M8 5v14l11-7z"/>',
+rain:'<path d="M7 3v6M12 6v8M17 3v5M7 15v6M17 13v8"/>'
 };
 const ic=(n,s=22,f=false)=>`<svg class="i" viewBox="0 0 24 24" width="${s}" height="${s}" ${f?'fill="currentColor" stroke="none"':'fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"'} aria-hidden="true">${ICO[n]}</svg>`;
 const xbtn=(go,label="Beenden")=>`<button class="x" data-go="${go}" aria-label="${label}">${ic("close")}</button>`;
@@ -1739,7 +1778,7 @@ function kpath(){
 // ===== Navigation =====
 let view="home",ui={cat:"Alle",q:""},gt=0;
 const TABS=[["home","home","Start"],["games","pad","Spiele"],["path","path","Lernpfad"],["cards","cards","Karten"],["more","more","Mehr"]];
-const SUB={more:["stats","fav","settings","list","badges","legal"],games:["pairs","blitz","listen"],path:["quiz","lesson","alphabet","letter","aquiz","satz","klek"]};
+const SUB={more:["stats","fav","settings","list","badges","legal"],games:["pairs","blitz","listen","regen"],path:["quiz","lesson","alphabet","letter","aquiz","satz","klek"]};
 const pHint=a=>{if(view!=="path"){ui.hint=a;return go("path")}ui.hint=ui.hint===a?null:a;ui.keep=true;path()}; // gesperrte Station: Grund direkt darunter zeigen statt als Toast
 function go(v){
   if(view==="klek"&&K&&K.l&&!K.test&&!K.fin&&(K.n||K.fb)){kSnap();const r=kSnapGet(K.l.id);if(r)toast(kRepAt(r)?"Gespeichert · du machst mit deinen Fehlern weiter":`Gespeichert · du machst bei ${kResTxt(r)} weiter`)} // X oder Zurück mitten in der Lektion
@@ -1764,8 +1803,8 @@ function fx(){requestAnimationFrame(()=>requestAnimationFrame(()=>document.query
 function render(){
   clearInterval(gt);
   $("#nav").innerHTML=TABS.map(t=>`<button class="${(view===t[0]||(SUB[t[0]]||[]).includes(view))?"on":""}${t[0]==="path"?" main":""}" data-go="${t[0]}" ${(view===t[0]||(SUB[t[0]]||[]).includes(view))?'aria-current="page"':""}><span>${ic(t[1])}</span>${t[2]}</button>`).join("");
-  $("#nav").hidden=["quiz","pairs","blitz","aquiz","listen","satz","klek"].includes(view)||(view==="legal"&&!U);
-  ({home,path,lesson,alphabet,letter,aquiz,listen,satz,cards,more,list,stats,settings,quiz,fav,games,badges,pairs,blitz,legal,klek})[view]();
+  $("#nav").hidden=["quiz","pairs","blitz","aquiz","listen","satz","klek","regen"].includes(view)||(view==="legal"&&!U);
+  ({home,path,lesson,alphabet,letter,aquiz,listen,satz,cards,more,list,stats,settings,quiz,fav,games,badges,pairs,blitz,legal,klek,regen})[view]();
   app.classList.remove("enter");void app.offsetWidth;app.classList.add("enter");
   window.scrollTo(0,0);pushH();
 }
@@ -1785,7 +1824,7 @@ addEventListener("popstate",()=>{if(popSkip){popSkip=false;return}hist=false;if(
   if(!authOn())pushH()});
 document.addEventListener("click",e=>{
   const g=e.target.closest("[data-go]");
-  if(g){const t=g.dataset.go;sfx("tap");if(t==="review")return startQuiz(null);if(t==="mix")return startMix();if(t==="satz")return startSatz();if(t==="pairs")return startPairs();if(t==="blitz")return startBlitz();if(t==="aquiz")return startAQ();if(t==="listen")return startListen();return go(t)}
+  if(g){const t=g.dataset.go;sfx("tap");if(t==="review")return startQuiz(null);if(t==="mix")return startMix();if(t==="satz")return startSatz();if(t==="pairs")return startPairs();if(t==="blitz")return startBlitz();if(t==="aquiz")return startAQ();if(t==="listen")return startListen();if(t==="regen")return startRegen();return go(t)}
   const ab=e.target.closest("[data-ab]");
   if(ab){const b=+ab.dataset.ab;sfx("tap");if(aLocked(b))return pHint(`data-ab="${b}"`);return startAQ(b,false,"path")}
   const kl=e.target.closest("[data-kl]");
@@ -1980,9 +2019,28 @@ const fLeft=e=>{const last=Math.max(...KL.filter(l=>l.e===e).map(l=>l.k));return
 const fWhy=e=>{const n=fLeft(e);return `Öffnet sich nach Etappe ${e.toUpperCase()} · ${esc(kEtap(e).titel)} (noch ${n} ${n===1?"Lektion":"Lektionen"})`};
 const fFree=()=>`<button class="lnk ffree" id="ffree">Ich kann schon lesen: alles freischalten</button>`;
 function fFreeOn(again){const b=$("#ffree");if(b)b.onclick=()=>{S.aok="skip";save();sfx("tap");toast("Karten und Spiele sind frei.");again()}}
+// Spiele-Übersicht: oben das Spiel des Tages (wechselt täglich unter den offenen Spielen), darunter Kacheln nach Thema.
+// Gesperrte Kacheln zeigen, nach welcher Etappe sie aufgehen; Antippen erklärt es direkt darunter.
+const GAMES=[
+  {k:"regen",g:"b",t:"Buchstaben-Regen",d:()=>"Namen hören, Buchstaben fangen"+(S.st.regen?" · Rekord: "+S.st.regen:""),ic:"rain"},
+  {k:"listen",g:"w",t:"Hörübung",d:()=>!canSpeak()?"Braucht eine arabische Stimme auf dem Gerät":"Hören und die Bedeutung wählen",ic:"speaker"},
+  {k:"pairs",g:"w",t:"Paare zuordnen",d:()=>"6 Wortpaare, so schnell du kannst",ic:"pairs"},
+  {k:"blitz",g:"w",t:"Wort-Blitz",d:()=>"60 Sekunden oder ohne Zeitlimit · Rekord: "+(S.st.blitz||0)+" Treffer",ic:"bolt"}
+];
+const GGRP=[["b","Buchstaben"],["w","Wörter und Sätze"]];
+function gDay(day=today()){ // gleiches Spiel den ganzen Tag, morgen das nächste
+  const c=GAMES.filter(x=>!fGate(x.k)&&(x.k!=="listen"||canSpeak()));if(!c.length)return null;
+  const h=[...day].reduce((a,ch)=>(a*31+ch.charCodeAt(0))>>>0,7);return c[h%c.length];
+}
 function games(){
-  const g=k=>fGate(k),row=(k,icon,t,sub)=>{const e=g(k);return e?`<button class="item lock" data-fl="${k}" aria-expanded="${ui.fl===k}"><span class="ic">${ic("lock")}</span><span><b>${t}</b><small>${fWhy(e)}</small>${ui.fl===k?`<small class="hint" role="status">Lerne im Lernpfad weiter, dann geht das Spiel von selbst auf.</small>`:""}</span></button>`:itm(`data-go="${k}"`,icon,t,sub)};
-  paint(`<h1>Spiele</h1><div class="menu">${itm('data-go="listen"',"speaker","Hörübung",!canSpeak()?"Braucht eine arabische Stimme auf dem Gerät":"Hören und die Bedeutung wählen")}${row("pairs","pairs","Paare zuordnen","6 Wortpaare, so schnell du kannst")}${row("blitz","bolt","Wort-Blitz","60 Sekunden oder ohne Zeitlimit · Rekord: "+(S.st.blitz||0)+" Treffer")}</div>${g("pairs")||g("blitz")?fFree():""}`);
+  const d=gDay(),lk=GAMES.filter(x=>fGate(x.k)).length;
+  const deco=x=>x.k==="regen"?rgPool().slice(0,3).map((a,i)=>`<span class="gdf" lang="ar" style="right:${18+i*44}px;animation-delay:${[0,.9,1.6][i]}s">${a.c}</span>`).join(""):`<span class="gdx">${ic(x.ic,56)}</span>`;
+  const tile=x=>{const e=fGate(x.k);
+    return e?`<button class="gtl lock" data-fl="${x.k}" aria-expanded="${ui.fl===x.k}"><span class="gi">${ic("lock",20)}</span><b>${x.t}</b><small>${fWhy(e)}</small>${ui.fl===x.k?`<small class="hint" role="status">Lerne im Lernpfad weiter, dann geht das Spiel von selbst auf.</small>`:""}</button>`
+      :`<button class="gtl" data-go="${x.k}"><span class="gi">${ic(x.ic)}</span><b>${x.t}</b><small>${x.d()}</small></button>`};
+  paint(`<div class="ghd"><h1>Spiele</h1>${lk?`<span class="mute">${GAMES.length-lk} von ${GAMES.length} offen</span>`:""}</div>
+  ${d?`<button class="gday" data-go="${d.k}"><span class="gdc" aria-hidden="true"></span><span class="gdd" aria-hidden="true">${deco(d)}</span><span class="gdl">Spiel des Tages</span><b>${d.t}</b><small>${d.d()}</small><span class="gdp" aria-hidden="true">Spielen ${ic("play",16,true)}</span></button>`:""}
+  ${GGRP.map(([g,t])=>`<p class="gh">${t}</p><div class="gtg">${GAMES.filter(x=>x.g===g).map(tile).join("")}</div>`).join("")}${lk?fFree():""}`);
   document.querySelectorAll("[data-fl]").forEach(b=>b.onclick=()=>{ui.fl=ui.fl===b.dataset.fl?null:b.dataset.fl;sfx("tap");games()});
   fFreeOn(games);
 }
@@ -2224,6 +2282,93 @@ function blitz(){
     if(B.free)B.n++;
     blitz();setTimeout(()=>{if(B.end||view!=="blitz")return;if(B.free&&B.n>=BFREE)return endBlitz();nextB();blitz()},ok?260:700);
   });
+}
+
+
+// ===== Spiel 4: Buchstaben-Regen (Namen hören, den fallenden Buchstaben fangen) =====
+// Fünf Bahnen, in jeder fällt ein Buchstabe. Das Ziel liegt immer mindestens einmal im Feld, ähnliche Buchstaben (gleiche Grundform) kommen öfter dazu.
+// Mit jedem Treffer fällt es schneller, ein Fehler kostet 3 Sekunden. Das Feld wird nur einmal gezeichnet, die Buchstaben kommen und gehen einzeln.
+let R=null;const RLANES=5,RSEC=60;
+const rgPool=()=>{ // im neuen Lernpfad nur Buchstaben aus geschafften S1-Lektionen, mindestens sechs (der Reihe nach aufgefüllt)
+  const all=ALPHA.filter(a=>a.i!=="hamza");if(!S.np||S.aok||hasWords()||!KL.length||kS1Done())return all;
+  const s1=KL.filter(l=>l.e==="s1"&&(l.neu||[]).length),ids=[...new Set(s1.filter(l=>kDone(l.id)).flatMap(l=>l.neu))];
+  for(const l of s1)for(const i of l.neu)if(ids.length<6&&!ids.includes(i))ids.push(i);
+  return ids.map(i=>ALBY[i]).filter(a=>a&&a.i!=="hamza");
+};
+const rLeft=()=>Math.max(0,RSEC-(Date.now()-R.t0)/1000);
+function startRegen(){R={intro:true,pool:rgPool()};view="regen";render()}
+function rGo(){
+  R={pool:R.pool,t0:Date.now(),score:0,combo:0,miss:0,items:[],seq:0,tick:0,end:false,intro:false};
+  R.tgt=R.pool[Math.floor(Math.random()*R.pool.length)];regen();
+  for(let k=0;k<RLANES;k++)rSpawn(k,true);
+  rSay();sfx("tap");
+  gt=setInterval(()=>{if(view!=="regen")return clearInterval(gt);rTick()},250);
+}
+function rLetter(k){ // fehlt das Ziel in den anderen Bahnen, kommt es sicher; sonst oft ein ähnlicher Buchstabe
+  if(!R.items.some((x,j)=>j!==k&&x&&x.a===R.tgt))return R.tgt;
+  const fam=(AFAM.find(f=>f.includes(R.tgt.i))||[]).map(i=>ALBY[i]).filter(a=>a!==R.tgt&&R.pool.includes(a)),src=fam.length&&Math.random()<.4?fam:R.pool;
+  return src[Math.floor(Math.random()*src.length)];
+}
+function rSpawn(k,first){
+  const old=R.items[k];if(old&&old.el&&!old.hit)old.el.remove();
+  const a=rLetter(k),it={a,id:++R.seq,dur:Math.max(2.8,6-R.score*.15)+Math.random()*1.2};R.items[k]=it;
+  const f=$("#rgf");if(!f||!f.appendChild)return it;
+  const b=document.createElement("button");b.type="button";b.className="rgi";b.setAttribute("lang","ar");b.setAttribute("aria-label","Buchstabe "+a.n);b.textContent=a.c;
+  b.style.left=(10+k*80/(RLANES-1))+"%"; // feste Bahnen: auch auf schmalen Handys berühren sich die Buchstaben nie
+  b.style.animationDuration=it.dur.toFixed(2)+"s";b.style.animationDelay=(first?k*.45+Math.random()*.8:0).toFixed(2)+"s";
+  b.onclick=()=>rTap(k,it.id);
+  b.onanimationend=e=>{if(e&&e.animationName&&e.animationName!=="rgfall")return;if(!R.end&&R.items[k]===it)rSpawn(k)}; // unten angekommen: neuer Buchstabe in dieser Bahn
+  it.el=b;f.appendChild(b);return it;
+}
+function rSay(){const n=$("#rgn");if(n)n.textContent=R.tgt.n+" · "+R.tgt.s;speak(R.tgt.sp)}
+function rTap(k,id){
+  if(!R||R.end||R.intro)return;const it=R.items[k];if(!it||it.id!==id||it.hit)return;
+  if(it.a===R.tgt){
+    R.score++;R.combo++;sfx("good",Math.min(6,R.combo));vib(10);it.hit=true;
+    const b=it.el;if(b){try{b.style.transform=getComputedStyle(b).transform}catch(e){}b.style.animationDuration=b.style.animationDelay="";b.classList.add("hit");setTimeout(()=>b.remove(),260)} // an Ort und Stelle aufploppen
+    const on=R.items.filter((x,j)=>j!==k&&x.a!==R.tgt).map(x=>x.a),c=on.length?on:R.pool.filter(a=>a!==R.tgt); // neues Ziel: am liebsten etwas, das schon fällt
+    R.tgt=c[Math.floor(Math.random()*c.length)];
+    rSpawn(k); // fehlt das neue Ziel im Feld, kommt es hier
+    const sc=$("#rgc");if(sc)sc.textContent=R.score;rSay();
+  }else{
+    R.combo=0;R.miss++;R.t0-=3000;sfx("bad");vib([40,30,40]);
+    const f=$("#rgf");if(f&&f.classList){f.classList.remove("shake");void f.offsetWidth;f.classList.add("shake")}
+    const b=it.el;if(b){b.classList.add("no");setTimeout(()=>b.classList.remove("no"),400)}
+    rTick();
+  }
+}
+function rTick(){
+  if(!R||R.end)return;const l=rLeft();if(l<=0)return rEnd();
+  const bb=$("#rgb"),bt=$("#rgt"),s=Math.ceil(l);
+  if(bb){bb.style.width=l/RSEC*100+"%";bb.parentNode.classList.toggle("low",l<10)}if(bt)bt.textContent=s+" s";
+  if(s<=5&&s!==R.tick){R.tick=s;sfx("tick")}
+}
+function rEnd(){
+  clearInterval(gt);R.end=true;const best=S.st.regen||0;R.rec=R.score>best;S.st.regen=Math.max(best,R.score);R.xp=R.score*2;
+  if(R.xp)addXP(R.xp);else{save();checkBadges()}
+  if(R.rec&&R.score>=10){confetti();sfx("win")}else sfx(R.score?"win":"lose");
+  if(view==="regen")regen();
+}
+function regen(){
+  if(R.intro){
+    paint(`<div class="top">${xbtn("games")}<h2 style="flex:1">Buchstaben-Regen</h2></div>
+    <div class="card rgin"><p class="ar as4" lang="ar">${R.pool.slice(1,4).map(a=>a.c).join(" ")}</p><p>Du hörst den Namen eines Buchstabens und siehst ihn oben. Tippe den passenden Buchstaben an, bevor er unten ankommt. Mit jedem Treffer wird es schneller.</p>
+    <p class="mute">Mit dabei: ${R.pool.map(a=>a.n).join(", ")}</p></div>
+    <button class="btn" id="rgo">Los geht's · ${RSEC} Sekunden${S.st.regen?" · Rekord: "+S.st.regen:""}</button><p class="mute bzh">Jeder Fehler kostet 3 Sekunden.</p>`);
+    $("#rgo").onclick=rGo;return;
+  }
+  if(R.end){
+    paint(`<div style="text-align:center;margin-top:30px"><h1>Zeit um!</h1>${R.rec&&R.score?'<p class="mute">Neuer Rekord</p>':""}</div>
+    <div class="tiles"><div class="card"><p class="mute">Treffer</p><b>${R.score}</b></div><div class="card"><p class="mute">Rekord</p><b>${S.st.regen||0}</b></div><div class="card" style="grid-column:span 2"><p class="mute">XP verdient</p><b>+${R.xp}</b></div></div>
+    <button class="btn" id="again">Nochmal</button><button class="btn alt" data-go="games">Zu den Spielen</button>`);
+    $("#again").onclick=rGo;return;
+  }
+  const l=rLeft();
+  paint(`<div class="top">${xbtn("games")}<div class="bar"><i id="rgb" style="width:${l/RSEC*100}%"></i></div><span class="mute" id="rgt">${Math.ceil(l)} s</span></div>
+  <div class="rgh"><button class="rgs" id="rgs" aria-label="Nochmal hören">${ic("speaker",20)}<span>Fang: <b id="rgn" aria-live="polite">${R.tgt.n} · ${R.tgt.s}</b></span></button><b class="rgc" id="rgc" aria-label="Treffer">${R.score}</b></div>
+  <div class="rgf" id="rgf"></div><p class="mute rgl">Fang den Buchstaben, bevor er landet.</p>`);
+  const f=$("#rgf");if(f&&f.style&&f.style.setProperty)f.style.setProperty("--fall",((f.clientHeight||560)+12)+"px");
+  $("#rgs").onclick=()=>speak(R.tgt.sp);
 }
 
 // ===== Statistik und Einstellungen =====
@@ -2481,7 +2626,7 @@ loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v39"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v40"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>

@@ -462,6 +462,12 @@ A cream bar fixed to the bottom with a hairline top border. It has five tabs (St
 - **Goal of the Etappe:** a white card with one segment per lesson; finished lessons are mint.
 - **Tiles:** Alphabet (large أ) and Tagesziel (mint ring), side by side; "Dein Fortschritt" below as a list row.
 
+### Games
+- **Overview:** "Spiele" at 28px/900, with "x von y offen" on the right while anything is locked.
+- **Spiel des Tages:** a Logo Night card like the next stop (20px corners, Night Circle top right). It has a mint label, a 22px/900 white title, a Night Mute line (both at most 62% wide) and a mint "Spielen" pill with a Ribbon Depth edge. On the right sits the game's motif: for Buchstaben-Regen three letters fall slowly (they stand still under reduced motion), for other games a 56px mint icon. It picks one of the open games, the same one all day; Hörübung is skipped without an Arabic voice.
+- **Game tiles:** two columns of white 20px-rounded tiles under section titles ("Buchstaben", "Wörter und Sätze"). Each tile has a 44px mist icon tile, a 15px title and a 13px line. Locked tiles get a dashed Line Depth border, a grey lock tile and the reason ("Öffnet sich nach Etappe …"); tapping one shows the hint below.
+- **Buchstaben-Regen:** a Logo Night "Fang: name · sound" pill (speaker in mint, tap to hear again), the score in green at 24px/900 and a full-width field with a mist ground strip. Letters are 64px white discs with a 5px Line Depth edge, in five fixed lanes so they never overlap. A hit turns the disc mint and makes it pop; a miss tints it brick red and shakes the field. Under reduced motion they fall in 9s.
+
 ### The Winding Road (Signature Component)
 The learning path is drawn as an SVG road of 30px stroke over each unit's landscape band, with footprints along the finished stretch. Each unit has its own theme, made of a road surface, an edge, an accent and a footprint colour, with a matching dark set:
 

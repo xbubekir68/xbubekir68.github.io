@@ -969,5 +969,32 @@ run(`settings()`);ok("Einstellungen: Abschnittstitel als eigene Klasse",(run(`ap
 ok("Listen: Symbol-Kacheln",/\.item \.ic\{flex:none;width:40px;height:40px;border-radius:12px;background:var\(--gl\)/.test(html));
 run(`U="gast";loadS()`);
 
+// ---------- 25. Spiele-Übersicht und Buchstaben-Regen ----------
+run(`U="sp25";loadS();S.ob={z:"lesen",d:today()};ui.fl=null;games()`);let g25=run(`app.innerHTML`);
+ok("Übersicht: Spiel des Tages als dunkle Karte, Kacheln in zwei Gruppen, Zähler der offenen Spiele",/<button class="gday" data-go="(regen|listen)">/.test(g25)&&/<p class="gh">Buchstaben<\/p><div class="gtg"><button class="gtl" data-go="regen">/.test(g25)&&/<p class="gh">Wörter und Sätze<\/p>/.test(g25)&&/2 von 4 offen/.test(g25),g25.slice(0,300));
+ok("… Spiel des Tages bleibt am selben Tag gleich und ist nie gesperrt",run(`gDay()===gDay()`)&&run(`!fGate(gDay().k)`)&&run(`(()=>{const ks=new Set();for(let d=1;d<31;d++){const x=gDay("2026-11-"+String(d).padStart(2,"0"));if(fGate(x.k))return false;ks.add(x.k)}return ks.size===2})()`));
+ok("… gesperrte Kachel mit Grund, Antippen zeigt den Hinweis",/<button class="gtl lock" data-fl="pairs" aria-expanded="false">/.test(g25)&&(run(`(ui.fl="pairs",games(),app.innerHTML)`).match(/Lerne im Lernpfad weiter/g)||[]).length===1);run(`ui.fl=null`);
+ok("… ohne Stimme und Aufnahmen ist die Hörübung nie das Spiel des Tages",run(`(()=>{const a=ARV,n=AUDN;ARV=false;AUDN=0;let ok=true;for(let d=1;d<31;d++){if(gDay("2026-12-"+String(d).padStart(2,"0")).k==="listen")ok=false}ARV=a;AUDN=n;return ok})()`));
+ok("Regen: Buchstaben-Auswahl für Anfänger sind die ersten sechs aus S1",run(`rgPool().map(a=>a.i).join()`)==="alif,ba,ta,tha,jim,hha",run(`rgPool().map(a=>a.i).join()`));
+run(`for(const l of KL.filter(l=>["s1-1","s1-2","s1-3"].includes(l.id)))S.kp.d[l.id]=1`);
+ok("… wächst mit den geschafften Lektionen",run(`rgPool().length`)===15&&run(`rgPool().some(a=>a.i==="shin")`)&&!run(`rgPool().some(a=>a.i==="qaf")`),run(`rgPool().length`));
+ok("… mit „kann schon lesen“ alle Buchstaben außer Hamza",run(`(S.aok="skip",rgPool().length)`)===28);run(`S.aok=""`);
+run(`startRegen()`);let r25=run(`app.innerHTML`);
+ok("… Startseite des Spiels erklärt Regeln und nennt die Buchstaben",run(`view`)==="regen"&&/Los geht's · 60 Sekunden/.test(r25)&&/Mit dabei: Alif, Bāʾ/.test(r25)&&/Jeder Fehler kostet 3 Sekunden/.test(r25));
+run(`rGo()`);
+ok("… fünf Bahnen, das Ziel fällt mindestens einmal, alles aus der Auswahl",run(`R.items.length===RLANES&&R.items.some(x=>x.a===R.tgt)&&R.items.every(x=>R.pool.includes(x.a))`)&&/Fang: <b id="rgn" aria-live="polite">/.test(run(`app.innerHTML`)));
+run(`const k0=R.items.findIndex(x=>x.a===R.tgt),t0=R.tgt;rTap(k0,R.items[k0].id);globalThis.t25=t0`);
+ok("… Treffer zählt, neues Ziel, Ziel liegt wieder im Feld",run(`R.score===1&&R.tgt!==t25&&R.items.some(x=>x.a===R.tgt)`));
+ok("… über 200 Treffer bleibt das Ziel immer im Feld",run(`(()=>{for(let n=0;n<200;n++){const k=R.items.findIndex(x=>x.a===R.tgt);if(k<0)return false;rTap(k,R.items[k].id);if(!R.items.some(x=>x.a===R.tgt))return false}return R.score===201})()`));
+run(`R.score=4;R.t0=Date.now();const kw=R.items.findIndex(x=>x.a!==R.tgt);rTap(kw,R.items[kw].id)`);
+ok("… Fehler kostet 3 Sekunden, Treffer bleiben",near(run(`rLeft()`),57,.2)&&run(`R.score`)===4&&run(`R.combo`)===0,run(`rLeft()`));
+ok("… schneller mit mehr Treffern (Fallzeit sinkt)",run(`(R.score=0,rSpawn(0).dur)`)>=6&&run(`(R.score=30,rSpawn(0).dur)`)<4.1);
+run(`R.score=12;S.st.regen=5;const xp0=S.xp||0;R.t0=Date.now()-61000;rTick();globalThis.xp25=xp0`);
+ok("… nach 60 Sekunden: Rekord, 2 XP je Treffer, Ergebnis",run(`R.end&&S.st.regen===12&&R.xp===24&&R.rec`)&&run(`S.xp-xp25`)===24&&/Zeit um!/.test(run(`app.innerHTML`))&&/Neuer Rekord/.test(run(`app.innerHTML`)));
+run(`rTap(0,R.items[0].id)`);ok("… nach dem Ende zählen Taps nicht mehr",run(`R.score`)===12);
+ok("… Rekord wird beim Synchronisieren nicht verloren",run(`mergeS({st:{regen:3}},{st:{regen:12}}).st.regen`)===12);
+ok("Regen: Navigation, Ansicht und Leiste",/games:\["pairs","blitz","listen","regen"\]/.test(html)&&/"klek","regen"\]\.includes\(view\)/.test(html)&&/if\(t==="regen"\)return startRegen\(\)/.test(html));
+run(`U="gast";loadS()`);
+
 console.log("\n"+pass+" OK, "+fail+" FAIL");
 process.exit(fail?1:0);
