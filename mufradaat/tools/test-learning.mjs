@@ -954,5 +954,13 @@ ok("Lernpfad: Kopf mit Fortschrittsbalken",/class="kph"><span>Stufe 1 · Lesen l
 ok("… aktuelle Station zeigt ihr Zeichen statt des App-Icons, geschaffte einen Haken",!/favicon-64/.test(p22)&&/pn abl\s+cur[^"]*" data-kl="s1-2"[^>]*><span class="nd"><span class="ar" lang="ar">ج ح</.test(p22)&&/pn abl done[^"]*" data-kl="s1-1"[^>]*><span class="nd"><svg/.test(p22),p22.match(/data-kl="s1-2"[^>]*><span class="nd">.{0,60}/)?.[0]);
 run(`U="gast";loadS()`);
 
+// ---------- 23. Lektionen und Karten im neuen Design ----------
+ok("Antworten, Paar-Kacheln und Bausteine haben Tiefe",/\.opt\{border:2px solid var\(--line\);border-radius:16px;[^}]*box-shadow:0 4px 0 var\(--line-d\)/.test(html)&&/\.pg button\{[^}]*box-shadow:0 4px 0 var\(--line-d\)/.test(html)&&/\.tk\{[^}]*box-shadow:0 4px 0 var\(--line-d\)/.test(html));
+ok("Rückmeldung mit Symbol (✓/✕) und XP rechts",/\.fb\.ok::before\{content:"✓"/.test(html)&&/\.fb\.no::before\{content:"✕"/.test(html)&&/\.fb \.xpf\{margin-left:auto/.test(html));
+run(`U="karte23";loadS();S.np=false;S.dir="ad";cd.order=["kitab"];cd.n=0;cd.flip=false;cards()`);
+ok("Karteikarten: Zähler als Chip, Vorderseite hell",/class="cnt">1 \/ 1</.test(run(`app.innerHTML`))&&/class="card flash  " id="fl">/.test(run(`app.innerHTML`)));
+run(`cd.flip=true;cards()`);ok("… Rückseite farbig",/class="card flash  bk" id="fl">/.test(run(`app.innerHTML`)));
+run(`U="gast";loadS()`);
+
 console.log("\n"+pass+" OK, "+fail+" FAIL");
 process.exit(fail?1:0);

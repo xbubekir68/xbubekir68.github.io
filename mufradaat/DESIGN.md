@@ -438,7 +438,13 @@ Full-width rows: a 22–28px line icon, a bold title, a 13px sub-line and a trai
 - **Arabic input:** uses the Arabic font at `--ar2`, with an on-screen Arabic keyboard: a 7-column RTL grid of `--ar2` Naskh keys with 8px corners.
 
 ### Answer Options
-Stacked full-width options with 12px corners, a 1.5px sand border and 15px padding. **Correct** turns mist green with a green border, pops, and pulses a green ring outward (0.55s). **Wrong** turns blush with a brick border and shakes 7px left and right (0.35s). Arabic options are centred at 26–34px.
+Stacked full-width options with 16px corners, a 2px hairline border, a 4px bottom edge (line-depth) and 17px bold text; pressed they sink 2px. **Correct** turns mist green with a green border and green edge, pops, and pulses a green ring outward (0.55s). **Wrong** turns blush with a brick border and edge and shakes 7px left and right (0.35s). After answering, the other options dim to 55%. Arabic options are centred at `--ar3`. Pair tiles and builder tiles use the same depth; a selected tile is mist with a green edge, matched pairs are flat mist.
+
+### Feedback
+A 16px-rounded bar under the task: a 30px circle with ✓ (green) or ✕ (brick), the message in 16px bold, and the earned XP on the right.
+
+### Flashcards
+A 32px-rounded card on a stack of two offset cards (deck1, deck2). The front is white; the back (after tapping) is Deep Garden Green with white text (Logo Mint with night text in dark mode). The counter sits in a pill chip.
 
 ### Navigation
 A cream bar fixed to the bottom with a hairline top border. It has five tabs (Start, Spiele, Lernpfad, Karten, Mehr), each a 20px line icon over a 12px label. Inactive tabs are sage grey, and the active tab is green and bold. The centre **Lernpfad** tab is a 46px Logo Night orb with a mint icon, raised out of the bar, wrapped in a 5px card-coloured ring and resting on a 4px Ribbon Depth edge (in dark mode a Logo Mint orb with a night icon). When active, its icon scales in (0.9 → 1) and gains a soft mint glow; the label turns green. Violet is no longer used.

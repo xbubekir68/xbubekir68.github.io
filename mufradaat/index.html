@@ -20,10 +20,10 @@
 .as1{font-size:var(--ar1);line-height:1.4}.as2{font-size:var(--ar2);line-height:1.5}.as3{font-size:var(--ar3);line-height:1.5}.as4{font-size:var(--ar4);line-height:1.5}.as5{font-size:var(--ar5);line-height:1.4}.as6{font-size:var(--ar6);line-height:1.4}
 
 :root{--bg:#f1f6f4;--card:#ffffff;--ink:#0a1c16;--mute:#4f635c;--line:#dce6e1;--g:#007a62;--g2:#00a383;--gl:#d2f5ea;--on:#fff;--bad:#b0402e;--badl:#f7dfd9;--g-d:#005e4b;--gl-d:#a6e6d4;--bad-d:#7e2c1f;
---night:#010d0b;--night2:#04241d;--night3:#021813;--mint:#00dab0;--night-mute:#9db8af;--sk-bg:#fff1d6;--sk-ink:#7a4e0b;--band-d:#01795e;--night-track:#0b2a22;--on-night:#ffffff;
+--night:#010d0b;--night2:#04241d;--night3:#021813;--mint:#00dab0;--night-mute:#9db8af;--line-d:#c6d4cd;--deck1:#e3ece8;--deck2:#d3e0da;--sk-bg:#fff1d6;--sk-ink:#7a4e0b;--band-d:#01795e;--night-track:#0b2a22;--on-night:#ffffff;
 --ar:"Noto Naskh Arabic","Geeza Pro","Segoe UI","Traditional Arabic",Arial,serif;--sans:Figtree,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--sk-bg:#3a2c12;--sk-ink:#f0c060;--bg:#020f0c;--card:#0b1e18;--ink:#e6f2ee;--mute:#94ada5;--line:#18332b;--g:#00dab0;--g2:#3de6c1;--gl:#0c352b;--on:#010d0b;--bad:#e27a68;--badl:#3a1f1a;--g-d:#00957a;--gl-d:#06231c;--bad-d:#a9503f}}
-:root[data-theme="dark"]{--sk-bg:#3a2c12;--sk-ink:#f0c060;--bg:#020f0c;--card:#0b1e18;--ink:#e6f2ee;--mute:#94ada5;--line:#18332b;--g:#00dab0;--g2:#3de6c1;--gl:#0c352b;--on:#010d0b;--bad:#e27a68;--badl:#3a1f1a;--g-d:#00957a;--gl-d:#06231c;--bad-d:#a9503f}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--line-d:#244238;--deck1:#0f2a22;--deck2:#0b221b;--sk-bg:#3a2c12;--sk-ink:#f0c060;--bg:#020f0c;--card:#0b1e18;--ink:#e6f2ee;--mute:#94ada5;--line:#18332b;--g:#00dab0;--g2:#3de6c1;--gl:#0c352b;--on:#010d0b;--bad:#e27a68;--badl:#3a1f1a;--g-d:#00957a;--gl-d:#06231c;--bad-d:#a9503f}}
+:root[data-theme="dark"]{--line-d:#244238;--deck1:#0f2a22;--deck2:#0b221b;--sk-bg:#3a2c12;--sk-ink:#f0c060;--bg:#020f0c;--card:#0b1e18;--ink:#e6f2ee;--mute:#94ada5;--line:#18332b;--g:#00dab0;--g2:#3de6c1;--gl:#0c352b;--on:#010d0b;--bad:#e27a68;--badl:#3a1f1a;--g-d:#00957a;--gl-d:#06231c;--bad-d:#a9503f}
 *,*::before,*::after{box-sizing:inherit}
 html{touch-action:pan-x pan-y}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)}
 body{min-height:100vh}
@@ -379,6 +379,27 @@ details.rule{display:block;margin-top:12px}details.rule>ol,details.rule>p{margin
 .ksr .krec{background:var(--bad);color:var(--on)}.ksk{display:block;margin:10px auto 0}
 .ksoon{margin-top:14px}.kold{margin-top:12px}.ksoon ol{list-style:none;margin:10px 0;padding:0;display:grid;gap:10px}.ksoon li{display:flex;gap:12px;align-items:center;opacity:.8}.ksoon li .ar{flex:none;width:96px;text-align:right;font-size:var(--ar1);color:var(--mute);line-height:1.4}.ksoon li b{display:block;font-size:14px}.ksoon li small{display:block;font-size:12px;color:var(--mute)}
 html.splash-lock{overflow:hidden}
+/* ===== Lektionen und Karten im neuen Design: Antworten, Kacheln und Bausteine mit Tiefe, kräftige Rückmeldung, Kartenstapel ===== */
+.bar{height:12px}.bar i{background:var(--mint);border-radius:99px;box-shadow:inset 0 -4px 0 rgba(0,0,0,.12)}
+.kq{font-size:20px;font-weight:800;letter-spacing:-.01em;margin-top:18px}
+.opt{border:2px solid var(--line);border-radius:16px;font-weight:700;font-size:17px;color:var(--ink);box-shadow:0 4px 0 var(--line-d);transition:transform .08s,box-shadow .08s;cursor:pointer}
+.opt:active:not(:disabled){transform:translateY(2px);box-shadow:0 2px 0 var(--line-d)}
+.opt.ok{border-color:var(--g);background:var(--gl);color:var(--g);box-shadow:0 4px 0 var(--g)}
+.opt.no{border-color:var(--bad);background:var(--badl);color:var(--bad);box-shadow:0 4px 0 var(--bad)}
+.opt:disabled:not(.ok):not(.no){opacity:.55;cursor:default}
+.pg button{border:2px solid var(--line);border-radius:16px;font-weight:700;box-shadow:0 4px 0 var(--line-d);cursor:pointer}
+.pg .sel{border-color:var(--g);background:var(--gl);box-shadow:0 4px 0 var(--g)}
+.pg button.done{border-color:var(--gl);background:var(--gl);color:var(--g);box-shadow:none}
+.pg .bad{box-shadow:0 4px 0 var(--bad)}
+.tk{border:2px solid var(--line);box-shadow:0 4px 0 var(--line-d);cursor:pointer}.sb .tk{border-color:var(--g);background:var(--gl);box-shadow:0 3px 0 var(--g)}.tk:disabled{box-shadow:none}
+.fb{justify-content:flex-start;gap:12px;padding:14px 16px;border-radius:16px;font-weight:700;font-size:16px;line-height:1.4}
+.fb::before{flex:none;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;font-weight:900;font-size:16px;color:var(--on)}
+.fb.ok::before{content:"✓";background:var(--g)}.fb.no::before{content:"✕";background:var(--bad)}
+.fb .xpf{margin-left:auto;font-weight:900}
+.flash{border:0;border-radius:32px;min-height:320px;box-shadow:0 1px 0 var(--line),0 12px 0 -6px var(--deck1),0 24px 0 -12px var(--deck2);margin-bottom:24px;cursor:pointer;color:var(--ink)}
+.flash.bk{background:var(--g);color:var(--on)}.flash.bk .mute{color:var(--on)}
+.flash .h1{font-size:34px;font-weight:900;letter-spacing:-.02em}
+.cnt{padding:6px 12px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-weight:800;font-size:14px;color:var(--mute)}
 /* ===== MUFRADAAT STARTBILDSCHIRM ===== */
 /* App-Start „Band entfaltet sich“: Ein Mint-Band schwingt herein, die Buchstaben des Logos klappen nacheinander auf (wie ein Band, das sich umfaltet),
    das Band wird zur feinen Ladelinie, auf der ein Lichtpunkt läuft, solange die App lädt. Alles in % des Wrappers (400×360 Einheiten der Band-Linie). */
@@ -1985,8 +2006,8 @@ function cards(){
   const arSide=`<div class="ar" lang="ar">${w.ar}</div><p class="mute">(${w.tr})</p>`;
   const deSide=`<div class="h1">${w.de}</div>`;
   const front=S.dir==="ad"?arSide:deSide,back=S.dir==="ad"?deSide:arSide;
-  paint(`<div class="row sp"><h1>Karteikarten</h1><span class="mute">${cd.n%cd.order.length+1} / ${cd.order.length}</span></div>
-  <button class="card flash ${cd.anim?"flipped":""}" id="fl">${cd.flip?back:front}</button>
+  paint(`<div class="row sp"><h1 class="hi" style="margin:0">Karteikarten</h1><span class="cnt">${cd.n%cd.order.length+1} / ${cd.order.length}</span></div>
+  <button class="card flash ${cd.anim?"flipped":""} ${cd.flip?"bk":""}" id="fl">${cd.flip?back:front}</button>
   <p class="mute hintf">${cd.flip?"Tippen zum Zurückdrehen":"Tippen zum Umdrehen"}</p>
   <div class="row" style="margin-top:12px"><button class="btn alt" id="sp" style="margin:0">${ic("speaker",18)} Anhören</button><button class="btn alt" id="fv" style="margin:0" aria-pressed="${isF}">${ic("star",18,isF)} Favorit</button></div>
   <div class="row" style="margin-top:0"><button class="btn alt" id="again">Nochmal</button><button class="btn" id="got">Gewusst</button></div>`);
@@ -2447,7 +2468,7 @@ loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v37"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v38"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>
