@@ -474,6 +474,28 @@ h1,.h1{font-size:28px;font-weight:900;letter-spacing:-.03em}h2{font-weight:800}
 .kar{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.kar .btn{margin:0}
 .kah{text-align:center;margin-top:10px;font-size:14px}.kah .lnk{display:inline-flex;align-items:center;gap:4px;padding:4px 0}
 @media (prefers-reduced-motion:reduce){.kag{animation:none}}
+/* Buchstaben-Magnet */
+.top .zseg{flex:1;margin:0}
+.mgq{text-align:center;font-size:20px;font-weight:800;margin-top:8px}
+.mgs{display:flex;align-items:center;gap:10px;margin:10px auto 0;padding:8px 14px;min-height:44px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);font:inherit;font-size:15px;cursor:pointer}.mgs svg{color:var(--g);flex:none}.mgs b{color:var(--g)}
+.mgb{position:relative;margin-top:16px;height:190px;border-radius:20px;background:var(--night);overflow:hidden;display:grid;place-items:center}
+.mgb .mgc{position:absolute;right:-40px;top:-40px;width:150px;height:150px;border-radius:50%;background:var(--night2)}
+.mgb.shake{animation:shake .3s}
+.mgh{position:relative;padding:0 20px;text-align:center;font-size:15px;color:var(--night-mute)}
+.mgb .mgw{position:relative;font-size:var(--ar5);line-height:1.4;color:var(--mint);animation:mgsnap .35s}
+.mgh+.mgw{position:absolute}
+@keyframes mgsnap{0%{transform:scale(.9)}60%{transform:scale(1.08)}100%{transform:none}}
+.mgsl{position:absolute;left:0;right:0;bottom:14px;display:flex;justify-content:center;gap:8px;direction:rtl}.mgsl i{width:28px;height:4px;border-radius:2px;background:var(--night-track)}.mgsl i.on{background:var(--mint)}
+.mgk{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:20px;direction:rtl}
+.mgt{width:64px;height:64px;border:2px solid var(--line);border-radius:16px;background:var(--card);color:var(--ink);font-family:var(--ar);font-size:var(--ar3);line-height:1.5;box-shadow:0 5px 0 var(--line-d);cursor:pointer;transition:transform .08s,box-shadow .08s}
+.mgt:active{transform:translateY(5px);box-shadow:0 0 0 var(--line-d)}.mgt:disabled{opacity:.25;box-shadow:none;cursor:default;transform:none}
+.mgf{display:flex;flex-wrap:wrap;gap:8px;direction:rtl}
+.mgfc{direction:ltr;flex:1;min-width:64px;display:grid;justify-items:center;padding:6px 4px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+.mgfc .ar{font-size:var(--ar3);line-height:1.5}.mgfc small{font-size:12px;color:var(--mute);text-align:center}
+.mgtip{margin-top:8px;font-size:14px}.mgl{text-align:center;margin-top:16px;font-size:14px}
+@media (prefers-reduced-motion:reduce){.mgb .mgw{animation:none}}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mgb{box-shadow:0 0 0 1px var(--line)}}:root[data-theme="dark"] .mgb{box-shadow:0 0 0 1px var(--line)}
+
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .kac.on{background:var(--mint);border-color:var(--mint);color:var(--night)}:root:not([data-theme="light"]) .kam circle{fill:var(--mint)}:root:not([data-theme="light"]) .kam text{fill:var(--night)}}
 :root[data-theme="dark"] .kac.on{background:var(--mint);border-color:var(--mint);color:var(--night)}:root[data-theme="dark"] .kam circle{fill:var(--mint)}:root[data-theme="dark"] .kam text{fill:var(--night)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .gday,:root:not([data-theme="light"]) .rgs{box-shadow:0 0 0 1px var(--line)}}
@@ -1805,7 +1827,7 @@ function kpath(){
 // ===== Navigation =====
 let view="home",ui={cat:"Alle",q:""},gt=0;
 const TABS=[["home","home","Start"],["games","pad","Spiele"],["path","path","Lernpfad"],["cards","cards","Karten"],["more","more","Mehr"]];
-const SUB={more:["stats","fav","settings","list","badges","legal"],games:["pairs","blitz","listen","regen","kalli"],path:["quiz","lesson","alphabet","letter","aquiz","satz","klek"]};
+const SUB={more:["stats","fav","settings","list","badges","legal"],games:["pairs","blitz","listen","regen","kalli","magnet"],path:["quiz","lesson","alphabet","letter","aquiz","satz","klek"]};
 const pHint=a=>{if(view!=="path"){ui.hint=a;return go("path")}ui.hint=ui.hint===a?null:a;ui.keep=true;path()}; // gesperrte Station: Grund direkt darunter zeigen statt als Toast
 function go(v){
   if(view==="klek"&&K&&K.l&&!K.test&&!K.fin&&(K.n||K.fb)){kSnap();const r=kSnapGet(K.l.id);if(r)toast(kRepAt(r)?"Gespeichert · du machst mit deinen Fehlern weiter":`Gespeichert · du machst bei ${kResTxt(r)} weiter`)} // X oder Zurück mitten in der Lektion
@@ -1830,8 +1852,8 @@ function fx(){requestAnimationFrame(()=>requestAnimationFrame(()=>document.query
 function render(){
   clearInterval(gt);
   $("#nav").innerHTML=TABS.map(t=>`<button class="${(view===t[0]||(SUB[t[0]]||[]).includes(view))?"on":""}${t[0]==="path"?" main":""}" data-go="${t[0]}" ${(view===t[0]||(SUB[t[0]]||[]).includes(view))?'aria-current="page"':""}><span>${ic(t[1])}</span>${t[2]}</button>`).join("");
-  $("#nav").hidden=["quiz","pairs","blitz","aquiz","listen","satz","klek","regen","kalli"].includes(view)||(view==="legal"&&!U);
-  ({home,path,lesson,alphabet,letter,aquiz,listen,satz,cards,more,list,stats,settings,quiz,fav,games,badges,pairs,blitz,legal,klek,regen,kalli})[view]();
+  $("#nav").hidden=["quiz","pairs","blitz","aquiz","listen","satz","klek","regen","kalli","magnet"].includes(view)||(view==="legal"&&!U);
+  ({home,path,lesson,alphabet,letter,aquiz,listen,satz,cards,more,list,stats,settings,quiz,fav,games,badges,pairs,blitz,legal,klek,regen,kalli,magnet})[view]();
   app.classList.remove("enter");void app.offsetWidth;app.classList.add("enter");
   window.scrollTo(0,0);pushH();
 }
@@ -1851,7 +1873,7 @@ addEventListener("popstate",()=>{if(popSkip){popSkip=false;return}hist=false;if(
   if(!authOn())pushH()});
 document.addEventListener("click",e=>{
   const g=e.target.closest("[data-go]");
-  if(g){const t=g.dataset.go;sfx("tap");if(t==="review")return startQuiz(null);if(t==="mix")return startMix();if(t==="satz")return startSatz();if(t==="pairs")return startPairs();if(t==="blitz")return startBlitz();if(t==="aquiz")return startAQ();if(t==="listen")return startListen();if(t==="regen")return startRegen();if(t==="kalli")return startKalli();return go(t)}
+  if(g){const t=g.dataset.go;sfx("tap");if(t==="review")return startQuiz(null);if(t==="mix")return startMix();if(t==="satz")return startSatz();if(t==="pairs")return startPairs();if(t==="blitz")return startBlitz();if(t==="aquiz")return startAQ();if(t==="listen")return startListen();if(t==="regen")return startRegen();if(t==="kalli")return startKalli();if(t==="magnet")return startMagnet();return go(t)}
   const ab=e.target.closest("[data-ab]");
   if(ab){const b=+ab.dataset.ab;sfx("tap");if(aLocked(b))return pHint(`data-ab="${b}"`);return startAQ(b,false,"path")}
   const kl=e.target.closest("[data-kl]");
@@ -2038,9 +2060,10 @@ function badges(){
   <h2 class="bgh">Lesen lernen <small class="mute">${cnt(rd)} von ${rd.length}</small></h2><div class="bg">${rd.map(card).join("")}</div>
   <h2 class="bgh">Wörter und Übung <small class="mute">${cnt(rest)} von ${rest.length}</small></h2><div class="bg">${rest.map(card).join("")}</div>`);
 }
-// Karten und Spiele gehen im neuen Lernpfad Etappe für Etappe auf: Hören sofort, Karten und Paare nach S3 (Wörter mit Vokalzeichen), Wort-Blitz nach S5 (flüssig lesen).
+// Karten und Spiele gehen im neuen Lernpfad Etappe für Etappe auf: Hören, Regen und Kalligrafie sofort, Buchstaben-Magnet nach S1 (alle Buchstaben bekannt),
+// Karten und Paare nach S3 (Wörter mit Vokalzeichen), Wort-Blitz nach S5 (flüssig lesen).
 // Nie gesperrt: bisheriger Pfad, wer schon Wörter übt oder „kann schon lesen“ gewählt hat (S.aok), Einstufung markiert Etappen als geschafft.
-const FREI={cards:"s3",pairs:"s3",blitz:"s5"};
+const FREI={cards:"s3",pairs:"s3",blitz:"s5",magnet:"s1"};
 const fGate=k=>{const e=FREI[k];return e&&S.np&&!S.aok&&!hasWords()&&KL.length&&!kEDone(e)?e:null};
 const fLeft=e=>{const last=Math.max(...KL.filter(l=>l.e===e).map(l=>l.k));return KL.filter(l=>l.k<=last&&!kDone(l.id)).length};
 const fWhy=e=>{const n=fLeft(e);return `Öffnet sich nach Etappe ${e.toUpperCase()} · ${esc(kEtap(e).titel)} (noch ${n} ${n===1?"Lektion":"Lektionen"})`};
@@ -2051,6 +2074,7 @@ function fFreeOn(again){const b=$("#ffree");if(b)b.onclick=()=>{S.aok="skip";sav
 const GAMES=[
   {k:"regen",g:"b",t:"Buchstaben-Regen",d:()=>"Namen hören, Buchstaben fangen"+(S.st.regen?" · Rekord: "+S.st.regen:""),ic:"rain"},
   {k:"kalli",g:"b",t:"Kalligrafie",d:()=>{const n=KALI.filter(x=>S.st["kal_"+x.i]===3).length;return "Buchstaben nachfahren"+(n?` · ${n} von ${KALI.length} mit drei Sternen`:"")},ar:"ب"},
+  {k:"magnet",g:"b",t:"Buchstaben-Magnet",d:()=>"Wörter aus Buchstaben bauen"+(S.st.magnet?" · "+S.st.magnet+(S.st.magnet===1?" Runde":" Runden"):""),ar:"كتـ"},
   {k:"listen",g:"w",t:"Hörübung",d:()=>!canSpeak()?"Braucht eine arabische Stimme auf dem Gerät":"Hören und die Bedeutung wählen",ic:"speaker"},
   {k:"pairs",g:"w",t:"Paare zuordnen",d:()=>"6 Wortpaare, so schnell du kannst",ic:"pairs"},
   {k:"blitz",g:"w",t:"Wort-Blitz",d:()=>"60 Sekunden oder ohne Zeitlimit · Rekord: "+(S.st.blitz||0)+" Treffer",ic:"bolt"}
@@ -2474,6 +2498,58 @@ function kalli(){
   if($("#knx"))$("#knx").onclick=()=>startKalli(good?(KA.k+1)%KALI.length:KA.k);
 }
 
+
+// ===== Spiel 6: Buchstaben-Magnet (Wort hören, aus Buchstaben bauen, sehen, wie sie sich verbinden) =====
+// Wörter aus der Wortliste mit 3 bis 5 Buchstaben, die nur aus Grundbuchstaben bestehen (ohne Artikel, ohne doppelte Schreibweise).
+// Die Buchstaben werden von rechts nach links angetippt, der Browser verbindet sie von selbst. Danach zeigt das Spiel jede Form (Anfang, Mitte, Ende, allein).
+const MCH=Object.fromEntries(ALPHA.map(a=>[a.c,a]));
+let M=null,MPOOL=null;
+const mgPool=()=>MPOOL||(MPOOL=(()=>{const st=w=>hkStrip(w.ar,2),cnt={};W.forEach(w=>{const x=st(w);cnt[x]=(cnt[x]||0)+1});
+  return W.filter(w=>{const x=st(w);return x.length>=3&&x.length<=5&&cnt[x]===1&&!x.startsWith("ال")&&[...x].every(c=>MCH[c])&&!/[()]/.test(w.de)}).map(w=>({w,L:[...st(w)].map(c=>MCH[c])}))})());
+const mgForms=L=>L.map((a,i)=>{const pv=i>0&&!L[i-1].nj&&a.i!=="hamza",nx=i<L.length-1&&!a.nj&&L[i+1].i!=="hamza",k=pv&&nx?"m":nx?"b":pv?"f":"i";
+  return{a,g:aform(a,k),n:{m:"Mitte",b:"Anfang",f:"Ende",i:"allein"}[k]}});
+function startMagnet(){
+  if(fGate("magnet"))return go("games");
+  const P=shuffle(mgPool()),pick=[];for(const n of [3,3,4,4,5]){const x=P.find(o=>o.L.length===n&&!pick.includes(o))||P.find(o=>!pick.includes(o));pick.push(x)}
+  M={ws:pick,n:0,miss:0,xp:0,fin:false};mgWord();view="magnet";render();
+}
+function mgWord(){ // Buchstaben des Wortes plus zwei bis drei ähnlich aussehende Ablenker
+  const o=M.ws[M.n],fam=[...new Set(o.L.flatMap(a=>AFAM.find(f=>f.includes(a.i))||[]))].map(i=>ALBY[i]).filter(a=>!o.L.includes(a)),rest=ALPHA.filter(a=>!o.L.includes(a)&&!fam.includes(a)&&a.i!=="hamza");
+  M.bank=shuffle([...o.L,...[...shuffle(fam),...shuffle(rest)].slice(0,o.L.length>3?3:2)]);M.used=[];M.built=[];M.wm=0;M.shake=false;M.done=false;M.said=false;M.gain=0;
+}
+function mgTap(k){
+  if(!M||M.done||M.used.includes(k))return;const o=M.ws[M.n];
+  if(M.bank[k]===o.L[M.built.length]){
+    M.used.push(k);M.built.push(M.bank[k]);sfx("tap");vib(8);
+    if(M.built.length===o.L.length){M.done=true;M.gain=M.wm?3:5;M.xp+=M.gain;sfx("good",3);addXP(M.gain);speakLater(o.w.ar)}
+  }else{M.wm++;M.miss++;M.shake=true;sfx("bad");vib([40,30,40])}
+  magnet();
+}
+function magnet(){
+  if(M.n>=M.ws.length){
+    if(!M.fin){M.fin=true;M.bonus=M.miss?0:5;S.st.magnet=(S.st.magnet||0)+1;if(M.bonus){M.xp+=M.bonus;addXP(M.bonus);confetti()}else{save();checkBadges()}sfx("win")}
+    paint(`<div style="text-align:center;margin-top:30px"><h1>Geschafft</h1></div><div class="tiles"><div class="card"><p class="mute">Wörter gebaut</p><b>${M.ws.length}</b></div><div class="card"><p class="mute">Fehler</p><b>${M.miss}</b></div><div class="card" style="grid-column:span 2"><p class="mute">XP verdient</p><b>+${M.xp}</b>${M.bonus?`<span class="mute">davon ${M.bonus} Bonus für null Fehler</span>`:""}</div></div>
+    <button class="btn" id="again">Nochmal</button><button class="btn alt" data-go="games">Zu den Spielen</button>`);
+    $("#again").onclick=startMagnet;return;
+  }
+  fTask(M,M.n);const o=M.ws[M.n],w=o.w,sh=M.shake,last=M.n+1>=M.ws.length;M.shake=false;
+  const fm=mgForms(o.L),nj=o.L.slice(0,-1).find(a=>a.nj&&a.i!=="hamza");
+  paint(`<div class="top">${xbtn("games")}<div class="zseg" aria-hidden="true">${M.ws.map((_,i)=>`<i class="${i<M.n||(i===M.n&&M.done)?"on":""}"></i>`).join("")}</div><span class="mute">${M.n+1} / ${M.ws.length}</span></div>
+  <p class="mgq" data-fq>Bau das Wort, das du hörst</p>
+  <button class="mgs" id="mgs">${ic("speaker",18)}<span>${canSpeak()?"Du hörst":"Bau"}: <b>${esc(w.tr)}</b> · ${esc(w.de)}</span></button>
+  <div class="mgb${sh?" shake":""}" role="status" aria-live="polite" aria-label="Dein Wort"><span class="mgc" aria-hidden="true"></span>${M.built.length?"":'<span class="mgh">Tippe die Buchstaben von rechts nach links</span>'}<span class="ar mgw" lang="ar" dir="rtl">${M.built.map(a=>a.c).join("")}</span><span class="mgsl" aria-hidden="true">${o.L.map((_,i)=>`<i class="${i<M.built.length?"on":""}"></i>`).join("")}</span></div>
+  ${M.done?`<div class="fb ok" role="status"><span><span class="ar as2" lang="ar">${w.ar}</span> ${esc(w.tr)} · ${esc(w.de)}</span><span class="xpf">+${M.gain} XP</span></div>
+    <p class="gh">So verbinden sich die Buchstaben</p><div class="mgf">${fm.map(f=>`<span class="mgfc"><span class="ar" lang="ar">${f.g}</span><small>${f.a.n} · ${f.n}</small></span>`).join("")}</div>
+    <p class="mute mgtip">${nj?`${nj.n} verbindet sich nur nach rechts. Der Buchstabe danach beginnt neu.`:"Hier verbindet sich jeder Buchstabe mit seinen Nachbarn: Anfang, Mitte, Ende."}</p>
+    <button class="btn" id="nx">${last?"Ergebnis ansehen":"Nächstes Wort"}</button>`
+  :`<div class="mgk">${M.bank.map((a,k)=>`<button class="mgt" data-mt="${k}" lang="ar" aria-label="Buchstabe ${a.n}" ${M.used.includes(k)?"disabled":""}>${a.c}</button>`).join("")}</div>
+    <p class="mute mgl">Sieh zu, wie sich die Buchstaben beim Andocken verwandeln.</p>`}`);
+  if(!M.said){M.said=true;speak(w.ar)}
+  $("#mgs").onclick=()=>speak(w.ar);
+  document.querySelectorAll("[data-mt]").forEach(b=>b.onclick=()=>mgTap(+b.dataset.mt));
+  if($("#nx"))$("#nx").onclick=()=>{M.n++;if(M.n<M.ws.length)mgWord();sfx("tap");magnet()};
+}
+
 // ===== Statistik und Einstellungen =====
 function stats(){
   const days=[...Array(7)].map((_,k)=>{const d=ago(6-k);return[["So","Mo","Di","Mi","Do","Fr","Sa"][d.getDay()],S.days[ymd(d)]||0]});
@@ -2729,7 +2805,7 @@ loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v41"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v42"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>

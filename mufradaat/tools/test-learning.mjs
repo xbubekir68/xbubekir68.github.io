@@ -971,7 +971,7 @@ run(`U="gast";loadS()`);
 
 // ---------- 25. Spiele-Übersicht und Buchstaben-Regen ----------
 run(`U="sp25";loadS();S.ob={z:"lesen",d:today()};ui.fl=null;games()`);let g25=run(`app.innerHTML`);
-ok("Übersicht: Spiel des Tages als dunkle Karte, Kacheln in zwei Gruppen, Zähler der offenen Spiele",/<button class="gday" data-go="(regen|listen)">/.test(g25)&&/<p class="gh">Buchstaben<\/p><div class="gtg"><button class="gtl" data-go="regen">/.test(g25)&&/<p class="gh">Wörter und Sätze<\/p>/.test(g25)&&/3 von 5 offen/.test(g25),g25.slice(0,300));
+ok("Übersicht: Spiel des Tages als dunkle Karte, Kacheln in zwei Gruppen, Zähler der offenen Spiele",/<button class="gday" data-go="(regen|listen|kalli)">/.test(g25)&&/<p class="gh">Buchstaben<\/p><div class="gtg"><button class="gtl" data-go="regen">/.test(g25)&&/<p class="gh">Wörter und Sätze<\/p>/.test(g25)&&/3 von 6 offen/.test(g25),g25.slice(0,300));
 ok("… Spiel des Tages bleibt am selben Tag gleich und ist nie gesperrt",run(`gDay()===gDay()`)&&run(`!fGate(gDay().k)`)&&run(`(()=>{const ks=new Set();for(let d=1;d<31;d++){const x=gDay("2026-11-"+String(d).padStart(2,"0"));if(fGate(x.k))return false;ks.add(x.k)}return ks.size===3})()`));
 ok("… gesperrte Kachel mit Grund, Antippen zeigt den Hinweis",/<button class="gtl lock" data-fl="pairs" aria-expanded="false">/.test(g25)&&(run(`(ui.fl="pairs",games(),app.innerHTML)`).match(/Lerne im Lernpfad weiter/g)||[]).length===1);run(`ui.fl=null`);
 ok("… ohne Stimme und Aufnahmen ist die Hörübung nie das Spiel des Tages",run(`(()=>{const a=ARV,n=AUDN;ARV=false;AUDN=0;let ok=true;for(let d=1;d<31;d++){if(gDay("2026-12-"+String(d).padStart(2,"0")).k==="listen")ok=false}ARV=a;AUDN=n;return ok})()`));
@@ -1001,7 +1001,7 @@ run(`U="ka26";loadS();S.ob={z:"lesen",d:today()};ui.fl=null;games()`);let g26=ru
 ok("Kalligrafie: Kachel in „Buchstaben“ mit Zeichen statt Symbol, sofort offen",/<button class="gtl" data-go="kalli"><span class="gi gia" lang="ar">ب<\/span><b>Kalligrafie<\/b><small>Buchstaben nachfahren<\/small>/.test(g26)&&run(`fGate("kalli")`)===null);
 ok("… acht Formen in Kursreihenfolge, jede mit Pfad, Abtastpunkten und Pfeil",run(`KALI.map(x=>x.i).join()`)==="ba,ta,tha,dal,dhal,ra,zay,nun"&&run(`KALI.every(x=>x.a&&/^M[\\d. ]+C/.test(x.d)&&x.S.length>=21&&/^M[\\d.\\- ]+L[\\d.\\- ]+$/.test(x.arr))`));
 ok("… Punkte liegen in der Fläche und nicht auf dem Strich",run(`KALI.every(x=>x.dots.every(d=>d[0]>20&&d[0]<300&&d[1]>20&&d[1]<300&&kaNear(d,x.S)>34))`),run(`KALI.map(x=>x.i+":"+x.dots.map(d=>Math.round(kaNear(d,x.S))).join("/")).join(" ")`));
-run(`startKalli()`);ok("… Start beim ersten Buchstaben ohne drei Sterne, Leiste aus",run(`view==="kalli"&&KA.k===0&&KA.phase==="draw"`)&&/Schreib Bāʾ <span class="ar" lang="ar">ب<\/span>/.test(run(`app.innerHTML`))&&/"klek","regen","kalli"\]\.includes\(view\)/.test(html));
+run(`startKalli()`);ok("… Start beim ersten Buchstaben ohne drei Sterne, Leiste aus",run(`view==="kalli"&&KA.k===0&&KA.phase==="draw"`)&&/Schreib Bāʾ <span class="ar" lang="ar">ب<\/span>/.test(run(`app.innerHTML`))&&/"klek","regen","kalli"[,\]]/.test(html));
 const trace=(k,rev,jit=0)=>run(`(()=>{const P=KALI[${k}].S.slice();${rev?"P.reverse();":""}kaDown(P[0]);P.forEach((p,n)=>kaMove([p[0]+(n%2?${jit}:-${jit}),p[1]]));kaUp();return KA.score})()`);
 let sc=trace(0,false);
 ok("… sauber nachgefahren: volle Punktzahl, dann Punkte setzen",sc>=95&&run(`KA.phase`)==="dots"&&/Jetzt einen Punkt unten/.test(run(`app.innerHTML`)),sc);
@@ -1018,6 +1018,32 @@ sc=trace(3,false,6);ok("… Dāl ohne Punkte: gleich bewertet, auch mit leichtem
 ok("… Bestwert sinkt nicht",run(`(S.st.kal_ba=3,startKalli(0),(()=>{const P=KALI[0].S;kaDown(P[0]);P.slice(0,30).forEach(kaMove);kaUp();if(KA.phase==="dots")KA.dots=[0],kaRate();return S.st.kal_ba})())`)===3);
 ok("… Kachel zählt Buchstaben mit drei Sternen",(run(`(S.st.kal_dal=3,games(),app.innerHTML)`).match(/Buchstaben nachfahren · 2 von 8 mit drei Sternen/)||[]).length===1);
 ok("… Bestwerte überleben das Synchronisieren",run(`mergeS({st:{kal_ba:2}},{st:{kal_ba:3}}).st.kal_ba`)===3);
+run(`U="gast";loadS()`);
+
+// ---------- 27. Buchstaben-Magnet ----------
+run(`U="mg27";loadS();S.ob={z:"lesen",d:today()};ui.fl=null;games()`);let g27=run(`app.innerHTML`);
+ok("Magnet: gesperrt bis S1, mit Grund",/<button class="gtl lock" data-fl="magnet"/.test(g27)&&/Öffnet sich nach Etappe S1 · Die Buchstaben/.test(g27)&&run(`fGate("magnet")`)==="s1");
+run(`view="games";startMagnet()`);ok("… lässt sich nicht an der Sperre vorbei starten",run(`view`)==="games");
+run(`for(const l of KL.filter(l=>l.e==="s1"))S.kp.d[l.id]=1;games()`);
+ok("… nach S1 offen, Kachel mit Zeichen in „Buchstaben“",/<p class="gh">Buchstaben<\/p><div class="gtg">.*<button class="gtl" data-go="magnet"><span class="gi gia" lang="ar">كتـ<\/span>/s.test(run(`app.innerHTML`)));
+ok("… Wortauswahl: 3–5 Grundbuchstaben, ohne Artikel, eindeutig, Bedeutung ohne Klammern",run(`(()=>{const P=mgPool();return P.length>100&&P.every(o=>o.L.length>=3&&o.L.length<=5&&o.L.every(a=>ALPHA.includes(a))&&o.L.map(a=>a.c).join("")===hkStrip(o.w.ar,2)&&!/[()]/.test(o.w.de)&&!hkStrip(o.w.ar,2).startsWith("ال"))&&P.filter(o=>o.w.i==="kitab").length===1&&!P.some(o=>hkStrip(o.w.ar,2)==="رجل")})()`),run(`mgPool().length`));
+run(`startMagnet()`);
+ok("… Runde mit 3, 3, 4, 4, 5 Buchstaben, Ablenker gehören nicht zum Wort",run(`M.ws.map(o=>o.L.length).join()`)==="3,3,4,4,5"&&run(`M.bank.length===M.ws[0].L.length+2&&M.bank.filter(a=>!M.ws[0].L.includes(a)).length===2`),run(`M.ws.map(o=>o.L.length).join()`));
+run(`M.ws[0]=mgPool().find(o=>o.w.i==="bab");mgWord();magnet()`);let m27=run(`app.innerHTML`);
+ok("… Ansage mit Umschrift und Bedeutung, Hinweis „rechts nach links“",/Du hörst: <b>bāb<\/b> · Tür/.test(m27)&&/Tippe die Buchstaben von rechts nach links/.test(m27)&&run(`view`)==="magnet");
+run(`mgTap(M.bank.findIndex(a=>!M.ws[0].L.includes(a)))`);
+ok("… falscher Buchstabe: Fehler, Feld wackelt, nichts gebaut",run(`M.miss===1&&M.built.length===0`)&&/class="mgb shake"/.test(run(`app.innerHTML`)));
+ok("… gewackelt wird nur einmal",!/class="mgb shake"/.test(run(`(magnet(),app.innerHTML)`)));
+run(`for(const a of M.ws[0].L)mgTap(M.bank.findIndex((x,k)=>x===a&&!M.used.includes(k)))`);
+ok("… doppelte Buchstaben (باب) gehen, mit Fehler 3 XP",run(`M.done&&M.gain===3&&M.built.map(a=>a.c).join("")==="باب"`)&&/Nächstes Wort/.test(run(`app.innerHTML`)));
+ok("… Formen von باب: Anfang, Ende, allein, Hinweis zu Alif",run(`mgForms(M.ws[0].L).map(f=>f.n).join()`)==="Anfang,Ende,allein"&&/Alif verbindet sich nur nach rechts/.test(run(`app.innerHTML`)));
+ok("… Formen von كتاب: Anfang, Mitte, Ende, allein",run(`mgForms(mgPool().find(o=>o.w.i==="kitab").L).map(f=>f.n+":"+f.g.length).join()`)==="Anfang:2,Mitte:3,Ende:2,allein:1",run(`mgForms(mgPool().find(o=>o.w.i==="kitab").L).map(f=>f.n+":"+f.g.length).join()`));
+ok("… ماء: Hamza steht allein",run(`mgForms(mgPool().find(o=>o.w.i==="ma").L).map(f=>f.n).join()`)==="Anfang,Ende,allein");
+run(`M.n=1;mgWord();for(const a of M.ws[1].L)mgTap(M.bank.findIndex((x,k)=>x===a&&!M.used.includes(k)))`);
+ok("… ohne Fehler 5 XP",run(`M.done&&M.gain===5`));
+run(`M.n=M.ws.length;M.miss=0;globalThis.x27=S.xp;magnet()`);
+ok("… Ergebnis: 5 Bonus bei null Fehlern, Runde gezählt",run(`M.bonus===5&&S.st.magnet===1&&S.xp-x27===5`)&&/Geschafft/.test(run(`app.innerHTML`))&&/davon 5 Bonus für null Fehler/.test(run(`app.innerHTML`)));
+ok("… mit „kann schon lesen“ sofort offen",run(`(U="mg27b",loadS(),S.aok="skip",fGate("magnet"))`)===null);
 run(`U="gast";loadS()`);
 
 console.log("\n"+pass+" OK, "+fail+" FAIL");
