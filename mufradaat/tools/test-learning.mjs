@@ -971,7 +971,7 @@ run(`U="gast";loadS()`);
 
 // ---------- 25. Spiele-Übersicht und Buchstaben-Regen ----------
 run(`U="sp25";loadS();S.ob={z:"lesen",d:today()};ui.fl=null;games()`);let g25=run(`app.innerHTML`);
-ok("Übersicht: Spiel des Tages als dunkle Karte, Kacheln in zwei Gruppen, Zähler der offenen Spiele",/<button class="gday" data-go="(regen|listen|kalli)">/.test(g25)&&/<p class="gh">Buchstaben<\/p><div class="gtg"><button class="gtl" data-go="regen">/.test(g25)&&/<p class="gh">Wörter und Sätze<\/p>/.test(g25)&&/3 von 6 offen/.test(g25),g25.slice(0,300));
+ok("Übersicht: Spiel des Tages als dunkle Karte, Kacheln in zwei Gruppen, Zähler der offenen Spiele",/<button class="gday" data-go="(regen|listen|kalli)">/.test(g25)&&/<p class="gh">Buchstaben<\/p><div class="gtg"><button class="gtl" data-go="regen">/.test(g25)&&/<p class="gh">Wörter und Sätze<\/p>/.test(g25)&&/3 von 7 offen/.test(g25),g25.slice(0,300));
 ok("… Spiel des Tages bleibt am selben Tag gleich und ist nie gesperrt",run(`gDay()===gDay()`)&&run(`!fGate(gDay().k)`)&&run(`(()=>{const ks=new Set();for(let d=1;d<31;d++){const x=gDay("2026-11-"+String(d).padStart(2,"0"));if(fGate(x.k))return false;ks.add(x.k)}return ks.size===3})()`));
 ok("… gesperrte Kachel mit Grund, Antippen zeigt den Hinweis",/<button class="gtl lock" data-fl="pairs" aria-expanded="false">/.test(g25)&&(run(`(ui.fl="pairs",games(),app.innerHTML)`).match(/Lerne im Lernpfad weiter/g)||[]).length===1);run(`ui.fl=null`);
 ok("… ohne Stimme und Aufnahmen ist die Hörübung nie das Spiel des Tages",run(`(()=>{const a=ARV,n=AUDN;ARV=false;AUDN=0;let ok=true;for(let d=1;d<31;d++){if(gDay("2026-12-"+String(d).padStart(2,"0")).k==="listen")ok=false}ARV=a;AUDN=n;return ok})()`));
@@ -1044,6 +1044,30 @@ ok("… ohne Fehler 5 XP",run(`M.done&&M.gain===5`));
 run(`M.n=M.ws.length;M.miss=0;globalThis.x27=S.xp;magnet()`);
 ok("… Ergebnis: 5 Bonus bei null Fehlern, Runde gezählt",run(`M.bonus===5&&S.st.magnet===1&&S.xp-x27===5`)&&/Geschafft/.test(run(`app.innerHTML`))&&/davon 5 Bonus für null Fehler/.test(run(`app.innerHTML`)));
 ok("… mit „kann schon lesen“ sofort offen",run(`(U="mg27b",loadS(),S.aok="skip",fGate("magnet"))`)===null);
+run(`U="gast";loadS()`);
+
+// ---------- 28. Satz-Zug ----------
+run(`U="zg28";loadS();S.ob={z:"lesen",d:today()};ui.fl=null;games()`);let g28=run(`app.innerHTML`);
+ok("Satz-Zug: gesperrt bis S3, mit Grund",/<button class="gtl lock" data-fl="zug"/.test(g28)&&/Öffnet sich nach Etappe S3 · Kurze Vokale/.test(g28.slice(g28.indexOf('data-fl="zug"'))));
+run(`view="games";startZug()`);ok("… lässt sich nicht an der Sperre vorbei starten",run(`view`)==="games");
+run(`for(const l of KL.filter(l=>["s1","s2","s3"].includes(l.e)))S.kp.d[l.id]=1;games()`);
+ok("… nach S3 offen, Kachel in „Wörter und Sätze“",/<p class="gh">Wörter und Sätze<\/p><div class="gtg">.*<button class="gtl" data-go="zug"><span class="gi"><svg/s.test(run(`app.innerHTML`)));
+run(`globalThis.s28=SENT.find(x=>x.t.length===2&&x.ids.every(i=>SFREE.has(i)||BY[i]));for(const i of s28.ids)if(!SFREE.has(i))S.box[i]=0`);
+ok("… Auswahl: fünf verschiedene Sätze, freie zuerst, sonst längere",run(`(()=>{const P=zgPick();return P.length===5&&new Set(P).size===5&&P.includes(s28)&&P.filter(x=>!sentOpen(x)).every(x=>x.t.length>=2)})()`));
+run(`S.box={};startZug()`);
+ok("… Ablenker: zwei fremde Wagen, keine Füllwörter",run(`(()=>{const x=ZG.ss[0],own=x.t.map(o=>o.a),ex=ZG.bank.filter(b=>b.j<0);return ZG.bank.length===x.t.length+2&&ex.length===2&&ex.every(b=>!own.includes(b.a))&&ZG.bank.filter(b=>b.j>=0).map(b=>b.a).sort().join()===own.slice().sort().join()})()`));
+let z28=run(`app.innerHTML`);
+ok("… keine Zeitleiste, Lok vorne, deutscher Satz als Auftrag",!/class="bar"/.test(z28)&&/<div class="zgtr" id="zgtr"><div class="zgl">/.test(z28)&&new RegExp("„"+run(`esc(ZG.ss[0].de)`).replace(/[.?]/g,"\\$&")+"“").test(z28));
+run(`zgTap(ZG.bank.findIndex(b=>b.j<0))`);
+ok("… falscher Wagen: Fehler, Wackeln, nichts angehängt",run(`ZG.miss===1&&ZG.placed.length===0`)&&/class="zgk shake"/.test(run(`app.innerHTML`))&&!/class="zgk shake"/.test(run(`(zug(),app.innerHTML)`)));
+run(`globalThis.k28=ZG.ss[0].k;globalThis.x28=S.xp||0;for(let j=0,n=ZG.ss[0].t.length;j<n;j++)zgTap(ZG.bank.findIndex(b=>b.j===j))`);
+z28=run(`app.innerHTML`);
+ok("… richtig angehängt: Abfahrt nach rechts, 5 XP mit Fehler, Satz gezählt",run(`ZG.done&&ZG.gain===5&&S.sent[k28]===1&&S.xp-x28===5`)&&/class="zgtr go"/.test(z28)&&/Abfahrt!/.test(z28)&&/Nächster Zug/.test(z28)&&!/Fehlerfrei/.test(z28));
+ok("… Wagen stehen in Satzreihenfolge hinter der Lok",run(`[...app.innerHTML.matchAll(/class="zgw[^"]*"><span class="ar" lang="ar">([^<]+)</g)].map(m=>m[1]).join(" ")===ZG.ss[0].t.map(o=>o.a).join(" ")`));
+run(`ZG.n=1;zgNew();zug();for(let j=0,n=ZG.ss[1].t.length;j<n;j++)zgTap(ZG.bank.findIndex(b=>b.j===j))`);
+ok("… fehlerfrei: 5 + 3 Bonus",run(`ZG.gain===8`)&&/Fehlerfrei, \+3 Bonus/.test(run(`app.innerHTML`)));
+run(`ZG.n=ZG.ss.length;zug()`);ok("… Ergebnis, Fahrten gezählt",/Alle Züge sind abgefahren/.test(run(`app.innerHTML`))&&run(`S.st.zug`)===1&&/1 Fahrt</.test(run(`(games(),app.innerHTML)`)));
+ok("… Lok fährt nach rechts (positive Verschiebung), Rauch zieht nach links",/@keyframes zggo\{from\{transform:translateX\(var\(--sh,0px\)\)\}to\{transform:translateX\(calc\(var\(--sh,0px\) \+ 130%\)\)\}\}/.test(html)&&/@keyframes zgsmoke\{[^}]*\}100%\{opacity:0;transform:translate\(-14px,-26px\)/.test(html));
 run(`U="gast";loadS()`);
 
 console.log("\n"+pass+" OK, "+fail+" FAIL");
