@@ -971,7 +971,7 @@ run(`U="gast";loadS()`);
 
 // ---------- 25. Spiele-Übersicht und Buchstaben-Regen ----------
 run(`U="sp25";loadS();S.ob={z:"lesen",d:today()};ui.fl=null;games()`);let g25=run(`app.innerHTML`);
-ok("Übersicht: Spiel des Tages als dunkle Karte, Kacheln in zwei Gruppen, Zähler der offenen Spiele",/<button class="gday" data-go="(regen|listen|kalli)">/.test(g25)&&/<p class="gh">Buchstaben<\/p><div class="gtg"><button class="gtl" data-go="regen">/.test(g25)&&/<p class="gh">Wörter und Sätze<\/p>/.test(g25)&&/3 von 7 offen/.test(g25),g25.slice(0,300));
+ok("Übersicht: Spiel des Tages als dunkle Karte, Kacheln in zwei Gruppen, Zähler der offenen Spiele",/<button class="gday" data-go="(regen|listen|kalli)">/.test(g25)&&/<p class="gh">Buchstaben<\/p><div class="gtg"><button class="gtl" data-go="regen">/.test(g25)&&/<p class="gh">Wörter und Sätze<\/p>/.test(g25)&&/3 von 8 offen/.test(g25),g25.slice(0,300));
 ok("… Spiel des Tages bleibt am selben Tag gleich und ist nie gesperrt",run(`gDay()===gDay()`)&&run(`!fGate(gDay().k)`)&&run(`(()=>{const ks=new Set();for(let d=1;d<31;d++){const x=gDay("2026-11-"+String(d).padStart(2,"0"));if(fGate(x.k))return false;ks.add(x.k)}return ks.size===3})()`));
 ok("… gesperrte Kachel mit Grund, Antippen zeigt den Hinweis",/<button class="gtl lock" data-fl="pairs" aria-expanded="false">/.test(g25)&&(run(`(ui.fl="pairs",games(),app.innerHTML)`).match(/Lerne im Lernpfad weiter/g)||[]).length===1);run(`ui.fl=null`);
 ok("… ohne Stimme und Aufnahmen ist die Hörübung nie das Spiel des Tages",run(`(()=>{const a=ARV,n=AUDN;ARV=false;AUDN=0;let ok=true;for(let d=1;d<31;d++){if(gDay("2026-12-"+String(d).padStart(2,"0")).k==="listen")ok=false}ARV=a;AUDN=n;return ok})()`));
@@ -1068,6 +1068,27 @@ run(`ZG.n=1;zgNew();zug();for(let j=0,n=ZG.ss[1].t.length;j<n;j++)zgTap(ZG.bank.
 ok("… fehlerfrei: 5 + 3 Bonus",run(`ZG.gain===8`)&&/Fehlerfrei, \+3 Bonus/.test(run(`app.innerHTML`)));
 run(`ZG.n=ZG.ss.length;zug()`);ok("… Ergebnis, Fahrten gezählt",/Alle Züge sind abgefahren/.test(run(`app.innerHTML`))&&run(`S.st.zug`)===1&&/1 Fahrt</.test(run(`(games(),app.innerHTML)`)));
 ok("… Lok fährt nach rechts (positive Verschiebung), Rauch zieht nach links",/@keyframes zggo\{from\{transform:translateX\(var\(--sh,0px\)\)\}to\{transform:translateX\(calc\(var\(--sh,0px\) \+ 130%\)\)\}\}/.test(html)&&/@keyframes zgsmoke\{[^}]*\}100%\{opacity:0;transform:translate\(-14px,-26px\)/.test(html));
+run(`U="gast";loadS()`);
+
+// ---------- 29. Im Suq ----------
+run(`U="sq29";loadS();S.ob={z:"lesen",d:today()};ui.fl=null;games()`);let g29=run(`app.innerHTML`);
+ok("Im Suq: gesperrt bis S3, mit Grund",/<button class="gtl lock" data-fl="suq"/.test(g29)&&/Öffnet sich nach Etappe S3 · Kurze Vokale/.test(g29.slice(g29.indexOf('data-fl="suq"'))));
+run(`view="games";startSuq()`);ok("… lässt sich nicht an der Sperre vorbei starten",run(`view`)==="games");
+run(`for(const l of KL.filter(l=>["s1","s2","s3"].includes(l.e)))S.kp.d[l.id]=1;games()`);
+ok("… nach S3 offen, Kachel in „Wörter und Sätze“",/<button class="gtl" data-go="suq"><span class="gi"><svg/.test(run(`app.innerHTML`)));
+ok("… neun Waren aus der Wortliste, jede mit Zeichnung ohne feste Farben",run(`SQI.length===9&&SQI.every(i=>BY[i]&&/^<svg viewBox="[\\d ]+" aria-hidden="true">/.test(SQV[i])&&!/#[0-9a-f]{3,6}|fill="|stroke="/i.test(SQV[i]))`)&&run(`!!BY.shukran`));
+run(`startSuq()`);
+ok("… Einkauf: drei Waren auf dem Zettel, sechs am Stand, alle drei liegen dort",run(`SQ.want.length===3&&SQ.stall.length===6&&new Set(SQ.stall).size===6&&SQ.want.every(i=>SQ.stall.includes(i))`));
+let q29=run(`app.innerHTML`);
+ok("… Zettel nur auf Arabisch (antippen liest vor), Stand mit Bild und deutschem Namen",run(`SQ.want.every(i=>app.innerHTML.includes('data-sw="'+i+'"')&&app.innerHTML.includes('<span class="ar" lang="ar">'+BY[i].ar+'</span>'))`)&&!run(`SQ.want.some(i=>new RegExp('class="sql"[^]*'+BY[i].de+'[^]*class="sqk"').test(app.innerHTML))`)&&/class="sqi" data-sq="\w+" ><span class="sqv"><svg/.test(q29)&&/Einkauf 1 von 3/.test(q29));
+run(`sqTap(SQ.stall.find(i=>!SQ.want.includes(i)))`);
+ok("… falsche Ware: Fehler, Wackeln, Hinweis mit Namen",run(`SQ.miss===1&&SQ.got.length===0`)&&/class="sqs shake"/.test(run(`app.innerHTML`))&&/steht nicht auf dem Zettel/.test(run(`app.innerHTML`))&&!/class="sqs shake"/.test(run(`(suq(),app.innerHTML)`)));
+run(`sqTap(SQ.want[0])`);ok("… richtige Ware landet im Korb, Zettel hakt ab",run(`SQ.got.length===1`)&&/class="sqw ok" data-sw/.test(run(`app.innerHTML`))&&/<span class="new" role="img"/.test(run(`app.innerHTML`)));
+run(`sqTap(SQ.want[0])`);ok("… doppelt antippen zählt nicht",run(`SQ.got.length===1&&SQ.miss===1`));
+run(`globalThis.x29=S.xp||0;sqTap(SQ.want[1]);sqTap(SQ.want[2])`);
+ok("… alles im Korb: شُكْرًا, 6 XP mit Fehler",run(`SQ.done&&SQ.gain===6&&S.xp-x29===6`)&&/شُكْرًا<\/span><span class="sqdt">shukran · Danke!/.test(run(`app.innerHTML`))&&/Nächster Einkauf/.test(run(`app.innerHTML`)));
+run(`SQ.r=1;sqNew();for(const i of SQ.want)sqTap(i)`);ok("… ohne Fehler 8 XP",run(`SQ.gain===8`));
+run(`SQ.r=SQ.n;suq()`);ok("… Ergebnis, Einkäufe gezählt",/Alles eingekauft/.test(run(`app.innerHTML`))&&run(`S.st.suq`)===1&&/1 Einkauf</.test(run(`(games(),app.innerHTML)`)));
 run(`U="gast";loadS()`);
 
 console.log("\n"+pass+" OK, "+fail+" FAIL");

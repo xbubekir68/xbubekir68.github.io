@@ -521,6 +521,37 @@ h1,.h1{font-size:28px;font-weight:900;letter-spacing:-.03em}h2{font-weight:800}
 @keyframes zgin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .zgsc{text-align:center;margin-top:10px}.zgsc p{margin-top:4px}.zgsc .lnk{display:inline-flex;align-items:center;gap:4px}.zgbn{font-weight:700}
 @media (prefers-reduced-motion:reduce){.zgtr.go,.zgl .zgs,.zgw.new{animation:none}.zgd{animation:none}}
+/* Im Suq: Zettel, dunkler Korb, Stand mit Markise */
+.sqt{flex:1;font-size:20px}.sqt small{font-size:14px;font-weight:600;color:var(--mute)}.sqx{font-weight:900;color:var(--g);white-space:nowrap}
+.sqr{display:flex;gap:12px;align-items:stretch}
+.sql{flex:1;min-width:0;padding:12px 14px}.sql .gh{margin:0 0 2px}
+.sqw{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:44px;padding:0;border:0;background:none;color:var(--ink);cursor:pointer;font:inherit}
+.sqw .ar{font-size:var(--ar3);line-height:1.5}.sqw.ok .ar{color:var(--mute)}
+.sqm{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--line);color:var(--on);font-weight:900;font-size:14px}.sqw.ok .sqm{background:var(--g)}
+.sqk{position:relative;overflow:hidden;flex:none;width:120px;padding:12px;border-radius:20px;background:var(--night);color:var(--on-night);display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
+.sqk .sqkc{position:absolute;right:-30px;top:-30px;width:90px;height:90px;border-radius:50%;background:var(--night2)}
+.sqkl{position:relative;font-size:12px;color:var(--night-mute)}
+.sqkb{position:relative;display:flex;flex-wrap:wrap;justify-content:center;gap:4px;margin:6px 0;min-height:44px}
+.sqkb>span{width:38px;height:38px;border-radius:12px;background:var(--night2);display:grid;place-items:center}.sqkb>span.new{animation:sqdrop .35s ease both}
+.sqkb svg{width:26px;height:26px}.sqkb .qk{stroke:var(--night-mute)}.sqkb .qkf{fill:var(--night-mute)}
+@keyframes sqdrop{from{opacity:0;transform:translateY(-16px) scale(.8)}to{opacity:1;transform:none}}
+.sqb{position:relative;width:72px;height:34px}.sqb .qd{fill:none;stroke:var(--band-d);stroke-width:3;stroke-linecap:round}
+.sqh{margin:14px 4px 10px;font-size:14px;color:var(--mute);min-height:20px}.sqh.no{color:var(--bad);font-weight:700}
+.sqa{height:22px;border-radius:16px 16px 6px 6px;background:repeating-linear-gradient(90deg,var(--g) 0 32px,var(--card) 32px 64px);box-shadow:0 1px 0 var(--line-d);margin-bottom:12px}
+.sqs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.sqs.shake{animation:shake .3s}
+.sqi{display:grid;justify-items:center;gap:2px;padding:10px 4px;border:2px solid var(--line);border-radius:20px;background:var(--card);color:var(--ink);box-shadow:0 5px 0 var(--line-d);cursor:pointer;font:inherit;transition:transform .08s,box-shadow .08s}
+.sqi:active{transform:translateY(5px);box-shadow:0 0 0 var(--line-d)}.sqi:disabled{opacity:.3;box-shadow:none;cursor:default;transform:none}
+.sqi b{font-size:14px}
+.sqv{display:grid;place-items:center;height:54px}.sqv svg{width:46px;height:46px}
+.sqv .qy{fill:var(--spark)}.sqv .qa{fill:var(--amber)}.sqv .ql{fill:none;stroke:var(--amber);stroke-width:3;stroke-linecap:round}
+.sqv .qw{fill:var(--card);stroke:var(--ink);stroke-width:2.5;stroke-linejoin:round}.sqv .qm,.sqb .qm{fill:var(--mint)}.sqv .qr{fill:var(--bad)}
+.sqv .qk{fill:none;stroke:var(--ink);stroke-width:2.5;stroke-linecap:round}.sqv .qkf{fill:var(--ink)}.sqv .qg{fill:var(--g)}.sqv .qb{fill:var(--sky)}.sqv .qe{fill:var(--card)}.sqv .qc{fill:var(--dawn)}
+.sqd{margin-top:16px;animation:zgin .35s ease both}
+.sqdk{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:20px;background:var(--night);color:var(--on-night)}
+.sqdk .ar{font-size:var(--ar3);line-height:1.5;color:var(--mint)}.sqdk .sqdt{font-size:14px;color:var(--night-mute)}.sqdk b{margin-left:auto;color:var(--mint);font-weight:900;white-space:nowrap}
+@media (prefers-reduced-motion:reduce){.sqkb>span.new,.sqd{animation:none}}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .sqk,:root:not([data-theme="light"]) .sqdk{box-shadow:0 0 0 1px var(--line)}}:root[data-theme="dark"] .sqk,:root[data-theme="dark"] .sqdk{box-shadow:0 0 0 1px var(--line)}
+
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .zgl{box-shadow:0 4px 0 var(--band-d),0 0 0 1px var(--line)}}:root[data-theme="dark"] .zgl{box-shadow:0 4px 0 var(--band-d),0 0 0 1px var(--line)}
 
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mgb{box-shadow:0 0 0 1px var(--line)}}:root[data-theme="dark"] .mgb{box-shadow:0 0 0 1px var(--line)}
@@ -862,7 +893,8 @@ mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14
 stop:'<rect x="7" y="7" width="10" height="10" rx="1.5"/>',
 play:'<path d="M8 5v14l11-7z"/>',
 rain:'<path d="M7 3v6M12 6v8M17 3v5M7 15v6M17 13v8"/>',
-train:'<rect x="5" y="3" width="14" height="13" rx="3"/><path d="M5 10h14M9 16l-2.5 4M15 16l2.5 4M8.5 13h.01M15.5 13h.01"/>'
+train:'<rect x="5" y="3" width="14" height="13" rx="3"/><path d="M5 10h14M9 16l-2.5 4M15 16l2.5 4M8.5 13h.01M15.5 13h.01"/>',
+basket:'<path d="M3 10h18l-2.5 10h-13z"/><path d="M8 10l4-6 4 6M9 14v3M15 14v3"/>'
 };
 const ic=(n,s=22,f=false)=>`<svg class="i" viewBox="0 0 24 24" width="${s}" height="${s}" ${f?'fill="currentColor" stroke="none"':'fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"'} aria-hidden="true">${ICO[n]}</svg>`;
 const xbtn=(go,label="Beenden")=>`<button class="x" data-go="${go}" aria-label="${label}">${ic("close")}</button>`;
@@ -1857,7 +1889,7 @@ function kpath(){
 // ===== Navigation =====
 let view="home",ui={cat:"Alle",q:""},gt=0;
 const TABS=[["home","home","Start"],["games","pad","Spiele"],["path","path","Lernpfad"],["cards","cards","Karten"],["more","more","Mehr"]];
-const SUB={more:["stats","fav","settings","list","badges","legal"],games:["pairs","blitz","listen","regen","kalli","magnet","zug"],path:["quiz","lesson","alphabet","letter","aquiz","satz","klek"]};
+const SUB={more:["stats","fav","settings","list","badges","legal"],games:["pairs","blitz","listen","regen","kalli","magnet","zug","suq"],path:["quiz","lesson","alphabet","letter","aquiz","satz","klek"]};
 const pHint=a=>{if(view!=="path"){ui.hint=a;return go("path")}ui.hint=ui.hint===a?null:a;ui.keep=true;path()}; // gesperrte Station: Grund direkt darunter zeigen statt als Toast
 function go(v){
   if(view==="klek"&&K&&K.l&&!K.test&&!K.fin&&(K.n||K.fb)){kSnap();const r=kSnapGet(K.l.id);if(r)toast(kRepAt(r)?"Gespeichert · du machst mit deinen Fehlern weiter":`Gespeichert · du machst bei ${kResTxt(r)} weiter`)} // X oder Zurück mitten in der Lektion
@@ -1882,8 +1914,8 @@ function fx(){requestAnimationFrame(()=>requestAnimationFrame(()=>document.query
 function render(){
   clearInterval(gt);
   $("#nav").innerHTML=TABS.map(t=>`<button class="${(view===t[0]||(SUB[t[0]]||[]).includes(view))?"on":""}${t[0]==="path"?" main":""}" data-go="${t[0]}" ${(view===t[0]||(SUB[t[0]]||[]).includes(view))?'aria-current="page"':""}><span>${ic(t[1])}</span>${t[2]}</button>`).join("");
-  $("#nav").hidden=["quiz","pairs","blitz","aquiz","listen","satz","klek","regen","kalli","magnet","zug"].includes(view)||(view==="legal"&&!U);
-  ({home,path,lesson,alphabet,letter,aquiz,listen,satz,cards,more,list,stats,settings,quiz,fav,games,badges,pairs,blitz,legal,klek,regen,kalli,magnet,zug})[view]();
+  $("#nav").hidden=["quiz","pairs","blitz","aquiz","listen","satz","klek","regen","kalli","magnet","zug","suq"].includes(view)||(view==="legal"&&!U);
+  ({home,path,lesson,alphabet,letter,aquiz,listen,satz,cards,more,list,stats,settings,quiz,fav,games,badges,pairs,blitz,legal,klek,regen,kalli,magnet,zug,suq})[view]();
   app.classList.remove("enter");void app.offsetWidth;app.classList.add("enter");
   window.scrollTo(0,0);pushH();
 }
@@ -1903,7 +1935,7 @@ addEventListener("popstate",()=>{if(popSkip){popSkip=false;return}hist=false;if(
   if(!authOn())pushH()});
 document.addEventListener("click",e=>{
   const g=e.target.closest("[data-go]");
-  if(g){const t=g.dataset.go;sfx("tap");if(t==="review")return startQuiz(null);if(t==="mix")return startMix();if(t==="satz")return startSatz();if(t==="pairs")return startPairs();if(t==="blitz")return startBlitz();if(t==="aquiz")return startAQ();if(t==="listen")return startListen();if(t==="regen")return startRegen();if(t==="kalli")return startKalli();if(t==="magnet")return startMagnet();if(t==="zug")return startZug();return go(t)}
+  if(g){const t=g.dataset.go;sfx("tap");if(t==="review")return startQuiz(null);if(t==="mix")return startMix();if(t==="satz")return startSatz();if(t==="pairs")return startPairs();if(t==="blitz")return startBlitz();if(t==="aquiz")return startAQ();if(t==="listen")return startListen();if(t==="regen")return startRegen();if(t==="kalli")return startKalli();if(t==="magnet")return startMagnet();if(t==="zug")return startZug();if(t==="suq")return startSuq();return go(t)}
   const ab=e.target.closest("[data-ab]");
   if(ab){const b=+ab.dataset.ab;sfx("tap");if(aLocked(b))return pHint(`data-ab="${b}"`);return startAQ(b,false,"path")}
   const kl=e.target.closest("[data-kl]");
@@ -2091,9 +2123,9 @@ function badges(){
   <h2 class="bgh">Wörter und Übung <small class="mute">${cnt(rest)} von ${rest.length}</small></h2><div class="bg">${rest.map(card).join("")}</div>`);
 }
 // Karten und Spiele gehen im neuen Lernpfad Etappe für Etappe auf: Hören, Regen und Kalligrafie sofort, Buchstaben-Magnet nach S1 (alle Buchstaben bekannt),
-// Karten, Paare und Satz-Zug nach S3 (Wörter mit Vokalzeichen), Wort-Blitz nach S5 (flüssig lesen).
+// Karten, Paare, Satz-Zug und Suq nach S3 (Wörter mit Vokalzeichen), Wort-Blitz nach S5 (flüssig lesen).
 // Nie gesperrt: bisheriger Pfad, wer schon Wörter übt oder „kann schon lesen“ gewählt hat (S.aok), Einstufung markiert Etappen als geschafft.
-const FREI={cards:"s3",pairs:"s3",blitz:"s5",magnet:"s1",zug:"s3"};
+const FREI={cards:"s3",pairs:"s3",blitz:"s5",magnet:"s1",zug:"s3",suq:"s3"};
 const fGate=k=>{const e=FREI[k];return e&&S.np&&!S.aok&&!hasWords()&&KL.length&&!kEDone(e)?e:null};
 const fLeft=e=>{const last=Math.max(...KL.filter(l=>l.e===e).map(l=>l.k));return KL.filter(l=>l.k<=last&&!kDone(l.id)).length};
 const fWhy=e=>{const n=fLeft(e);return `Öffnet sich nach Etappe ${e.toUpperCase()} · ${esc(kEtap(e).titel)} (noch ${n} ${n===1?"Lektion":"Lektionen"})`};
@@ -2108,7 +2140,8 @@ const GAMES=[
   {k:"listen",g:"w",t:"Hörübung",d:()=>!canSpeak()?"Braucht eine arabische Stimme auf dem Gerät":"Hören und die Bedeutung wählen",ic:"speaker"},
   {k:"pairs",g:"w",t:"Paare zuordnen",d:()=>"6 Wortpaare, so schnell du kannst",ic:"pairs"},
   {k:"blitz",g:"w",t:"Wort-Blitz",d:()=>"60 Sekunden oder ohne Zeitlimit · Rekord: "+(S.st.blitz||0)+" Treffer",ic:"bolt"},
-  {k:"zug",g:"w",t:"Satz-Zug",d:()=>"Wörter als Wagen ordnen"+(S.st.zug?" · "+S.st.zug+(S.st.zug===1?" Fahrt":" Fahrten"):""),ic:"train"}
+  {k:"zug",g:"w",t:"Satz-Zug",d:()=>"Wörter als Wagen ordnen"+(S.st.zug?" · "+S.st.zug+(S.st.zug===1?" Fahrt":" Fahrten"):""),ic:"train"},
+  {k:"suq",g:"w",t:"Im Suq",d:()=>"Einkaufszettel lesen, Waren einpacken"+(S.st.suq?" · "+S.st.suq+(S.st.suq===1?" Einkauf":" Einkäufe"):""),ic:"basket"}
 ];
 const GGRP=[["b","Buchstaben"],["w","Wörter und Sätze"]];
 function gDay(day=today()){ // gleiches Spiel den ganzen Tag, morgen das nächste
@@ -2630,6 +2663,53 @@ function zug(){
   if($("#nx"))$("#nx").onclick=()=>{ZG.n++;if(ZG.n<ZG.ss.length)zgNew();sfx("tap");zug()};
 }
 
+
+// ===== Spiel 8: Im Suq (arabischen Einkaufszettel lesen, die Waren einpacken) =====
+// Drei Einkäufe: Der Zettel nennt drei Waren nur auf Arabisch (Antippen liest vor), am Stand liegen sechs Waren mit Bild und deutschem Namen.
+// Waren als kleine Zeichnungen, Farben nur über Tokens (Klassen q*). 6 XP je Einkauf, +2 ohne Fehler.
+const SQV={
+  khubz:'<svg viewBox="0 0 46 34" aria-hidden="true"><path class="qy" d="M4 18c0-9 8-14 19-14s19 5 19 14v8a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path class="ql" d="M14 12l-3 8M23 11v9M32 12l3 8"/></svg>',
+  halib:'<svg viewBox="0 0 30 46" aria-hidden="true"><path class="qw" d="M9 2h12v8l6 8v24a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V18l6-8z"/><path class="qm" d="M4 26h22v8H4z"/></svg>',
+  tuffah:'<svg viewBox="0 0 40 42" aria-hidden="true"><path class="qr" d="M20 12c-6-4-16-2-16 10 0 10 7 18 12 18 2 0 3-1 4-1s2 1 4 1c5 0 12-8 12-18 0-12-10-14-16-10z"/><path class="qk" d="M20 12c0-5 2-8 6-10"/><path class="qg" d="M22 8c4-3 8-2 9 0-3 3-7 3-9 0z"/></svg>',
+  samak:'<svg viewBox="0 0 48 30" aria-hidden="true"><path class="qb" d="M4 15c8-12 24-12 32 0-8 12-24 12-32 0z"/><path class="qb" d="M36 15l10-9v18z"/><circle class="qe" cx="13" cy="13" r="2.5"/></svg>',
+  jubn:'<svg viewBox="0 0 46 36" aria-hidden="true"><path class="qc" d="M4 30V16L36 4l6 12v14z"/><path class="ql" d="M4 16h38"/><circle class="qa" cx="16" cy="24" r="3"/><circle class="qa" cx="30" cy="22" r="2.5"/></svg>',
+  mawz:'<svg viewBox="0 0 46 34" aria-hidden="true"><path class="qy" d="M4 8c4 14 22 22 38 12-10 0-24-4-32-16z"/><path class="qk" d="M4 8l-2-4"/></svg>',
+  bayd:'<svg viewBox="0 0 34 42" aria-hidden="true"><path class="qw" d="M17 3c7 0 13 12 13 22a13 13 0 0 1-26 0C4 15 10 3 17 3z"/></svg>',
+  asir:'<svg viewBox="0 0 34 46" aria-hidden="true"><path class="qk" d="M22 2l-4 14"/><path class="qw" d="M5 12h24l-3 30a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2z"/><path class="qy" d="M7.5 22h19l-2 19H9.5z"/></svg>',
+  asal:'<svg viewBox="0 0 40 44" aria-hidden="true"><rect class="qkf" x="9" y="4" width="22" height="8" rx="2"/><rect class="qa" x="5" y="12" width="30" height="28" rx="8"/><path class="qc" d="M12 22h16v9H12z"/></svg>'
+};
+const SQI=Object.keys(SQV).filter(i=>BY[i]);
+let SQ=null;
+function startSuq(){if(fGate("suq"))return go("games");SQ={r:0,n:3,miss:0,xp:0,fin:false};sqNew();view="suq";render()}
+function sqNew(){const p=shuffle(SQI);SQ.want=p.slice(0,3);SQ.stall=shuffle(p.slice(0,6));SQ.got=[];SQ.wm=0;SQ.shake=false;SQ.no=null;SQ.done=false;SQ.gain=0}
+function sqTap(i){
+  if(!SQ||SQ.done||SQ.got.includes(i)||!SQ.stall.includes(i))return;
+  if(SQ.want.includes(i)){
+    SQ.got.push(i);SQ.no=null;sfx("good",SQ.got.length);vib(10);
+    if(SQ.got.length===SQ.want.length){SQ.done=true;SQ.gain=6+(SQ.wm?0:2);SQ.xp+=SQ.gain;addXP(SQ.gain);if(BY.shukran)speakLater(BY.shukran.ar)}else speakLater(BY[i].ar);
+  }else{SQ.wm++;SQ.miss++;SQ.shake=true;SQ.no=i;sfx("bad");vib([40,30,40])}
+  suq();
+}
+function suq(){
+  if(SQ.r>=SQ.n){
+    if(!SQ.fin){SQ.fin=true;S.st.suq=(S.st.suq||0)+1;save();checkBadges();sfx("win");if(!SQ.miss)confetti()}
+    paint(`<div style="text-align:center;margin-top:30px"><h1>Alles eingekauft</h1></div><div class="tiles"><div class="card"><p class="mute">Einkäufe</p><b>${SQ.n}</b></div><div class="card"><p class="mute">Fehler</p><b>${SQ.miss}</b></div><div class="card" style="grid-column:span 2"><p class="mute">XP verdient</p><b>+${SQ.xp}</b></div></div>
+    <button class="btn" id="again">Nochmal</button><button class="btn alt" data-go="games">Zu den Spielen</button>`);
+    $("#again").onclick=startSuq;return;
+  }
+  fTask(SQ,SQ.r);const sh=SQ.shake,t=BY.shukran,last=SQ.r+1>=SQ.n;SQ.shake=false;
+  paint(`<div class="top">${xbtn("games")}<h2 class="sqt">Im Suq <small>· Einkauf ${SQ.r+1} von ${SQ.n}</small></h2><span class="sqx">${SQ.xp} XP</span></div>
+  <div class="sqr"><div class="card sql"><p class="gh" data-fq>Dein Einkaufszettel</p>${SQ.want.map(i=>{const ok=SQ.got.includes(i);return `<button class="sqw${ok?" ok":""}" data-sw="${i}" aria-label="${BY[i].ar}${ok?", schon im Korb":""}, vorlesen"><span class="ar" lang="ar">${BY[i].ar}</span><span class="sqm" aria-hidden="true">${ok?"✓":""}</span></button>`}).join("")}</div>
+  <div class="sqk"><span class="sqkc" aria-hidden="true"></span><span class="sqkl">Dein Korb</span><div class="sqkb">${SQ.got.map((i,k)=>`<span class="${k===SQ.got.length-1?"new":""}" role="img" aria-label="${esc(BY[i].de)}">${SQV[i]}</span>`).join("")}</div><svg class="sqb" viewBox="0 0 72 34" aria-hidden="true"><path class="qm" d="M4 4h64l-8 26H12z"/><path class="qd" d="M14 10h44M18 18h36"/></svg></div></div>
+  <p class="sqh${SQ.no?" no":""}" role="status">${SQ.no?`„${esc(BY[SQ.no].de)}“ steht nicht auf dem Zettel.`:SQ.done?"":"Lies den Zettel und pack die Waren in den Korb. Antippen liest vor."}</p>
+  <div class="sqa" aria-hidden="true"></div><div class="sqs${sh?" shake":""}">${SQ.stall.map(i=>`<button class="sqi" data-sq="${i}" ${SQ.got.includes(i)?"disabled":""}><span class="sqv">${SQV[i]}</span><b>${esc(BY[i].de)}</b></button>`).join("")}</div>
+  ${SQ.done?`<div class="sqd"><div class="sqdk" role="status">${t?`<span class="ar" lang="ar">${t.ar}</span><span class="sqdt">${esc(t.tr)} · Danke!<br>Alles eingekauft.</span>`:`<span class="sqdt">Alles eingekauft.</span>`}<b>+${SQ.gain} XP</b></div>
+    <button class="btn" id="nx">${last?"Ergebnis ansehen":"Nächster Einkauf"}</button></div>`:""}`);
+  document.querySelectorAll("[data-sw]").forEach(b=>b.onclick=()=>speak(BY[b.dataset.sw].ar));
+  document.querySelectorAll("[data-sq]").forEach(b=>b.onclick=()=>sqTap(b.dataset.sq));
+  if($("#nx"))$("#nx").onclick=()=>{SQ.r++;if(SQ.r<SQ.n)sqNew();sfx("tap");suq()};
+}
+
 // ===== Statistik und Einstellungen =====
 function stats(){
   const days=[...Array(7)].map((_,k)=>{const d=ago(6-k);return[["So","Mo","Di","Mi","Do","Fr","Sa"][d.getDay()],S.days[ymd(d)]||0]});
@@ -2885,7 +2965,7 @@ loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v43"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v44"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>
