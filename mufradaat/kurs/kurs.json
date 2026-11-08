@@ -20,17 +20,10 @@
       "id": 2,
       "titel": "Sprache lernen",
       "ar": "تَعَلُّمُ اللُّغَةِ",
+      "demnaechst": "Stufe 2 geht weiter: Etappe 3 „Der, die, das“ und Etappe 4 „Wo ist es?“ entstehen gerade.",
       "etappen": [
-        {"id": "w1", "titel": "Erste Schritte", "ar": "الْخُطُوَاتُ الْأُولَى", "kurz": "Grüßen, höflich sein, fragen", "datei": "w1.json"},
-        {"id": "w2", "titel": "In der Schule", "ar": "فِي الْمَدْرَسَةِ", "kurz": "Erste Dinge und die ersten Sätze", "datei": "w2.json"},
-        {"id": "w3", "titel": "Zuhause", "ar": "فِي الْبَيْتِ", "kurz": "Haus, Möbel und Familie", "datei": "w3.json"},
-        {"id": "w4", "titel": "Essen & Trinken", "ar": "الطَّعَامُ وَالشَّرَابُ", "kurz": "Was auf den Tisch kommt", "datei": "w4.json"},
-        {"id": "w5", "titel": "Zahlen & Farben", "ar": "الْأَرْقَامُ وَالْأَلْوَانُ", "kurz": "Zählen und beschreiben", "datei": "w5.json"},
-        {"id": "w6", "titel": "Unterwegs", "ar": "فِي الطَّرِيقِ", "kurz": "Orte, Wege und Verkehr", "datei": "w6.json"},
-        {"id": "w7", "titel": "Natur & Tiere", "ar": "الطَّبِيعَةُ وَالْحَيَوَانَاتُ", "kurz": "Wetter, Landschaft und Tiere", "datei": "w7.json"},
-        {"id": "w8", "titel": "Zeit & Körper", "ar": "الْوَقْتُ وَالْجِسْمُ", "kurz": "Wann etwas ist, wie wir aussehen", "datei": "w8.json"},
-        {"id": "w9", "titel": "Handlungen", "ar": "الْأَفْعَالُ", "kurz": "Was Menschen tun", "datei": "w9.json"},
-        {"id": "w10", "titel": "Alltag", "ar": "الْحَيَاةُ الْيَوْمِيَّةُ", "kurz": "Gefühle, Berufe und Kleidung", "datei": "w10.json"}
+        {"id": "a1", "titel": "Was ist das?", "ar": "مَا هَذَا", "kurz": "Auf Dinge zeigen, fragen und mit Ja oder Nein antworten", "datei": "a1.json"},
+        {"id": "a2", "titel": "Das dort", "ar": "ذَلِكَ", "kurz": "Nah und fern, und, wer", "datei": "a2.json"}
       ]
     }
   ]

@@ -1,12 +1,14 @@
 // Alle Texte, die die App vorliest: Wörter, Sätze, Buchstabennamen und Beispielwörter.
 // Liefert pro Text eine feste ID, unter der die Audiodatei abgelegt wird.
 // Wörter: w/<wort-id>, Buchstaben: a/<buchstaben-id>, Sätze: s/<prüfsumme des Satzes>,
-// Texte aus den Kursdateien (Surenanfänge, Wörter mit Vokalzeichen, Ziele der Etappen): k/<prüfsumme des Textes>,
+// Texte aus den Kursdateien (Surenanfänge, Wörter mit Vokalzeichen, Ziele der Etappen, Sätze und Dialogzeilen der Stufe 2): k/<prüfsumme des Textes>,
+// neue Wörter der Stufe 2 (kurs/*.json, „woerter“): w/<wort-id>,
 // Silben (Buchstabe mit kurzem Vokal, Tanwin oder langem Vokal): sb/<buchstaben-id>-<zeichen>, z. B. sb/ba-a für بَ, sb/tam-un für ةٌ, sb/ba-aa für بَا.
 import fs from "node:fs";
 import vm from "node:vm";
 import {fileURLToPath} from "node:url";
 export const APP=fileURLToPath(new URL("..",import.meta.url));
+const sSay=s=>s.replace(/\s*\.\s*$/,"").trim(); // wie sSay in der App
 const html=()=>fs.readFileSync(APP+"index.html","utf8");
 const pick=(h,n)=>{const m=h.match(new RegExp("const "+n+"=(\\[[\\s\\S]*?\\n?\\]);\\s*\\n"));if(!m)throw new Error(n+" nicht in index.html gefunden");return vm.runInNewContext(m[1])};
 // Kurze, stabile Prüfsumme (FNV-1a): ändert sich, wenn der Satz korrigiert wird
@@ -39,6 +41,17 @@ export function texts(){
     for(const l of d.lektionen)for(const x of l.suren||[])add("k/"+hash(x.sp),x.sp,"Surenanfang "+x.t);
     for(const l of d.lektionen)if(l.art==="vokale"&&!QZ.includes(l.zeichen))for(const [w,de] of l.woerter)if(!QX.test(w))add("k/"+hash(w),w,de); // Koranschrift liest keine Computerstimme vor
     if(d.ziel&&d.ziel.sp)add("k/"+hash(d.ziel.sp),d.ziel.sp,"Ziel der Etappe "+e.id.toUpperCase());
+    for(const w of d.woerter||[])if(w&&w.id)add("w/"+w.id,w.ar,w.de); // Stufe 2: neue Wörter, Sätze und Dialogzeilen (vorgelesen ohne Schlusspunkt, mit ، und ؟)
+    for(const s of d.saetze||[]){const t=sSay(s.ar);add("k/"+hash(t),t,s.de)}
+    for(const x of d.dialoge||[])for(const z of x.z){const t=sSay(z[1]);add("k/"+hash(t),t,z[2])}
   }
   return [...out.values()];
+}
+
+// node tools/audio-texts.mjs --fehlend   Texte, für die es noch keine Aufnahme gibt (danach auf dem PC: node tools/gen-audio.mjs alle …)
+if(process.argv[1]&&fileURLToPath(import.meta.url)===fs.realpathSync(process.argv[1])){
+  let have={};try{have=JSON.parse(fs.readFileSync(APP+"audio/audio.json","utf8")).items||{}}catch(e){}
+  const all=texts(),list=process.argv.includes("--fehlend")?all.filter(t=>!have[t.text]):all;
+  for(const t of list)console.log(t.id+"\t"+t.text+"\t"+t.de);
+  console.log(`${list.length} von ${all.length} Texten${process.argv.includes("--fehlend")?" ohne Aufnahme":""}`);
 }

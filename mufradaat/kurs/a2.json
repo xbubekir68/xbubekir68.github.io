@@ -1,0 +1,48 @@
+{
+  "id": "a2",
+  "ziel": {"art":"lesen","ar":"هَذَا قَلَمٌ وَذَلِكَ كِتَابٌ","sp":"هَذَا قَلَمٌ وَذَلِكَ كِتَابٌ","tr":"hādhā qalamun wa-dhālika kitābun","de":"Das hier ist ein Stift, und das dort ist ein Buch.","text":"Auf Nahes und Fernes zeigen","geschafft":"Du zeigst auf Nahes und Fernes und fragst nach Menschen."},
+  "woerter": [
+    {"id":"imam","ar":"إِمَام","tr":"imām","de":"Imam (Vorbeter)","wie":"tabib","gen":"m"},
+    {"id":"dhalika","ar":"ذَلِكَ","tr":"dhālika","de":"das dort (männlich)","wie":"hadha"}
+  ],
+  "saetze": [
+    {"id":"a2s1","ar":"ذَلِكَ بَيْتٌ.","tr":"dhālika baytun","de":"Das dort ist ein Haus.","w":["dhalika","bayt"]},
+    {"id":"a2s2","ar":"ذَلِكَ مَسْجِدٌ.","tr":"dhālika masjidun","de":"Das dort ist eine Moschee.","w":["dhalika","masjid"]},
+    {"id":"a2s3","ar":"ذَلِكَ مُعَلِّمٌ.","tr":"dhālika muʿallimun","de":"Das dort ist ein Lehrer.","w":["dhalika","muallim"]},
+    {"id":"a2s4","ar":"ذَلِكَ رَجُلٌ.","tr":"dhālika rajulun","de":"Das dort ist ein Mann.","w":["dhalika","rajul"]},
+    {"id":"a2s5","ar":"أَذَلِكَ طَبِيبٌ؟","tr":"a-dhālika ṭabībun?","de":"Ist das dort ein Arzt?","w":["a+dhalika","tabib"]},
+    {"id":"a2s6","ar":"لَا، ذَلِكَ تَاجِرٌ.","tr":"lā, dhālika tājirun","de":"Nein, das dort ist ein Händler.","w":["la","dhalika","tajir"]},
+    {"id":"a2s7","ar":"أَذَلِكَ إِمَامٌ؟","tr":"a-dhālika imāmun?","de":"Ist das dort ein Imam?","w":["a+dhalika","imam"]},
+    {"id":"a2s8","ar":"نَعَمْ، ذَلِكَ إِمَامٌ.","tr":"naʿam, dhālika imāmun","de":"Ja, das dort ist ein Imam.","w":["naam","dhalika","imam"]},
+    {"id":"a2s9","ar":"هَذَا قَلَمٌ وَذَلِكَ كِتَابٌ.","tr":"hādhā qalamun wa-dhālika kitābun","de":"Das hier ist ein Stift, und das dort ist ein Buch.","w":["hadha","qalam","wa+dhalika","kitab"]},
+    {"id":"a2s10","ar":"هَذَا بَابٌ وَذَلِكَ بَيْتٌ.","tr":"hādhā bābun wa-dhālika baytun","de":"Das hier ist eine Tür, und das dort ist ein Haus.","w":["hadha","bab","wa+dhalika","bayt"]},
+    {"id":"a2s11","ar":"هَذَا رَجُلٌ وَذَلِكَ وَلَدٌ.","tr":"hādhā rajulun wa-dhālika waladun","de":"Das hier ist ein Mann, und das dort ist ein Junge.","w":["hadha","rajul","wa+dhalika","walad"]},
+    {"id":"a2s12","ar":"هَذَا كَلْبٌ وَذَلِكَ حِصَانٌ.","tr":"hādhā kalbun wa-dhālika ḥiṣānun","de":"Das hier ist ein Hund, und das dort ist ein Pferd.","w":["hadha","kalb","wa+dhalika","hisan"]},
+    {"id":"a2s13","ar":"هَذَا جَمَلٌ وَذَلِكَ جَبَلٌ.","tr":"hādhā jamalun wa-dhālika jabalun","de":"Das hier ist ein Kamel, und das dort ist ein Berg.","w":["hadha","jamal","wa+dhalika","jabal"]},
+    {"id":"a2s14","ar":"مَا ذَلِكَ؟","tr":"mā dhālika?","de":"Was ist das dort?","w":["ma-was","dhalika"]},
+    {"id":"a2s15","ar":"ذَلِكَ جَبَلٌ.","tr":"dhālika jabalun","de":"Das dort ist ein Berg.","w":["dhalika","jabal"]},
+    {"id":"a2s16","ar":"مَنْ هَذَا؟","tr":"man hādhā?","de":"Wer ist das?","w":["man","hadha"]},
+    {"id":"a2s17","ar":"هَذَا طَالِبٌ.","tr":"hādhā ṭālibun","de":"Das ist ein Schüler.","w":["hadha","talib"]},
+    {"id":"a2s18","ar":"مَنْ ذَلِكَ؟","tr":"man dhālika?","de":"Wer ist das dort?","w":["man","dhalika"]},
+    {"id":"a2s19","ar":"ذَلِكَ وَلَدٌ.","tr":"dhālika waladun","de":"Das dort ist ein Junge.","w":["dhalika","walad"]},
+    {"id":"a2s20","ar":"أَهَذَا طَالِبٌ؟","tr":"a-hādhā ṭālibun?","de":"Ist das ein Schüler?","w":["a+hadha","talib"]},
+    {"id":"a2s21","ar":"لَا، هَذَا مُعَلِّمٌ.","tr":"lā, hādhā muʿallimun","de":"Nein, das ist ein Lehrer.","w":["la","hadha","muallim"]},
+    {"id":"a2s22","ar":"هَذَا خَالِدٌ.","tr":"hādhā khālidun","de":"Das ist Khalid.","w":["hadha","#khalid"]},
+    {"id":"a2s23","ar":"وَذَلِكَ حَامِدٌ.","tr":"wa-dhālika ḥāmidun","de":"Und das dort ist Hamid.","w":["wa+dhalika","#hamid"]},
+    {"id":"a2s24","ar":"أَحَامِدٌ تَاجِرٌ؟","tr":"a-ḥāmidun tājirun?","de":"Ist Hamid Händler?","w":["a+#hamid","tajir"]},
+    {"id":"a2s25","ar":"نَعَمْ، حَامِدٌ تَاجِرٌ.","tr":"naʿam, ḥāmidun tājirun","de":"Ja, Hamid ist Händler.","w":["naam","#hamid","tajir"]}
+  ],
+  "dialoge": [
+    {"id":"a2d1","z":[["A","مَنْ ذَلِكَ؟","Wer ist das dort?",["man","dhalika"]],["B","ذَلِكَ إِمَامٌ.","Das dort ist ein Imam.",["dhalika","imam"]]],"falsch":["ذَلِكَ جَبَلٌ.","نَعَمْ، ذَلِكَ إِمَامٌ."]},
+    {"id":"a2d2","z":[["A","مَا ذَلِكَ؟","Was ist das dort?",["ma-was","dhalika"]],["B","ذَلِكَ مَسْجِدٌ.","Das dort ist eine Moschee.",["dhalika","masjid"]],["A","وَمَا هَذَا؟","Und was ist das hier?",["wa+ma-was","hadha"]],["B","هَذَا بَيْتٌ.","Das ist ein Haus.",["hadha","bayt"]]],"falsch":["هَذَا طَالِبٌ.","لَا، هَذَا مُعَلِّمٌ."]},
+    {"id":"a2d3","z":[["A","مَنْ هَذَا؟","Wer ist das?",["man","hadha"]],["B","هَذَا خَالِدٌ.","Das ist Khalid.",["hadha","#khalid"]],["A","أَخَالِدٌ طَالِبٌ؟","Ist Khalid Schüler?",["a+#khalid","talib"]],["B","نَعَمْ، خَالِدٌ طَالِبٌ.","Ja, Khalid ist Schüler.",["naam","#khalid","talib"]]],"falsch":["مَنْ هَذَا؟","هَذَا خَالِدٌ."]}
+  ],
+  "lektionen": [
+    {"id":"a2-1","titel":"Menschen","art":"wortschatz","station":"رَجُل","woerter":["talib","muallim","rajul","walad","tabib","tajir","imam"]},
+    {"id":"a2-2","titel":"Das dort","art":"saetze","station":"ذَلِكَ","woerter":["dhalika"],"saetze":["a2s1","a2s2","a2s3","a2s4","a2s5","a2s6","a2s7","a2s8"],"uebungen":["endung"],"tipp":{"titel":"Das dort","zeichen":"ذَلِكَ","text":"ذَلِكَ zeigt auf etwas, das weiter weg ist, هَذَا auf etwas in der Nähe. Beide stehen für männliche Wörter."}},
+    {"id":"a2-3","titel":"Tiere und Natur","art":"wortschatz","station":"جَمَل","woerter":["jamal","hisan","kalb","qamar","jabal"]},
+    {"id":"a2-4","titel":"Und","art":"saetze","station":"وَ","woerter":["wa"],"saetze":["a2s9","a2s10","a2s11","a2s12","a2s13","a2s14","a2s15"],"uebungen":["diktat"],"tipp":{"titel":"Und","zeichen":"وَذَلِكَ","text":"وَ heißt „und“ und wird an das nächste Wort geschrieben: وَذَلِكَ (wa-dhālika)."}},
+    {"id":"a2-5","titel":"Wer ist das?","art":"saetze","station":"مَنْ","woerter":["man"],"saetze":["a2s16","a2s17","a2s18","a2s19","a2s20","a2s21","a2s22","a2s23","a2s24","a2s25"],"tipp":{"titel":"Wer ist das?","zeichen":"مَنْ هَذَا","text":"مَنْ fragt nach Menschen, مَا nach Dingen: مَنْ هَذَا؟ heißt „Wer ist das?“. Viele Namen tragen ebenfalls das -un, ohne dass es „ein“ heißt: هَذَا خَالِدٌ heißt „Das ist Khalid“."}},
+    {"id":"a2-6","titel":"Im Gespräch","art":"dialog","station":"مَنْ ذَلِكَ","dialoge":["a2d1","a2d2","a2d3"]}
+  ]
+}

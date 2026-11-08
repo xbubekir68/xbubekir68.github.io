@@ -18,10 +18,20 @@
 //               Ohne eigenes Zeichen stehen nur: Alif, Yāʾ und Wāw als Dehnung nach Fatha, Kasra und Damma, ى am Wortende,
 //               das stumme Alif nach -an (nicht nach ة und Hamza) und der Artikel ال am Wortanfang (mit Sukun auf dem Lām, vor
 //               Sonnenbuchstaben ohne, dann mit Schadda auf dem nächsten Buchstaben). Tanwin nur am Wortende und nie mit Artikel.
-//   wortschatz: Stufe 2. woerter[] = IDs aus der Wortliste der App (W_RAW), 4–12, jedes Wort nur einmal in allen Wortschatz-Lektionen;
-//               gram = "genus" oder "plural" hängt passende Übungen an (optional)
-//   saetze:     Stufe 2. einheit = Nummer der Einheit (0–9) in UNITS; die Lektion übt deren Satzrunden (SSTA)
+//   wortschatz: Stufe 2. woerter[] = Wort-IDs, 4–12: aus der Wortliste der App (W_RAW, der Lernstand bleibt) oder neue Wörter der Etappe
+//               (siehe unten), jedes Wort nur einmal in Stufe 2; gram = "genus" oder "plural" hängt passende Übungen an (optional)
+//   saetze:     Stufe 2. saetze[] = IDs aus den Sätzen der Etappe, jeder Satz in genau einer Lektion, in der Reihenfolge des Tipps;
+//               woerter[] = kleine Wörter, die die Lektion vorstellt (z. B. هَذَا, مَا), optional; uebungen[] = "endung" (Endung wählen) und/oder "diktat"
+//               (Satz hören und schreiben), optional. (Ohne saetze: einheit = Nummer der Einheit in UNITS, übt deren Satzrunden.)
+//   dialog:     Stufe 2. dialoge[] = IDs aus den Mini-Dialogen der Etappe; dazu wiederholt die App Sätze und Wörter der Etappe.
 //   test:       Abschlusstest der Stufe, ohne eigene Wörter, als letzte Lektion der letzten Etappe einer Stufe.
+// Etappen der Stufe 2 haben außerdem:
+//   woerter[]:  neue Wörter {id, ar mit Vokalzeichen, tr, de, wie = Wort-ID mit demselben Thema, gen = "m" oder "f" (optional)}, die es in W_RAW noch nicht gibt
+//   saetze[]:   {id, ar = Satz mit allen Vokalzeichen und Satzzeichen (. am Ende, ؟ bei Fragen, ، nach نَعَمْ/لَا), tr, de, w[] = je Wortblock die Wörter:
+//               "hadha", "wa+dhalika" (angehängtes وَ), "a+hadha" (Fragewort أَ), "#khalid" (Name)}. Jedes Wort ist vor oder in der Lektion des Satzes
+//               eingeführt und trägt seine Endung (Vokalzeichen am Wortende oder langer Vokal).
+//   dialoge[]:  {id, z[] = Zeilen [A oder B, Arabisch, Deutsch, w[] wie bei den Sätzen], falsch[] = zwei Sätze der Stufe als falsche Antworten auf die letzte Zeile}
+// Fehlende Aufnahmen für neue Wörter, Sätze und Dialogzeilen sind nur ein Hinweis: tools/audio-texts.mjs listet sie für tools/gen-audio.mjs.
 // Ziele: woerter {woerter[] = 3–8 Wort-IDs}: Kernwörter einer Wortschatz-Etappe; alle-buchstaben (alle 29 eingeführt) oder lesen {ar, sp, de, tr?}: ein Text, den man am Ende der Etappe lesen kann (in Koranschrift ohne sp)
 // (de = Übersetzung, nur bei Texten mit Vokalzeichen; die Umschrift erzeugt die App).
 // Neue Etappen-Dateien gehören auch in die Offline-Liste SHELL in sw.js.
@@ -29,7 +39,9 @@ import fs from "node:fs";
 import vm from "node:vm";
 import {fileURLToPath} from "node:url";
 const APP=fileURLToPath(new URL("..",import.meta.url)),KURS=APP+"kurs/";
-const ARTEN=["buchstaben","verbinden","suren","vokale","wortschatz","saetze","test"],ZIELE=["alle-buchstaben","lesen","woerter"];
+const ARTEN=["buchstaben","verbinden","suren","vokale","wortschatz","saetze","dialog","test"],ZIELE=["alle-buchstaben","lesen","woerter"],UEB=["endung","diktat"];
+export const sSay=s=>s.replace(/\s*\.\s*$/,"").trim(); // vorgelesener Text eines Satzes oder einer Dialogzeile (wie sSay in der App)
+const sBl=s=>s.replace(/[.،؟]/g,"").replace(/\s+/g," ").trim(); // Wortblöcke ohne Satzzeichen
 const ZEICHEN_ARTEN=["a","i","u","hamza","an","in","un","ta","aa","ii","uu","kl","dip","o","al","hz","sh","sun","md","wa","q","qk","pz"],TANW=["an","in","un"],VZ={"\u064e":"a","\u0650":"i","\u064f":"u","\u064b":"an","\u064d":"in","\u064c":"un"};
 const AR=/^[؀-ۿݐ-ݿ ]+$/; // nur arabische Zeichen und Leerzeichen
 const MK=/[\u064b-\u0652\u0670\u06e1]/,QP="\u06d6\u06d7\u06d8\u06d9\u06da\u06db",QX=/[ٱ\u06e1\u06e5\u06e6\u06df\u06d6-\u06db]|[ىو]\u0670|\u064e\u0670/,SONNE=new Set(["ta","tha","dal","dhal","ra","zay","sin","shin","sad","dad","tah","zah","lam","nun"]); // Zeichen über und unter Buchstaben; Sonnenbuchstaben
@@ -37,16 +49,30 @@ const txt=v=>typeof v==="string"&&v.trim().length>0;
 const ZEICHEN=/[\u064b-\u065f\u0670\u0640 ]/g; // Vokal- und Lesezeichen, Dehnungsstrich, Leerzeichen
 
 export function pruefen(){
-  const fehler=[],f=m=>fehler.push(m),html=fs.readFileSync(APP+"index.html","utf8"),sw=fs.readFileSync(APP+"sw.js","utf8");
+  const fehler=[],hinweise=[],f=m=>fehler.push(m),h=m=>hinweise.push(m),html=fs.readFileSync(APP+"index.html","utf8"),sw=fs.readFileSync(APP+"sw.js","utf8");
   const ALPHA=vm.runInNewContext(html.match(/const ALPHA=(\[[\s\S]*?\n\])\.map/)[1]),AB=Object.fromEntries(ALPHA.map(a=>[a[0],a]));
   const audio=JSON.parse(fs.readFileSync(APP+"audio/audio.json","utf8")).items;
-  const WIDS=new Set(vm.runInNewContext(html.match(/const W_RAW=(\[[\s\S]*?\]);/)[1]).map(w=>w[0])),NU=vm.runInNewContext(html.match(/const UNITS=(\[[\s\S]*?\n\]);/)[1]).length,wsSeen=new Map(); // Stufe 2: Wortliste und Einheiten der App
+  const WIDS=new Set(vm.runInNewContext(html.match(/const W_RAW=(\[[\s\S]*?\]);/)[1]).map(w=>w[0])),NU=vm.runInNewContext(html.match(/const UNITS=(\[[\s\S]*?\n\]);/)[1]).length,wsSeen=new Map(),neuW=new Map(),sIds=new Set(),dIds=new Set(),alleS=new Map(); // Stufe 2: Wortliste und Einheiten der App, Wort → Lektion, neue Wörter, Satz- und Dialog-IDs, Sätze der Stufe (Arabisch → ID)
   const shell=vm.runInNewContext("("+sw.match(/SHELL=(\[[^\]]*\])/)[1]+")");
   const lies=(n,wo)=>{try{return JSON.parse(fs.readFileSync(KURS+n,"utf8"))}catch(e){f(`${wo}: ${n} fehlt oder ist kein gültiges JSON (${e.message})`);return null}};
-  const idx=lies("kurs.json","Übersicht");if(!idx)return{fehler,etappen:0,lektionen:0};
+  const idx=lies("kurs.json","Übersicht");if(!idx)return{fehler,hinweise,etappen:0,lektionen:0};
+  const kennt=i=>WIDS.has(i)||neuW.has(i);
+  const pausal=s=>s.split(" ").map(w=>/[\u064b-\u0652\u0670اى]$/.test(w)||[...w].length<3?w:[...w].slice(0,-1).join("")).join(" "); // Grundform ohne Endung (wie in der Wortliste): der letzte Buchstabe darf ohne Zeichen stehen, geprüft wird der Rest
+  const skel=s=>s.replace(/[\u064b-\u065f\u0670]/g,""); // Buchstaben ohne Zeichen
+  const endet=b=>{const m=b.match(/[\u064b-\u0652]+$/);return m?/[\u064b-\u0650\u0652]/.test(m[0]):/[اى]$/.test(b)}; // Endung: Vokal, Tanwin oder Sukun am Ende, sonst langer Vokal
+  const zeile=(ar,w,lw,was,bis)=>{ // ein Satz oder eine Dialogzeile: Satzzeichen, Vokalzeichen, Wortblöcke, eingeführte Wörter (Lektion ≤ bis), Endungen
+    if(!txt(ar)){f(`${lw}: ${was} fehlt`);return}
+    if(!/[.؟]$/.test(ar.trim()))f(`${lw}: ${was} „${ar}“ endet nicht mit . oder ؟`);
+    const B=sBl(ar).split(" ");vokal(B.join(" "),lw,was);
+    if(!Array.isArray(w)||w.length!==B.length){f(`${lw}: ${was} „${ar}“ hat ${B.length} Wortblöcke, aber w nennt ${Array.isArray(w)?w.length:0}`);return}
+    B.forEach((b,j)=>{if(!endet(b))f(`${lw}: ${was} „${ar}“: „${b}“ trägt keine Endung`);
+      for(const x of String(w[j]).split("+")){if(x==="a"||x.startsWith("#"))continue;
+        if(!kennt(x)){f(`${lw}: ${was} „${ar}“ nennt unbekanntes Wort „${x}“`);continue}
+        if(!wsSeen.has(x)||wsSeen.get(x)[1]>bis)f(`${lw}: ${was} „${ar}“ nutzt „${x}“, das erst später oder nie eingeführt wird`);
+        const sk=skel(neuW.has(x)?neuW.get(x):AW[x]);if(sk&&!skel(b).includes(sk))f(`${lw}: ${was} „${ar}“: Block „${b}“ passt nicht zum Wort „${x}“`)}})};
   if(!Array.isArray(idx.stufen)||!idx.stufen.length)f("kurs.json: keine Stufen");
   const eIds=new Set(),lIds=new Set(),dateien=new Set(["kurs.json"]),eingef=new Map(),formen=new Map();let ne=0,nl=0;
-  const AC=Object.fromEntries(ALPHA.map(a=>[a[1],a]));
+  const AC=Object.fromEntries(ALPHA.map(a=>[a[1],a])),AW=Object.fromEntries(vm.runInNewContext(html.match(/const W_RAW=(\[[\s\S]*?\]);/)[1]).map(w=>[w[0],w[1]]));
   const buchst=(t,lw,was,vokale)=>{ // Buchstaben eines arabischen Textes; meldet fremde Zeichen und Formen, die noch nicht dran waren
     if(!txt(t)||!AR.test(t)){f(`${lw}: ${was} „${t}“ ist kein arabischer Text`);return[]}
     if(!vokale&&/[\u064b-\u0652\u0670]/.test(t))f(`${lw}: ${was} „${t}“ hat Vokalzeichen, hier sind sie noch nicht dran`);
@@ -139,6 +165,7 @@ export function pruefen(){
   for(const st of idx.stufen||[]){
     if(!txt(st.titel)||!txt(st.ar))f(`Stufe ${st.id}: Titel oder arabischer Titel fehlt`);
     if(txt(st.ar)&&!AR.test(st.ar))f(`Stufe ${st.id}: arabischer Titel enthält andere Zeichen`);
+    const kStufe2=st.id>1;
     for(const e of st.etappen||[]){
       const wo="Etappe "+e.id;
       if(!/^[a-z0-9]+$/.test(e.id||""))f(`${wo}: ungültige ID`);
@@ -151,6 +178,17 @@ export function pruefen(){
       const d=lies(e.datei,wo);if(!d)continue;
       if(d.id!==e.id)f(`${wo}: Datei ${e.datei} trägt die ID ${d.id}`);
       if(!Array.isArray(d.lektionen)||!d.lektionen.length){f(`${wo}: keine Lektionen`);continue}
+      const SD=Object.fromEntries((d.saetze||[]).map(s=>[s.id,s])),DD=Object.fromEntries((d.dialoge||[]).map(x=>[x.id,x])),sIn=new Map(),dIn=new Map();
+      for(const w of d.woerter||[]){const ww=`${wo}, neues Wort ${w&&w.id}`;
+        if(!w||!/^[a-z0-9-]+$/.test(w.id||"")){f(`${ww}: ungültige ID`);continue}
+        if(WIDS.has(w.id)||neuW.has(w.id))f(`${ww}: gibt es schon (vorhandene Wörter nur in der Lektion nennen)`);
+        if(!txt(w.tr)||!txt(w.de))f(`${ww}: Umschrift oder Bedeutung fehlt`);
+        vokal(pausal(w.ar||""),ww,"Wort");if(!kennt(w.wie))f(`${ww}: „wie“ nennt kein bekanntes Wort`);
+        if(w.gen!==undefined&&!["m","f"].includes(w.gen))f(`${ww}: gen ist "m" oder "f"`);
+        neuW.set(w.id,w.ar);if(!audio[w.ar])h(`${ww}: noch keine Aufnahme für „${w.ar}“`)}
+      for(const s of d.saetze||[]){if(sIds.has(s.id))f(`${wo}: Satz-ID ${s.id} doppelt`);sIds.add(s.id);if(!txt(s.tr)||!txt(s.de))f(`${wo}, Satz ${s.id}: Umschrift oder Übersetzung fehlt`);
+        if(alleS.has(s.ar))f(`${wo}, Satz ${s.id}: derselbe Satz steht schon als ${alleS.get(s.ar)}`);alleS.set(s.ar,s.id)}
+      for(const x of d.dialoge||[])if(dIds.has(x.id))f(`${wo}: Dialog-ID ${x.id} doppelt`);else dIds.add(x.id);
       for(const l of d.lektionen){
         const lw=`${wo}, Lektion ${l.id}`;nl++;
         if(lIds.has(l.id))f(`${lw}: ID doppelt`);lIds.add(l.id);
@@ -200,18 +238,40 @@ export function pruefen(){
           if(ZEICHEN_ARTEN.includes(l.zeichen)&&mit<W.length/2)f(`${lw}: weniger als die Hälfte der Wörter nutzt das neue Zeichen`);
           if(l.station!==undefined&&txt(l.station))vokal(l.station,lw,"Station");
         }
-        if(l.art==="wortschatz"){
-          if(!Array.isArray(l.woerter)||l.woerter.length<4||l.woerter.length>12)f(`${lw}: 4 bis 12 Wörter nötig`);
-          for(const i of l.woerter||[]){if(!WIDS.has(i))f(`${lw}: unbekanntes Wort „${i}“ (nicht in der Wortliste)`);else if(wsSeen.has(i))f(`${lw}: „${i}“ steht schon in ${wsSeen.get(i)}`);else wsSeen.set(i,l.id)}
-          if(l.gram!==undefined&&!["genus","plural"].includes(l.gram))f(`${lw}: unbekannte Grammatik-Übung „${l.gram}“`);
+        if(l.art==="wortschatz"||l.art==="saetze"&&l.woerter!==undefined){ // Wörter der Stufe 2: bekannt und nur einmal eingeführt
+          if(l.art==="wortschatz"&&(!Array.isArray(l.woerter)||l.woerter.length<4||l.woerter.length>12))f(`${lw}: 4 bis 12 Wörter nötig`);
+          if(l.art==="saetze"&&(!Array.isArray(l.woerter)||l.woerter.length>4))f(`${lw}: höchstens 4 kleine Wörter`);
+          for(const i of l.woerter||[]){if(!kennt(i))f(`${lw}: unbekanntes Wort „${i}“ (nicht in der Wortliste und nicht neu in der Etappe)`);else if(wsSeen.has(i))f(`${lw}: „${i}“ steht schon in ${wsSeen.get(i)[0]}`);else wsSeen.set(i,[l.id,nl])}
         }
-        if(l.art==="saetze"&&!(Number.isInteger(l.einheit)&&l.einheit>=0&&l.einheit<NU))f(`${lw}: „einheit“ muss eine Einheit von 0 bis ${NU-1} sein`);
+        if(l.art==="wortschatz"&&l.gram!==undefined&&!["genus","plural"].includes(l.gram))f(`${lw}: unbekannte Grammatik-Übung „${l.gram}“`);
+        if(l.art==="saetze"&&l.saetze===undefined&&!(Number.isInteger(l.einheit)&&l.einheit>=0&&l.einheit<NU))f(`${lw}: „einheit“ muss eine Einheit von 0 bis ${NU-1} sein`);
+        if(l.art==="saetze"&&l.saetze!==undefined){
+          if(!Array.isArray(l.saetze)||l.saetze.length<4||l.saetze.length>12)f(`${lw}: 4 bis 12 Sätze nötig`);
+          for(const k of l.saetze||[]){const s=SD[k];if(!s){f(`${lw}: Satz „${k}“ gibt es in der Etappe nicht`);continue}
+            if(sIn.has(k))f(`${lw}: Satz „${k}“ steht schon in ${sIn.get(k)}`);sIn.set(k,l.id);
+            zeile(s.ar,s.w,lw,"Satz "+k,nl);if(!audio[sSay(s.ar)])h(`${lw}: noch keine Aufnahme für „${sSay(s.ar)}“`)}
+          for(const u of l.uebungen||[])if(!UEB.includes(u))f(`${lw}: unbekannte Übung „${u}“`);
+          if((l.uebungen||[]).includes("endung")&&!(l.saetze||[]).some(k=>SD[k]&&/\u064c/.test(SD[k].ar)))f(`${lw}: „Endung wählen“ braucht Sätze mit -un`);
+        }
+        if(l.art==="dialog"){
+          if(!Array.isArray(l.dialoge)||!l.dialoge.length)f(`${lw}: keine Dialoge`);
+          for(const k of l.dialoge||[]){const x=DD[k];if(!x){f(`${lw}: Dialog „${k}“ gibt es in der Etappe nicht`);continue}
+            if(dIn.has(k))f(`${lw}: Dialog „${k}“ steht schon in ${dIn.get(k)}`);dIn.set(k,l.id);
+            if(!Array.isArray(x.z)||x.z.length<2){f(`${lw}, Dialog ${k}: mindestens zwei Zeilen`);continue}
+            x.z.forEach((z,j)=>{if(!Array.isArray(z)||!["A","B"].includes(z[0])||!txt(z[2])){f(`${lw}, Dialog ${k}: Zeile ${j+1} braucht [A oder B, Arabisch, Deutsch, Wörter]`);return}
+              if(j&&z[0]===x.z[j-1][0])f(`${lw}, Dialog ${k}: Zeile ${j+1} spricht dieselbe Person wie davor`);
+              zeile(z[1],z[3],lw,`Dialog ${k}, Zeile ${j+1}`,nl);if(!audio[sSay(z[1])])h(`${lw}: noch keine Aufnahme für „${sSay(z[1])}“`)});
+            const r=x.z[x.z.length-1][1];
+            if(!Array.isArray(x.falsch)||x.falsch.length!==2||new Set([r,...x.falsch]).size!==3)f(`${lw}, Dialog ${k}: falsch braucht zwei andere Zeilen`);
+            for(const q of x.falsch||[])if(!alleS.has(q))f(`${lw}, Dialog ${k}: falsche Antwort „${q}“ ist kein Satz der Stufe`)}
+        }
         if(l.art==="test"){ // Abschlusstest: Aufgaben aus allen Etappen der Stufe, steht als letzte Lektion der Stufe
           if(l.woerter||l.neu||l.suren)f(`${lw}: ein Test hat keine eigenen Wörter`);
           if(l!==d.lektionen[d.lektionen.length-1]||e!==st.etappen[st.etappen.length-1])f(`${lw}: der Abschlusstest steht am Ende der Stufe`);
           if(l.station!==undefined&&txt(l.station))vokal(l.station,lw,"Station");
         }
         if(l.station!==undefined&&(!txt(l.station)||!AR.test(l.station)))f(`${lw}: Station ist kein arabischer Text`);
+        if(l.station!==undefined&&txt(l.station)&&kStufe2)vokal(pausal(l.station),lw,"Station");
         if(l.tipp){
           if(!txt(l.tipp.titel)||!txt(l.tipp.text)||!txt(l.tipp.zeichen))f(`${lw}: Tipp unvollständig`);
           else if(!AR.test(l.tipp.zeichen))f(`${lw}: Tipp-Zeichen enthalten andere Zeichen`);
@@ -224,21 +284,23 @@ export function pruefen(){
         else if(d.ziel.art==="lesen")buchst(d.ziel.ar,wo+", Ziel","Zieltext",true);
         if(d.ziel.art==="lesen"&&!QX.test(d.ziel.ar)){if(!txt(d.ziel.sp)||!AR.test(d.ziel.sp))f(`${wo}: Ziel ohne arabischen Vorlesetext`)} // Koranschrift liest keine Computerstimme vor
         if(d.ziel.art==="lesen"&&QX.test(d.ziel.ar)&&d.ziel.sp!==undefined)f(`${wo}: Ziel in Koranschrift ohne Vorlesetext („sp“ weglassen)`);
-        if(d.ziel.art==="woerter"){const z=d.ziel.woerter;if(!Array.isArray(z)||z.length<3||z.length>8)f(`${wo}: Ziel „woerter“ braucht 3 bis 8 Wörter`);else z.filter(i=>!WIDS.has(i)).forEach(i=>f(`${wo}: Ziel nennt unbekanntes Wort „${i}“`))}
+        if(d.ziel.art==="woerter"){const z=d.ziel.woerter;if(!Array.isArray(z)||z.length<3||z.length>8)f(`${wo}: Ziel „woerter“ braucht 3 bis 8 Wörter`);else z.filter(i=>!kennt(i)).forEach(i=>f(`${wo}: Ziel nennt unbekanntes Wort „${i}“`))}
         if(d.ziel.art==="alle-buchstaben"){const fehlt=ALPHA.filter(a=>!eingef.has(a[0])).map(a=>a[0]);if(fehlt.length)f(`${wo}: Ziel „alle Buchstaben“, aber es fehlen ${fehlt.join(", ")}`)}
       }
+      for(const k in SD)if(!sIn.has(k))f(`${wo}: Satz ${k} steht in keiner Lektion`);
+      for(const k in DD)if(!dIn.has(k))f(`${wo}: Dialog ${k} steht in keiner Lektion`);
+      for(const w of d.woerter||[])if(w&&!wsSeen.has(w.id))f(`${wo}: neues Wort ${w.id} steht in keiner Lektion`);
     }
   }
-  for(const st of idx.stufen||[])if((st.etappen||[]).length&&st.etappen.every(e=>e.datei)&&[...wsSeen.values()].some(id=>st.etappen.some(e=>id.startsWith(e.id+"-")))){ // fertige Wortschatz-Stufe: jedes Wort der App kommt vor
-    const fehlt=[...WIDS].filter(i=>!wsSeen.has(i));if(fehlt.length)f(`Stufe ${st.id}: ${fehlt.length} Wörter der Wortliste kommen in keiner Lektion vor (${fehlt.slice(0,8).join(", ")}${fehlt.length>8?" …":""})`)}
   for(const n of fs.readdirSync(KURS))if(n.endsWith(".json")&&!dateien.has(n))f(`kurs/${n} wird in kurs.json nicht genannt`);
-  return{fehler,etappen:ne,lektionen:nl};
+  return{fehler,hinweise,etappen:ne,lektionen:nl};
 }
 
 if(process.argv[1]&&fileURLToPath(import.meta.url)===fs.realpathSync(process.argv[1])){
   const r=pruefen();
   console.log(`${r.etappen} Etappen mit Inhalt, ${r.lektionen} Lektionen`);
   r.fehler.forEach(m=>console.log("FEHLER "+m));
+  if(r.hinweise.length)console.log(`HINWEIS ${r.hinweise.length} Texte ohne Aufnahme (Liste: node tools/audio-texts.mjs --fehlend)`);
   console.log(r.fehler.length?r.fehler.length+" Fehler":"Alles in Ordnung");
   process.exit(r.fehler.length?1:0);
 }

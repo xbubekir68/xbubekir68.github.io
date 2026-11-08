@@ -1,46 +1,144 @@
-# Grammatik-Tipps zum Gegenlesen (Stufe 2)
+# Stufe 2 zum Gegenlesen
 
-Die Wörter und Sätze von Stufe 2 kommen aus der Wortliste und der Satzliste der App (siehe `saetze-pruefen.md`). Neu sind nur diese Tipps und die Ziele der Etappen. Bitte jede Zeile prüfen und Korrekturen als Liste zurückschicken (Nummer + richtige Fassung).
+Alle Wörter, Sätze, Mini-Dialoge, Tipps und Ziele von Stufe 2, so wie sie in der App stehen. Der Inhaber hat sie vor dem Einbau gegengelesen; diese Liste ist für die Prüfung durch Muttersprachler. Bitte Korrekturen als Liste zurückschicken (Nummer + richtige Fassung).
 
 **Worauf es ankommt**
 
-1. Stimmt die Regel so, wie sie auf Deutsch erklärt ist, für Hocharabisch (Fusha)?
-2. Stimmen die arabischen Beispiele samt Vokalzeichen?
-3. Ist die Erklärung für Anfänger verständlich und nicht zu vereinfacht?
+1. Ist jeder Satz richtiges Hocharabisch (Fusha) und klingt er natürlich?
+2. Stimmen die Vokalzeichen, besonders die Endungen?
+3. Stimmen Umschrift und deutsche Übersetzung?
+4. Stimmt jede Regel so, wie sie auf Deutsch erklärt ist, und ist sie für Anfänger verständlich?
 
-| Nr. | Etappe · Lektion | Titel | Beispiel | Text |
+## Etappe 1 · Was ist das?
+
+**Neue Wörter**
+
+| Arabisch | Umschrift | Deutsch |
+| --- | --- | --- |
+| مَكْتَب | maktab | Schreibtisch |
+
+**Tipps**
+
+| Nr. | Lektion | Titel | Beispiel | Text |
 | --- | --- | --- | --- | --- |
-| 1 | W1 · Pronomen | Ich, du, er, sie | أَنْتَ أَنْتِ | Für „du“ gibt es zwei Wörter: أَنْتَ sagt man zu einem Mann, أَنْتِ zu einer Frau. „Er“ heißt هُوَ, „sie“ heißt هِيَ. |
-| 2 | W1 · Fragewörter | Ja oder nein? | هَلْ | Mit هَلْ am Anfang wird ein Satz zu einer Frage, auf die man mit Ja oder Nein antwortet: هَلْ أَنْتَ طَالِبٌ heißt „Bist du Schüler?“. |
-| 3 | W2 · Schule | Ein Satz ohne „ist“ | هَذَا كِتَابٌ | In der Gegenwart braucht ein arabischer Satz kein „ist“: هَذَا كِتَابٌ heißt „Das ist ein Buch“, wörtlich „dies ein Buch“. |
-| 4 | W2 · Kleine Wörter | Dies: männlich und weiblich | هَذَا هَذِهِ | هَذَا steht vor männlichen Wörtern, هَذِهِ vor weiblichen. Viele weibliche Wörter enden auf ـَة, so wie مَدْرَسَة (Schule). |
-| 5 | W2 · Eigenschaften 1 | Eigenschaften passen sich an | كَبِيرٌ كَبِيرَةٌ | Auch Eigenschaften bekommen bei weiblichen Wörtern ein ـَة: الْكِتَابُ كَبِيرٌ heißt „Das Buch ist groß“, aber الْمَدْرَسَةُ كَبِيرَةٌ „Die Schule ist groß“. |
-| 6 | W3 · Möbel & Dinge | In und auf | فِي عَلَى | فِي heißt „in“, عَلَى heißt „auf“. Das Wort danach endet auf i: الْكِتَابُ عَلَى الطَّاوِلَةِ heißt „Das Buch ist auf dem Tisch“. |
-| 7 | W3 · Familie | Männlich oder weiblich? | اِبْن اِبْنَة | Bei Menschen zeigt oft schon das Wort, ob es männlich oder weiblich ist: اِبْن (Sohn) und اِبْنَة (Tochter). Manche weiblichen Wörter haben keine Endung, zum Beispiel أُمّ (Mutter) und أُخْت (Schwester). |
-| 8 | W4 · Eigenschaften 2 | Die Eigenschaft steht hinten | مَاءٌ بَارِدٌ | Die Eigenschaft steht hinter dem Wort: مَاءٌ بَارِدٌ heißt „kaltes Wasser“. Hat nur das Wort den Artikel, wird daraus ein Satz: الْمَاءُ بَارِدٌ heißt „Das Wasser ist kalt“. |
-| 9 | W5 · Zahlen 1–10 | Arabische Ziffern | ١ ٢ ٣ | So schreibt man die Ziffern: ١ ٢ ٣ ٤ ٥ ٦ ٧ ٨ ٩. Zahlen mit mehreren Ziffern liest man anders als die Schrift von links nach rechts: ٢٠ heißt 20. |
-| 10 | W5 · Farben | Farben männlich und weiblich | أَزْرَقُ زَرْقَاءُ | Farben haben eine eigene weibliche Form: الْبَحْرُ أَزْرَقُ heißt „Das Meer ist blau“, aber السَّمَاءُ زَرْقَاءُ „Der Himmel ist blau“, denn السَّمَاء ist weiblich. |
-| 11 | W6 · Unterwegs | Plural mit ـَات | سَيَّارَات | Viele Wörter auf ـَة bilden den Plural mit ـَات: سَيَّارَة wird zu سَيَّارَات (Autos), طَائِرَة zu طَائِرَات (Flugzeuge). |
-| 12 | W6 · Orientierung | Wo ist …? | أَيْنَ | Mit أَيْنَ fragt man nach dem Ort: أَيْنَ الْمَطَارُ heißt „Wo ist der Flughafen?“. Die Antwort kann ganz kurz sein: هُنَا (hier) oder هُنَاكَ (dort). |
-| 13 | W7 · Wetter & Himmel | Die Sonne ist weiblich | الشَّمْسُ حَارَّةٌ | الشَّمْس (die Sonne) ist weiblich, darum heißt es الشَّمْسُ حَارَّةٌ „Die Sonne ist heiß“. الْقَمَر (der Mond) ist männlich. |
-| 14 | W7 · Landschaft | Plural im Wortinneren | جَبَل جِبَال | Viele Wörter bilden den Plural im Inneren des Wortes: جَبَل (Berg) wird zu جِبَال, بَحْر (Meer) zu بِحَار. Diesen Plural lernt man am besten gleich mit. |
-| 15 | W8 · Tageszeiten | Heute heißt „der Tag“ | الْيَوْمُ | الْيَوْمُ heißt „heute“, wörtlich „der Tag“: الْيَوْمُ بَارِدٌ heißt „Heute ist es kalt“. |
-| 16 | W8 · Wochentage | Tage zum Zählen | الْأَحَد | Viele Wochentage sind gezählt: الْأَحَد (Sonntag) kommt von „eins“, الِاثْنَيْن (Montag) von „zwei“. Die Woche beginnt am Sonntag. |
-| 17 | W8 · Kopf | Paarige Körperteile | عَيْن أُذُن | Körperteile, die es zweimal gibt, sind oft weiblich: عَيْن (Auge), أُذُن (Ohr), يَد (Hand). رَأْس (Kopf) und أَنْف (Nase) sind männlich. |
-| 18 | W9 · Verben 1 | Verben in der Er-Form | ذَهَبَ | Verben lernst du in der Form „er hat …“: ذَهَبَ heißt „er ging“. In dieser Form stehen Verben auch im Wörterbuch. |
-| 19 | W9 · Verben 2 | Das Verb steht vorne | كَتَبَ | Im arabischen Satz steht das Verb oft am Anfang: كَتَبَ الْمُعَلِّمُ الْكَلِمَةَ heißt „Der Lehrer schrieb das Wort“. |
-| 20 | W9 · Verben 3 | Er und sie | كَتَبَتْ | Für „sie“ hängt man ـَتْ an das Verb: كَتَبَ heißt „er schrieb“, كَتَبَتْ „sie schrieb“. |
-| 21 | W10 · Gefühle & Zustand | Ich bin müde | أَنَا مُتْعَبٌ | Auch hier fehlt das „bin“: أَنَا مُتْعَبٌ heißt „Ich bin müde“. Eine Frau sagt أَنَا مُتْعَبَةٌ. |
-| 22 | W10 · Berufe | Berufe für Frauen | طَبِيبٌ طَبِيبَةٌ | Weibliche Berufsbezeichnungen bekommen ـَة: طَبِيب (Arzt), طَبِيبَة (Ärztin). هِيَ طَبِيبَةٌ heißt „Sie ist Ärztin“. |
+| 1 | Im Zimmer | Das ist ein … | هَذَا كِتَابٌ | Für „Das ist ein Buch“ sagt man هَذَا كِتَابٌ. Ein „ist“ braucht der Satz nicht. Das ٌ am Ende, gesprochen -un, heißt hier „ein“. |
+| 2 | Was ist das? | Was ist das? | مَا هَذَا | مَا fragt nach Dingen: مَا هَذَا؟ heißt „Was ist das?“. Die Antwort ist wieder ein Satz mit هَذَا. |
+| 3 | Ja oder nein? | Ja oder nein? | أَهَذَا قَلَمٌ | Ein أَ vor dem Satz macht daraus eine Ja/Nein-Frage: أَهَذَا قَلَمٌ؟ heißt „Ist das ein Stift?“. Die Antwort beginnt mit نَعَمْ (ja) oder لَا (nein). |
 
-## Ziele der Etappen
+**Sätze**
 
-| Etappe | Arabisch | Umschrift | Deutsch |
+| Nr. | Arabisch | Umschrift | Deutsch |
 | --- | --- | --- | --- |
-| W2 · In der Schule | هَلْ أَنْتَ طَالِبٌ | hal anta ṭālibun | Bist du Schüler? |
-| W3 · Zuhause | الْكِتَابُ عَلَى الطَّاوِلَةِ | al-kitābu ʿalā ṭ-ṭāwilati | Das Buch ist auf dem Tisch. |
-| W4 · Essen & Trinken | الْمَاءُ بَارِدٌ | al-māʾu bāridun | Das Wasser ist kalt. |
-| W6 · Unterwegs | أَيْنَ الْمَطَارُ | ayna l-maṭāru | Wo ist der Flughafen? |
-| W7 · Natur & Tiere | فِي الْحَدِيقَةِ شَجَرَةٌ | fī l-ḥadīqati shajaratun | Im Garten ist ein Baum. |
-| W9 · Handlungen | ذَهَبَ الْوَلَدُ إِلَى الْمَدْرَسَةِ | dhahaba l-waladu ilā l-madrasati | Der Junge ging zur Schule. |
-| W10 · Alltag | هِيَ طَبِيبَةٌ | hiya ṭabībatun | Sie ist Ärztin. |
+| 1 | هَذَا بَيْتٌ. | hādhā baytun | Das ist ein Haus. |
+| 2 | هَذَا بَابٌ. | hādhā bābun | Das ist eine Tür. |
+| 3 | هَذَا كِتَابٌ. | hādhā kitābun | Das ist ein Buch. |
+| 4 | هَذَا قَلَمٌ. | hādhā qalamun | Das ist ein Stift. |
+| 5 | هَذَا مَكْتَبٌ. | hādhā maktabun | Das ist ein Schreibtisch. |
+| 6 | هَذَا كُرْسِيٌّ. | hādhā kursiyyun | Das ist ein Stuhl. |
+| 7 | هَذَا سَرِيرٌ. | hādhā sarīrun | Das ist ein Bett. |
+| 8 | مَا هَذَا؟ | mā hādhā? | Was ist das? |
+| 9 | هَذَا مِفْتَاحٌ. | hādhā miftāḥun | Das ist ein Schlüssel. |
+| 10 | هَذَا مِصْبَاحٌ. | hādhā miṣbāḥun | Das ist eine Lampe. |
+| 11 | هَذَا هَاتِفٌ. | hādhā hātifun | Das ist ein Telefon. |
+| 12 | هَذَا دَفْتَرٌ. | hādhā daftarun | Das ist ein Heft. |
+| 13 | هَذَا قَمِيصٌ. | hādhā qamīṣun | Das ist ein Hemd. |
+| 14 | هَذَا مَسْجِدٌ. | hādhā masjidun | Das ist eine Moschee. |
+| 15 | هَذَا مَاءٌ. | hādhā māʾun | Das ist Wasser. |
+| 16 | أَهَذَا قَلَمٌ؟ | a-hādhā qalamun? | Ist das ein Stift? |
+| 17 | نَعَمْ، هَذَا قَلَمٌ. | naʿam, hādhā qalamun | Ja, das ist ein Stift. |
+| 18 | أَهَذَا كِتَابٌ؟ | a-hādhā kitābun? | Ist das ein Buch? |
+| 19 | لَا، هَذَا دَفْتَرٌ. | lā, hādhā daftarun | Nein, das ist ein Heft. |
+| 20 | أَهَذَا بَيْتٌ؟ | a-hādhā baytun? | Ist das ein Haus? |
+| 21 | لَا، هَذَا مَسْجِدٌ. | lā, hādhā masjidun | Nein, das ist eine Moschee. |
+| 22 | أَهَذَا كُرْسِيٌّ؟ | a-hādhā kursiyyun? | Ist das ein Stuhl? |
+| 23 | نَعَمْ، هَذَا كُرْسِيٌّ. | naʿam, hādhā kursiyyun | Ja, das ist ein Stuhl. |
+| 24 | أَهَذَا هَاتِفٌ؟ | a-hādhā hātifun? | Ist das ein Telefon? |
+| 25 | لَا، هَذَا مِصْبَاحٌ. | lā, hādhā miṣbāḥun | Nein, das ist eine Lampe. |
+
+**Mini-Dialoge** (in der App wählt man die letzte Zeile; die zwei falschen Antworten stehen darunter)
+
+| Dialog | Wer | Arabisch | Deutsch |
+| --- | --- | --- | --- |
+| 1 | A | مَا هَذَا؟ | Was ist das? |
+| 1 | B | هَذَا مِفْتَاحٌ. | Das ist ein Schlüssel. |
+| 1 | falsch | نَعَمْ، هَذَا قَلَمٌ. / أَهَذَا كِتَابٌ؟ | |
+| 2 | A | أَهَذَا بَابٌ؟ | Ist das eine Tür? |
+| 2 | B | نَعَمْ، هَذَا بَابٌ. | Ja, das ist eine Tür. |
+| 2 | A | أَهَذَا بَيْتٌ؟ | Ist das ein Haus? |
+| 2 | B | لَا، هَذَا مَسْجِدٌ. | Nein, das ist eine Moschee. |
+| 2 | falsch | مَا هَذَا؟ / نَعَمْ، هَذَا قَلَمٌ. | |
+| 3 | A | مَا هَذَا؟ | Was ist das? |
+| 3 | B | هَذَا مَاءٌ. | Das ist Wasser. |
+| 3 | A | أَهَذَا قَلَمٌ؟ | Ist das ein Stift? |
+| 3 | B | لَا، هَذَا مِفْتَاحٌ. | Nein, das ist ein Schlüssel. |
+| 3 | falsch | مَا هَذَا؟ / نَعَمْ، هَذَا كُرْسِيٌّ. | |
+
+**Ziel der Etappe:** أَهَذَا قَلَمٌ · a-hādhā qalamun · Ist das ein Stift?
+
+## Etappe 2 · Das dort
+
+**Neue Wörter**
+
+| Arabisch | Umschrift | Deutsch |
+| --- | --- | --- |
+| إِمَام | imām | Imam (Vorbeter) |
+| ذَلِكَ | dhālika | das dort (männlich) |
+
+**Tipps**
+
+| Nr. | Lektion | Titel | Beispiel | Text |
+| --- | --- | --- | --- | --- |
+| 1 | Das dort | Das dort | ذَلِكَ | ذَلِكَ zeigt auf etwas, das weiter weg ist, هَذَا auf etwas in der Nähe. Beide stehen für männliche Wörter. |
+| 2 | Und | Und | وَذَلِكَ | وَ heißt „und“ und wird an das nächste Wort geschrieben: وَذَلِكَ (wa-dhālika). |
+| 3 | Wer ist das? | Wer ist das? | مَنْ هَذَا | مَنْ fragt nach Menschen, مَا nach Dingen: مَنْ هَذَا؟ heißt „Wer ist das?“. Viele Namen tragen ebenfalls das -un, ohne dass es „ein“ heißt: هَذَا خَالِدٌ heißt „Das ist Khalid“. |
+
+**Sätze**
+
+| Nr. | Arabisch | Umschrift | Deutsch |
+| --- | --- | --- | --- |
+| 1 | ذَلِكَ بَيْتٌ. | dhālika baytun | Das dort ist ein Haus. |
+| 2 | ذَلِكَ مَسْجِدٌ. | dhālika masjidun | Das dort ist eine Moschee. |
+| 3 | ذَلِكَ مُعَلِّمٌ. | dhālika muʿallimun | Das dort ist ein Lehrer. |
+| 4 | ذَلِكَ رَجُلٌ. | dhālika rajulun | Das dort ist ein Mann. |
+| 5 | أَذَلِكَ طَبِيبٌ؟ | a-dhālika ṭabībun? | Ist das dort ein Arzt? |
+| 6 | لَا، ذَلِكَ تَاجِرٌ. | lā, dhālika tājirun | Nein, das dort ist ein Händler. |
+| 7 | أَذَلِكَ إِمَامٌ؟ | a-dhālika imāmun? | Ist das dort ein Imam? |
+| 8 | نَعَمْ، ذَلِكَ إِمَامٌ. | naʿam, dhālika imāmun | Ja, das dort ist ein Imam. |
+| 9 | هَذَا قَلَمٌ وَذَلِكَ كِتَابٌ. | hādhā qalamun wa-dhālika kitābun | Das hier ist ein Stift, und das dort ist ein Buch. |
+| 10 | هَذَا بَابٌ وَذَلِكَ بَيْتٌ. | hādhā bābun wa-dhālika baytun | Das hier ist eine Tür, und das dort ist ein Haus. |
+| 11 | هَذَا رَجُلٌ وَذَلِكَ وَلَدٌ. | hādhā rajulun wa-dhālika waladun | Das hier ist ein Mann, und das dort ist ein Junge. |
+| 12 | هَذَا كَلْبٌ وَذَلِكَ حِصَانٌ. | hādhā kalbun wa-dhālika ḥiṣānun | Das hier ist ein Hund, und das dort ist ein Pferd. |
+| 13 | هَذَا جَمَلٌ وَذَلِكَ جَبَلٌ. | hādhā jamalun wa-dhālika jabalun | Das hier ist ein Kamel, und das dort ist ein Berg. |
+| 14 | مَا ذَلِكَ؟ | mā dhālika? | Was ist das dort? |
+| 15 | ذَلِكَ جَبَلٌ. | dhālika jabalun | Das dort ist ein Berg. |
+| 16 | مَنْ هَذَا؟ | man hādhā? | Wer ist das? |
+| 17 | هَذَا طَالِبٌ. | hādhā ṭālibun | Das ist ein Schüler. |
+| 18 | مَنْ ذَلِكَ؟ | man dhālika? | Wer ist das dort? |
+| 19 | ذَلِكَ وَلَدٌ. | dhālika waladun | Das dort ist ein Junge. |
+| 20 | أَهَذَا طَالِبٌ؟ | a-hādhā ṭālibun? | Ist das ein Schüler? |
+| 21 | لَا، هَذَا مُعَلِّمٌ. | lā, hādhā muʿallimun | Nein, das ist ein Lehrer. |
+| 22 | هَذَا خَالِدٌ. | hādhā khālidun | Das ist Khalid. |
+| 23 | وَذَلِكَ حَامِدٌ. | wa-dhālika ḥāmidun | Und das dort ist Hamid. |
+| 24 | أَحَامِدٌ تَاجِرٌ؟ | a-ḥāmidun tājirun? | Ist Hamid Händler? |
+| 25 | نَعَمْ، حَامِدٌ تَاجِرٌ. | naʿam, ḥāmidun tājirun | Ja, Hamid ist Händler. |
+
+**Mini-Dialoge** (in der App wählt man die letzte Zeile; die zwei falschen Antworten stehen darunter)
+
+| Dialog | Wer | Arabisch | Deutsch |
+| --- | --- | --- | --- |
+| 1 | A | مَنْ ذَلِكَ؟ | Wer ist das dort? |
+| 1 | B | ذَلِكَ إِمَامٌ. | Das dort ist ein Imam. |
+| 1 | falsch | ذَلِكَ جَبَلٌ. / نَعَمْ، ذَلِكَ إِمَامٌ. | |
+| 2 | A | مَا ذَلِكَ؟ | Was ist das dort? |
+| 2 | B | ذَلِكَ مَسْجِدٌ. | Das dort ist eine Moschee. |
+| 2 | A | وَمَا هَذَا؟ | Und was ist das hier? |
+| 2 | B | هَذَا بَيْتٌ. | Das ist ein Haus. |
+| 2 | falsch | هَذَا طَالِبٌ. / لَا، هَذَا مُعَلِّمٌ. | |
+| 3 | A | مَنْ هَذَا؟ | Wer ist das? |
+| 3 | B | هَذَا خَالِدٌ. | Das ist Khalid. |
+| 3 | A | أَخَالِدٌ طَالِبٌ؟ | Ist Khalid Schüler? |
+| 3 | B | نَعَمْ، خَالِدٌ طَالِبٌ. | Ja, Khalid ist Schüler. |
+| 3 | falsch | مَنْ هَذَا؟ / هَذَا خَالِدٌ. | |
+
+**Ziel der Etappe:** هَذَا قَلَمٌ وَذَلِكَ كِتَابٌ · hādhā qalamun wa-dhālika kitābun · Das hier ist ein Stift, und das dort ist ein Buch.
+

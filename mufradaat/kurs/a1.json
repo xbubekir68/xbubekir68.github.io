@@ -1,0 +1,47 @@
+{
+  "id": "a1",
+  "ziel": {"art":"lesen","ar":"أَهَذَا قَلَمٌ","sp":"أَهَذَا قَلَمٌ؟","tr":"a-hādhā qalamun","de":"Ist das ein Stift?","text":"Fragen, was etwas ist","geschafft":"Du sagst, was etwas ist, und fragst danach."},
+  "woerter": [
+    {"id":"maktab","ar":"مَكْتَب","tr":"maktab","de":"Schreibtisch","wie":"kursi","gen":"m"}
+  ],
+  "saetze": [
+    {"id":"a1s1","ar":"هَذَا بَيْتٌ.","tr":"hādhā baytun","de":"Das ist ein Haus.","w":["hadha","bayt"]},
+    {"id":"a1s2","ar":"هَذَا بَابٌ.","tr":"hādhā bābun","de":"Das ist eine Tür.","w":["hadha","bab"]},
+    {"id":"a1s3","ar":"هَذَا كِتَابٌ.","tr":"hādhā kitābun","de":"Das ist ein Buch.","w":["hadha","kitab"]},
+    {"id":"a1s4","ar":"هَذَا قَلَمٌ.","tr":"hādhā qalamun","de":"Das ist ein Stift.","w":["hadha","qalam"]},
+    {"id":"a1s5","ar":"هَذَا مَكْتَبٌ.","tr":"hādhā maktabun","de":"Das ist ein Schreibtisch.","w":["hadha","maktab"]},
+    {"id":"a1s6","ar":"هَذَا كُرْسِيٌّ.","tr":"hādhā kursiyyun","de":"Das ist ein Stuhl.","w":["hadha","kursi"]},
+    {"id":"a1s7","ar":"هَذَا سَرِيرٌ.","tr":"hādhā sarīrun","de":"Das ist ein Bett.","w":["hadha","sarir"]},
+    {"id":"a1s8","ar":"مَا هَذَا؟","tr":"mā hādhā?","de":"Was ist das?","w":["ma-was","hadha"]},
+    {"id":"a1s9","ar":"هَذَا مِفْتَاحٌ.","tr":"hādhā miftāḥun","de":"Das ist ein Schlüssel.","w":["hadha","miftah"]},
+    {"id":"a1s10","ar":"هَذَا مِصْبَاحٌ.","tr":"hādhā miṣbāḥun","de":"Das ist eine Lampe.","w":["hadha","misbah"]},
+    {"id":"a1s11","ar":"هَذَا هَاتِفٌ.","tr":"hādhā hātifun","de":"Das ist ein Telefon.","w":["hadha","hatif"]},
+    {"id":"a1s12","ar":"هَذَا دَفْتَرٌ.","tr":"hādhā daftarun","de":"Das ist ein Heft.","w":["hadha","daftar"]},
+    {"id":"a1s13","ar":"هَذَا قَمِيصٌ.","tr":"hādhā qamīṣun","de":"Das ist ein Hemd.","w":["hadha","qamis"]},
+    {"id":"a1s14","ar":"هَذَا مَسْجِدٌ.","tr":"hādhā masjidun","de":"Das ist eine Moschee.","w":["hadha","masjid"]},
+    {"id":"a1s15","ar":"هَذَا مَاءٌ.","tr":"hādhā māʾun","de":"Das ist Wasser.","w":["hadha","ma"]},
+    {"id":"a1s16","ar":"أَهَذَا قَلَمٌ؟","tr":"a-hādhā qalamun?","de":"Ist das ein Stift?","w":["a+hadha","qalam"]},
+    {"id":"a1s17","ar":"نَعَمْ، هَذَا قَلَمٌ.","tr":"naʿam, hādhā qalamun","de":"Ja, das ist ein Stift.","w":["naam","hadha","qalam"]},
+    {"id":"a1s18","ar":"أَهَذَا كِتَابٌ؟","tr":"a-hādhā kitābun?","de":"Ist das ein Buch?","w":["a+hadha","kitab"]},
+    {"id":"a1s19","ar":"لَا، هَذَا دَفْتَرٌ.","tr":"lā, hādhā daftarun","de":"Nein, das ist ein Heft.","w":["la","hadha","daftar"]},
+    {"id":"a1s20","ar":"أَهَذَا بَيْتٌ؟","tr":"a-hādhā baytun?","de":"Ist das ein Haus?","w":["a+hadha","bayt"]},
+    {"id":"a1s21","ar":"لَا، هَذَا مَسْجِدٌ.","tr":"lā, hādhā masjidun","de":"Nein, das ist eine Moschee.","w":["la","hadha","masjid"]},
+    {"id":"a1s22","ar":"أَهَذَا كُرْسِيٌّ؟","tr":"a-hādhā kursiyyun?","de":"Ist das ein Stuhl?","w":["a+hadha","kursi"]},
+    {"id":"a1s23","ar":"نَعَمْ، هَذَا كُرْسِيٌّ.","tr":"naʿam, hādhā kursiyyun","de":"Ja, das ist ein Stuhl.","w":["naam","hadha","kursi"]},
+    {"id":"a1s24","ar":"أَهَذَا هَاتِفٌ؟","tr":"a-hādhā hātifun?","de":"Ist das ein Telefon?","w":["a+hadha","hatif"]},
+    {"id":"a1s25","ar":"لَا، هَذَا مِصْبَاحٌ.","tr":"lā, hādhā miṣbāḥun","de":"Nein, das ist eine Lampe.","w":["la","hadha","misbah"]}
+  ],
+  "dialoge": [
+    {"id":"a1d1","z":[["A","مَا هَذَا؟","Was ist das?",["ma-was","hadha"]],["B","هَذَا مِفْتَاحٌ.","Das ist ein Schlüssel.",["hadha","miftah"]]],"falsch":["نَعَمْ، هَذَا قَلَمٌ.","أَهَذَا كِتَابٌ؟"]},
+    {"id":"a1d2","z":[["A","أَهَذَا بَابٌ؟","Ist das eine Tür?",["a+hadha","bab"]],["B","نَعَمْ، هَذَا بَابٌ.","Ja, das ist eine Tür.",["naam","hadha","bab"]],["A","أَهَذَا بَيْتٌ؟","Ist das ein Haus?",["a+hadha","bayt"]],["B","لَا، هَذَا مَسْجِدٌ.","Nein, das ist eine Moschee.",["la","hadha","masjid"]]],"falsch":["مَا هَذَا؟","نَعَمْ، هَذَا قَلَمٌ."]},
+    {"id":"a1d3","z":[["A","مَا هَذَا؟","Was ist das?",["ma-was","hadha"]],["B","هَذَا مَاءٌ.","Das ist Wasser.",["hadha","ma"]],["A","أَهَذَا قَلَمٌ؟","Ist das ein Stift?",["a+hadha","qalam"]],["B","لَا، هَذَا مِفْتَاحٌ.","Nein, das ist ein Schlüssel.",["la","hadha","miftah"]]],"falsch":["مَا هَذَا؟","نَعَمْ، هَذَا كُرْسِيٌّ."]}
+  ],
+  "lektionen": [
+    {"id":"a1-1","titel":"Im Zimmer","art":"wortschatz","station":"بَيْت","woerter":["bayt","bab","kitab","qalam","maktab","kursi","sarir"],"tipp":{"titel":"Das ist ein …","zeichen":"هَذَا كِتَابٌ","text":"Für „Das ist ein Buch“ sagt man هَذَا كِتَابٌ. Ein „ist“ braucht der Satz nicht. Das ٌ am Ende, gesprochen -un, heißt hier „ein“."}},
+    {"id":"a1-2","titel":"Das ist ein …","art":"saetze","station":"هَذَا","woerter":["hadha"],"saetze":["a1s1","a1s2","a1s3","a1s4","a1s5","a1s6","a1s7"],"uebungen":["endung"]},
+    {"id":"a1-3","titel":"Noch mehr Dinge","art":"wortschatz","station":"مِفْتَاح","woerter":["miftah","misbah","hatif","daftar","qamis","masjid","ma"]},
+    {"id":"a1-4","titel":"Was ist das?","art":"saetze","station":"مَا","woerter":["ma-was"],"saetze":["a1s8","a1s9","a1s10","a1s11","a1s12","a1s13","a1s14","a1s15"],"uebungen":["diktat"],"tipp":{"titel":"Was ist das?","zeichen":"مَا هَذَا","text":"مَا fragt nach Dingen: مَا هَذَا؟ heißt „Was ist das?“. Die Antwort ist wieder ein Satz mit هَذَا."}},
+    {"id":"a1-5","titel":"Ja oder nein?","art":"saetze","station":"نَعَمْ","woerter":["naam","la"],"saetze":["a1s16","a1s17","a1s18","a1s19","a1s20","a1s21","a1s22","a1s23","a1s24","a1s25"],"tipp":{"titel":"Ja oder nein?","zeichen":"أَهَذَا قَلَمٌ","text":"Ein أَ vor dem Satz macht daraus eine Ja/Nein-Frage: أَهَذَا قَلَمٌ؟ heißt „Ist das ein Stift?“. Die Antwort beginnt mit نَعَمْ (ja) oder لَا (nein)."}},
+    {"id":"a1-6","titel":"Im Gespräch","art":"dialog","station":"لَا","dialoge":["a1d1","a1d2","a1d3"]}
+  ]
+}

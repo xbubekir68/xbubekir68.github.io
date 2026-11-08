@@ -37,6 +37,7 @@ node tools/gen-audio.mjs alle --anbieter azure --stimme ar-SA-HamedNeural
 ```
 
 Das sind etwa 420 Texte mit rund 3.400 Zeichen, also weit unter der kostenlosen Grenze.
+Welche Texte noch keine Aufnahme haben (z. B. nach neuen Etappen), zeigt `node tools/audio-texts.mjs --fehlend`.
 Später nur noch dasselbe Kommando ausführen: Es erzeugt nur neue oder geänderte Texte
 (wenn du Vokalzeichen korrigierst, wird das Wort neu vertont). Danach committen und pushen.
 Das Tempo lässt sich mit `--tempo -20%` (langsamer) oder `--tempo 0%` ändern.
