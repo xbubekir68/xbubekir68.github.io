@@ -550,6 +550,40 @@ h1,.h1{font-size:28px;font-weight:900;letter-spacing:-.03em}h2{font-weight:800}
 .sqdk{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:20px;background:var(--night);color:var(--on-night)}
 .sqdk .ar{font-size:var(--ar3);line-height:1.5;color:var(--mint)}.sqdk .sqdt{font-size:14px;color:var(--night-mute)}.sqdk b{margin-left:auto;color:var(--mint);font-weight:900;white-space:nowrap}
 @media (prefers-reduced-motion:reduce){.sqkb>span.new,.sqd{animation:none}}
+/* Ergebnis-Seite aller Spiele */
+.gex{position:relative;overflow:hidden;margin-top:18px;padding:22px 20px;border-radius:20px;background:var(--night);color:var(--on-night);text-align:center}
+.gex>*{position:relative}.gex .gdc{position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;background:var(--night2)}
+.gex h1{color:var(--on-night);font-size:24px}.gex .gxp{display:block;margin-top:6px;font-size:44px;font-weight:900;letter-spacing:-.02em;color:var(--mint);animation:gxpin .5s ease both}
+.gex .gen{margin-top:6px;font-size:14px;color:var(--night-mute)}
+@keyframes gxpin{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08);opacity:1}100%{transform:none}}
+.gtt{margin-top:12px}.gtt+.btn{margin-top:16px}
+/* Hörübung: dunkle Bühne mit großem Lautsprecher */
+.lnb{position:relative;overflow:hidden;margin-top:14px;min-height:170px;padding:16px;border-radius:20px;background:var(--night);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.lnb .mgc{position:absolute;right:-40px;top:-40px;width:150px;height:150px;border-radius:50%;background:var(--night2)}
+.lnb>*:not(.mgc){position:relative}
+.lnw{font-size:var(--ar5);line-height:1.4;color:var(--mint)}.lnt{font-size:15px;color:var(--night-mute)}
+.lns{display:inline-flex;flex-direction:column;align-items:center;gap:6px;border:0;background:none;color:var(--on-night);font:inherit;font-weight:800;font-size:15px;cursor:pointer}
+.lns svg{box-sizing:content-box;padding:18px;border-radius:50%;background:var(--mint);color:var(--night);box-shadow:0 5px 0 var(--band-d);transition:transform .08s,box-shadow .08s}
+.lns:active svg{transform:translateY(5px);box-shadow:0 0 0 var(--band-d)}
+.lnb.dn .lns{flex-direction:row;margin-top:4px;font-size:14px}.lnb.dn .lns svg{padding:8px}
+/* Paare: Zeit als Chip, Fortschritt in Segmenten */
+.tch{padding:6px 12px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-weight:800;font-size:14px;color:var(--mute);font-variant-numeric:tabular-nums}
+.pgs{margin:0 0 6px}.pgh{margin-bottom:4px}
+/* Wort-Blitz: zwei Wahlkarten, Wort auf dunkler Bühne */
+.bzc{position:relative;overflow:hidden;display:grid;justify-items:start;gap:4px;width:100%;margin-top:14px;padding:18px 20px;border:1px solid var(--line);border-radius:20px;background:var(--card);color:var(--ink);text-align:left;font:inherit;cursor:pointer;box-shadow:0 5px 0 var(--line-d);transition:transform .08s,box-shadow .08s}
+.bzc:active{transform:translateY(5px);box-shadow:0 0 0 var(--line-d)}
+.bzc>*{position:relative}.bzc .mgc{position:absolute;right:-40px;top:-40px;width:150px;height:150px;border-radius:50%;background:var(--night2)}
+.bzc .bzi{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--gl);color:var(--g);margin-bottom:4px}
+.bzc b{font-size:19px;font-weight:900}.bzc small{font-size:14px;color:var(--mute);line-height:1.4}
+.bzc.dk{border:0;background:var(--night);color:var(--on-night);box-shadow:0 5px 0 var(--band-d)}.bzc.dk:active{box-shadow:0 0 0 var(--band-d)}
+.bzc.dk .bzi{background:var(--night2);color:var(--mint)}.bzc.dk small{color:var(--night-mute)}
+.bzc .bzr{margin-top:6px;padding:4px 10px;border-radius:999px;background:var(--mint);color:var(--night);font-weight:800;font-size:13px}
+.bzb{position:relative;overflow:hidden;margin:12px 0 14px;min-height:150px;border-radius:20px;background:var(--night);display:grid;place-items:center}
+.bzb .mgc{position:absolute;right:-40px;top:-40px;width:150px;height:150px;border-radius:50%;background:var(--night2)}
+.bzb .bzw{position:relative;font-size:var(--ar5);line-height:1.4;color:var(--mint)}
+@media (prefers-reduced-motion:reduce){.gex .gxp{animation:none}}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .gex,:root:not([data-theme="light"]) .lnb,:root:not([data-theme="light"]) .bzb,:root:not([data-theme="light"]) .bzc.dk{box-shadow:0 0 0 1px var(--line)}}
+:root[data-theme="dark"] .gex,:root[data-theme="dark"] .lnb,:root[data-theme="dark"] .bzb,:root[data-theme="dark"] .bzc.dk{box-shadow:0 0 0 1px var(--line)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .sqk,:root:not([data-theme="light"]) .sqdk{box-shadow:0 0 0 1px var(--line)}}:root[data-theme="dark"] .sqk,:root[data-theme="dark"] .sqdk{box-shadow:0 0 0 1px var(--line)}
 
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .zgl{box-shadow:0 4px 0 var(--band-d),0 0 0 1px var(--line)}}:root[data-theme="dark"] .zgl{box-shadow:0 4px 0 var(--band-d),0 0 0 1px var(--line)}
@@ -987,6 +1021,11 @@ const BADGES=[
 ["blitz","برق","Blitzdenker","10 Treffer im Wort-Blitz",()=>(S.st.blitz||0)>=10],
 ["mix7","٧","Sieben Mischungen","7 Tages-Mischungen abgeschlossen",()=>(S.st.mix||0)>=7],
 ["sent10","جملة","Satzbauer","10 verschiedene Sätze richtig",()=>sentDone()>=10],
+["regen","مطر","Regenmacher","20 Treffer im Buchstaben-Regen",()=>(S.st.regen||0)>=20],
+["kalli","خط","Schönschrift","Alle 8 Kalligrafie-Buchstaben mit drei Sternen",()=>{try{return KALI.every(x=>S.st["kal_"+x.i]===3)}catch(e){return false}}],
+["magnet","حرف","Wortbauer","3 Runden Buchstaben-Magnet",()=>(S.st.magnet||0)>=3],
+["zug","قطار","Lokführer","3 Fahrten im Satz-Zug",()=>(S.st.zug||0)>=3],
+["suq","سوق","Marktgänger","3 Runden im Suq",()=>(S.st.suq||0)>=3],
 ...EBDG.map(([e,ar,t])=>["e-"+e,ar,t,"Etappe "+e.toUpperCase()+" im Lernpfad geschafft",()=>kEDone(e)]),
 ["st1","اقْرَأْ","Lesen gelernt","Alle 8 Etappen von Stufe 1 geschafft",()=>EBDG.every(([e])=>kEDone(e))],
 ...GROUPS.map(g=>["g-"+g,GA[g]||"✓",g+" gemeistert","Alle Wörter im Thema „"+g+"“ gelernt",()=>W.filter(w=>w.cat===g).every(w=>isLearned(w.i))])
@@ -1005,6 +1044,13 @@ function addXP(n){
   checkBadges();save();
 }
 
+// Ergebnis-Seite aller Spiele: dunkle Karte mit Titel und XP in Mint, darunter die Zahlen der Runde, dann „Nochmal“ und „Zu den Spielen“
+function gEnd(t,tiles,xp,note,again){
+  paint(`<div class="gex"><span class="gdc" aria-hidden="true"></span><h1>${t}</h1><b class="gxp">+${xp} XP</b>${note?`<p class="gen">${note}</p>`:""}</div>
+  <div class="tiles gtt">${tiles.map(([l,v,x])=>`<div class="card"><p class="mute">${l}</p><b>${v}</b>${x?`<span class="mute">${x}</span>`:""}</div>`).join("")}</div>
+  <button class="btn" id="again">Nochmal</button><button class="btn alt" data-go="games">Zu den Spielen</button>`);
+  $("#again").onclick=again;
+}
 // ===== Spiel 3: Hörübung (Wort hören, Bedeutung wählen) =====
 let LN=null;
 function startListen(){
@@ -1015,13 +1061,12 @@ function startListen(){
 function listen(){
   if(LN.n>=LN.ws.length){
     if(!LN.fin){LN.fin=true;LN.xp=LN.right*4+(LN.right>=8?10:0);S.st.listen=(S.st.listen||0)+1;if(LN.xp)addXP(LN.xp);else{save();checkBadges()}if(LN.right>=8){confetti();sfx("win")}}
-    paint(`<div style="text-align:center;margin-top:30px"><h1>Runde beendet</h1></div><div class="tiles"><div class="card"><p class="mute">Richtig</p><b>${LN.right} / ${LN.ws.length}</b></div><div class="card"><p class="mute">XP verdient</p><b>+${LN.xp}</b></div></div><button class="btn" id="again">Nochmal</button><button class="btn alt" data-go="games">Zu den Spielen</button>`);
-    $("#again").onclick=startListen;return;
+    return gEnd("Runde beendet",[["Richtig",LN.right+" / "+LN.ws.length]],LN.xp,LN.right>=8?"Davon 10 Bonus für mindestens 8 richtige":"",startListen);
   }
   const w=LN.ws[LN.n],p=LN.picked,done=p!==null;fTask(LN,LN.n);if(!LN.opts)LN.opts=options(w);
-  paint(`<div class="top">${xbtn("games")}<div class="bar"><i style="width:${LN.n/LN.ws.length*100}%"></i></div><span class="mute">${LN.n+1} / ${LN.ws.length}</span></div>
-  <p style="text-align:center;font-weight:600;margin-top:12px">Was bedeutet das, was du hörst?</p>
-  <div style="text-align:center;margin:18px 0">${done?`<div class="ar as5" lang="ar">${w.ar}</div><p class="mute">(${w.tr})</p>`:""}<button class="btn alt" id="rp" style="width:auto;padding:14px 26px">${ic("speaker",22)} ${done?"Nochmal hören":"Anhören"}</button></div>
+  paint(`<div class="top">${xbtn("games")}<div class="zseg" aria-hidden="true">${LN.ws.map((_,i)=>`<i class="${i<LN.n||(i===LN.n&&done)?"on":""}"></i>`).join("")}</div><span class="mute">${LN.n+1} / ${LN.ws.length}</span></div>
+  <p class="mgq" data-fq>Was bedeutet das, was du hörst?</p>
+  <div class="lnb${done?" dn":""}"><span class="mgc" aria-hidden="true"></span>${done?`<span class="ar lnw" lang="ar">${w.ar}</span><span class="lnt">${esc(w.tr)}</span>`:""}<button class="lns" id="rp">${ic("speaker",done?20:30)}<span>${done?"Nochmal hören":"Anhören"}</span></button></div>
   ${LN.opts.map(o=>`<button class="opt ${done?(o.i===w.i?"ok":o.i===p?"no":""):""}" data-o="${o.i}" ${done?"disabled":""}>${o.de}</button>`).join("")}
   ${done?`<div class="fb ${p===w.i?"ok":"no"}" role="status"><span>${p===w.i?"Richtig":"Das war: "+w.de}</span></div>`:""}
   <button class="btn" id="nx" ${done?"":"disabled"}>${LN.n+1>=LN.ws.length?"Ergebnis ansehen":"Weiter"}</button>`);
@@ -2336,15 +2381,13 @@ function finishPairs(){
 }
 function pairs(){
   if(G.end){
-    paint(`<div style="text-align:center;margin-top:30px"><h1>Geschafft</h1></div>
-    <div class="tiles"><div class="card"><p class="mute">Zeit</p><b>${G.sec} s</b></div><div class="card"><p class="mute">Fehler</p><b>${G.miss}</b></div><div class="card" style="grid-column:span 2"><p class="mute">XP verdient</p><b>+${G.xp}</b></div></div>
-    <button class="btn" id="again">Nochmal</button><button class="btn alt" data-go="games">Zu den Spielen</button>`);
-    $("#again").onclick=startPairs;return;
+    return gEnd("Geschafft",[["Zeit",G.sec+" s"],["Fehler",G.miss]],G.xp,G.sec<=20?"Blitzschnell: unter 20 Sekunden":G.miss===0?"Ohne Fehler":"",startPairs);
   }
   const cell=(w,side)=>{const d=G.done.includes(w.i),s=G.sel&&G.sel.id===w.i&&G.sel.side===side,b=G.bad&&G.bad.includes(side+w.i);
     return `<button class="${side==="L"?"ar":""} ${d?"done":s?"sel":""} ${b?"bad":""} ${G.last===w.i?"just":""}" ${side==="L"?'lang="ar"':""} data-p="${side}${w.i}" aria-pressed="${!!(s||d)}" ${d?"disabled":""}>${side==="L"?w.ar:w.de}</button>`};
-  paint(`<div class="top">${xbtn("games")}<h2 style="flex:1">Paare zuordnen</h2><span class="mute" id="pt">${Math.floor((Date.now()-G.t0)/1000)} s</span></div>
-  <p class="mute">Tippe ein arabisches Wort und dann die passende Bedeutung. ${G.done.length} / ${G.L.length}</p>
+  paint(`<div class="top">${xbtn("games")}<h2 style="flex:1">Paare zuordnen</h2><span class="tch" id="pt">${Math.floor((Date.now()-G.t0)/1000)} s</span></div>
+  <div class="zseg pgs" aria-hidden="true">${G.L.map((_,i)=>`<i class="${i<G.done.length?"on":""}"></i>`).join("")}</div>
+  <p class="mute pgh">Tippe ein arabisches Wort und dann die passende Bedeutung. ${G.done.length} / ${G.L.length}</p>
   <div class="pg">${G.L.map((w,k)=>cell(w,"L")+cell(G.R[k],"R")).join("")}</div>`);
   document.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{
     const side=b.dataset.p[0],id=b.dataset.p.slice(1);
@@ -2379,19 +2422,16 @@ function endBlitz(){
 function blitz(){
   if(B.intro){
     paint(`<div class="top">${xbtn("games")}<h2 style="flex:1">Wort-Blitz</h2></div><p class="mute">Ein arabisches Wort, vier Bedeutungen: Tippe die richtige.</p>
-    <button class="btn" id="bz60">60 Sekunden · Rekord: ${S.st.blitz||0}</button><p class="mute bzh">So viele Treffer wie möglich. Jeder Fehler kostet 3 Sekunden.</p>
-    <button class="btn alt" id="bzf">Ohne Zeitlimit · ${BFREE} Wörter</button><p class="mute bzh">In deinem Tempo, ohne Rekord.</p>`);
+    <button class="bzc dk" id="bz60"><span class="mgc" aria-hidden="true"></span><span class="bzi">${ic("bolt",22)}</span><b>60 Sekunden</b><small>So viele Treffer wie möglich. Jeder Fehler kostet 3 Sekunden.</small><span class="bzr">Rekord: ${S.st.blitz||0}</span></button>
+    <button class="bzc" id="bzf"><span class="bzi">${ic("repeat",22)}</span><b>Ohne Zeitlimit · ${BFREE} Wörter</b><small>In deinem Tempo, ohne Rekord.</small></button>`);
     $("#bz60").onclick=()=>startBlitz(false);$("#bzf").onclick=()=>startBlitz(true);return;
   }
   if(B.end){
-    paint(`<div style="text-align:center;margin-top:30px"><h1>${B.free?"Geschafft":"Zeit abgelaufen"}</h1></div>
-    <div class="tiles"><div class="card"><p class="mute">Treffer</p><b>${B.right}${B.free?" / "+BFREE:""}</b></div><div class="card"><p class="mute">${B.free?"Fehler":"Fehler (−3 s je Fehler)"}</p><b>${B.wrong}</b></div>${B.free?"":`<div class="card"><p class="mute">Rekord</p><b>${S.st.blitz||0}</b></div>`}<div class="card"><p class="mute">XP verdient</p><b>+${B.xp}</b></div></div>
-    <button class="btn" id="again">Nochmal</button><button class="btn alt" data-go="games">Zu den Spielen</button>`);
-    $("#again").onclick=()=>startBlitz(B.free);return;
+    return gEnd(B.free?"Geschafft":"Zeit abgelaufen",B.free?[["Treffer",B.right+" / "+BFREE],["Fehler",B.wrong]]:[["Treffer",B.right],["Fehler",B.wrong,"−3 s je Fehler"],["Rekord",S.st.blitz||0]],B.xp,!B.free&&B.right&&B.right===S.st.blitz?"Rekord!":"",()=>startBlitz(B.free));
   }
   fTask(B,B.q);const w=B.w,l=leftB();
   paint(`<div class="top">${xbtn("games")}${B.free?`<div class="bar"><i style="width:${B.n/BFREE*100}%"></i></div><span class="mute">${Math.min(B.n+1,BFREE)} / ${BFREE}</span>`:`<div class="bar ${l<10?"low":""}"><i id="bb" style="width:${l/60*100}%"></i></div><span class="mute" id="bt">${Math.ceil(l)} s</span>`}</div>
-  <div class="qmeta"><span class="mute">Treffer: ${B.right}</span>${B.combo>=3?`<span class="combo">${ic("flame",14,true)} ${B.combo}</span>`:""}</div><div style="text-align:center;margin:14px 0"><div class="ar as5" lang="ar" data-fq>${w.ar}</div></div>
+  <div class="qmeta"><span class="mute">Treffer: ${B.right}</span>${B.combo>=3?`<span class="combo">${ic("flame",14,true)} ${B.combo}</span>`:""}</div><div class="bzb"><span class="mgc" aria-hidden="true"></span><div class="ar bzw" lang="ar" data-fq>${w.ar}</div></div>
   ${B.opts.map(o=>`<button class="opt ${B.pick!==null?(o.i===w.i?"ok":o.i===B.pick?"no":""):""}" data-o="${o.i}" ${B.pick!==null?"disabled":""}>${o.de}</button>`).join("")}`);
   document.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{
     if(B.locked)return;B.locked=true;B.pick=b.dataset.o;const ok=B.pick===w.i;
@@ -2475,10 +2515,7 @@ function regen(){
     $("#rgo").onclick=rGo;return;
   }
   if(R.end){
-    paint(`<div style="text-align:center;margin-top:30px"><h1>Zeit um!</h1>${R.rec&&R.score?'<p class="mute">Neuer Rekord</p>':""}</div>
-    <div class="tiles"><div class="card"><p class="mute">Treffer</p><b>${R.score}</b></div><div class="card"><p class="mute">Rekord</p><b>${S.st.regen||0}</b></div><div class="card" style="grid-column:span 2"><p class="mute">XP verdient</p><b>+${R.xp}</b></div></div>
-    <button class="btn" id="again">Nochmal</button><button class="btn alt" data-go="games">Zu den Spielen</button>`);
-    $("#again").onclick=rGo;return;
+    return gEnd("Zeit um!",[["Treffer",R.score],["Rekord",S.st.regen||0]],R.xp,R.rec&&R.score?"Neuer Rekord":"",rGo);
   }
   const l=rLeft();
   paint(`<div class="top">${xbtn("games")}<div class="bar"><i id="rgb" style="width:${l/RSEC*100}%"></i></div><span class="mute" id="rgt">${Math.ceil(l)} s</span></div>
@@ -2592,9 +2629,7 @@ function mgTap(k){
 function magnet(){
   if(M.n>=M.ws.length){
     if(!M.fin){M.fin=true;M.bonus=M.miss?0:5;S.st.magnet=(S.st.magnet||0)+1;if(M.bonus){M.xp+=M.bonus;addXP(M.bonus);confetti()}else{save();checkBadges()}sfx("win")}
-    paint(`<div style="text-align:center;margin-top:30px"><h1>Geschafft</h1></div><div class="tiles"><div class="card"><p class="mute">Wörter gebaut</p><b>${M.ws.length}</b></div><div class="card"><p class="mute">Fehler</p><b>${M.miss}</b></div><div class="card" style="grid-column:span 2"><p class="mute">XP verdient</p><b>+${M.xp}</b>${M.bonus?`<span class="mute">davon ${M.bonus} Bonus für null Fehler</span>`:""}</div></div>
-    <button class="btn" id="again">Nochmal</button><button class="btn alt" data-go="games">Zu den Spielen</button>`);
-    $("#again").onclick=startMagnet;return;
+    return gEnd("Geschafft",[["Wörter gebaut",M.ws.length],["Fehler",M.miss]],M.xp,M.bonus?`Davon ${M.bonus} Bonus für null Fehler`:"",startMagnet);
   }
   fTask(M,M.n);const o=M.ws[M.n],w=o.w,sh=M.shake,last=M.n+1>=M.ws.length;M.shake=false;
   const fm=mgForms(o.L),nj=o.L.slice(0,-1).find(a=>a.nj&&a.i!=="hamza");
@@ -2642,9 +2677,7 @@ function zgTap(k){
 function zug(){
   if(ZG.n>=ZG.ss.length){
     if(!ZG.fin){ZG.fin=true;S.st.zug=(S.st.zug||0)+1;save();checkBadges();sfx("win");if(!ZG.miss)confetti()}
-    paint(`<div style="text-align:center;margin-top:30px"><h1>Alle Züge sind abgefahren</h1></div><div class="tiles"><div class="card"><p class="mute">Sätze</p><b>${ZG.ss.length}</b></div><div class="card"><p class="mute">Fehler</p><b>${ZG.miss}</b></div><div class="card" style="grid-column:span 2"><p class="mute">XP verdient</p><b>+${ZG.xp}</b></div></div>
-    <button class="btn" id="again">Nochmal</button><button class="btn alt" data-go="games">Zu den Spielen</button>`);
-    $("#again").onclick=startZug;return;
+    return gEnd("Alle Züge sind abgefahren",[["Sätze",ZG.ss.length],["Fehler",ZG.miss]],ZG.xp,ZG.miss?"":"Alle Sätze ohne Fehler",startZug);
   }
   fTask(ZG,ZG.n);const x=ZG.ss[ZG.n],sh=ZG.shake,last=ZG.n+1>=ZG.ss.length;ZG.shake=false;
   const wag=ZG.placed.map((k,i)=>`<div class="zgw${i===ZG.placed.length-1&&!ZG.done?" new":""}"><span class="ar" lang="ar">${ZG.bank[k].a}</span><i></i><i></i></div>`).join("");
@@ -2693,9 +2726,7 @@ function sqTap(i){
 function suq(){
   if(SQ.r>=SQ.n){
     if(!SQ.fin){SQ.fin=true;S.st.suq=(S.st.suq||0)+1;save();checkBadges();sfx("win");if(!SQ.miss)confetti()}
-    paint(`<div style="text-align:center;margin-top:30px"><h1>Alles eingekauft</h1></div><div class="tiles"><div class="card"><p class="mute">Einkäufe</p><b>${SQ.n}</b></div><div class="card"><p class="mute">Fehler</p><b>${SQ.miss}</b></div><div class="card" style="grid-column:span 2"><p class="mute">XP verdient</p><b>+${SQ.xp}</b></div></div>
-    <button class="btn" id="again">Nochmal</button><button class="btn alt" data-go="games">Zu den Spielen</button>`);
-    $("#again").onclick=startSuq;return;
+    return gEnd("Alles eingekauft",[["Einkäufe",SQ.n],["Fehler",SQ.miss]],SQ.xp,SQ.miss?"":"Alles ohne Fehler eingekauft",startSuq);
   }
   fTask(SQ,SQ.r);const sh=SQ.shake,t=BY.shukran,last=SQ.r+1>=SQ.n;SQ.shake=false;
   paint(`<div class="top">${xbtn("games")}<h2 class="sqt">Im Suq <small>· Einkauf ${SQ.r+1} von ${SQ.n}</small></h2><span class="sqx">${SQ.xp} XP</span></div>
@@ -2965,7 +2996,7 @@ loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v44"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v45"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>
