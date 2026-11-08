@@ -834,7 +834,7 @@ run(`S.ob.z="sprache";home()`);ok("… Ziel Sprache: erst Lesen, Wörter schon u
 run(`for(const l of KL.filter(l=>["s1","s2"].includes(l.e)))S.kp.d[l.id]=1;S.last=today();S.streak=3;home()`);hs=run(`app.innerHTML`);
 ok("Start in S3: nächster Halt, Zielsatz der Etappe auf Arabisch, Serie sichtbar",/Nächster Halt · Etappe S3 · Kurze Vokale/.test(hs)&&/class="ar zar" lang="ar">هُوَ سَمِعَ وَفَهِمَ</.test(hs)&&/Er hörte und verstand/.test(hs)&&/class="flame on"[^>]*aria-label="Serie: 3 Tage"/.test(hs));
 run(`for(const l of KL)S.kp.d[l.id]=1;home()`);hs=run(`app.innerHTML`);
-ok("Alles geschafft: alles Vorhandene geschafft, weiter zum Pfad oder zu den Wörtern",/Alles geschafft, was es bisher gibt/.test(hs)&&/Weitere Etappen sind in Arbeit/.test(hs)&&/data-go="path"/.test(hs)&&/data-go="cards"/.test(hs)&&!/Ziel der Etappe/.test(hs));
+ok("Alles geschafft: alles Vorhandene geschafft, weiter zum Pfad oder zu den Wörtern",/Alles geschafft, was es bisher gibt/.test(hs)&&(run(`KURS.stufen.some(x=>x.etappen.some(y=>!KE[y.id]))`)===/Weitere Etappen sind in Arbeit/.test(hs))&&/data-go="path"/.test(hs)&&/data-go="cards"/.test(hs)&&!/Ziel der Etappe/.test(hs));
 run(`U="neu2";loadS();S.kp.d["s1-1"]=1;home()`);
 ok("Wer schon gelernt hat, sieht keine Begrüßung",!/Willkommen!/.test(run(`app.innerHTML`))&&/Nächster Halt/.test(run(`app.innerHTML`)));
 ok("Ziel bleibt beim Zusammenführen erhalten",run(`mergeS({epoch:1,kp:{d:{}}},{epoch:1,ob:{z:"koran",d:"2026-11-03"}}).ob.z`)==="koran"&&run(`mergeS({epoch:1,ob:{z:"lesen"}},{epoch:1,ob:{z:"koran"}}).ob.z`)==="lesen");
@@ -1174,6 +1174,20 @@ ok("… Kopf zeigt Stufe 2, sobald der nächste Halt dort liegt",/class="kph"><s
 run(`kSnapDel();home()`);let h33=run(`app.innerHTML`);
 ok("Startseite: nächster Halt in Stufe 2 mit Zahl der neuen Wörter",/Etappe W1 · Erste Schritte/.test(h33)&&/Lektion 1: Hallo sagen/.test(h33)&&/8 neue Wörter/.test(h33),h33.match(/<div class="card nh dk">[\s\S]{0,500}/)&&h33.match(/<div class="card nh dk">[\s\S]{0,500}/)[0]);
 run(`U="st33c";loadS();view="path";path()`);ok("… solange Stufe 1 offen ist: Band mit Einstufungstest",/<div class="stb"[^>]*>.*<button class="sbt" data-kt="wissen">Ich kann schon lesen/s.test(run(`app.innerHTML`)));
+run(`U="gast";loadS()`);
+
+// ---------- 34. Stufe 2 komplett: alle Wörter, Abschlusstest, Abzeichen, Statistik ----------
+ok("Stufe 2: zehn Etappen, jedes der 330 Wörter genau einmal",run(`KURS.stufen[1].etappen.filter(e=>KE[e.id]).length`)===10&&run(`(()=>{const a=KL.filter(l=>l.art==="wortschatz").flatMap(l=>l.woerter);return a.length===W.length&&new Set(a).size===W.length})()`));
+ok("… Abzeichen-Titel stimmen mit den Etappen überein",run(`EBDG2.every(([e,,t])=>kEtap(e)&&kEtap(e).titel===t)`));
+run(`U="st34";loadS();for(const l of KL)if(l.id!=="w10-6")S.kp.d[l.id]=1;globalThis.L37=KL.find(l=>l.id==="w10-6");startK(L37)`);
+ok("Abschlusstest Stufe 2: 20 Aufgaben aus allen zehn Etappen, ohne Karten und Zuordnen, 16 nötig",run(`L37.art==="test"&&K.T.length===20&&K.test.need===16&&new Set(K.T.map(x=>KL.find(l=>l.id===x.src).e)).size===10&&K.T.every(x=>!KCARD.includes(x.t)&&x.t!=="paare")`),run(`K.T.length+" "+[...new Set(K.T.map(x=>x.src))].join()`));
+run(`for(let n=0;n<20;n++){K.n=n;kAns(n>=4)}K.n=20;klek()`);let t34=run(`app.innerHTML`);
+ok("… 16 von 20: Stufe 2 geschafft, Abzeichen „Sprache gelernt“",/Stufe 2 geschafft/.test(t34)&&run(`kDone("w10-6")`)&&run(`S.badges.includes("st2")&&S.badges.includes("e-w10")`));
+run(`view="badges";badges()`);let b34=run(`app.innerHTML`);
+ok("Abzeichen-Seite: Lesen lernen, dann Sprache lernen, dann Wörter und Übung",b34.indexOf("Lesen lernen")<b34.indexOf("Sprache lernen")&&b34.indexOf("Sprache lernen")<b34.indexOf("Wörter und Übung")&&/Sprache lernen <small class="mute">11 von 11<\/small>/.test(b34));
+run(`view="stats";stats()`);let s34=run(`app.innerHTML`);
+ok("Statistik: eigene Kacheln für Stufe 1 und Stufe 2",/<p class="gh">Lesen lernen<\/p>.*<span class="mute">von 43 geschafft<\/span>/s.test(s34)&&new RegExp(`<p class="gh">Sprache lernen</p>.*<span class="mute">von ${run(`KL.filter(l=>l.e[0]==="w").length`)} geschafft</span>.*<span class="mute">von 10 geschafft</span>`,"s").test(s34));
+run(`view="path";path()`);ok("Lernpfad komplett: kein „Demnächst“ mehr",!/class="card ksoon"/.test(run(`app.innerHTML`))&&/data-ko>Zum bisherigen Lernpfad/.test(run(`app.innerHTML`)));
 run(`U="gast";loadS()`);
 
 console.log("\n"+pass+" OK, "+fail+" FAIL");

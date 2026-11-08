@@ -28,9 +28,9 @@
         {"id": "w5", "titel": "Zahlen & Farben", "ar": "الْأَرْقَامُ وَالْأَلْوَانُ", "kurz": "Zählen und beschreiben", "datei": "w5.json"},
         {"id": "w6", "titel": "Unterwegs", "ar": "فِي الطَّرِيقِ", "kurz": "Orte, Wege und Verkehr", "datei": "w6.json"},
         {"id": "w7", "titel": "Natur & Tiere", "ar": "الطَّبِيعَةُ وَالْحَيَوَانَاتُ", "kurz": "Wetter, Landschaft und Tiere", "datei": "w7.json"},
-        {"id": "w8", "titel": "Zeit & Körper", "ar": "الْوَقْتُ وَالْجِسْمُ", "kurz": "Wann etwas ist, wie wir aussehen"},
-        {"id": "w9", "titel": "Handlungen", "ar": "الْأَفْعَالُ", "kurz": "Was Menschen tun"},
-        {"id": "w10", "titel": "Alltag", "ar": "الْحَيَاةُ الْيَوْمِيَّةُ", "kurz": "Gefühle, Berufe und Kleidung"}
+        {"id": "w8", "titel": "Zeit & Körper", "ar": "الْوَقْتُ وَالْجِسْمُ", "kurz": "Wann etwas ist, wie wir aussehen", "datei": "w8.json"},
+        {"id": "w9", "titel": "Handlungen", "ar": "الْأَفْعَالُ", "kurz": "Was Menschen tun", "datei": "w9.json"},
+        {"id": "w10", "titel": "Alltag", "ar": "الْحَيَاةُ الْيَوْمِيَّةُ", "kurz": "Gefühle, Berufe und Kleidung", "datei": "w10.json"}
       ]
     }
   ]

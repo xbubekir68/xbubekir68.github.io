@@ -1038,6 +1038,9 @@ const xpFor=L=>40*(L-1)*(L-1),lvl=()=>1+Math.floor(Math.sqrt((S.xp||0)/40));
 // Lesen lernen: je Etappe ein Abzeichen mit dem Zeichen, um das es geht (Titel wie in kurs/kurs.json, prüft tools/test-learning.mjs)
 const EBDG=[["s1","أ ب","Die Buchstaben"],["s2","ـبـ","Buchstaben verbinden"],["s3","بَ","Kurze Vokale"],["s4","بٌ","Tanwin"],["s5","بَا","Lange Vokale"],["s6","بْ","Sukun"],["s7","بّ","Schadda"],["s8","بِسۡمِ","Alles zusammen"]];
 const BREAD=["first","alpha",...EBDG.map(([e])=>"e-"+e),"st1"]; // Abzeichen zum Lesen, auf der Abzeichen-Seite zuerst
+// Sprache lernen: je Etappe von Stufe 2 ein Abzeichen mit einem Wort ihres Themas (Titel wie in kurs/kurs.json, prüft tools/test-learning.mjs)
+const EBDG2=[["w1","مرحبا","Erste Schritte"],["w2","مدرسة","In der Schule"],["w3","بيت","Zuhause"],["w4","طعام","Essen & Trinken"],["w5","ألوان","Zahlen & Farben"],["w6","سفر","Unterwegs"],["w7","طبيعة","Natur & Tiere"],["w8","وقت","Zeit & Körper"],["w9","أفعال","Handlungen"],["w10","حياة","Alltag"]];
+const BSPR=[...EBDG2.map(([e])=>"e-"+e),"st2"];
 const BADGES=[
 ["first","بداية","Erster Schritt","Die erste richtige Antwort",()=>(S.xp||0)>0],
 ["w10","١٠","10 Wörter","10 Wörter gelernt",()=>knownN()>=10],
@@ -1064,6 +1067,8 @@ const BADGES=[
 ["suq","سوق","Marktgänger","3 Runden im Suq",()=>(S.st.suq||0)>=3],
 ...EBDG.map(([e,ar,t])=>["e-"+e,ar,t,"Etappe "+e.toUpperCase()+" im Lernpfad geschafft",()=>kEDone(e)]),
 ["st1","اقْرَأْ","Lesen gelernt","Alle 8 Etappen von Stufe 1 geschafft",()=>EBDG.every(([e])=>kEDone(e))],
+...EBDG2.map(([e,ar,t])=>["e-"+e,ar,t,"Etappe "+e.toUpperCase()+" im Lernpfad geschafft",()=>kEDone(e)]),
+["st2","تَكَلَّمْ","Sprache gelernt","Alle 10 Etappen von Stufe 2 geschafft",()=>EBDG2.every(([e])=>kEDone(e))],
 ...GROUPS.map(g=>["g-"+g,GA[g]||"✓",g+" gemeistert","Alle Wörter im Thema „"+g+"“ gelernt",()=>W.filter(w=>w.cat===g).every(w=>isLearned(w.i))])
 ].map(a=>({id:a[0],ic:a[1],n:a[2],d:a[3],t:a[4]}));
 function checkBadges(){
@@ -2278,9 +2283,10 @@ function more(){
 }
 function badges(){
   const have=S.badges||[];
-  const card=b=>`<div class="card bdg ${have.includes(b.id)?"":"lock"}"><span class="med">${medal(b.ic)}</span><b>${b.n}</b><small>${b.d}</small></div>`,rd=BADGES.filter(b=>BREAD.includes(b.id)),rest=BADGES.filter(b=>!BREAD.includes(b.id)),cnt=l=>l.filter(b=>have.includes(b.id)).length;
+  const card=b=>`<div class="card bdg ${have.includes(b.id)?"":"lock"}"><span class="med">${medal(b.ic)}</span><b>${b.n}</b><small>${b.d}</small></div>`,rd=BADGES.filter(b=>BREAD.includes(b.id)),sp=BADGES.filter(b=>BSPR.includes(b.id)),rest=BADGES.filter(b=>!BREAD.includes(b.id)&&!BSPR.includes(b.id)),cnt=l=>l.filter(b=>have.includes(b.id)).length;
   paint(head("Abzeichen","more")+pgHead(have.length,BADGES.length,"freigeschaltet")+`
   <h2 class="bgh">Lesen lernen <small class="mute">${cnt(rd)} von ${rd.length}</small></h2><div class="bg">${rd.map(card).join("")}</div>
+  <h2 class="bgh">Sprache lernen <small class="mute">${cnt(sp)} von ${sp.length}</small></h2><div class="bg">${sp.map(card).join("")}</div>
   <h2 class="bgh">Wörter und Übung <small class="mute">${cnt(rest)} von ${rest.length}</small></h2><div class="bg">${rest.map(card).join("")}</div>`);
 }
 // Karten und Spiele gehen im neuen Lernpfad Etappe für Etappe auf: Hören, Regen und Kalligrafie sofort, Buchstaben-Magnet nach S1 (alle Buchstaben bekannt),
@@ -2862,7 +2868,9 @@ function stats(){
   const days=[...Array(7)].map((_,k)=>{const d=ago(6-k);return[["So","Mo","Di","Mi","Do","Fr","Sa"][d.getDay()],S.days[ymd(d)]||0]});
   const mx=Math.max(1,...days.map(d=>d[1]));
   const g=S.goal||100,xd=S.xpDays[today()]||0,es=KURS?KURS.stufen[0].etappen.filter(e=>KE[e.id]):[];
-  const rd=S.np&&KL.length?`<p class="gh">Lesen lernen</p><div class="tiles" style="margin-bottom:18px"><div class="card"><p class="mute">Lektionen</p><b>${KL.filter(l=>kDone(l.id)).length}</b><span class="mute">von ${KL.length} geschafft</span></div><div class="card"><p class="mute">Etappen</p><b>${es.filter(e=>kEDone(e.id)).length}</b><span class="mute">von ${es.length} geschafft</span></div><div class="card"><p class="mute">Buchstaben sicher</p><b>${alphaSure()}</b><span class="mute">von ${ALPHA.length}</span></div><div class="card"><p class="mute">Tagesziel</p><b>${Math.min(xd,g)} / ${g}</b><span class="mute">XP heute</span></div></div><p class="gh">Wörter</p>`:"";
+  const st2=KURS&&KURS.stufen[1],es2=st2?kStE(st2):[],sL=st=>KL.filter(l=>kStOf(l.e)===st),s1L=KURS?sL(KURS.stufen[0]):[],s2L=st2?sL(st2):[];
+  const sp2=S.np&&es2.length?`<p class="gh">Sprache lernen</p><div class="tiles" style="margin-bottom:18px"><div class="card"><p class="mute">Lektionen</p><b>${s2L.filter(l=>kDone(l.id)).length}</b><span class="mute">von ${s2L.length} geschafft</span></div><div class="card"><p class="mute">Etappen</p><b>${es2.filter(e=>kEDone(e.id)).length}</b><span class="mute">von ${es2.length} geschafft</span></div></div>`:"";
+  const rd=S.np&&KL.length?`<p class="gh">Lesen lernen</p><div class="tiles" style="margin-bottom:18px"><div class="card"><p class="mute">Lektionen</p><b>${s1L.filter(l=>kDone(l.id)).length}</b><span class="mute">von ${s1L.length} geschafft</span></div><div class="card"><p class="mute">Etappen</p><b>${es.filter(e=>kEDone(e.id)).length}</b><span class="mute">von ${es.length} geschafft</span></div><div class="card"><p class="mute">Buchstaben sicher</p><b>${alphaSure()}</b><span class="mute">von ${ALPHA.length}</span></div><div class="card"><p class="mute">Tagesziel</p><b>${Math.min(xd,g)} / ${g}</b><span class="mute">XP heute</span></div></div>${sp2}<p class="gh">Wörter</p>`:"";
   paint(head("Statistiken",ui.from==="home"?"home":"more")+rd+`<div class="card row"><div><p class="mute">Lernfortschritt</p><p class="big">${pct()}%</p><p class="mute">${knownN()} von ${W.length} Wörtern</p></div><div class="ring" style="--p:${pct()};margin-left:auto"><span>${pct()}%</span></div></div>
   <div class="tiles"><div class="card"><p class="mute">Heute geübt</p><b>${S.days[today()]||0}</b><span class="mute">Wörter</span></div><div class="card"><p class="mute">Aktuelle Serie</p><b>${streak()}</b><span class="mute">Tage</span></div><div class="card"><p class="mute">Gefestigt</p><b>${Object.values(S.box).filter(b=>b>=3).length}</b><span class="mute">von ${W.length}</span></div><div class="card"><p class="mute">Gelernt gesamt</p><b>${knownN()}</b></div><div class="card"><p class="mute">Level</p><b>${lvl()}</b></div><div class="card"><p class="mute">XP gesamt</p><b>${S.xp||0}</b></div></div>
   <div class="card" style="margin-top:10px"><p class="gh">Gedächtnis</p><p class="mute" style="margin-top:2px">Wie frisch deine angefangenen Wörter gerade sind.</p>${(()=>{const c=[0,0,0,0];W.forEach(w=>{const m=mem(w.i);if(m)c[m.k]++});const tot=c.reduce((a,b)=>a+b,0);
@@ -3112,7 +3120,7 @@ loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v49"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v50"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>
