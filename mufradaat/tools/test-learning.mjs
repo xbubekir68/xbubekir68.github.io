@@ -1129,5 +1129,20 @@ ok("Abzeichen: Fortschrittskopf, verdiente dunkel, gesperrte gestrichelt",/<div 
 ok("… aktiver Chip und Abschnittstitel im neuen Stil",/\.chip\.on\{background:var\(--night\);color:var\(--mint\)/.test(html)&&/\.bgh\{margin:22px 4px 8px;font-size:13px;font-weight:800/.test(html));
 run(`U="gast";loadS()`);
 
+// ---------- 32. Lernpfad-Landschaften in Logo-Farben ----------
+{
+  const css=html.slice(html.indexOf("<style>"),html.indexOf("</style>"));
+  const lines=css.split("\n"),li=lines.findIndex(l=>l.startsWith(".ths{")),light=lines[li],dmed=lines[li+1],dattr=lines[li+2];
+  const parse=(s,pre)=>{const o={};for(const k of ["ths","th0","th1","th2","th3","th4","th5","th6","th7","th8","th9"]){const m=s.match(new RegExp(pre+"\\."+k+"\\{([^}]*)\\}"));if(m)o[k]=Object.fromEntries(m[1].split(";").map(x=>x.split(":")))}return o};
+  const L=parse(light,"(?:^|\\})"),D=parse(dmed,' '),DA=parse(dattr,' ');
+  const lum=h=>{const c=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)/255).map(v=>v<=.03928?v/12.92:((v+.055)/1.055)**2.4);return .2126*c[0]+.7152*c[1]+.0722*c[2]},cr=(a,b)=>{const[x,y]=[lum(a),lum(b)].sort((p,q)=>q-p);return (x+.05)/(y+.05)};
+  const ks=Object.keys(L);
+  ok("Landschaften: elf Beläge hell und dunkel, jeder mit Belag, Rand, Akzent und Fußspuren",ks.length===11&&ks.every(k=>["--rb","--re","--ew","--ac","--fp"].every(v=>L[k][v]))&&Object.keys(D).length===11&&ks.every(k=>["--rb","--re","--ac","--fp"].every(v=>D[k][v]))&&JSON.stringify(D)===JSON.stringify(DA));
+  const bad=[];for(const k of ks){for(const bg of ["#f1f6f4","#ffffff"])if(cr(L[k]["--ac"],bg)<4.5)bad.push("hell "+k+" "+bg);for(const bg of ["#020f0c","#0b1e18"])if(cr(D[k]["--ac"],bg)<4.5)bad.push("dunkel "+k+" "+bg);if(cr(L[k]["--fp"],L[k]["--rb"])<1.6)bad.push("Spuren hell "+k);if(cr(D[k]["--fp"],D[k]["--rb"])<1.6)bad.push("Spuren dunkel "+k)}
+  ok("… Akzente lesbar (Kontrast ≥ 4.5 auf Hintergrund und Karte), Fußspuren sichtbar",!bad.length,bad);
+  ok("… benachbarte Etappen haben verschiedene Beläge",ks.every((k,i)=>i===0||L[k]["--rb"]!==L[ks[i-1]]["--rb"]&&D[k]["--rb"]!==D[ks[i-1]]["--rb"]));
+  ok("… kein Lila, Blauviolett oder Ziegelrot mehr, S8 fährt auf der Nacht-Straße mit Mint-Rand",!/#5b3fa0|#c7a8ea|#bba5f2|#644a87|#c8553d|#30406c|#25335a/i.test(css)&&L.th7["--rb"]==="#0b2a22"&&L.th7["--re"]==="#00dab0"&&D.th7["--re"]==="#00dab0");
+}
+
 console.log("\n"+pass+" OK, "+fail+" FAIL");
 process.exit(fail?1:0);

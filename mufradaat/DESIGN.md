@@ -482,26 +482,27 @@ A cream bar fixed to the bottom with a hairline top border. It has five tabs (St
 - **Im Suq:** a white shopping-list card with three items in Arabic only (`--ar3`, tap to hear) and a round check that turns green; beside it a 120px Logo Night basket card with a Night Circle and a mint basket. Packed items drop into it as small Night 2 tiles. Above the stall hangs a striped awning (Garden Green and card white). The stall is a 3-column grid of white 20px tiles with a 5px Line Depth edge, each with a small flat drawing (colours only from tokens: spark, amber, sky, dawn, brick red, mint, green, ink) and the German name. A wrong item shakes the stall and names itself in brick red. When all is packed, a Logo Night bar says شُكْرًا in mint with the transliteration and XP.
 
 ### The Winding Road (Signature Component)
-The learning path is drawn as an SVG road of 30px stroke over each unit's landscape band, with footprints along the finished stretch. Each unit has its own theme, made of a road surface, an edge, an accent and a footprint colour, with a matching dark set:
+The learning path is drawn as an SVG road of 30px stroke, with footprints along the finished stretch. Each Etappe (and each unit of the earlier path) has its own road surface, edge, accent and footprint colour. All of them come from the logo world: night, mint, garden green, sand, saffron, sky, sage, stone and a muted brick. Each has a matching dark set. Accents reach at least 4.5:1 on the background and on cards in both modes; the test computes this.
 
-| Theme | Unit (Arabic header) | Road | Accent |
+| Theme | Used for | Road | Accent |
 |---|---|---|---|
-| Schrift | Letters | pale paper with a tan edge | #6b5a3e |
-| th0 | First steps | sand | #8a5a1c |
-| th1 | At school | white with a blue edge | #2c5a8f |
-| th2 | At home | terracotta | #a14e2e |
-| th3 | Food & drink | saffron | #93540a |
-| th4 | Numbers & colours | sky blue, with rainbow segments | #5b3fa0 |
-| th5 | On the road | asphalt with a white edge | #37474f |
-| th6 | Nature & animals | earth with a grass edge | #3f7a2a |
-| th7 | Time & body | night blue | #2f4a8a |
-| th8 | Verbs | brick red | #a33a24 |
-| th9 | Daily life | stone | #6d5a3d |
+| ths | S1 · Letters | white with a mist-grey edge | #0b3d2e |
+| th0 | earlier path, unit 1 | sand | #7a5a1e |
+| th1 | S2 · Joining letters | mist (mint tint) with a mint edge | #006b56 |
+| th2 | S3 · Short vowels | saffron cream | #83560f |
+| th3 | S4 · Tanwin | pale sky | #245a87 |
+| th4 | S5 · Long vowels | deck grey, with five calm segments (mint, sand, sky, sage, blush) | #1f5f6b |
+| th5 | S6 · Sukun | sage | #4a6233 |
+| th6 | S7 · Shadda | garden green with a 3px green edge | #2d7059 |
+| th7 | S8 · All together | the Logo Night road with a mint edge | #0b3d2e |
+| th8 | earlier path, unit 9 | blush with a muted brick edge | #8f3f22 |
+| th9 | earlier path, unit 10 | stone | #5a5446 |
+
+In dark mode the roads are deep tints of the same family (S8 is Night 2 with a mint edge) and the accents are light, with mint on S8.
 
 - **Stops:** 58px circles with a 3px accent border and a 4px bottom edge, showing the stop's own Arabic word at `--ar2` (long words at `--ar1`; too wide, the circle becomes a pill). **Done** stops are Logo Mint with a night check and a Ribbon Depth edge. The **current** stop is a 76px Logo Night pill with its Arabic in mint (`--ar3`), a 6px mist halo and a 7px Ribbon Depth edge (Logo Mint with night text in dark mode). **Locked** stops use a dashed border at 50% accent, with muted text and no edge.
 - **Unit header:** the Arabic unit name at 30px in the accent colour, then "Einheit N · Title" and a 13px description.
 - **Goal sign:** the unit's longest sentence in Naskh at `--ar3`. Words already begun turn green and unknown ones are muted. Below it sit the German translation, a listen link and a "Sätze üben" button.
-- **Provisional:** the new course will cycle these ten surfaces and give each part of stage 2 its own accent colour.
 
 ### Celebration Layer
 Toasts pop in as green pills at the top of the screen. Level-ups are a green badge that drops in with a ring burst and saffron sparks. New badges and passed tests set off confetti, with a sound and a short vibration. Results show up to three stars that spin in one by one. The streak flame flickers once you have practised today. Progress rings fill in over 0.9s, and bars ease to width over 0.5s. Under reduced motion all of it stops, and the final state shows instantly.
