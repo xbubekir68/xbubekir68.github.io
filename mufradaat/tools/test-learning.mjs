@@ -1256,5 +1256,20 @@ run(`U="gast";loadS()`);
   ok("… ohne Netz kommt die gespeicherte App",a6.out==="APP");
 }
 
+// ---------- 36. Untere Leiste über dem Lernpfad, iPhone-Statusleiste, Knopf auf dem Stufen-Band ----------
+{
+  const css=html.slice(html.indexOf("<style>"),html.indexOf("</style>")),navZ=+((css.match(/\nnav\{[^}]*z-index:(\d+)/)||[])[1]||0);
+  const zs=[...css.matchAll(/([^{}]+)\{[^}]*z-index:(\d+)/g)].map(m=>[m[1].trim(),+m[2]]),inhalt=zs.filter(([s])=>/\.stb|\.kjp|\.ring span|\.rgi|\.zgtr/.test(s));
+  ok("Leiste liegt über allen Inhalten des Lernpfads und der Seiten (Stufen-Band, Sprungknöpfe)",navZ>=20&&inhalt.length>=3&&inhalt.every(([,z])=>z<navZ),{navZ,inhalt});
+  ok("… Meldungen, Konfetti und Startbildschirm liegen weiter darüber",zs.filter(([s])=>/#toasts|\.conf|#splash|\.lvfx/.test(s)).every(([,z])=>z>navZ));
+  ok("iPhone-Statusleiste: Inhalt beginnt darunter, beim Scrollen läuft nichts unter die Uhr",/\nmain\{[^}]*padding:calc\(20px \+ env\(safe-area-inset-top,0px\)\)/.test(css)&&/body::before\{[^}]*position:fixed;top:0[^}]*height:env\(safe-area-inset-top,0px\);background:var\(--bg\)/.test(css));
+  run(`U="b36";loadS();S.np=true;for(const l of KL.filter(l=>l.e[0]==="s"&&l.id!=="s8-7"))S.kp.d[l.id]=1;view="path";ui.hint=null;path()`);let p36=run(`app.innerHTML`);
+  ok("Stufen-Band: fehlt nur noch der Abschlusstest, führt der Knopf dorthin statt zum Einstufungstest",/<div class="stb"[^>]*>.*<button class="sbt" data-kl="s8-7">Zum Abschlusstest<small>16 von 20 richtig öffnen Stufe 2<\/small><\/button>/s.test(p36)&&!/<div class="stb"[^>]*>(?:(?!<\/div>).)*data-kt="wissen"/s.test(p36));
+  run(`delete S.kp.d["s8-6"];path()`);p36=run(`app.innerHTML`);
+  ok("… fehlt noch mehr, bleibt „Ich kann schon lesen“",/<div class="stb"[^>]*>.*<button class="sbt" data-kt="wissen">Ich kann schon lesen/s.test(p36));
+  run(`for(const l of KL.filter(l=>l.e[0]==="s"))S.kp.d[l.id]=1;path()`);ok("… Stufe 1 geschafft: Band ohne Knopf",!/<div class="stb"[^>]*>(?:(?!<\/div>).)*class="sbt"/s.test(run(`app.innerHTML`)));
+  run(`U="gast";loadS()`);
+}
+
 console.log("\n"+pass+" OK, "+fail+" FAIL");
 process.exit(fail?1:0);
