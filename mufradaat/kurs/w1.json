@@ -1,0 +1,26 @@
+{
+  "id": "w1",
+  "ziel": {"art": "woerter", "woerter": ["marhaban", "shukran", "ana", "man", "ayna"], "text": "Grüßen, danken und erste Fragen stellen", "geschafft": "Du kannst grüßen, danken und erste Fragen stellen."},
+  "lektionen": [
+    {
+      "id": "w1-1", "titel": "Hallo sagen", "art": "wortschatz", "station": "مَرْحَبًا",
+      "woerter": ["marhaban", "ahlan", "sabah-al-khayr", "masa-al-khayr", "kayfa-haluk", "ana-bikhayr", "maa-s-salamah", "ismi"]
+    },
+    {
+      "id": "w1-2", "titel": "Höflichkeit", "art": "wortschatz", "station": "شُكْرًا",
+      "woerter": ["shukran", "afwan", "min-fadlik", "asif", "naam", "la", "alhamdulillah", "inshaallah"]
+    },
+    {
+      "id": "w1-3", "titel": "Pronomen", "art": "wortschatz", "station": "أَنَا",
+      "woerter": ["ana", "anta", "anti", "huwa", "hiya", "nahnu", "hum"],
+      "tipp": {"titel": "Ich, du, er, sie", "zeichen": "أَنْتَ أَنْتِ",
+        "text": "Für „du“ gibt es zwei Wörter: أَنْتَ sagt man zu einem Mann, أَنْتِ zu einer Frau. „Er“ heißt هُوَ, „sie“ heißt هِيَ."}
+    },
+    {
+      "id": "w1-4", "titel": "Fragewörter", "art": "wortschatz", "station": "أَيْنَ",
+      "woerter": ["ma-was", "man", "ayna", "mata", "limadha", "kayfa", "kam", "hal"],
+      "tipp": {"titel": "Ja oder nein?", "zeichen": "هَلْ",
+        "text": "Mit هَلْ am Anfang wird ein Satz zu einer Frage, auf die man mit Ja oder Nein antwortet: هَلْ أَنْتَ طَالِبٌ heißt „Bist du Schüler?“."}
+    }
+  ]
+}
