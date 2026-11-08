@@ -447,6 +447,11 @@ A 16px-rounded bar under the task: a 30px circle with ✓ (green) or ✕ (brick)
 A 32px-rounded card on a stack of two offset cards (deck1, deck2). The front is white; the back (after tapping) is Deep Garden Green with white text (Logo Mint with night text in dark mode). The counter sits in a pill chip.
 
 ### Lists and Settings
+- **Progress head** (Alphabet, Abzeichen): "x von y" at 20px/900, a sage label and a full-width 10px mint bar.
+- **Alphabet tiles:** white 20px tiles with a Line Depth edge. Letters already known for sure get a Mist fill, a Mist Depth edge and a green letter.
+- **Letter page:** a Logo Night head card with a Night Circle. The letter is mint at `--ar6`, name and sound in white, the hint in Night Mute, and a mint "Name anhören" button with a Ribbon Depth edge. Form cards have depth. Previous and next are white pills that also show the neighbouring letter in green.
+- **Word list:** a search field with a magnifier (16px corners) and category chips (active: Logo Night with mint text, or the reverse in dark mode, with `aria-pressed`). A word count follows, then word rows with a 3px Line Depth edge. Empty states (no results, no favourites) are a card with a green icon and, where it helps, a way onward.
+- **Badges:** earned badges are Logo Night cards with a mint-ringed medal on Night 2. Locked badges are transparent with a dashed Line Depth border. Section titles use the uppercase section style.
 - **Menu items:** 20px-rounded white rows (64px tall) with a 40px icon tile (12px corners, mist fill, green icon) on the left and a chevron on the right; locked items use a hairline-grey tile.
 - **Section titles** (settings, statistics): 13px extra bold, uppercase, 0.06em tracking, sage grey.
 - **Settings groups:** 20px-rounded cards with 52px rows; switches are 50×30 with a white knob, green when on (Logo Mint in dark mode).
