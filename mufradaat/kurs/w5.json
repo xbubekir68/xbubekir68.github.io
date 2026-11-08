@@ -1,0 +1,22 @@
+{
+  "id": "w5",
+  "ziel": {"art": "woerter", "woerter": ["wahid", "thalathah", "asharah", "ahmar", "azraq", "akhdar"], "text": "Zählen und Farben nennen", "geschafft": "Du kannst bis zehn zählen und Farben nennen."},
+  "lektionen": [
+    {
+      "id": "w5-1", "titel": "Zahlen 1–10", "art": "wortschatz", "station": "وَاحِد",
+      "woerter": ["wahid", "ithnan", "thalathah", "arbaah", "khamsah", "sittah", "sabah", "thamaniyah", "tisah", "asharah"],
+      "tipp": {"titel": "Arabische Ziffern", "zeichen": "١ ٢ ٣",
+        "text": "So schreibt man die Ziffern: ١ ٢ ٣ ٤ ٥ ٦ ٧ ٨ ٩. Zahlen mit mehreren Ziffern liest man anders als die Schrift von links nach rechts: ٢٠ heißt 20."}
+    },
+    {
+      "id": "w5-2", "titel": "Größere Zahlen", "art": "wortschatz", "station": "صِفْر",
+      "woerter": ["sifr", "ahada-ashar", "ithna-ashar", "ishrun", "thalathun", "arbaun", "khamsun", "miah", "alf"]
+    },
+    {
+      "id": "w5-3", "titel": "Farben", "art": "wortschatz", "station": "أَحْمَر",
+      "woerter": ["ahmar", "azraq", "akhdar", "asfar", "abyad", "aswad", "burtuqali", "bunni", "wardi", "ramadi", "banafsaji", "fiddi"],
+      "tipp": {"titel": "Farben männlich und weiblich", "zeichen": "أَزْرَقُ زَرْقَاءُ",
+        "text": "Farben haben eine eigene weibliche Form: الْبَحْرُ أَزْرَقُ heißt „Das Meer ist blau“, aber السَّمَاءُ زَرْقَاءُ „Der Himmel ist blau“, denn السَّمَاء ist weiblich."}
+    }
+  ]
+}
