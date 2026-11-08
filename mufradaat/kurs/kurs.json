@@ -20,7 +20,18 @@
       "id": 2,
       "titel": "Sprache lernen",
       "ar": "تَعَلُّمُ اللُّغَةِ",
-      "etappen": []
+      "etappen": [
+        {"id": "w1", "titel": "Erste Schritte", "ar": "الْخُطُوَاتُ الْأُولَى", "kurz": "Grüßen, höflich sein, fragen", "datei": "w1.json"},
+        {"id": "w2", "titel": "In der Schule", "ar": "فِي الْمَدْرَسَةِ", "kurz": "Erste Dinge und die ersten Sätze", "datei": "w2.json"},
+        {"id": "w3", "titel": "Zuhause", "ar": "فِي الْبَيْتِ", "kurz": "Haus, Möbel und Familie", "datei": "w3.json"},
+        {"id": "w4", "titel": "Essen & Trinken", "ar": "الطَّعَامُ وَالشَّرَابُ", "kurz": "Was auf den Tisch kommt"},
+        {"id": "w5", "titel": "Zahlen & Farben", "ar": "الْأَرْقَامُ وَالْأَلْوَانُ", "kurz": "Zählen und beschreiben"},
+        {"id": "w6", "titel": "Unterwegs", "ar": "فِي الطَّرِيقِ", "kurz": "Orte, Wege und Verkehr"},
+        {"id": "w7", "titel": "Natur & Tiere", "ar": "الطَّبِيعَةُ وَالْحَيَوَانَاتُ", "kurz": "Wetter, Landschaft und Tiere"},
+        {"id": "w8", "titel": "Zeit & Körper", "ar": "الْوَقْتُ وَالْجِسْمُ", "kurz": "Wann etwas ist, wie wir aussehen"},
+        {"id": "w9", "titel": "Handlungen", "ar": "الْأَفْعَالُ", "kurz": "Was Menschen tun"},
+        {"id": "w10", "titel": "Alltag", "ar": "الْحَيَاةُ الْيَوْمِيَّةُ", "kurz": "Gefühle, Berufe und Kleidung"}
+      ]
     }
   ]
 }

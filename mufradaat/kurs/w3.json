@@ -1,0 +1,29 @@
+{
+  "id": "w3",
+  "ziel": {"art": "lesen", "ar": "الْكِتَابُ عَلَى الطَّاوِلَةِ", "sp": "الْكِتَابُ عَلَى الطَّاوِلَةِ", "tr": "al-kitābu ʿalā ṭ-ṭāwilati", "de": "Das Buch ist auf dem Tisch.", "text": "Sagen, wo etwas ist", "geschafft": "Du kannst sagen, wo etwas im Haus ist."},
+  "lektionen": [
+    {
+      "id": "w3-1", "titel": "Im Haus", "art": "wortschatz", "station": "بَيْت",
+      "woerter": ["bayt", "bab", "nafidhah", "ghurfah", "matbakh", "hammam", "hadiqah"]
+    },
+    {
+      "id": "w3-2", "titel": "Möbel & Dinge", "art": "wortschatz", "station": "طَاوِلَة",
+      "woerter": ["tawilah", "kursi", "sarir", "miftah", "misbah", "jidar", "hatif"],
+      "tipp": {"titel": "In und auf", "zeichen": "فِي عَلَى",
+        "text": "فِي heißt „in“, عَلَى heißt „auf“. Das Wort danach endet auf i: الْكِتَابُ عَلَى الطَّاوِلَةِ heißt „Das Buch ist auf dem Tisch“."}
+    },
+    {
+      "id": "w3-3", "titel": "Familie", "art": "wortschatz", "station": "أُخْت", "gram": "genus",
+      "woerter": ["ab", "umm", "akh", "ukht", "ibn", "ibnah", "tifl", "ailah"],
+      "tipp": {"titel": "Männlich oder weiblich?", "zeichen": "اِبْن اِبْنَة",
+        "text": "Bei Menschen zeigt oft schon das Wort, ob es männlich oder weiblich ist: اِبْن (Sohn) und اِبْنَة (Tochter). Manche weiblichen Wörter haben keine Endung, zum Beispiel أُمّ (Mutter) und أُخْت (Schwester)."}
+    },
+    {
+      "id": "w3-4", "titel": "Verwandte & Menschen", "art": "wortschatz", "station": "جَدَّة", "gram": "genus",
+      "woerter": ["jadd", "jaddah", "amm", "khal", "zawj", "zawjah", "rajul", "imraah", "walad", "bint", "sadiq"]
+    },
+    {
+      "id": "w3-5", "titel": "Sätze", "art": "saetze", "station": "جُمَل", "einheit": 2
+    }
+  ]
+}

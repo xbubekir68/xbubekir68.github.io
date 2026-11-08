@@ -504,6 +504,12 @@ In dark mode the roads are deep tints of the same family (S8 is Night 2 with a m
 - **Unit header:** the Arabic unit name at 30px in the accent colour, then "Einheit N · Title" and a 13px description.
 - **Goal sign:** the unit's longest sentence in Naskh at `--ar3`. Words already begun turn green and unknown ones are muted. Below it sit the German translation, a listen link and a "Sätze üben" button.
 
+### Stage 2 (Sprache lernen)
+- **Stage band:** at the start of every further stage the path shows a Logo Night card spanning the width. It carries the stage's Arabic title in mint (`--ar3`), "Stufe 2 · Sprache lernen" at 18px/900 and a Night Mute line. While the stage is still locked, it adds a mint "Ich kann schon lesen" pill that opens the placement test. Jump tests appear only in stage 1.
+- **Word goal sign:** the Etappe goal can be a row of core words (right to left, `--ar3`). Words already begun turn green, the rest stay muted.
+- **New word card:** the flash card with the word at `--ar5`, the German meaning at 22px bold, then the transliteration and the notes (gender, plural) in sage, and "Anhören". It is followed by the matching meaning question. Answer tasks reuse the lesson styles: German options as full-width rows, Arabic options in the two-column grid, sentence building with the word tiles.
+- **Header:** the path header names the stage of the next stop ("Stufe 2 · Sprache lernen") and counts that stage's lessons.
+
 ### Celebration Layer
 Toasts pop in as green pills at the top of the screen. Level-ups are a green badge that drops in with a ring burst and saffron sparks. New badges and passed tests set off confetti, with a sound and a short vibration. Results show up to three stars that spin in one by one. The streak flame flickers once you have practised today. Progress rings fill in over 0.9s, and bars ease to width over 0.5s. Under reduced motion all of it stops, and the final state shows instantly.
 

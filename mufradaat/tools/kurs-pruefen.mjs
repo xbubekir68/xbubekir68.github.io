@@ -18,15 +18,18 @@
 //               Ohne eigenes Zeichen stehen nur: Alif, Yāʾ und Wāw als Dehnung nach Fatha, Kasra und Damma, ى am Wortende,
 //               das stumme Alif nach -an (nicht nach ة und Hamza) und der Artikel ال am Wortanfang (mit Sukun auf dem Lām, vor
 //               Sonnenbuchstaben ohne, dann mit Schadda auf dem nächsten Buchstaben). Tanwin nur am Wortende und nie mit Artikel.
+//   wortschatz: Stufe 2. woerter[] = IDs aus der Wortliste der App (W_RAW), 4–12, jedes Wort nur einmal in allen Wortschatz-Lektionen;
+//               gram = "genus" oder "plural" hängt passende Übungen an (optional)
+//   saetze:     Stufe 2. einheit = Nummer der Einheit (0–9) in UNITS; die Lektion übt deren Satzrunden (SSTA)
 //   test:       Abschlusstest der Stufe, ohne eigene Wörter, als letzte Lektion der letzten Etappe einer Stufe.
-// Ziele: alle-buchstaben (alle 29 eingeführt) oder lesen {ar, sp, de}: ein Text, den man am Ende der Etappe lesen kann (in Koranschrift ohne sp)
+// Ziele: woerter {woerter[] = 3–8 Wort-IDs}: Kernwörter einer Wortschatz-Etappe; alle-buchstaben (alle 29 eingeführt) oder lesen {ar, sp, de, tr?}: ein Text, den man am Ende der Etappe lesen kann (in Koranschrift ohne sp)
 // (de = Übersetzung, nur bei Texten mit Vokalzeichen; die Umschrift erzeugt die App).
 // Neue Etappen-Dateien gehören auch in die Offline-Liste SHELL in sw.js.
 import fs from "node:fs";
 import vm from "node:vm";
 import {fileURLToPath} from "node:url";
 const APP=fileURLToPath(new URL("..",import.meta.url)),KURS=APP+"kurs/";
-const ARTEN=["buchstaben","verbinden","suren","vokale","test"],ZIELE=["alle-buchstaben","lesen"];
+const ARTEN=["buchstaben","verbinden","suren","vokale","wortschatz","saetze","test"],ZIELE=["alle-buchstaben","lesen","woerter"];
 const ZEICHEN_ARTEN=["a","i","u","hamza","an","in","un","ta","aa","ii","uu","kl","dip","o","al","hz","sh","sun","md","wa","q","qk","pz"],TANW=["an","in","un"],VZ={"\u064e":"a","\u0650":"i","\u064f":"u","\u064b":"an","\u064d":"in","\u064c":"un"};
 const AR=/^[؀-ۿݐ-ݿ ]+$/; // nur arabische Zeichen und Leerzeichen
 const MK=/[\u064b-\u0652\u0670\u06e1]/,QP="\u06d6\u06d7\u06d8\u06d9\u06da\u06db",QX=/[ٱ\u06e1\u06e5\u06e6\u06df\u06d6-\u06db]|[ىو]\u0670|\u064e\u0670/,SONNE=new Set(["ta","tha","dal","dhal","ra","zay","sin","shin","sad","dad","tah","zah","lam","nun"]); // Zeichen über und unter Buchstaben; Sonnenbuchstaben
@@ -37,6 +40,7 @@ export function pruefen(){
   const fehler=[],f=m=>fehler.push(m),html=fs.readFileSync(APP+"index.html","utf8"),sw=fs.readFileSync(APP+"sw.js","utf8");
   const ALPHA=vm.runInNewContext(html.match(/const ALPHA=(\[[\s\S]*?\n\])\.map/)[1]),AB=Object.fromEntries(ALPHA.map(a=>[a[0],a]));
   const audio=JSON.parse(fs.readFileSync(APP+"audio/audio.json","utf8")).items;
+  const WIDS=new Set(vm.runInNewContext(html.match(/const W_RAW=(\[[\s\S]*?\]);/)[1]).map(w=>w[0])),NU=vm.runInNewContext(html.match(/const UNITS=(\[[\s\S]*?\n\]);/)[1]).length,wsSeen=new Map(); // Stufe 2: Wortliste und Einheiten der App
   const shell=vm.runInNewContext("("+sw.match(/SHELL=(\[[^\]]*\])/)[1]+")");
   const lies=(n,wo)=>{try{return JSON.parse(fs.readFileSync(KURS+n,"utf8"))}catch(e){f(`${wo}: ${n} fehlt oder ist kein gültiges JSON (${e.message})`);return null}};
   const idx=lies("kurs.json","Übersicht");if(!idx)return{fehler,etappen:0,lektionen:0};
@@ -196,6 +200,12 @@ export function pruefen(){
           if(ZEICHEN_ARTEN.includes(l.zeichen)&&mit<W.length/2)f(`${lw}: weniger als die Hälfte der Wörter nutzt das neue Zeichen`);
           if(l.station!==undefined&&txt(l.station))vokal(l.station,lw,"Station");
         }
+        if(l.art==="wortschatz"){
+          if(!Array.isArray(l.woerter)||l.woerter.length<4||l.woerter.length>12)f(`${lw}: 4 bis 12 Wörter nötig`);
+          for(const i of l.woerter||[]){if(!WIDS.has(i))f(`${lw}: unbekanntes Wort „${i}“ (nicht in der Wortliste)`);else if(wsSeen.has(i))f(`${lw}: „${i}“ steht schon in ${wsSeen.get(i)}`);else wsSeen.set(i,l.id)}
+          if(l.gram!==undefined&&!["genus","plural"].includes(l.gram))f(`${lw}: unbekannte Grammatik-Übung „${l.gram}“`);
+        }
+        if(l.art==="saetze"&&!(Number.isInteger(l.einheit)&&l.einheit>=0&&l.einheit<NU))f(`${lw}: „einheit“ muss eine Einheit von 0 bis ${NU-1} sein`);
         if(l.art==="test"){ // Abschlusstest: Aufgaben aus allen Etappen der Stufe, steht als letzte Lektion der Stufe
           if(l.woerter||l.neu||l.suren)f(`${lw}: ein Test hat keine eigenen Wörter`);
           if(l!==d.lektionen[d.lektionen.length-1]||e!==st.etappen[st.etappen.length-1])f(`${lw}: der Abschlusstest steht am Ende der Stufe`);
@@ -214,10 +224,13 @@ export function pruefen(){
         else if(d.ziel.art==="lesen")buchst(d.ziel.ar,wo+", Ziel","Zieltext",true);
         if(d.ziel.art==="lesen"&&!QX.test(d.ziel.ar)){if(!txt(d.ziel.sp)||!AR.test(d.ziel.sp))f(`${wo}: Ziel ohne arabischen Vorlesetext`)} // Koranschrift liest keine Computerstimme vor
         if(d.ziel.art==="lesen"&&QX.test(d.ziel.ar)&&d.ziel.sp!==undefined)f(`${wo}: Ziel in Koranschrift ohne Vorlesetext („sp“ weglassen)`);
+        if(d.ziel.art==="woerter"){const z=d.ziel.woerter;if(!Array.isArray(z)||z.length<3||z.length>8)f(`${wo}: Ziel „woerter“ braucht 3 bis 8 Wörter`);else z.filter(i=>!WIDS.has(i)).forEach(i=>f(`${wo}: Ziel nennt unbekanntes Wort „${i}“`))}
         if(d.ziel.art==="alle-buchstaben"){const fehlt=ALPHA.filter(a=>!eingef.has(a[0])).map(a=>a[0]);if(fehlt.length)f(`${wo}: Ziel „alle Buchstaben“, aber es fehlen ${fehlt.join(", ")}`)}
       }
     }
   }
+  for(const st of idx.stufen||[])if((st.etappen||[]).length&&st.etappen.every(e=>e.datei)&&[...wsSeen.values()].some(id=>st.etappen.some(e=>id.startsWith(e.id+"-")))){ // fertige Wortschatz-Stufe: jedes Wort der App kommt vor
+    const fehlt=[...WIDS].filter(i=>!wsSeen.has(i));if(fehlt.length)f(`Stufe ${st.id}: ${fehlt.length} Wörter der Wortliste kommen in keiner Lektion vor (${fehlt.slice(0,8).join(", ")}${fehlt.length>8?" …":""})`)}
   for(const n of fs.readdirSync(KURS))if(n.endsWith(".json")&&!dateien.has(n))f(`kurs/${n} wird in kurs.json nicht genannt`);
   return{fehler,etappen:ne,lektionen:nl};
 }
