@@ -1,5 +1,5 @@
 // Mufradaat Service Worker: App-Hülle offline, Anmeldung/Sync nie aus dem Cache.
-const V="mfr-v51",AC="mfr-audio",SHELL=["./","index.html","manifest.webmanifest","icons/icon-192.png","icons/icon-512.png","icons/favicon-64.png","icons/icon-180.png","fonts/noto-naskh-arabic-500.woff2","fonts/noto-naskh-arabic-700.woff2","brand/mufradaat.webp","brand/mufradaat-nacht.webp","fonts/figtree-latin-400.woff2","fonts/figtree-latin-600.woff2","fonts/figtree-latin-800.woff2","fonts/figtree-latin-900.woff2","fonts/figtree-latin-ext-400.woff2","fonts/figtree-latin-ext-600.woff2","fonts/figtree-latin-ext-800.woff2","fonts/figtree-latin-ext-900.woff2","vendor/supabase.js","kurs/kurs.json","kurs/s1.json","kurs/s2.json","kurs/s3.json","kurs/s4.json","kurs/s5.json","kurs/s6.json","kurs/s7.json","kurs/s8.json","kurs/a1.json","kurs/a2.json"];
+const V="mfr-v52",AC="mfr-audio",SHELL=["./","index.html","manifest.webmanifest","icons/icon-192.png","icons/icon-512.png","icons/favicon-64.png","icons/icon-180.png","fonts/noto-naskh-arabic-500.woff2","fonts/noto-naskh-arabic-700.woff2","brand/mufradaat.webp","brand/mufradaat-nacht.webp","fonts/figtree-latin-400.woff2","fonts/figtree-latin-600.woff2","fonts/figtree-latin-800.woff2","fonts/figtree-latin-900.woff2","fonts/figtree-latin-ext-400.woff2","fonts/figtree-latin-ext-600.woff2","fonts/figtree-latin-ext-800.woff2","fonts/figtree-latin-ext-900.woff2","vendor/supabase.js","kurs/kurs.json","kurs/s1.json","kurs/s2.json","kurs/s3.json","kurs/s4.json","kurs/s5.json","kurs/s6.json","kurs/s7.json","kurs/s8.json","kurs/a1.json","kurs/a2.json"];
 self.addEventListener("install",e=>{
   e.waitUntil(caches.open(V).then(c=>Promise.all(SHELL.map(u=>c.add(u).catch(()=>{})))).then(()=>self.skipWaiting()));
 });
@@ -16,7 +16,8 @@ self.addEventListener("fetch",e=>{
   if(/\/audio\//.test(u.pathname)){e.respondWith(audio(r));return} // Audio: eigener Cache, bleibt bei App-Updates erhalten
   const page=r.mode==="navigate";
   if(page){ // Seite: erst Netz, immer revalidiert (damit Updates sofort ankommen, nicht erst nach dem HTTP-Cache von GitHub Pages), sonst Cache
-    e.respondWith(fetch(r,{cache:"no-cache"}).then(res=>{const cp=res.clone();caches.open(V).then(c=>c.put("index.html",cp));return res}).catch(()=>caches.match("index.html").then(m=>m||caches.match("./"))));
+    const app=u.pathname===new URL("./",self.registration.scope).pathname||u.pathname===new URL("index.html",self.registration.scope).pathname; // nur die App selbst, keine anderen Seiten im Ordner (z. B. tools/*.md) und keine Fehlerseiten
+    e.respondWith(fetch(r,{cache:"no-cache"}).then(res=>{if(app&&res.ok){const cp=res.clone();caches.open(V).then(c=>c.put("index.html",cp))}return res}).catch(()=>caches.match("index.html").then(m=>m||caches.match("./"))));
     return;
   }
   e.respondWith(caches.match(r).then(m=>m||fetch(r).then(res=>{if(res.ok){const cp=res.clone();caches.open(V).then(c=>c.put(r,cp))}return res})));

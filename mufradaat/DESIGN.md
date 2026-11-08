@@ -515,8 +515,19 @@ In dark mode the roads are deep tints of the same family (S8 is Night 2 with a m
 - **Diktat:** a "Nochmal hören" pill, the German meaning with the word count as a hint, the input field and the Arabic on-screen keyboard. "Prüfen" stays disabled until something is typed. The placeholder reads left to right and the typed text right to left.
 - **Mini-dialogue:** lines as bubbles with a 4px depth edge. Speaker A sits left with a Night badge (mint in dark mode) and speaker B right with a Garden Mist badge. Each bubble can be tapped to hear it. The open last line is a dashed bubble with "…". After answering, every line shows its German translation in sage below the bubble. Answers are full-width Arabic options.
 
+### Sound
+One small sound family, "Holz und Glocke": a soft mallet (a sine fundamental with quiet 2nd and 3rd partials, a 3–6ms attack and an exponential decay). Its notes come from C major pentatonic, the same ladder as the "correct" chime. No square or saw waves and no standard beeps. Everything is synthesised with Web Audio, with no files.
+- **Tick** (`tap`, every other button): a 40ms wooden tick, a sine falling from 880 to 620 Hz plus a faint low-passed click. About 3 dB quieter than the three below, because it comes most often.
+- **Umdrehen** (`flip`, flashcard): a soft paper swish (band-passed noise) sweeping up when the card turns to its back and down when it turns back. A muted landing on G3 follows at 70ms, like a card touching felt. ±3% random variation keeps frequent flips from sounding mechanical. About 0.15s.
+- **Lernpfad** (`path`, path tab, "Zum Lernpfad", opening a stop or lesson, tests on the path): a warm step upward, G4 then C5 75ms later. A low register with few overtones, for orientation and progress. About 0.35s.
+- **Spiele** (`game`, games tab, "Zu den Spielen", every game tile): three quick plucks C5, E5, G5, 45ms apart. They have a slight pitch bounce, brighter partials and a faster decay: livelier, but the same family. About 0.2s.
+- **Level:** tick, Umdrehen, Lernpfad and Spiele are levelled by measurement: K-weighted, loudest 50ms window, rendered offline. Umdrehen, Lernpfad and Spiele sit within 1.5 dB of each other, about 5 dB below the "correct" chime. Peaks stay at −13 dBFS or lower.
+- **Fast tapping:** the tick and the three sounds above each run on their own gain bus. A new one fades out the one still ringing within about 15ms, so nothing stacks. The same sound twice within 40ms plays once.
+- **Speech first:** while a recording or the device voice speaks, the master level ducks to 40% and comes back softly afterwards, so a chime's tail never covers a word.
+- **Rules:** "Töne" off in the settings creates no sound at all. The audio context starts only after the first touch, as browsers require, and resumes from "suspended" and from Safari's "interrupted". Feedback sounds (correct, wrong, win, badge, level) keep their priority order.
+
 ### Celebration Layer
-Toasts pop in as green pills at the top of the screen. Level-ups are a green badge that drops in with a ring burst and saffron sparks. New badges and passed tests set off confetti, with a sound and a short vibration. Results show up to three stars that spin in one by one. The streak flame flickers once you have practised today. Progress rings fill in over 0.9s, and bars ease to width over 0.5s. Under reduced motion all of it stops, and the final state shows instantly.
+Toasts pop in as green pills at the top of the screen, at most three at a time. Three or more new badges at once share one toast ("5 neue Abzeichen: …"). Level-ups are a green badge that drops in with a ring burst and saffron sparks. New badges and passed tests set off confetti, with a sound and a short vibration. Results show up to three stars that spin in one by one. The streak flame flickers once you have practised today. Progress rings fill in over 0.9s, and bars ease to width over 0.5s. Under reduced motion all of it stops, and the final state shows instantly.
 
 ## Do's and Don'ts
 
