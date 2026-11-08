@@ -505,7 +505,7 @@ In dark mode the roads are deep tints of the same family (S8 is Night 2 with a m
 - **Goal sign:** the unit's longest sentence in Naskh at `--ar3`. Words already begun turn green and unknown ones are muted. Below it sit the German translation, a listen link and a "Sätze üben" button.
 
 ### Stage 2 (Sprache lernen)
-- **Stage band:** at the start of every further stage the path shows a Logo Night card spanning the width. It carries the stage's Arabic title in mint (`--ar3`), "Stufe 2 · Sprache lernen" at 18px/900 and a Night Mute line. While the stage is still locked, it adds a mint "Ich kann schon lesen" pill that opens the placement test. Jump tests appear only in stage 1.
+- **Stage band:** at the start of every further stage the path shows a Logo Night card spanning the width. It carries the stage's Arabic title in mint (`--ar3`), "Stufe 2 · Sprache lernen" at 18px/900 and a Night Mute line. While the stage is still locked, it adds a mint "Ich kann schon lesen" pill that opens the placement test. When only the previous stage's final test is left, the pill reads "Zum Abschlusstest" and opens that test instead, because the placement test cannot replace it. Jump tests appear only in stage 1.
 - **Word goal sign:** the Etappe goal can be a row of core words (right to left, `--ar3`). Words already begun turn green, the rest stay muted.
 - **New word card:** the flash card with the word at `--ar5`, the German meaning at 22px bold, then the transliteration and the notes (gender, plural) in sage, and "Anhören". It is followed by the matching meaning question. Answer tasks reuse the lesson styles: German options as full-width rows, Arabic options in the two-column grid, sentence building with the word tiles.
 - **Header:** the path header names the stage of the next stop ("Stufe 2 · Sprache lernen") and counts that stage's lessons.
@@ -514,6 +514,10 @@ In dark mode the roads are deep tints of the same family (S8 is Night 2 with a m
 - **Endung wählen:** the sentence card shows the last word without its ending, highlighted in garden green (`.kgp`), with the German line below. Three spelled-out forms (-un, -an, -in) follow as full-width Arabic options, one above the other.
 - **Diktat:** a "Nochmal hören" pill, the German meaning with the word count as a hint, the input field and the Arabic on-screen keyboard. "Prüfen" stays disabled until something is typed. The placeholder reads left to right and the typed text right to left.
 - **Mini-dialogue:** lines as bubbles with a 4px depth edge. Speaker A sits left with a Night badge (mint in dark mode) and speaker B right with a Garden Mist badge. Each bubble can be tapped to hear it. The open last line is a dashed bubble with "…". After answering, every line shows its German translation in sage below the bubble. Answers are full-width Arabic options.
+
+### Layers and safe areas
+- The bottom tab bar sits on layer 20, above everything on the path and the pages (stage band, jump pills: layer 1). Confetti (50), toasts and the update banner (60), the level effect (70) and the splash screen sit above it.
+- Content starts below the iPhone status bar (`env(safe-area-inset-top)` on top of the 20px main padding). A fixed strip in the page background covers that area, so scrolled content never runs under the clock.
 
 ### Sound
 One small sound family, "Holz und Glocke": a soft mallet (a sine fundamental with quiet 2nd and 3rd partials, a 3–6ms attack and an exponential decay). Its notes come from C major pentatonic, the same ladder as the "correct" chime. No square or saw waves and no standard beeps. Everything is synthesised with Web Audio, with no files.

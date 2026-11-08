@@ -28,7 +28,9 @@
 html{touch-action:pan-x pan-y}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)}
 body{min-height:100vh}
 .ar{font-family:var(--ar);direction:rtl}
-main{max-width:560px;margin:0 auto;padding:20px 24px 110px}
+main{max-width:560px;margin:0 auto;padding:calc(20px + env(safe-area-inset-top,0px)) 24px 110px}
+/* iPhone-Statusleiste (viewport-fit=cover): Inhalt fängt darunter an, und beim Scrollen läuft nichts unter die Uhr */
+body::before{content:"";position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:5;pointer-events:none}
 h1,.h1{font-size:26px;font-weight:700;margin:6px 0 4px}h2{font-size:20px;margin:0}
 p{margin:0}.mute{color:var(--mute);font-size:14px}
 button{font:inherit;color:inherit;cursor:pointer}
@@ -165,7 +167,7 @@ input[type=search],input.t{width:100%;padding:13px 14px;border-radius:12px;borde
 .sw.on{background:var(--g)}.sw.on::after{left:21px}
 .top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
 .x{border:0;background:none;font-size:22px;padding:4px 8px;min-width:44px;min-height:44px}
-nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:center;padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px))}
+nav{position:fixed;z-index:20;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:center;padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px))}
 nav button{flex:1;max-width:120px;border:0;background:none;color:var(--mute);font-size:12px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px;min-height:48px;justify-content:center}
 nav button span{font-size:20px}nav button.on{color:var(--g);font-weight:700}
 :root{--vi:var(--night);--vn:var(--mint);--vil:var(--g)}
@@ -2097,8 +2099,8 @@ function kpath(){
   KURS.stufen.forEach(st=>st.etappen.forEach((e,ei)=>{
     const f=KE[e.id];if(!f){soon.push({...e,st});return}
     if(st!==stIn){stIn=st;if(st.id>1){ // Band zu Beginn jeder weiteren Stufe; wer schon lesen kann, kommt mit dem Einstufungstest hierher
-      const f0=KL.find(l=>kStOf(l.e)===st),lk=f0&&kLocked(f0);
-      nodes.push(`<div class="stb" style="top:${y}px"><span class="ar" lang="ar">${st.ar}</span><b>Stufe ${st.id} · ${esc(st.titel)}</b><small>Wörter, Sätze und erste Grammatik</small>${lk?`<button class="sbt" data-kt="wissen">Ich kann schon lesen<small>Einstufungstest machen</small></button>`:""}</div>`);
+      const f0=KL.find(l=>kStOf(l.e)===st),lk=f0&&kLocked(f0),pt=f0&&KL[f0.k-1],ab=lk&&pt&&pt.art==="test"&&KL.filter(l=>l.k<pt.k&&kStOf(l.e)===kStOf(pt.e)).every(l=>kDone(l.id)); // nur noch der Abschlusstest fehlt: der Einstufungstest hilft dann nicht weiter
+      nodes.push(`<div class="stb" style="top:${y}px"><span class="ar" lang="ar">${st.ar}</span><b>Stufe ${st.id} · ${esc(st.titel)}</b><small>Wörter, Sätze und erste Grammatik</small>${ab?`<button class="sbt" data-kl="${pt.id}">Zum Abschlusstest<small>16 von 20 richtig öffnen Stufe ${st.id}</small></button>`:lk?`<button class="sbt" data-kt="wissen">Ich kann schon lesen<small>Einstufungstest machen</small></button>`:""}</div>`);
       y+=lk?220:150;br=true}}
     const ls=KL.filter(l=>l.e===e.id),jp=ls.length&&kLocked(ls[0])&&st.id===1;th=e.id==="s1"?"ths":"th"+(ei%10); // Sprungtest nur in Stufe 1
     bands.push({y,th,h:`<div class="pgr" style="top:0"><span class="ar ut" lang="ar">${e.ar}</span><b>Etappe ${eLab(e.id)} · ${esc(e.titel)}</b><small>${ls.length} Lektionen · ${esc(e.kurz)}</small>${jp?`<button class="sbt kjp ${th}" data-kj="${e.id}" aria-label="Mit einem Test bis Etappe ${eLab(e.id)} springen">Hierher springen<small>Test mit 10 Aufgaben</small></button>`:""}</div>`}); // gesperrte Etappe: mit einem Test überspringen
@@ -3228,7 +3230,7 @@ loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v52"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v53"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>
