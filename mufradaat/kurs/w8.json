@@ -1,0 +1,28 @@
+{
+  "id": "w8",
+  "ziel": {"art": "woerter", "woerter": ["yawm", "layl", "alyawm", "ras", "yad", "qalb"], "text": "Über Zeit und den Körper sprechen", "geschafft": "Du kannst Tage und Tageszeiten nennen und den Körper beschreiben."},
+  "lektionen": [
+    {
+      "id": "w8-1", "titel": "Tageszeiten", "art": "wortschatz", "station": "يَوْم",
+      "woerter": ["yawm", "layl", "sabah-morning", "masa", "zuhr", "alyawm", "ghadan", "ams", "alan", "saah", "daqiqah"],
+      "tipp": {"titel": "Heute heißt „der Tag“", "zeichen": "الْيَوْمُ",
+        "text": "الْيَوْمُ heißt „heute“, wörtlich „der Tag“: الْيَوْمُ بَارِدٌ heißt „Heute ist es kalt“."}
+    },
+    {
+      "id": "w8-2", "titel": "Wochentage", "art": "wortschatz", "station": "السَّبْت",
+      "woerter": ["ithnayn", "thulatha", "arbia", "khamis", "jumuah", "sabt", "ahad", "usbuu", "shahr", "sanah"],
+      "tipp": {"titel": "Tage zum Zählen", "zeichen": "الْأَحَد",
+        "text": "Viele Wochentage sind gezählt: الْأَحَد (Sonntag) kommt von „eins“, الِاثْنَيْن (Montag) von „zwei“. Die Woche beginnt am Sonntag."}
+    },
+    {
+      "id": "w8-3", "titel": "Kopf", "art": "wortschatz", "station": "رَأْس", "gram": "genus",
+      "woerter": ["ras", "wajh", "ayn", "udhun", "anf", "fam", "sinn", "lisan", "shaar"],
+      "tipp": {"titel": "Paarige Körperteile", "zeichen": "عَيْن أُذُن",
+        "text": "Körperteile, die es zweimal gibt, sind oft weiblich: عَيْن (Auge), أُذُن (Ohr), يَد (Hand). رَأْس (Kopf) und أَنْف (Nase) sind männlich."}
+    },
+    {
+      "id": "w8-4", "titel": "Körper", "art": "wortschatz", "station": "إِصْبَع", "gram": "genus",
+      "woerter": ["yad", "isba", "dhira", "katif", "raqabah", "zahr", "batn", "rijl", "qadam", "qalb"]
+    }
+  ]
+}

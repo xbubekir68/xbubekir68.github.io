@@ -24,6 +24,14 @@ Die Wörter und Sätze von Stufe 2 kommen aus der Wortliste und der Satzliste de
 | 12 | W6 · Orientierung | Wo ist …? | أَيْنَ | Mit أَيْنَ fragt man nach dem Ort: أَيْنَ الْمَطَارُ heißt „Wo ist der Flughafen?“. Die Antwort kann ganz kurz sein: هُنَا (hier) oder هُنَاكَ (dort). |
 | 13 | W7 · Wetter & Himmel | Die Sonne ist weiblich | الشَّمْسُ حَارَّةٌ | الشَّمْس (die Sonne) ist weiblich, darum heißt es الشَّمْسُ حَارَّةٌ „Die Sonne ist heiß“. الْقَمَر (der Mond) ist männlich. |
 | 14 | W7 · Landschaft | Plural im Wortinneren | جَبَل جِبَال | Viele Wörter bilden den Plural im Inneren des Wortes: جَبَل (Berg) wird zu جِبَال, بَحْر (Meer) zu بِحَار. Diesen Plural lernt man am besten gleich mit. |
+| 15 | W8 · Tageszeiten | Heute heißt „der Tag“ | الْيَوْمُ | الْيَوْمُ heißt „heute“, wörtlich „der Tag“: الْيَوْمُ بَارِدٌ heißt „Heute ist es kalt“. |
+| 16 | W8 · Wochentage | Tage zum Zählen | الْأَحَد | Viele Wochentage sind gezählt: الْأَحَد (Sonntag) kommt von „eins“, الِاثْنَيْن (Montag) von „zwei“. Die Woche beginnt am Sonntag. |
+| 17 | W8 · Kopf | Paarige Körperteile | عَيْن أُذُن | Körperteile, die es zweimal gibt, sind oft weiblich: عَيْن (Auge), أُذُن (Ohr), يَد (Hand). رَأْس (Kopf) und أَنْف (Nase) sind männlich. |
+| 18 | W9 · Verben 1 | Verben in der Er-Form | ذَهَبَ | Verben lernst du in der Form „er hat …“: ذَهَبَ heißt „er ging“. In dieser Form stehen Verben auch im Wörterbuch. |
+| 19 | W9 · Verben 2 | Das Verb steht vorne | كَتَبَ | Im arabischen Satz steht das Verb oft am Anfang: كَتَبَ الْمُعَلِّمُ الْكَلِمَةَ heißt „Der Lehrer schrieb das Wort“. |
+| 20 | W9 · Verben 3 | Er und sie | كَتَبَتْ | Für „sie“ hängt man ـَتْ an das Verb: كَتَبَ heißt „er schrieb“, كَتَبَتْ „sie schrieb“. |
+| 21 | W10 · Gefühle & Zustand | Ich bin müde | أَنَا مُتْعَبٌ | Auch hier fehlt das „bin“: أَنَا مُتْعَبٌ heißt „Ich bin müde“. Eine Frau sagt أَنَا مُتْعَبَةٌ. |
+| 22 | W10 · Berufe | Berufe für Frauen | طَبِيبٌ طَبِيبَةٌ | Weibliche Berufsbezeichnungen bekommen ـَة: طَبِيب (Arzt), طَبِيبَة (Ärztin). هِيَ طَبِيبَةٌ heißt „Sie ist Ärztin“. |
 
 ## Ziele der Etappen
 
@@ -34,3 +42,5 @@ Die Wörter und Sätze von Stufe 2 kommen aus der Wortliste und der Satzliste de
 | W4 · Essen & Trinken | الْمَاءُ بَارِدٌ | al-māʾu bāridun | Das Wasser ist kalt. |
 | W6 · Unterwegs | أَيْنَ الْمَطَارُ | ayna l-maṭāru | Wo ist der Flughafen? |
 | W7 · Natur & Tiere | فِي الْحَدِيقَةِ شَجَرَةٌ | fī l-ḥadīqati shajaratun | Im Garten ist ein Baum. |
+| W9 · Handlungen | ذَهَبَ الْوَلَدُ إِلَى الْمَدْرَسَةِ | dhahaba l-waladu ilā l-madrasati | Der Junge ging zur Schule. |
+| W10 · Alltag | هِيَ طَبِيبَةٌ | hiya ṭabībatun | Sie ist Ärztin. |
