@@ -582,6 +582,33 @@ h1,.h1{font-size:28px;font-weight:900;letter-spacing:-.03em}h2{font-weight:800}
 .bzb .mgc{position:absolute;right:-40px;top:-40px;width:150px;height:150px;border-radius:50%;background:var(--night2)}
 .bzb .bzw{position:relative;font-size:var(--ar5);line-height:1.4;color:var(--mint)}
 @media (prefers-reduced-motion:reduce){.gex .gxp{animation:none}}
+/* Restliche Seiten: Alphabet, Buchstabe, Wortliste, Favoriten, Abzeichen */
+.pgk{display:grid;grid-template-columns:auto 1fr;align-items:baseline;gap:2px 8px;margin:4px 0 10px}.pgk b{font-size:20px;font-weight:900}.pgk span{color:var(--mute);font-size:14px}
+.pgk .kpb{grid-column:1/-1;height:10px;margin-top:6px}
+.at{border-radius:20px;border:1px solid var(--line);box-shadow:0 4px 0 var(--line-d);color:var(--ink);transition:transform .08s,box-shadow .08s}
+.at:active{transform:translateY(4px);box-shadow:0 0 0 var(--line-d)}
+.at.ok{background:var(--gl);border-color:var(--gl-d);box-shadow:0 4px 0 var(--gl-d)}.at.ok .ar{color:var(--g)}.at.ok .dots i.on{background:var(--g)}
+.lhc{position:relative;overflow:hidden;display:grid;justify-items:center;gap:2px;padding:18px 20px 22px;border-radius:20px;background:var(--night);color:var(--on-night);text-align:center}
+.lhc>*{position:relative}.lhc .gdc{position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;background:var(--night2)}
+.lhc .lha{font-size:var(--ar6);line-height:1.4;color:var(--mint)}.lhc .lhn{font-size:17px}.lhc .lhh{color:var(--night-mute);font-size:14px;max-width:32ch}
+.lhc .btn{width:auto;margin-top:12px;padding:11px 22px;display:inline-flex;align-items:center;gap:8px;background:var(--mint);color:var(--night);--g-d:var(--band-d)}
+.forms .card{border-radius:16px;box-shadow:0 4px 0 var(--line-d)}
+.nav2{margin-top:18px;gap:12px}
+.lnv{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:6px 16px;border:2px solid var(--line);border-radius:999px;background:var(--card);color:var(--ink);font:inherit;font-weight:800;box-shadow:0 4px 0 var(--line-d);direction:ltr;cursor:pointer}
+.lnv .ar{font-size:var(--ar2);line-height:1.5;color:var(--g)}.lnv:active{transform:translateY(4px);box-shadow:0 0 0 var(--line-d)}
+.srch{position:relative;display:block}.srch svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--mute);pointer-events:none}
+.srch input[type=search]{padding:14px 14px 14px 42px;border-radius:16px;min-height:50px}
+.chip{font-weight:700}.chip.on{background:var(--night);color:var(--mint);border-color:var(--night)}
+.wlc{font-size:13px;margin:10px 4px 0}
+.w{box-shadow:0 3px 0 var(--line-d)}.w .ar{color:var(--ink)}
+.emp{display:grid;justify-items:center;gap:8px;margin-top:12px;padding:22px 18px;text-align:center}.emp>svg{color:var(--g)}.emp .btn{width:auto;margin:4px 0 0;padding:11px 20px}
+.bgh{margin:22px 4px 8px;font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}.bgh small{text-transform:none;letter-spacing:0;font-weight:600}
+.bg{gap:12px}.bdg{border-radius:20px;padding:16px 10px}
+.bdg:not(.lock){background:var(--night);border-color:var(--night);color:var(--on-night)}
+.bdg:not(.lock) .med{background:var(--night2);border-color:var(--mint);color:var(--mint)}.bdg:not(.lock) small{color:var(--night-mute)}
+.bdg.lock{background:transparent;border:1px dashed var(--line-d)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .lhc,:root:not([data-theme="light"]) .bdg:not(.lock){box-shadow:0 0 0 1px var(--line)}:root:not([data-theme="light"]) .chip.on{background:var(--mint);color:var(--night);border-color:var(--mint)}}
+:root[data-theme="dark"] .lhc,:root[data-theme="dark"] .bdg:not(.lock){box-shadow:0 0 0 1px var(--line)}:root[data-theme="dark"] .chip.on{background:var(--mint);color:var(--night);border-color:var(--mint)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .gex,:root:not([data-theme="light"]) .lnb,:root:not([data-theme="light"]) .bzb,:root:not([data-theme="light"]) .bzc.dk{box-shadow:0 0 0 1px var(--line)}}
 :root[data-theme="dark"] .gex,:root[data-theme="dark"] .lnb,:root[data-theme="dark"] .bzb,:root[data-theme="dark"] .bzc.dk{box-shadow:0 0 0 1px var(--line)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .sqk,:root:not([data-theme="light"]) .sqdk{box-shadow:0 0 0 1px var(--line)}}:root[data-theme="dark"] .sqk,:root[data-theme="dark"] .sqdk{box-shadow:0 0 0 1px var(--line)}
@@ -928,7 +955,8 @@ stop:'<rect x="7" y="7" width="10" height="10" rx="1.5"/>',
 play:'<path d="M8 5v14l11-7z"/>',
 rain:'<path d="M7 3v6M12 6v8M17 3v5M7 15v6M17 13v8"/>',
 train:'<rect x="5" y="3" width="14" height="13" rx="3"/><path d="M5 10h14M9 16l-2.5 4M15 16l2.5 4M8.5 13h.01M15.5 13h.01"/>',
-basket:'<path d="M3 10h18l-2.5 10h-13z"/><path d="M8 10l4-6 4 6M9 14v3M15 14v3"/>'
+basket:'<path d="M3 10h18l-2.5 10h-13z"/><path d="M8 10l4-6 4 6M9 14v3M15 14v3"/>',
+search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>'
 };
 const ic=(n,s=22,f=false)=>`<svg class="i" viewBox="0 0 24 24" width="${s}" height="${s}" ${f?'fill="currentColor" stroke="none"':'fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"'} aria-hidden="true">${ICO[n]}</svg>`;
 const xbtn=(go,label="Beenden")=>`<button class="x" data-go="${go}" aria-label="${label}">${ic("close")}</button>`;
@@ -1192,19 +1220,20 @@ const alphaGate=()=>!S.aok&&!hasWords()&&!alphaPassed()&&!kS1Done(); // vor dem 
 const kS1Done=()=>{const ls=KL.filter(l=>l.e==="s1");return ls.length>0&&ls.every(l=>kDone(l.id))};
 const aLocked=b=>b>0&&!S.aok&&!hasWords()&&!aPass(b-1);
 const dots=n=>`<span class="dots" aria-hidden="true">${[0,1,2].map(i=>`<i class="${i<n?"on":""}"></i>`).join("")}</span>`;
+const pgHead=(n,m,t)=>`<div class="pgk"><b>${n} von ${m}</b><span>${t}</span><span class="kpb" role="img" aria-label="${n} von ${m} ${t}"><i style="width:${m?Math.round(n/m*100):0}%"></i></span></div>`;
 function alphabet(){
-  paint(head("Alphabet",ui.from||"home")+`<p class="mute">${alphaSure()} von ${ALPHA.length} Buchstaben sicher. Ein Buchstabe gilt als sicher, wenn du ihn dreimal in Folge richtig erkannt hast (die Punkte zeigen den Stand).</p>
+  paint(head("Alphabet",ui.from||"home")+pgHead(alphaSure(),ALPHA.length,"Buchstaben sicher")+`<p class="mute">Ein Buchstabe gilt als sicher, wenn du ihn dreimal in Folge richtig erkannt hast (die Punkte zeigen den Stand).</p>
   <button class="btn" data-go="aquiz" style="margin-top:12px">Buchstaben üben</button>
-  <div class="agrid">${ALPHA.map(a=>`<button class="card at" data-al="${a.i}" aria-label="${a.n}, ${aCnt(a.i)>=3?"sicher":"noch nicht sicher"}"><span class="ar" lang="ar">${a.c}</span><b>${a.n}</b>${dots(Math.min(3,aCnt(a.i)))}</button>`).join("")}</div>`);
+  <div class="agrid">${ALPHA.map(a=>`<button class="card at${aCnt(a.i)>=3?" ok":""}" data-al="${a.i}" aria-label="${a.n}, ${aCnt(a.i)>=3?"sicher":"noch nicht sicher"}"><span class="ar" lang="ar">${a.c}</span><b>${a.n}</b>${dots(Math.min(3,aCnt(a.i)))}</button>`).join("")}</div>`);
 }
 function letter(){
   const k=ALPHA.findIndex(a=>a.i===ui.al),a=ALPHA[k],pv=ALPHA[(k+ALPHA.length-1)%ALPHA.length],nx=ALPHA[(k+1)%ALPHA.length];
   const f=[["b","Anfang"],["m","Mitte"],["f","Ende"],["i","Allein"]]; // Reihenfolge von rechts nach links: Wortanfang rechts, Wortende links
-  paint(head(a.n,"alphabet")+`<div class="card flash slide"><div class="ar as6" lang="ar">${a.c}</div><p><b>${a.n}</b> · ${a.s}</p><p class="mute">${a.h}</p><button class="btn alt" id="sp" style="width:auto;padding:10px 22px">${ic("speaker",18)} Name anhören</button></div>
+  paint(head(a.n,"alphabet")+`<div class="lhc slide"><span class="gdc" aria-hidden="true"></span><div class="ar lha" lang="ar">${a.c}</div><p class="lhn"><b>${a.n}</b> · ${a.s}</p><p class="lhh">${a.h}</p><button class="btn" id="sp">${ic("speaker",18)} Name anhören</button></div>
   <p class="gt">Die vier Formen</p><div class="rdir" aria-hidden="true"><span>‹ Ende</span><i></i><span>Anfang</span></div><p class="sr">Gelesen wird von rechts nach links: Der Wortanfang steht rechts, das Wortende links.</p><div class="forms">${f.map(x=>`<div class="card"><span class="ar" lang="ar">${aform(a,x[0])}</span><small>${x[1]}</small></div>`).join("")}</div>
   ${a.nj?`<p class="mute" style="margin-top:8px">${a.i==="hamza"?"Das Hamza verbindet sich nicht und hat nur diese eine Form.":"Dieser Buchstabe verbindet sich nicht mit dem folgenden. Er steht allein oder am Wortende nach einem verbindenden Buchstaben."}</p>`:""}
   <p class="gt">Beispielwort</p><button class="w" id="ex"><span class="ar" lang="ar" style="min-width:110px">${a.ea}</span><span style="flex:1"><b>${a.ed}</b><span class="tr"><br>(${a.et})</span></span><span class="mute">${ic("speaker",18)}</span></button>
-  <div class="row sp nav2" style="margin-top:16px"><button class="btn alt" data-al="${pv.i}" style="margin:0;width:auto;padding:10px 18px;direction:ltr">${pv.n} →</button><button class="btn alt" data-al="${nx.i}" style="margin:0;width:auto;padding:10px 18px;direction:ltr">← ${nx.n}</button></div>`);
+  <div class="row sp nav2"><button class="lnv" data-al="${pv.i}"><span class="ar" lang="ar">${pv.c}</span>${pv.n} →</button><button class="lnv" data-al="${nx.i}">← ${nx.n}<span class="ar" lang="ar">${nx.c}</span></button></div>`);
   $("#sp").onclick=()=>speak(a.sp);$("#ex").onclick=()=>speak(a.ea);
 }
 // Übung: Buchstaben erkennen, Formen, Namen hören, Anfangsbuchstabe
@@ -2163,7 +2192,7 @@ function more(){
 function badges(){
   const have=S.badges||[];
   const card=b=>`<div class="card bdg ${have.includes(b.id)?"":"lock"}"><span class="med">${medal(b.ic)}</span><b>${b.n}</b><small>${b.d}</small></div>`,rd=BADGES.filter(b=>BREAD.includes(b.id)),rest=BADGES.filter(b=>!BREAD.includes(b.id)),cnt=l=>l.filter(b=>have.includes(b.id)).length;
-  paint(head("Abzeichen","more")+`<p class="mute">${have.length} von ${BADGES.length} freigeschaltet</p>
+  paint(head("Abzeichen","more")+pgHead(have.length,BADGES.length,"freigeschaltet")+`
   <h2 class="bgh">Lesen lernen <small class="mute">${cnt(rd)} von ${rd.length}</small></h2><div class="bg">${rd.map(card).join("")}</div>
   <h2 class="bgh">Wörter und Übung <small class="mute">${cnt(rest)} von ${rest.length}</small></h2><div class="bg">${rest.map(card).join("")}</div>`);
 }
@@ -2212,14 +2241,14 @@ function list(){
   const q=ui.q.toLowerCase();
   const ws=W.filter(w=>(ui.cat==="Alle"||w.cat===ui.cat)&&(!q||w.de.toLowerCase().includes(q)||w.tr.toLowerCase().includes(q)||norm(w.ar).includes(norm(q))));
   const keep=(document.querySelector(".chips")||{}).scrollLeft;
-  paint(head("Wortliste",ui.from||"more")+`<input type="search" id="q" placeholder="Wörter suchen …" value="${esc(ui.q)}" aria-label="Wörter suchen"><div class="chips">${cats.map(c=>`<button class="chip ${ui.cat===c?"on":""}" data-cat="${c}">${c}</button>`).join("")}</div><div id="ws">${ws.map(wordRow).join("")||'<p class="mute">Keine Treffer. Versuch einen anderen Suchbegriff.</p>'}</div>`);
+  paint(head("Wortliste",ui.from||"more")+`<label class="srch">${ic("search",18)}<input type="search" id="q" placeholder="Wörter suchen …" value="${esc(ui.q)}" aria-label="Wörter suchen"></label><div class="chips">${cats.map(c=>`<button class="chip ${ui.cat===c?"on":""}" data-cat="${c}" aria-pressed="${ui.cat===c}">${c}</button>`).join("")}</div><p class="mute wlc">${ws.length} ${ws.length===1?"Wort":"Wörter"}</p><div id="ws">${ws.map(wordRow).join("")||`<div class="card emp">${ic("search",28)}<p><b>Keine Treffer.</b> Versuch einen anderen Suchbegriff.</p></div>`}</div>`);
   $("#q").oninput=e=>{ui.q=e.target.value;const pos=e.target.selectionStart;list();const el=$("#q");el.focus();el.setSelectionRange(pos,pos)};
   const ch=$(".chips"),on=ch.querySelector(".on");
   ch.scrollLeft=keep===undefined?0:keep; // Leiste bleibt beim Antippen und Suchen an ihrer Stelle
   if(on){const l=on.offsetLeft-36,r=on.offsetLeft+on.offsetWidth+40;if(l<ch.scrollLeft)ch.scrollLeft=l;else if(r>ch.scrollLeft+ch.clientWidth)ch.scrollLeft=r-ch.clientWidth}
   ch.onwheel=e=>{if(e.deltaX||!e.deltaY||ch.scrollWidth<=ch.clientWidth)return;e.preventDefault();ch.scrollLeft+=e.deltaY} // Maus: Rad scrollt die Leiste seitlich
 }
-function fav(){paint(head("Favoriten","more")+`<p class="mute">Tippe bei den Karteikarten auf den Stern, um Wörter zu speichern.</p><div id="fv">${(S.fav||[]).map(i=>BY[i]).filter(Boolean).map(wordRow).join("")||'<div class="card" style="margin-top:12px">Noch keine Favoriten. Öffne die Karteikarten und markiere ein Wort mit dem Stern.</div>'}</div>`)}
+function fav(){paint(head("Favoriten","more")+`<p class="mute">Tippe bei den Karteikarten auf den Stern, um Wörter zu speichern.</p><div id="fv">${(S.fav||[]).map(i=>BY[i]).filter(Boolean).map(wordRow).join("")||`<div class="card emp">${ic("star",28)}<p><b>Noch keine Favoriten.</b> Öffne die Karteikarten und markiere ein Wort mit dem Stern.</p><button class="btn alt" data-go="cards">Zu den Karteikarten</button></div>`}</div>`)}
 
 // ===== Karteikarten =====
 let cd={order:[],n:0,flip:false,sig:0,anim:false};
@@ -2996,7 +3025,7 @@ loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v45"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v46"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>

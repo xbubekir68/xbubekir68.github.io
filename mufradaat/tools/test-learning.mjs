@@ -1113,5 +1113,21 @@ run(`U="alt30c";loadS();S.badges=[];S.st.regen=19;S.st.magnet=2;for(const x of K
 ok("… knapp darunter: noch nicht",run(`!S.badges.includes("regen")&&!S.badges.includes("kalli")&&!S.badges.includes("magnet")`));
 run(`U="gast";loadS()`);
 
+// ---------- 31. Restliche Seiten im neuen Design ----------
+run(`U="sei31";loadS();S.aok="skip";S.alpha={ba:3,ta:1};view="alphabet";alphabet()`);let a31=run(`app.innerHTML`);
+ok("Alphabet: Fortschrittskopf, sichere Buchstaben mit Mint-Tönung",/<div class="pgk"><b>1 von 29<\/b><span>Buchstaben sicher<\/span><span class="kpb"[^>]*><i style="width:3%"><\/i><\/span><\/div>/.test(a31)&&/class="card at ok" data-al="ba"/.test(a31)&&/class="card at" data-al="ta"/.test(a31));
+run(`ui.al="ba";letter()`);let l31=run(`app.innerHTML`);
+ok("Buchstabe: dunkle Kopf-Karte mit großem Zeichen in Mint und Mint-Knopf",/<div class="lhc slide"><span class="gdc"[^>]*><\/span><div class="ar lha" lang="ar">ب<\/div>/.test(l31)&&/<button class="btn" id="sp">/.test(l31)&&/\.lhc \.lha\{font-size:var\(--ar6\)/.test(html));
+ok("… Vor und Zurück als Pillen mit den Nachbar-Buchstaben",/<button class="lnv" data-al="alif"><span class="ar" lang="ar">ا<\/span>Alif →<\/button>/.test(l31)&&/<button class="lnv" data-al="ta">← Tāʾ<span class="ar" lang="ar">ت<\/span><\/button>/.test(l31));
+run(`ui.cat="Alle";ui.q="";view="list";list()`);let w31=run(`app.innerHTML`);
+ok("Wortliste: Suchfeld mit Lupe, Chips melden ihren Zustand, Anzahl der Wörter",/<label class="srch"><svg[^>]*>.*<\/svg><input type="search" id="q"/.test(w31)&&/class="chip on" data-cat="Alle" aria-pressed="true"/.test(w31)&&/<p class="mute wlc">330 Wörter<\/p>/.test(w31));
+run(`ui.q="xyzqq";list()`);ok("… keine Treffer: Karte mit Lupe",/<div class="card emp"><svg[^>]*>.*<\/svg><p><b>Keine Treffer\.<\/b>/.test(run(`app.innerHTML`))&&/0 Wörter/.test(run(`app.innerHTML`)));run(`ui.q=""`);
+run(`S.fav=[];fav()`);ok("Favoriten leer: Karte mit Stern und Weg zu den Karten",/<div class="card emp"><svg[^>]*>.*<\/svg><p><b>Noch keine Favoriten\.<\/b>/.test(run(`app.innerHTML`))&&/data-go="cards">Zu den Karteikarten/.test(run(`app.innerHTML`)));
+run(`S.fav=["kitab"];fav()`);ok("… mit Favorit: Wortzeile",/class="w" data-say="kitab"/.test(run(`app.innerHTML`)));
+run(`S.badges=["first","pairs"];view="badges";badges()`);let b31=run(`app.innerHTML`);
+ok("Abzeichen: Fortschrittskopf, verdiente dunkel, gesperrte gestrichelt",/<div class="pgk"><b>2 von \d+<\/b><span>freigeschaltet<\/span>/.test(b31)&&/class="card bdg "/.test(b31)&&/class="card bdg lock"/.test(b31)&&/\.bdg:not\(\.lock\)\{background:var\(--night\)/.test(html)&&/\.bdg\.lock\{background:transparent;border:1px dashed var\(--line-d\)\}/.test(html));
+ok("… aktiver Chip und Abschnittstitel im neuen Stil",/\.chip\.on\{background:var\(--night\);color:var\(--mint\)/.test(html)&&/\.bgh\{margin:22px 4px 8px;font-size:13px;font-weight:800/.test(html));
+run(`U="gast";loadS()`);
+
 console.log("\n"+pass+" OK, "+fail+" FAIL");
 process.exit(fail?1:0);
