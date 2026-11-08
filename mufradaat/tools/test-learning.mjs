@@ -390,7 +390,7 @@ ok("… erledigt, aktuell (Mim) und gesperrt",/pn abl done[^"]*" data-kl="s1-1"/
 ok("… Ziel der Etappe mit allen 29 Buchstaben",/Ziel der Etappe/.test(kh)&&((kh.match(/<div class="sgn ksg[\s\S]*?<\/div>/)||[""])[0].match(/<span class="[ku]">/g)||[]).length===29);
 ok("… Stufe 2 beginnt mit eigenem Band, ihre fehlenden Etappen stehen unter „Demnächst“",/<div class="stb" style="top:\d+px"><span class="ar" lang="ar">تَعَلُّمُ اللُّغَةِ<\/span><b>Stufe 2 · Sprache lernen<\/b>/.test(kh)&&run(`KURS.stufen[1].etappen.filter(e=>!KE[e.id]).every(e=>app.innerHTML.includes("<b>"+e.id.toUpperCase()+" · "))`)&&!/Danach: Stufe/.test(kh)&&!/entsteht gerade/.test(kh));
 ok("… Weg zum bisherigen Lernpfad am Ende, kein Vorschau-Hinweis mehr",/data-ko/.test(kh)&&kh.indexOf("data-ko")>kh.indexOf('class="pth"')&&!/Vorschau/.test(kh));
-ok("… keine Buchnamen oder Verweise",!/Qaida|Noorani|Nuraniyya|Medina|Madina|Band [123]/i.test(kh+fs.readdirSync(kdir).map(n=>fs.readFileSync(path.join(kdir,n),"utf8")).join("")));
+ok("… keine Buchnamen oder Verweise",!/Qaida|Noorani|Nuraniyya|Medina|Madina|Band [123]/i.test(kh+fs.readdirSync(kdir).map(n=>fs.readFileSync(path.join(kdir,n),"utf8").replace(/"woerter": \[[^\]]*\]/g,"")).join(""))); // Wort-IDs der Wortschatz-Lektionen (z. B. madinah = Stadt) sind keine Verweise
 run(`pHint('data-kl="s1-3"')`);
 ok("gesperrte Station: Grund direkt darunter",/Schließe erst „Jīm bis Dhāl“ ab\./.test(run(`app.innerHTML`)));
 run(`home()`);
@@ -1146,7 +1146,7 @@ run(`U="gast";loadS()`);
 
 // ---------- 33. Stufe 2: Wortschatz und Sätze im neuen Lernpfad ----------
 run(`U="st33";loadS();S.ob={z:"sprache",d:today()}`);
-ok("Stufe 2: Etappen W1–W3 mit Lektionen nach dem Abschlusstest von Stufe 1",run(`KL.filter(l=>l.e[0]==="w").map(l=>l.id).join()`)==="w1-1,w1-2,w1-3,w1-4,w2-1,w2-2,w2-3,w2-4,w2-5,w3-1,w3-2,w3-3,w3-4,w3-5"&&run(`KL[KL.findIndex(l=>l.id==="w1-1")-1].id`)==="s8-7"&&run(`kLocked(KL.find(l=>l.id==="w1-1"))`));
+ok("Stufe 2: Etappen der Reihe nach, mit Lektionen nach dem Abschlusstest von Stufe 1",run(`[...new Set(KL.filter(l=>l.e[0]==="w").map(l=>l.e))].join()`)===run(`KURS.stufen[1].etappen.filter(e=>KE[e.id]).map(e=>e.id).join()`)&&run(`KL.filter(l=>l.e[0]==="w").map(l=>l.id).slice(0,9).join()`)==="w1-1,w1-2,w1-3,w1-4,w2-1,w2-2,w2-3,w2-4,w2-5"&&run(`KL[KL.findIndex(l=>l.id==="w1-1")-1].id`)==="s8-7"&&run(`kLocked(KL.find(l=>l.id==="w1-1"))`));
 ok("… alle Wörter stammen aus der Wortliste, Satz-Lektionen haben Sätze",run(`KL.filter(l=>l.art==="wortschatz").every(l=>l.woerter.every(i=>BY[i]))&&KL.filter(l=>l.art==="saetze").every(l=>(SSTA[l.einheit]||[]).length>=SMIN)`));
 run(`globalThis.L33=KL.find(l=>l.id==="w1-1");globalThis.T33=kGen(L33,true)`);
 ok("Wortschatz: jedes Wort als Karte, gleich danach abgefragt",run(`L33.woerter.every(i=>{const k=T33.findIndex(x=>x.t==="wneu"&&x.wi===i);return k>=0&&T33[k+1].t==="wbed"&&T33[k+1].wi===i})`));
@@ -1165,6 +1165,9 @@ run(`K.n=6;K.sel=[];klek();const it=K.T[6],x=SENT[it.sk];for(const o of x.t)K.se
 ok("… Satz bauen: richtige Reihenfolge zählt, Satz wird mitgezählt",run(`K.fb.ok&&S.sent[K.T[6].sk]===1`)&&run(`K.T[6].bank.length===SENT[K.T[6].sk].t.length+2`));
 run(`globalThis.L35=KL.find(l=>l.id==="w3-3");globalThis.T35=kGen(L35,true)`);
 ok("Grammatik: Familie übt männlich oder weiblich",run(`(()=>{const g=T35.filter(x=>x.t==="genus");g.forEach(kwOpts);return g.length===3&&g.every(x=>x.opts.join()==="männlich,weiblich"&&x.ok===(GEN_F.has(x.wi)?1:0))})()`)&&run(`L35.tipp.titel`)==="Männlich oder weiblich?");
+run(`globalThis.L36=KL.find(l=>l.titel==="Landschaft"&&l.art==="wortschatz");globalThis.T36=L36?kGen(L36,true):[]`);
+ok("Grammatik: Landschaft übt den Plural (richtiger Plural unter drei Möglichkeiten)",run(`(()=>{const g=T36.filter(x=>x.t==="plural");g.forEach(kwOpts);return g.length===3&&g.every(x=>x.opts.length===3&&new Set(x.opts).size===3&&x.opts[x.ok]===PL[x.wi][0])})()`));
+ok("… jede Wortschatz-Lektion mit Grammatik-Flag hat genug passende Wörter",run(`KL.filter(l=>l.gram).every(l=>l.woerter.filter(i=>l.gram==="genus"?GEN_F.has(i)||GEN_M.has(i):!!PL[i]).length>=3)`),run(`KL.filter(l=>l.gram).map(l=>l.id+":"+l.woerter.filter(i=>l.gram==="genus"?GEN_F.has(i)||GEN_M.has(i):!!PL[i]).length).join(" ")`));
 run(`view="path";ui.hint=null;path()`);let p33=run(`app.innerHTML`);
 ok("Lernpfad: Stufe-2-Band ohne Sprungtests in Stufe 2, Ziel aus Kernwörtern in W1",/class="stb"/.test(p33)&&!/data-kj="w\d"/.test(p33)&&/<div class="sgn kzw/.test(p33)&&/Grüßen, danken und erste Fragen stellen/.test(p33));
 ok("… Kopf zeigt Stufe 2, sobald der nächste Halt dort liegt",/class="kph"><span>Stufe 2 · Sprache lernen<\/span>/.test(p33));
