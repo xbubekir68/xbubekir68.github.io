@@ -1042,7 +1042,7 @@ ok("… ماء: Hamza steht allein",run(`mgForms(mgPool().find(o=>o.w.i==="ma").
 run(`M.n=1;mgWord();for(const a of M.ws[1].L)mgTap(M.bank.findIndex((x,k)=>x===a&&!M.used.includes(k)))`);
 ok("… ohne Fehler 5 XP",run(`M.done&&M.gain===5`));
 run(`M.n=M.ws.length;M.miss=0;globalThis.x27=S.xp;magnet()`);
-ok("… Ergebnis: 5 Bonus bei null Fehlern, Runde gezählt",run(`M.bonus===5&&S.st.magnet===1&&S.xp-x27===5`)&&/Geschafft/.test(run(`app.innerHTML`))&&/davon 5 Bonus für null Fehler/.test(run(`app.innerHTML`)));
+ok("… Ergebnis: 5 Bonus bei null Fehlern, Runde gezählt",run(`M.bonus===5&&S.st.magnet===1&&S.xp-x27===5`)&&/Geschafft/.test(run(`app.innerHTML`))&&/Davon 5 Bonus für null Fehler/.test(run(`app.innerHTML`)));
 ok("… mit „kann schon lesen“ sofort offen",run(`(U="mg27b",loadS(),S.aok="skip",fGate("magnet"))`)===null);
 run(`U="gast";loadS()`);
 
@@ -1089,6 +1089,28 @@ run(`globalThis.x29=S.xp||0;sqTap(SQ.want[1]);sqTap(SQ.want[2])`);
 ok("… alles im Korb: شُكْرًا, 6 XP mit Fehler",run(`SQ.done&&SQ.gain===6&&S.xp-x29===6`)&&/شُكْرًا<\/span><span class="sqdt">shukran · Danke!/.test(run(`app.innerHTML`))&&/Nächster Einkauf/.test(run(`app.innerHTML`)));
 run(`SQ.r=1;sqNew();for(const i of SQ.want)sqTap(i)`);ok("… ohne Fehler 8 XP",run(`SQ.gain===8`));
 run(`SQ.r=SQ.n;suq()`);ok("… Ergebnis, Einkäufe gezählt",/Alles eingekauft/.test(run(`app.innerHTML`))&&run(`S.st.suq`)===1&&/1 Einkauf</.test(run(`(games(),app.innerHTML)`)));
+run(`U="gast";loadS()`);
+
+// ---------- 30. Alte Spiele aufpoliert, einheitliches Ergebnis, Abzeichen der neuen Spiele ----------
+run(`U="alt30";loadS();S.aok="skip";startListen()`);let l30=run(`app.innerHTML`);
+ok("Hörübung: dunkle Bühne mit großem Lautsprecher, Segmente statt Leiste",/<div class="lnb"><span class="mgc"[^>]*><\/span><button class="lns" id="rp">/.test(l30)&&/<div class="zseg"/.test(l30)&&!/class="bar"/.test(l30)&&/Was bedeutet das, was du hörst\?/.test(l30));
+run(`LN.picked=LN.ws[0].i;LN.right=1;listen()`);l30=run(`app.innerHTML`);
+ok("… nach der Antwort steht das Wort in Mint auf der Bühne",/<div class="lnb dn">.*<span class="ar lnw" lang="ar">/s.test(l30)&&/Nochmal hören/.test(l30));
+run(`LN.n=LN.ws.length;LN.right=9;listen()`);l30=run(`app.innerHTML`);
+ok("… Ergebnis als dunkle Karte mit XP und Bonus-Hinweis",/<div class="gex"><span class="gdc"[^>]*><\/span><h1>Runde beendet<\/h1><b class="gxp">\+46 XP<\/b><p class="gen">Davon 10 Bonus/.test(l30)&&/data-go="games"/.test(l30));
+run(`startPairs()`);let p30=run(`app.innerHTML`);
+ok("Paare: Zeit als Chip, Fortschritt in sechs Segmenten",/<span class="tch" id="pt">/.test(p30)&&(p30.match(/<div class="zseg pgs"[^>]*>(.*?)<\/div>/)||[,""])[1].match(/<i/g).length===6);
+run(`G.miss=0;G.done=G.L.map(w=>w.i);finishPairs();pairs()`);ok("… Ergebnis mit Zeit und Fehlern",/<h1>Geschafft<\/h1><b class="gxp">\+\d+ XP<\/b>/.test(run(`app.innerHTML`))&&/<p class="mute">Zeit<\/p>/.test(run(`app.innerHTML`)));
+run(`clearInterval(gt);startBlitz()`);let b30=run(`app.innerHTML`);
+ok("Wort-Blitz: zwei Wahlkarten (dunkel mit Rekord, hell ohne Zeit)",/<button class="bzc dk" id="bz60">.*Rekord: \d+<\/span><\/button>/s.test(b30)&&/<button class="bzc" id="bzf">.*Ohne Zeitlimit · 20 Wörter/s.test(b30));
+run(`startBlitz(true)`);ok("… das Wort steht auf einer dunklen Bühne",/<div class="bzb"><span class="mgc"[^>]*><\/span><div class="ar bzw" lang="ar" data-fq>/.test(run(`app.innerHTML`)));
+ok("Ergebnis-Seite: alle sieben Spiele nutzen gEnd",["startListen","startPairs","startBlitz(B.free)","rGo","startMagnet","startZug","startSuq"].every(f=>html.includes(f+");"))&&(html.match(/return gEnd\(/g)||[]).length===7);
+run(`clearInterval(gt);U="alt30b";loadS();S.badges=[];checkBadges()`);
+ok("Abzeichen der neuen Spiele: noch keins ohne Spielen",run(`["regen","kalli","magnet","zug","suq"].every(b=>!S.badges.includes(b))`));
+run(`S.st.regen=20;S.st.magnet=3;S.st.zug=3;S.st.suq=3;for(const x of KALI)S.st["kal_"+x.i]=3;checkBadges()`);
+ok("… Regenmacher, Schönschrift, Wortbauer, Lokführer, Marktgänger werden vergeben",run(`["regen","kalli","magnet","zug","suq"].every(b=>S.badges.includes(b))`)&&run(`BADGES.filter(b=>["regen","kalli","magnet","zug","suq"].includes(b.id)).map(b=>b.n).join()`)==="Regenmacher,Schönschrift,Wortbauer,Lokführer,Marktgänger");
+run(`U="alt30c";loadS();S.badges=[];S.st.regen=19;S.st.magnet=2;for(const x of KALI.slice(1))S.st["kal_"+x.i]=3;S.st.kal_ba=2;checkBadges()`);
+ok("… knapp darunter: noch nicht",run(`!S.badges.includes("regen")&&!S.badges.includes("kalli")&&!S.badges.includes("magnet")`));
 run(`U="gast";loadS()`);
 
 console.log("\n"+pass+" OK, "+fail+" FAIL");
