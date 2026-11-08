@@ -25,7 +25,11 @@ The course has two stages (Stufen):
 
 1. **Lesen lernen**: eight sections (Etappen S1–S8). They run from single letters through connected forms, short vowels, tanwin, long vowels, sukun and shadda, and end with reading everything together, including the signs of Qur'anic script.
 2. **Sprache lernen**: one section per lesson of a proven three-volume curriculum, 88 in total. Each section adds vocabulary lessons. The target is over 1,000 words by the middle of the second part and about 1,800 by the end.
-   The first part is live: ten sections (Etappen W1–W10) built from the app's existing word list (330 words) and sentence list (53 sentences), one section per earlier unit. Each has vocabulary lessons (new word card, meaning, listening, Arabic from German, matching pairs, review of due words, gender and plural drills), a sentence lesson where the unit has sentences (understand and build), and short grammar tips. Stage 2 ends with its own final test (20 tasks, 16 needed) and has its own badges. The grammar tips are listed for native-speaker review in `tools/grammatik-pruefen.md`. The larger curriculum above stays the target.
+   It grows in packages of two sections. Each package goes from draft to the owner's proofreading, then audio from the owner's PC, then into the app. Sections 1 and 2 are live: "Was ist das?" (هَذَا, a sentence without "is", Tanwin as "a", questions with مَا and أَ, yes and no) and "Das dort" (ذَلِكَ, وَ, مَنْ, first names). Together they have 33 words, 50 own sentences, 6 mini-dialogues and 6 grammar tips. Words that already existed keep their ID, so learning progress carries over. Each section has six lessons:
+   - vocabulary lessons: new word card, meaning, listening, Arabic from German, matching pairs, due words;
+   - sentence lessons: small new words such as هَذَا, then each sentence in the tip's order, understood or built in turn, plus the new drills "Endung wählen" (pick -un, -an or -in) and "Diktat" (hear a sentence and type it on the Arabic on-screen keyboard);
+   - a closing mini-dialogue lesson: hear or read a short exchange and pick the fitting last line, with review of the section's sentences and words.
+   Sections 3 and 4 ("Der, die, das", "Wo ist es?") come next. Everything is listed for native-speaker review in `tools/grammatik-pruefen.md`. The earlier interim sections W1–W10, built from the old word list, are gone.
 
 Success means two things. A learner can read vocalized Arabic, the Qur'an included, without help. They also understand and produce Fusha sentences with correct endings, and they come back daily to keep that up.
 
@@ -80,7 +84,7 @@ The following are directions in progress, not promises yet:
 
 ## Evidence on Hand
 
-- **Live app:** `index.html`. Course data for stage 1, S1–S8, is in `kurs/kurs.json` and `kurs/s1.json` to `kurs/s8.json`; stage 2 sections are in `kurs/w1.json` onwards (word IDs from `W_RAW`).
+- **Live app:** `index.html`. Course data for stage 1, S1–S8, is in `kurs/kurs.json` and `kurs/s1.json` to `kurs/s8.json`; stage 2 sections are in `kurs/a1.json` onwards. Each has its new words, sentences (with word IDs per block) and mini-dialogues. `tools/kurs-pruefen.mjs` checks them, and `node tools/audio-texts.mjs --fehlend` lists texts still without a recording.
 - **Audio:** `audio/audio.json` and `audio/liste.csv`. The production guide is `tools/audio-anleitung.md`. Voice samples are in `audio-proben/`, which is gitignored and local only.
 - **Planning docs** (Claude Docs, private):
   - "Neuer Lernpfad: Inhalte der Werke und Bauplan": course structure, exercise types, decisions from 26 Oct 2026;

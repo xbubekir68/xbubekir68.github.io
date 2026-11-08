@@ -388,7 +388,7 @@ run(`view="path";ui.hint=null;path()`);let kh=run(`app.innerHTML`);
 ok("Pfad zeigt die Stationen von S1 bis S8 (6, 7, 5, 4, 5, 4, 5 und 7) und danach die von Stufe 2",(kh.match(/class="pn /g)||[]).length===run(`KL.length`)&&run(`KL.filter(l=>l.e[0]==="s").length`)===43&&[["s1",6],["s2",7],["s3",5],["s4",4],["s5",5],["s6",4],["s7",5],["s8",7]].every(([e,n])=>(kh.match(new RegExp('data-kl="'+e+'-\\d"',"g"))||[]).length===n),["s1","s2","s3","s4","s5","s6","s7","s8"].map(e=>(kh.match(new RegExp('data-kl="'+e+'-\\d"',"g"))||[]).length));
 ok("… erledigt, aktuell (Mim) und gesperrt",/pn abl done[^"]*" data-kl="s1-1"/.test(kh)&&/pn abl\s+cur[^"]*" data-kl="s1-2"/.test(kh)&&/pn abl lock[^"]*" data-kl="s1-3"/.test(kh),kh.match(/class="pn [^"]*" data-kl="s1-\d"/g));
 ok("… Ziel der Etappe mit allen 29 Buchstaben",/Ziel der Etappe/.test(kh)&&((kh.match(/<div class="sgn ksg[\s\S]*?<\/div>/)||[""])[0].match(/<span class="[ku]">/g)||[]).length===29);
-ok("… Stufe 2 beginnt mit eigenem Band, ihre fehlenden Etappen stehen unter „Demnächst“",/<div class="stb" style="top:\d+px"><span class="ar" lang="ar">تَعَلُّمُ اللُّغَةِ<\/span><b>Stufe 2 · Sprache lernen<\/b>/.test(kh)&&run(`KURS.stufen[1].etappen.filter(e=>!KE[e.id]).every(e=>app.innerHTML.includes("<b>"+e.id.toUpperCase()+" · "))`)&&!/Danach: Stufe/.test(kh)&&!/entsteht gerade/.test(kh));
+ok("… Stufe 2 beginnt mit eigenem Band, unter „Demnächst“ steht, wie sie weitergeht",/<div class="stb" style="top:\d+px"><span class="ar" lang="ar">تَعَلُّمُ اللُّغَةِ<\/span><b>Stufe 2 · Sprache lernen<\/b>/.test(kh)&&kh.includes(`<div class="card ksoon"><b>Demnächst</b><p class="mute">${kidx.stufen[1].demnaechst}</p>`)&&!/Danach: Stufe/.test(kh)&&!/entsteht gerade/.test(kh));
 ok("… Weg zum bisherigen Lernpfad am Ende, kein Vorschau-Hinweis mehr",/data-ko/.test(kh)&&kh.indexOf("data-ko")>kh.indexOf('class="pth"')&&!/Vorschau/.test(kh));
 ok("… keine Buchnamen oder Verweise",!/Qaida|Noorani|Nuraniyya|Medina|Madina|Band [123]/i.test(kh+fs.readdirSync(kdir).map(n=>fs.readFileSync(path.join(kdir,n),"utf8").replace(/"woerter": \[[^\]]*\]/g,"")).join(""))); // Wort-IDs der Wortschatz-Lektionen (z. B. madinah = Stadt) sind keine Verweise
 run(`pHint('data-kl="s1-3"')`);
@@ -729,7 +729,7 @@ ok("… Fehler kommen nicht noch einmal",run(`K.T.length===20`)&&!/am Ende noch 
 run(`K.n++;K.fb=null;klek()`);playT(`(it=>![3,7,11,15].includes(K.n))`);h8=run(`app.innerHTML`);
 ok("… 15 von 20: nicht bestanden, Lektion bleibt offen, nochmal versuchen",/Noch nicht bestanden/.test(h8)&&/15 \/ 20/.test(h8)&&/data-kl="s8-7"/.test(h8)&&run(`!kDone("s8-7")`));
 run(`startK(KL.find(l=>l.id==="s8-7"))`);playT(`(it=>![1,2,3,4].includes(K.n))`);h8=run(`app.innerHTML`);
-ok("… 16 von 20: Stufe 1 geschafft, weiter mit Stufe 2",/Stufe 1 geschafft/.test(h8)&&/16 \/ 20/.test(h8)&&run(`kDone("s8-7")`)&&/data-kl="w1-1">Weiter: Etappe W1, Hallo sagen/.test(h8));
+ok("… 16 von 20: Stufe 1 geschafft, weiter mit Stufe 2",/Stufe 1 geschafft/.test(h8)&&/16 \/ 20/.test(h8)&&run(`kDone("s8-7")`)&&/data-kl="a1-1">Weiter: Etappe 1, Im Zimmer/.test(h8));
 // Sprungtest und Einstufung im Pfad
 run(`S.kp={d:{}};delete S.wt;K=null;view="path";ui.hint=null;path()`);kh=run(`app.innerHTML`);
 ok("Pfad: gesperrte Etappen S2 bis S8 mit „Hierher springen“, Einstufungstest am Anfang",(kh.match(/data-kj="s\d"/g)||[]).length===7&&!/data-kj="s1"/.test(kh)&&/Kannst du schon etwas lesen\?/.test(kh)&&/data-kt="wissen"/.test(kh));
@@ -1120,7 +1120,7 @@ run(`ui.al="ba";letter()`);let l31=run(`app.innerHTML`);
 ok("Buchstabe: dunkle Kopf-Karte mit großem Zeichen in Mint und Mint-Knopf",/<div class="lhc slide"><span class="gdc"[^>]*><\/span><div class="ar lha" lang="ar">ب<\/div>/.test(l31)&&/<button class="btn" id="sp">/.test(l31)&&/\.lhc \.lha\{font-size:var\(--ar6\)/.test(html));
 ok("… Vor und Zurück als Pillen mit den Nachbar-Buchstaben",/<button class="lnv" data-al="alif"><span class="ar" lang="ar">ا<\/span>Alif →<\/button>/.test(l31)&&/<button class="lnv" data-al="ta">← Tāʾ<span class="ar" lang="ar">ت<\/span><\/button>/.test(l31));
 run(`ui.cat="Alle";ui.q="";view="list";list()`);let w31=run(`app.innerHTML`);
-ok("Wortliste: Suchfeld mit Lupe, Chips melden ihren Zustand, Anzahl der Wörter",/<label class="srch"><svg[^>]*>.*<\/svg><input type="search" id="q"/.test(w31)&&/class="chip on" data-cat="Alle" aria-pressed="true"/.test(w31)&&/<p class="mute wlc">330 Wörter<\/p>/.test(w31));
+ok("Wortliste: Suchfeld mit Lupe, Chips melden ihren Zustand, Anzahl der Wörter",/<label class="srch"><svg[^>]*>.*<\/svg><input type="search" id="q"/.test(w31)&&/class="chip on" data-cat="Alle" aria-pressed="true"/.test(w31)&&/<p class="mute wlc">333 Wörter<\/p>/.test(w31)); // 330 aus der Wortliste und 3 neue aus dem Lernpfad
 run(`ui.q="xyzqq";list()`);ok("… keine Treffer: Karte mit Lupe",/<div class="card emp"><svg[^>]*>.*<\/svg><p><b>Keine Treffer\.<\/b>/.test(run(`app.innerHTML`))&&/0 Wörter/.test(run(`app.innerHTML`)));run(`ui.q=""`);
 run(`S.fav=[];fav()`);ok("Favoriten leer: Karte mit Stern und Weg zu den Karten",/<div class="card emp"><svg[^>]*>.*<\/svg><p><b>Noch keine Favoriten\.<\/b>/.test(run(`app.innerHTML`))&&/data-go="cards">Zu den Karteikarten/.test(run(`app.innerHTML`)));
 run(`S.fav=["kitab"];fav()`);ok("… mit Favorit: Wortzeile",/class="w" data-say="kitab"/.test(run(`app.innerHTML`)));
@@ -1144,50 +1144,64 @@ run(`U="gast";loadS()`);
   ok("… kein Lila, Blauviolett oder Ziegelrot mehr, S8 fährt auf der Nacht-Straße mit Mint-Rand",!/#5b3fa0|#c7a8ea|#bba5f2|#644a87|#c8553d|#30406c|#25335a/i.test(css)&&L.th7["--rb"]==="#0b2a22"&&L.th7["--re"]==="#00dab0"&&D.th7["--re"]==="#00dab0");
 }
 
-// ---------- 33. Stufe 2: Wortschatz und Sätze im neuen Lernpfad ----------
+// ---------- 33. Stufe 2, Etappen 1 und 2: Wörter, Sätze, Endung wählen, Diktat, Mini-Dialoge ----------
 run(`U="st33";loadS();S.ob={z:"sprache",d:today()}`);
-ok("Stufe 2: Etappen der Reihe nach, mit Lektionen nach dem Abschlusstest von Stufe 1",run(`[...new Set(KL.filter(l=>l.e[0]==="w").map(l=>l.e))].join()`)===run(`KURS.stufen[1].etappen.filter(e=>KE[e.id]).map(e=>e.id).join()`)&&run(`KL.filter(l=>l.e[0]==="w").map(l=>l.id).slice(0,9).join()`)==="w1-1,w1-2,w1-3,w1-4,w2-1,w2-2,w2-3,w2-4,w2-5"&&run(`KL[KL.findIndex(l=>l.id==="w1-1")-1].id`)==="s8-7"&&run(`kLocked(KL.find(l=>l.id==="w1-1"))`));
-ok("… alle Wörter stammen aus der Wortliste, Satz-Lektionen haben Sätze",run(`KL.filter(l=>l.art==="wortschatz").every(l=>l.woerter.every(i=>BY[i]))&&KL.filter(l=>l.art==="saetze").every(l=>(SSTA[l.einheit]||[]).length>=SMIN)`));
-run(`globalThis.L33=KL.find(l=>l.id==="w1-1");globalThis.T33=kGen(L33,true)`);
-ok("Wortschatz: jedes Wort als Karte, gleich danach abgefragt",run(`L33.woerter.every(i=>{const k=T33.findIndex(x=>x.t==="wneu"&&x.wi===i);return k>=0&&T33[k+1].t==="wbed"&&T33[k+1].wi===i})`));
-ok("… danach jedes Wort noch einmal (hören oder rückwärts) und einmal zuordnen mit Bedeutungen",run(`L33.woerter.every(i=>T33.filter(x=>(x.t==="whoer"||x.t==="wrueck")&&x.wi===i).length===1)&&T33.filter(x=>x.t==="paare"&&x.de&&x.set.length>=4).length===1`));
-ok("… ohne Stimme nur rückwärts statt hören",!run(`kGen(L33,false).some(x=>x.t==="whoer")`));
+ok("Stufe 2: zwei Etappen mit je sechs Lektionen, nach dem Abschlusstest von Stufe 1, erst gesperrt",run(`KL.filter(l=>kStOf(l.e).id===2).map(l=>l.id).join()`)==="a1-1,a1-2,a1-3,a1-4,a1-5,a1-6,a2-1,a2-2,a2-3,a2-4,a2-5,a2-6"&&run(`KL[KL.findIndex(l=>l.id==="a1-1")-1].id`)==="s8-7"&&run(`kLocked(KL.find(l=>l.id==="a1-1"))`)&&!fs.existsSync(path.join(kdir,"w1.json")));
+ok("… drei neue Wörter in der Wortliste, mit dem Thema eines verwandten Wortes; vorhandene behalten ihre ID",run(`W.length`)===333&&run(`BY.maktab.cat===BY.kursi.cat&&BY.imam.cat===BY.tabib.cat&&BY.dhalika.cat===BY.hadha.cat&&GEN_M.has("maktab")&&GEN_M.has("imam")&&!GEN_M.has("dhalika")`)&&run(`KL.filter(l=>l.e==="a1"&&l.woerter).flatMap(l=>l.woerter).filter(i=>!BY[i]).length`)===0);
+ok("… 50 Sätze und 6 Mini-Dialoge; Wortblöcke ohne Satzzeichen, Anzeige mit ، und ؟",run(`Object.keys(CS).length`)===50&&run(`Object.keys(CD).length`)===6&&run(`CS.a1s17.t.map(x=>x.a).join("|")`)==="نَعَمْ|هَذَا|قَلَمٌ"&&run(`CS.a1s17.disp`)==="نَعَمْ، هَذَا قَلَمٌ"&&run(`CS.a1s16.q&&CS.a1s16.disp.endsWith("؟")&&!CS.a1s1.q`)&&run(`CS.a2s9.ids.join()`)==="hadha,qalam,wa,dhalika,kitab"&&run(`CS.a2s22.ids.join()`)==="hadha");
+run(`globalThis.L33=KL.find(l=>l.id==="a1-1");globalThis.T33=kGen(L33,true)`);
+ok("Wortschatz „Im Zimmer“: Tipp „Das ist ein …“, jedes Wort als Karte und gleich abgefragt",run(`T33[0].t==="tipp"&&T33[0].p.titel==="Das ist ein …"&&L33.woerter.every(i=>{const k=T33.findIndex(x=>x.t==="wneu"&&x.wi===i);return k>=0&&T33[k+1].t==="wbed"&&T33[k+1].wi===i})`)&&run(`L33.woerter.includes("maktab")`));
 run(`K={l:L33,T:T33};globalThis.O33=T33.filter(x=>KWG.includes(x.t)).map(x=>{kwOpts(x);return x})`);
 ok("… Antworten: richtige dabei, vier verschiedene, keine Verwechslungspaare",run(`O33.every(x=>x.opts.length===4&&new Set(x.opts).size===4&&x.opts[x.ok]===x.wi&&x.opts.every((a,i)=>x.opts.every((b,j)=>i===j||!clash(BY[a],BY[b]))))`));
 run(`startK(L33);for(let n=0;n<K.T.length;n++){const it=K.T[n];if(KCARD.includes(it.t)||it.t==="paare")continue;K.n=n;kAns(true);K.fb=null}`);
-ok("… richtig beantwortet: alle Wörter der Lektion sind angefangen (Gedächtnis), XP gezählt",run(`L33.woerter.every(i=>S.box[i]===1)`)&&run(`S.xp>0`));
-run(`globalThis.b33=S.box.marhaban;K.T.push({t:"wbed",wi:"marhaban",rep:true});K.n=K.T.length-1;kAns(false)`);
-ok("… eine Wiederholung zählt nicht fürs Gedächtnis",run(`S.box.marhaban===b33`));
-run(`U="st33b";loadS();for(const l of KL.filter(l=>l.e[0]==="s"))S.kp.d[l.id]=1;S.box={};globalThis.L34=KL.find(l=>l.id==="w2-5");startK(L34)`);
-ok("Sätze: bis zu sechs Sätze der Einheit, je einmal verstehen und einmal bauen",run(`K.T.length===12&&K.T.slice(0,6).every(x=>x.t==="sversteh")&&K.T.slice(6).every(x=>x.t==="sbau")&&K.T.every(x=>SSTA[1].some(s=>s.k===x.sk))`));
-run(`K.n=0;kwOpts(K.T[0]);klek()`);ok("… Satz verstehen: Arabisch mit Punkt, vier deutsche Antworten",/Was bedeutet der Satz\?/.test(run(`app.innerHTML`))&&run(`K.T[0].opts.length===4&&K.T[0].opts[K.T[0].ok]===K.T[0].sk`));
-run(`K.n=6;K.sel=[];klek();const it=K.T[6],x=SENT[it.sk];for(const o of x.t)K.sel.push(it.bank.find(b=>b.c===o.a&&!K.sel.includes(b.u)).u);kAns(K.sel.map(u=>it.bank[u].k).join(" ")===x.t.map(o=>o.a).join(" "))`);
-ok("… Satz bauen: richtige Reihenfolge zählt, Satz wird mitgezählt",run(`K.fb.ok&&S.sent[K.T[6].sk]===1`)&&run(`K.T[6].bank.length===SENT[K.T[6].sk].t.length+2`));
-run(`globalThis.L35=KL.find(l=>l.id==="w3-3");globalThis.T35=kGen(L35,true)`);
-ok("Grammatik: Familie übt männlich oder weiblich",run(`(()=>{const g=T35.filter(x=>x.t==="genus");g.forEach(kwOpts);return g.length===3&&g.every(x=>x.opts.join()==="männlich,weiblich"&&x.ok===(GEN_F.has(x.wi)?1:0))})()`)&&run(`L35.tipp.titel`)==="Männlich oder weiblich?");
-run(`globalThis.L36=KL.find(l=>l.titel==="Landschaft"&&l.art==="wortschatz");globalThis.T36=L36?kGen(L36,true):[]`);
-ok("Grammatik: Landschaft übt den Plural (richtiger Plural unter drei Möglichkeiten)",run(`(()=>{const g=T36.filter(x=>x.t==="plural");g.forEach(kwOpts);return g.length===3&&g.every(x=>x.opts.length===3&&new Set(x.opts).size===3&&x.opts[x.ok]===PL[x.wi][0])})()`));
-ok("… jede Wortschatz-Lektion mit Grammatik-Flag hat genug passende Wörter",run(`KL.filter(l=>l.gram).every(l=>l.woerter.filter(i=>l.gram==="genus"?GEN_F.has(i)||GEN_M.has(i):!!PL[i]).length>=3)`),run(`KL.filter(l=>l.gram).map(l=>l.id+":"+l.woerter.filter(i=>l.gram==="genus"?GEN_F.has(i)||GEN_M.has(i):!!PL[i]).length).join(" ")`));
+ok("… richtig beantwortet: alle Wörter angefangen, auch das neue مَكْتَب, das jetzt in den Karten auftaucht",run(`L33.woerter.every(i=>S.box[i]===1)`)&&run(`unlockedWords().some(w=>w.i==="maktab")`));
+run(`globalThis.L34=KL.find(l=>l.id==="a1-2");globalThis.T34=kGen(L34,true)`);
+ok("Satz-Lektion „Das ist ein …“: هَذَا vorstellen, dann die 7 Sätze der Reihe nach, abwechselnd verstehen und bauen, dazu 3× Endung wählen",run(`T34[0].t==="wneu"&&T34[0].wi==="hadha"&&T34[1].t==="wbed"`)&&run(`T34.filter(x=>x.t==="sversteh"||x.t==="sbau").map(x=>x.sk).join()`)==="a1s1,a1s2,a1s3,a1s4,a1s5,a1s6,a1s7"&&run(`T34.filter(x=>x.t==="sversteh"||x.t==="sbau").every((x,j)=>x.t===(j%2?"sbau":"sversteh"))`)&&run(`T34.filter(x=>x.t==="endung").length`)===3&&run(`T34.slice(0,5).every(x=>x.t!=="endung")`)&&run(`!T34.some(x=>x.t==="diktat")`));
+ok("Endung wählen: -un, -an und -in richtig geschrieben (stummes Alif, nicht nach Hamza; Vokal vor Schadda)",run(`kEndF("بَيْتٌ").join()`)==="بَيْتٌ,بَيْتًا,بَيْتٍ"&&run(`kEndF("مَاءٌ")[1]`)==="مَاءً"&&run(`kEndF("كُرْسِيٌّ".normalize()).join()`)===["كُرْسِيٌّ","كُرْسِيًّا","كُرْسِيٍّ"].map(s=>s.normalize("NFC")).join()&&run(`kEndF("كُرْسِيٌّ".normalize()).every(x=>x===x.normalize("NFC"))`));
+run(`startK(L34);K.n=K.T.findIndex(x=>x.t==="endung");klek()`);let e33=run(`app.innerHTML`);
+ok("… Aufgabe: Satz mit Lücke ohne Endung, Übersetzung, drei Formen untereinander, die richtige dabei",/Welche Endung passt\?/.test(e33)&&/<span class="kgp">[^<ٌ]+<\/span>/.test(e33)&&/class="kog k1"/.test(e33)&&run(`(it=>it.opts.length===3&&new Set(it.opts).size===3&&it.opts[it.ok]===CS[it.sk].t[kEndW(CS[it.sk])].a)(K.T[K.n])`));
+run(`K.picked=K.T[K.n].ok;kAns(true);klek()`);ok("… richtig: Satz wird mitgezählt, Lücke zeigt die Endung",run(`S.sent[K.T[K.n].sk]===1`)&&/<span class="kgp">[^<]*ٌ[^<]*<\/span>/.test(run(`app.innerHTML`)));
+run(`K.n=K.T.findIndex(x=>x.t==="sversteh");K.fb=null;K.picked=null;klek()`);
+ok("Satz verstehen: Antworten aus den Sätzen bis zu dieser Lektion, vier verschiedene Bedeutungen",run(`(it=>it.opts.length===4&&it.opts.every(k=>CS[k]&&L34.saetze.includes(k))&&new Set(it.opts.map(k=>CS[k].de)).size===4&&it.opts[it.ok]===it.sk)(K.T[K.n])`)&&/Was bedeutet der Satz\?/.test(run(`app.innerHTML`)));
+run(`K.n=K.T.findIndex(x=>x.t==="sbau");K.fb=null;K.sel=[];klek();const it=K.T[K.n],x=CS[it.sk];for(const o of x.t)K.sel.push(it.bank.find(b=>b.c===o.a&&!K.sel.includes(b.u)).u);kAns(K.sel.map(u=>it.bank[u].k).join(" ")===x.t.map(o=>o.a).join(" "))`);
+ok("Satz bauen: zwei Ablenker aus schon geübten Sätzen, richtige Reihenfolge zählt",run(`(it=>it.bank.length===CS[it.sk].t.length+2&&it.bank.filter(b=>!CS[it.sk].t.some(o=>o.a===b.c)).length===2&&it.bank.every(b=>L34.saetze.some(k=>CS[k].t.some(o=>o.a===b.c))))(K.T[K.n])`)&&run(`K.fb.ok`));
+run(`globalThis.L35=KL.find(l=>l.id==="a1-4")`);
+ok("Satz-Lektion „Was ist das?“: Tipp, 8 Sätze, mit Stimme 2× Diktat kurzer Sätze, ohne Stimme keins",run(`(T=>T[0].t==="tipp"&&T.filter(x=>x.t==="diktat").length===2&&T.filter(x=>x.t==="diktat").every(x=>CS[x.sk].t.length<=3&&L35.saetze.includes(x.sk))&&T.filter(x=>x.t==="sversteh"||x.t==="sbau").length===8)(kGen(L35,true))`)&&run(`!kGen(L35,false).some(x=>x.t==="diktat")`));
+ok("Diktat: Vergleich ohne Vokalzeichen, Satzzeichen und Hamza-Träger, leere Eingabe zählt nicht",run(`kDik("ما هذا","مَا هَذَا")&&kDik(" اهذا  قلم ","أَهَذَا قَلَمٌ")&&kDik("لا، هذا دفتر","لَا هَذَا دَفْتَرٌ")&&!kDik("هذا قلم","هَذَا كِتَابٌ")&&!kDik("ما","مَاءٌ")&&!kDik("","مَا هَذَا")`));
+run(`startK(L35);K.n=K.T.findIndex(x=>x.t==="diktat");if(K.n<0){K.T.splice(3,0,{t:"diktat",sk:"a1s8"});K.n=3}klek()`);let d33=run(`app.innerHTML`);
+ok("… Aufgabe: Anhören, Übersetzung als Hilfe, Feld und arabische Tastatur, Prüfen erst mit Eingabe",/Hör zu und schreib den Satz/.test(d33)&&/id="rp"/.test(d33)&&/<input class="t ar as2 kdi" id="tx"/.test(d33)&&/<div class="kb" id="kb">/.test(d33)&&/<button class="btn" id="chk" disabled>Prüfen/.test(d33));
+run(`K.dk=sPunct(CS[K.T[K.n].sk].ar).replace(/[ً-ْ]/g,"");kAns(kDik(K.dk,CS[K.T[K.n].sk].ar));klek()`);
+ok("… richtig geschrieben: Lösung mit Umschrift, Satz gezählt, Tastatur weg",run(`K.fb.ok&&S.sent[K.T[K.n].sk]===1`)&&!/id="kb"/.test(run(`app.innerHTML`))&&run(`app.innerHTML.includes(CS[K.T[K.n].sk].tr)`));
+run(`globalThis.L36=KL.find(l=>l.id==="a1-6");globalThis.T36=kGen(L36,true)`);
+ok("Mini-Dialoge: alle drei der Reihe nach, dazwischen 4 Sätze und 2 Wörter der Etappe",run(`T36.filter(x=>x.t==="dialog").map(x=>x.dk).join()`)==="a1d1,a1d2,a1d3"&&run(`T36.filter(x=>x.t==="sversteh"||x.t==="sbau").length`)===4&&run(`T36.filter(x=>x.t==="wbed").length`)===2&&run(`T36.every(x=>!x.sk||CS[x.sk].e==="a1")`)&&run(`T36[0].t==="dialog"`));
+run(`startK(L36);K.n=0;klek()`);let g33=run(`app.innerHTML`);
+ok("… Aufgabe: Zeilen von A und B zum Anhören, die letzte offen, drei Antworten mit der richtigen",/Wie geht das Gespräch weiter\?/.test(g33)&&/<div class="kdz a"><span class="kdw" aria-hidden="true">A<\/span><button class="kdb ar" lang="ar" data-dz="0"/.test(g33)&&/class="kdb kdq"/.test(g33)&&run(`(it=>it.opts.length===3&&it.opts[it.ok]===CD[it.dk].z.at(-1)[1]&&CD[it.dk].falsch.every(f=>it.opts.includes(f)))(K.T[0])`));
+run(`K.picked=K.T[0].ok;kAns(true);klek()`);g33=run(`app.innerHTML`);
+ok("… nach der Antwort: alle Zeilen mit Übersetzung, die Lücke ist gefüllt",!/kdq/.test(g33)&&(g33.match(/<small>[^<]+<\/small>/g)||[]).length>=2&&/Das ist ein Schlüssel\./.test(g33));
+ok("Mini-Dialoge: jede falsche Antwort ist ein anderer Satz der Stufe, keine passt als Antwort",run(`Object.values(CD).every(d=>d.falsch.length===2&&d.falsch.every(f=>f!==d.z.at(-1)[1]&&Object.values(CS).some(s=>s.disp===sSay(f))))`));
+run(`playK([]);`);ok("… Lektion geschafft zeigt die Gespräche",/Lektion geschafft/.test(run(`app.innerHTML`))&&/Gespräche/.test(run(`app.innerHTML`))&&/Etappe 1 · Lektion 6: Im Gespräch/.test(run(`app.innerHTML`)));
+run(`U="st33b";loadS();for(const l of KL.filter(l=>l.e[0]==="s"))S.kp.d[l.id]=1;S.box={};globalThis.L37=KL.find(l=>l.id==="a2-5");globalThis.T37=kGen(L37,true)`);
+ok("Etappe 2 „Wer ist das?“: Namen sind keine Wörter, Sätze mit وَ und أَ werden gebaut wie geschrieben",run(`T37.filter(x=>x.sk).every(x=>CS[x.sk].e==="a2")`)&&run(`CS.a2s23.t.map(x=>x.a).join("|")`)==="وَذَلِكَ|حَامِدٌ"&&run(`CS.a2s24.t[0].i`)==="a+#hamid");
 run(`view="path";ui.hint=null;path()`);let p33=run(`app.innerHTML`);
-ok("Lernpfad: Stufe-2-Band ohne Sprungtests in Stufe 2, Ziel aus Kernwörtern in W1",/class="stb"/.test(p33)&&!/data-kj="w\d"/.test(p33)&&/<div class="sgn kzw/.test(p33)&&/Grüßen, danken und erste Fragen stellen/.test(p33));
-ok("… Kopf zeigt Stufe 2, sobald der nächste Halt dort liegt",/class="kph"><span>Stufe 2 · Sprache lernen<\/span>/.test(p33));
+ok("Lernpfad: Band von Stufe 2, Etappe 1 und 2 mit Zahl statt Kürzel, keine Sprungtests, Ziel als Satz",/class="stb"/.test(p33)&&/<b>Etappe 1 · Was ist das\?<\/b><small>6 Lektionen/.test(p33)&&/<b>Etappe 2 · Das dort<\/b>/.test(p33)&&!/data-kj="a\d"/.test(p33)&&/<div class="sgn kzl[^"]*"[^>]*><span class="eta">Ziel der Etappe<\/span>\s*<button class="sent ar[^"]*" lang="ar" data-kz="a1"[^>]*>أَهَذَا قَلَمٌ<\/button>/.test(p33));
+ok("… Kopf zeigt Stufe 2, Stationen mit arabischen Wörtern, „Demnächst“ nennt Etappe 3 und 4",/class="kph"><span>Stufe 2 · Sprache lernen<\/span>/.test(p33)&&/data-kl="a1-2"[^>]*><span class="nd"><span class="ar" lang="ar">هَذَا<\/span>/.test(p33)&&/Etappe 3 „Der, die, das“ und Etappe 4 „Wo ist es\?“/.test(p33));
 run(`kSnapDel();home()`);let h33=run(`app.innerHTML`);
-ok("Startseite: nächster Halt in Stufe 2 mit Zahl der neuen Wörter",/Etappe W1 · Erste Schritte/.test(h33)&&/Lektion 1: Hallo sagen/.test(h33)&&/8 neue Wörter/.test(h33),h33.match(/<div class="card nh dk">[\s\S]{0,500}/)&&h33.match(/<div class="card nh dk">[\s\S]{0,500}/)[0]);
+ok("Startseite: nächster Halt in Stufe 2 mit Zahl der neuen Wörter",/Etappe 1 · Was ist das\?/.test(h33)&&/Lektion 1: Im Zimmer/.test(h33)&&/7 neue Wörter/.test(h33),h33.match(/<div class="card nh dk">[\s\S]{0,500}/)&&h33.match(/<div class="card nh dk">[\s\S]{0,500}/)[0]);
+run(`store[KRK()]=JSON.stringify({"w1-1":{id:"w1-1",n:3,T:[{t:"wneu",wi:"marhaban"},{t:"wbed",wi:"marhaban"},{t:"wbed",wi:"ahlan"},{t:"wbed",wi:"shukran"}],ts:Date.now()}})`);
+ok("… alter Stand einer entfernten Lektion wird ignoriert",run(`kSnapGet("w1-1")===null&&kSnapGet()===null`));
 run(`U="st33c";loadS();view="path";path()`);ok("… solange Stufe 1 offen ist: Band mit Einstufungstest",/<div class="stb"[^>]*>.*<button class="sbt" data-kt="wissen">Ich kann schon lesen/s.test(run(`app.innerHTML`)));
 run(`U="gast";loadS()`);
 
-// ---------- 34. Stufe 2 komplett: alle Wörter, Abschlusstest, Abzeichen, Statistik ----------
-ok("Stufe 2: zehn Etappen, jedes der 330 Wörter genau einmal",run(`KURS.stufen[1].etappen.filter(e=>KE[e.id]).length`)===10&&run(`(()=>{const a=KL.filter(l=>l.art==="wortschatz").flatMap(l=>l.woerter);return a.length===W.length&&new Set(a).size===W.length})()`));
-ok("… Abzeichen-Titel stimmen mit den Etappen überein",run(`EBDG2.every(([e,,t])=>kEtap(e)&&kEtap(e).titel===t)`));
-run(`U="st34";loadS();for(const l of KL)if(l.id!=="w10-6")S.kp.d[l.id]=1;globalThis.L37=KL.find(l=>l.id==="w10-6");startK(L37)`);
-ok("Abschlusstest Stufe 2: 20 Aufgaben aus allen zehn Etappen, ohne Karten und Zuordnen, 16 nötig",run(`L37.art==="test"&&K.T.length===20&&K.test.need===16&&new Set(K.T.map(x=>KL.find(l=>l.id===x.src).e)).size===10&&K.T.every(x=>!KCARD.includes(x.t)&&x.t!=="paare")`),run(`K.T.length+" "+[...new Set(K.T.map(x=>x.src))].join()`));
-run(`for(let n=0;n<20;n++){K.n=n;kAns(n>=4)}K.n=20;klek()`);let t34=run(`app.innerHTML`);
-ok("… 16 von 20: Stufe 2 geschafft, Abzeichen „Sprache gelernt“",/Stufe 2 geschafft/.test(t34)&&run(`kDone("w10-6")`)&&run(`S.badges.includes("st2")&&S.badges.includes("e-w10")`));
-run(`view="badges";badges()`);let b34=run(`app.innerHTML`);
-ok("Abzeichen-Seite: Lesen lernen, dann Sprache lernen, dann Wörter und Übung",b34.indexOf("Lesen lernen")<b34.indexOf("Sprache lernen")&&b34.indexOf("Sprache lernen")<b34.indexOf("Wörter und Übung")&&/Sprache lernen <small class="mute">11 von 11<\/small>/.test(b34));
+// ---------- 34. Stufe 2: Abzeichen, Statistik, alles geschafft ----------
+ok("Abzeichen je Etappe von Stufe 2, Titel wie im Kurs; „Sprache gelernt“ kommt erst am Ende des ganzen Teils",run(`EBDG2.map(([e])=>e).join()`)==="a1,a2"&&run(`EBDG2.every(([e,,t])=>kEtap(e)&&kEtap(e).titel===t)`)&&run(`!BADGES.some(b=>b.id==="st2")&&BSPR.join()==="e-a1,e-a2"`));
+run(`U="st34";loadS();for(const l of KL)if(l.e!=="a2")S.kp.d[l.id]=1;checkBadges()`);
+ok("… Etappe 1 geschafft: Abzeichen „Was ist das?“",run(`S.badges.includes("e-a1")&&!S.badges.includes("e-a2")`)&&run(`BADGES.find(b=>b.id==="e-a1").d`)==="Etappe 1 von Stufe 2 geschafft");
+run(`S.badges.push("e-w3","st2");S.kp.d["w1-1"]=1;view="badges";badges()`);let b34=run(`app.innerHTML`);
+ok("Abzeichen-Seite: Lesen lernen, dann Sprache lernen, dann Wörter und Übung; Abzeichen entfernter Etappen zählen nicht",b34.indexOf("Lesen lernen")<b34.indexOf("Sprache lernen")&&b34.indexOf("Sprache lernen")<b34.indexOf("Wörter und Übung")&&/Sprache lernen <small class="mute">1 von 2<\/small>/.test(b34)&&b34.includes(`<div class="pgk"><b>${run(`S.badges.filter(id=>BADGES.some(b=>b.id===id)).length`)} von ${run(`BADGES.length`)}</b>`));
+run(`home()`);ok("… Startseite zählt nur Lektionen, die es gibt",run(`app.innerHTML`).includes(`· ${run(`KL.filter(l=>kDone(l.id)).length`)} von ${run(`KL.length`)} Lektionen`));
 run(`view="stats";stats()`);let s34=run(`app.innerHTML`);
-ok("Statistik: eigene Kacheln für Stufe 1 und Stufe 2",/<p class="gh">Lesen lernen<\/p>.*<span class="mute">von 43 geschafft<\/span>/s.test(s34)&&new RegExp(`<p class="gh">Sprache lernen</p>.*<span class="mute">von ${run(`KL.filter(l=>l.e[0]==="w").length`)} geschafft</span>.*<span class="mute">von 10 geschafft</span>`,"s").test(s34));
-run(`view="path";path()`);ok("Lernpfad komplett: kein „Demnächst“ mehr",!/class="card ksoon"/.test(run(`app.innerHTML`))&&/data-ko>Zum bisherigen Lernpfad/.test(run(`app.innerHTML`)));
+ok("Statistik: eigene Kacheln für Stufe 1 und Stufe 2",/<p class="gh">Lesen lernen<\/p>.*<span class="mute">von 43 geschafft<\/span>/s.test(s34)&&/<p class="gh">Sprache lernen<\/p>.*<span class="mute">von 12 geschafft<\/span>.*<span class="mute">von 2 geschafft<\/span>/s.test(s34));
+run(`for(const l of KL)S.kp.d[l.id]=1;home()`);ok("Alles geschafft: Startseite sagt es, der Lernpfad nennt, was als Nächstes kommt",/Alles geschafft, was es bisher gibt/.test(run(`app.innerHTML`))&&(run(`view="path";path(),app.innerHTML`)).includes(kidx.stufen[1].demnaechst));
 run(`U="gast";loadS()`);
 
 console.log("\n"+pass+" OK, "+fail+" FAIL");

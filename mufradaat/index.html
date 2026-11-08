@@ -589,6 +589,18 @@ h1,.h1{font-size:28px;font-weight:900;letter-spacing:-.03em}h2{font-weight:800}
 .sgn .zww{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 14px;direction:rtl}
 .kwn .wde{font-size:22px;margin-top:4px}.kwn .mute{margin-top:2px}
 .kss{text-align:center;margin-top:12px}
+/* Stufe 2: Mini-Dialog (A links, B rechts, Zeilen zum Antippen), Diktat, Antworten untereinander */
+.kdl{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+.kdz{display:flex;align-items:flex-start;flex-wrap:wrap;gap:8px}.kdz.b{flex-direction:row-reverse}
+.kdw{flex:none;width:30px;height:30px;margin-top:8px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:800;background:var(--night);color:var(--mint)}
+.kdz.b .kdw{background:var(--gl);color:var(--g)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .kdz.a .kdw{background:var(--mint);color:var(--night)}}:root[data-theme="dark"] .kdz.a .kdw{background:var(--mint);color:var(--night)}
+.kdb{max-width:calc(100% - 38px);min-height:52px;padding:6px 16px;border-radius:16px;border:1.5px solid var(--line);border-bottom-width:4px;background:var(--card);color:var(--ink);font-size:var(--ar3);line-height:1.5}
+.kdz.a .kdb{border-top-left-radius:6px}.kdz.b .kdb{border-top-right-radius:6px}
+.kdq{display:grid;place-items:center;min-width:120px;border-style:dashed;color:var(--mute);font-family:var(--sans);font-size:22px;font-weight:800}
+.kdz small{flex-basis:100%;padding:0 38px;color:var(--mute);font-size:14px;line-height:1.4}.kdz.b small{text-align:right}
+.k1 .opt.ar{margin-top:10px}
+.kdh{margin-top:2px}.kdi{margin-top:8px;text-align:right}.kdi:placeholder-shown{direction:ltr;font-family:var(--sans);font-size:16px}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .stb{box-shadow:0 0 0 1px var(--line)}}:root[data-theme="dark"] .stb{box-shadow:0 0 0 1px var(--line)}
 /* Restliche Seiten: Alphabet, Buchstabe, Wortliste, Favoriten, Abzeichen */
 .pgk{display:grid;grid-template-columns:auto 1fr;align-items:baseline;gap:2px 8px;margin:4px 0 10px}.pgk b{font-size:20px;font-weight:900}.pgk span{color:var(--mute);font-size:14px}
@@ -915,7 +927,7 @@ function oldWords(k){
   if(pick.length<3)pick.push(...prev.filter(w=>!pick.includes(w)).sort((a,b)=>(S.box[a.i]-S.box[b.i])||(LESOF[b.i]-LESOF[a.i])).slice(0,3-pick.length));
   return pick}
 const isLocked=k=>k>0&&lessonStat(LES[k-1]).s<need(LES[k-1])&&LES[k].w.every(id=>S.box[id]===undefined); // schon begonnene Lektionen bleiben offen (wichtig nach der neuen Reihenfolge)
-const unlockedWords=()=>LES.filter(l=>!isLocked(l.k)).flatMap(l=>l.w.map(id=>BY[id]));
+const unlockedWords=()=>[...LES.filter(l=>!isLocked(l.k)).flatMap(l=>l.w.map(id=>BY[id])),...W.filter(w=>w.kurs&&S.box[w.i]!==undefined)]; // dazu angefangene neue Wörter des Lernpfads
 const currentLesson=()=>{const u=LES.filter(l=>!isLocked(l.k));return u.find(l=>l.w.some(id=>S.box[id]===undefined))||u[u.length-1]};
 function gamePool(n){const u=unlockedWords(),s=u.filter(w=>S.box[w.i]!==undefined);return s.length>=n?s:u}
 // Wörter mit überlappender Bedeutung werden nie zusammen angeboten
@@ -1039,8 +1051,8 @@ const xpFor=L=>40*(L-1)*(L-1),lvl=()=>1+Math.floor(Math.sqrt((S.xp||0)/40));
 const EBDG=[["s1","أ ب","Die Buchstaben"],["s2","ـبـ","Buchstaben verbinden"],["s3","بَ","Kurze Vokale"],["s4","بٌ","Tanwin"],["s5","بَا","Lange Vokale"],["s6","بْ","Sukun"],["s7","بّ","Schadda"],["s8","بِسۡمِ","Alles zusammen"]];
 const BREAD=["first","alpha",...EBDG.map(([e])=>"e-"+e),"st1"]; // Abzeichen zum Lesen, auf der Abzeichen-Seite zuerst
 // Sprache lernen: je Etappe von Stufe 2 ein Abzeichen mit einem Wort ihres Themas (Titel wie in kurs/kurs.json, prüft tools/test-learning.mjs)
-const EBDG2=[["w1","مرحبا","Erste Schritte"],["w2","مدرسة","In der Schule"],["w3","بيت","Zuhause"],["w4","طعام","Essen & Trinken"],["w5","ألوان","Zahlen & Farben"],["w6","سفر","Unterwegs"],["w7","طبيعة","Natur & Tiere"],["w8","وقت","Zeit & Körper"],["w9","أفعال","Handlungen"],["w10","حياة","Alltag"]];
-const BSPR=[...EBDG2.map(([e])=>"e-"+e),"st2"];
+const EBDG2=[["a1","هذا","Was ist das?"],["a2","ذلك","Das dort"]];
+const BSPR=EBDG2.map(([e])=>"e-"+e);
 const BADGES=[
 ["first","بداية","Erster Schritt","Die erste richtige Antwort",()=>(S.xp||0)>0],
 ["w10","١٠","10 Wörter","10 Wörter gelernt",()=>knownN()>=10],
@@ -1067,8 +1079,7 @@ const BADGES=[
 ["suq","سوق","Marktgänger","3 Runden im Suq",()=>(S.st.suq||0)>=3],
 ...EBDG.map(([e,ar,t])=>["e-"+e,ar,t,"Etappe "+e.toUpperCase()+" im Lernpfad geschafft",()=>kEDone(e)]),
 ["st1","اقْرَأْ","Lesen gelernt","Alle 8 Etappen von Stufe 1 geschafft",()=>EBDG.every(([e])=>kEDone(e))],
-...EBDG2.map(([e,ar,t])=>["e-"+e,ar,t,"Etappe "+e.toUpperCase()+" im Lernpfad geschafft",()=>kEDone(e)]),
-["st2","تَكَلَّمْ","Sprache gelernt","Alle 10 Etappen von Stufe 2 geschafft",()=>EBDG2.every(([e])=>kEDone(e))],
+...EBDG2.map(([e,ar,t],k)=>["e-"+e,ar,t,"Etappe "+(k+1)+" von Stufe 2 geschafft",()=>kEDone(e)]),
 ...GROUPS.map(g=>["g-"+g,GA[g]||"✓",g+" gemeistert","Alle Wörter im Thema „"+g+"“ gelernt",()=>W.filter(w=>w.cat===g).every(w=>isLearned(w.i))])
 ].map(a=>({id:a[0],ic:a[1],n:a[2],d:a[3],t:a[4]}));
 function checkBadges(){
@@ -1295,11 +1306,21 @@ function aEnd(){
 
 // ===== Neuer Lernpfad (Vorschau): Kurs aus kurs/*.json =====
 // Standard für neue Profile (migrate setzt S.np); der bisherige Pfad bleibt über S.np=false erreichbar. Stand: S.kp.d[Lektions-ID] = wie oft abgeschlossen.
-let KURS=null,KE={},KL=[],QTX=new Set(); // Übersicht (false = Laden fehlgeschlagen), geladene Etappen, alle Lektionen in Kursreihenfolge, Korantexte
+let KURS=null,KE={},KL=[],QTX=new Set(),CS={},CD={}; // Übersicht (false = Laden fehlgeschlagen), geladene Etappen, alle Lektionen in Kursreihenfolge, Korantexte, Sätze und Mini-Dialoge der Stufe 2 (Schlüssel = ID)
+const sPunct=s=>s.replace(/[.،؟!?,]/g,"").replace(/\s+/g," ").trim(); // Satz ohne Satzzeichen (Wortblöcke, Vergleich)
+const sSay=s=>s.replace(/\s*\.\s*$/,"").trim(); // vorgelesen und angezeigt mit ، und ؟, ohne Schlusspunkt
 function kursSet(idx,files){
-  KURS=idx;KE=files||{};KL=[];
+  KURS=idx;KE=files||{};KL=[];CS={};CD={};
   idx.stufen.forEach(st=>st.etappen.forEach(e=>{const f=KE[e.id];if(f)f.lektionen.forEach((l,li)=>KL.push({...l,e:e.id,li,k:KL.length}))}));
   QTX=new Set(KL.filter(l=>QZ.includes(l.zeichen)).flatMap(l=>l.woerter.map(w=>w[0])));
+  const F=Object.entries(KE);
+  // Stufe 2: neue Wörter kommen in die Wortliste (Thema wie das Wort in „wie“), vorhandene behalten ihre ID und damit den Lernstand
+  F.forEach(([e,f])=>(f.woerter||[]).forEach(w=>{if(!w||!w.id||BY[w.id]||Array.isArray(w))return;const o={i:w.id,ar:w.ar,tr:w.tr,de:w.de,n:w.note||"",cat:(BY[w.wie]||{}).cat||"Kleine Wörter",kurs:e};W.push(o);BY[w.id]=o;if(w.gen==="m")GEN_M.add(w.id);if(w.gen==="f")GEN_F.add(w.id)}));
+  // Sätze: Wortblöcke ohne Satzzeichen; w nennt je Block die Wörter (wa+dhalika = angehängtes وَ, a+… = Fragewort أَ, #… = Name)
+  F.forEach(([e,f])=>(f.saetze||[]).forEach(s=>{const t=sPunct(s.ar).split(" ").map((a,j)=>({a,i:(s.w||[])[j]||""}));
+    CS[s.id]={k:s.id,de:s.de,tr:s.tr,t,q:/؟$/.test(s.ar.trim()),ar:t.map(x=>x.a).join(" "),disp:sSay(s.ar),sp:sSay(s.ar),ids:[...new Set(t.flatMap(x=>x.i.split("+")).filter(i=>BY[i]))],e}}));
+  F.forEach(([e,f])=>(f.dialoge||[]).forEach(d=>{CD[d.id]={...d,e}}));
+  AMB=null;
 }
 function loadKurs(){
   const j=u=>fetch("kurs/"+u).then(r=>{if(!r.ok)throw r.status;return r.json()});
@@ -1312,6 +1333,7 @@ const kDone=id=>(kp().d[id]||0)>0;
 const kLocked=l=>l.k>0&&!kDone(KL[l.k-1].id); // weiter erst, wenn die vorherige Lektion abgeschlossen ist
 const kCur=()=>KL.find(l=>!kDone(l.id))||KL[KL.length-1];
 const kEtap=id=>KURS.stufen.flatMap(s=>s.etappen).find(e=>e.id===id);
+const eLab=id=>{const st=KURS&&KURS.stufen.find(s=>s.etappen.some(e=>e.id===id));return st&&st.id>1?String(st.etappen.findIndex(e=>e.id===id)+1):String(id).toUpperCase()}; // „Etappe S3“ in Stufe 1, „Etappe 2“ in Stufe 2
 const kLet=l=>(l.neu||[]).map(i=>ALBY[i]);
 const kKnown=k=>KL.slice(0,k).filter(l=>l.art==="buchstaben").flatMap(kLet); // in früheren Lektionen eingeführte Buchstaben
 const kLearnt=()=>KL.filter(l=>l.art==="buchstaben"&&kDone(l.id)).flatMap(kLet);
@@ -1351,7 +1373,7 @@ const kHearT=t=>!!AUD[t]||ARV===true&&!kQT(t); // Höraufgabe nur, wenn der Text
 const kQT=t=>QX.test(t)||QTX.has(t); // Text in Koranschrift: an den Zeichen erkennbar oder aus einer Lektion zur Koranschrift
 const kSayOk=t=>!!t&&(!kQT(t)||!!AUD[t]);
 const KCARD=["neu","tipp","neuform","neusure","neuz","neuq","tafel","sprechen","wneu"]; // Karten zum Kennenlernen und Nachsprechen, ohne Bewertung
-const KW=["wbed","whoer","wrueck","genus","plural","sversteh"],KWG=["wbed","whoer","wrueck"]; // Stufe 2: Bedeutung, Hören, rückwärts, Genus, Plural, Satz verstehen (KWG zählen fürs Gedächtnis)
+const KW=["wbed","whoer","wrueck","genus","plural","sversteh","endung","dialog"],KWG=["wbed","whoer","wrueck"]; // Stufe 2: Bedeutung, Hören, rückwärts, Genus, Plural, Satz verstehen, Endung wählen, Mini-Dialog (KWG zählen fürs Gedächtnis)
 const KCHO=["formsuche","bauen","sure","surehoeren","silbe","silbewahl","silbehoeren","wortlesen","worthoeren","luecke","qbed"]; // Aufgaben mit Antworten als Text
 function kTasksV(l){
   const nw=kLet(l),forms=nw.filter(a=>posOf(a).length),W=shuffle(l.woerter),T=[],tail=[],fm=a=>({t:"form",a,pos:pick(posOf(a))});
@@ -1598,10 +1620,15 @@ function kTasksQ(l,hear){ // Koranschrift: je zwei Zeichen vorstellen, gleich ab
   const sw=pick(W.filter(wo=>!wo.w.includes(" ")||wo.w.split(" ").length<=4));if(sw)tail.push({t:"sprechen",wo:sw,sr:true});
   return [...T,...shuffle(tail)];
 }
-// ===== Stufe 2: Wortschatz und Sätze aus den vorhandenen Daten (W, SENT) =====
+// ===== Stufe 2: Wortschatz, Sätze und Mini-Dialoge (Wörter aus W, Sätze und Dialoge aus den Etappen-Dateien) =====
 // Wortschatz: jedes Wort vorstellen und gleich abfragen, dann gemischt üben (hören oder rückwärts), zuordnen, Grammatik, Fälliges von früher.
 // Die Antworten zählen fürs Gedächtnis (grade), wie im bisherigen Lernpfad und bei den Karten.
-const kWPool=()=>{const k=K&&K.l?K.l.k:KL.length;return [...new Set(KL.filter(l=>l.art==="wortschatz"&&l.k<=k).flatMap(l=>l.woerter))].map(i=>BY[i]).filter(Boolean)}; // schon vorgestellte Wörter als Ablenker
+const kWLs=k=>KL.filter(l=>(l.art==="wortschatz"||l.art==="saetze")&&Array.isArray(l.woerter)&&l.k<=k); // Lektionen, die Wörter vorstellen (auch Satz-Lektionen mit kleinen Wörtern wie هَذَا)
+const kWPool=()=>{const k=K&&K.l?K.l.k:KL.length;return [...new Set(kWLs(k).flatMap(l=>l.woerter))].map(i=>BY[i]).filter(Boolean)}; // schon vorgestellte Wörter als Ablenker
+const kSent=k=>CS[k]||SENT[k]; // Satz des Lernpfads (Text-ID) oder der bisherigen Satzrunden (Nummer)
+const kCSeen=()=>{const k=K&&K.l?K.l.k:KL.length;return KL.filter(l=>l.saetze&&l.k<=k).flatMap(l=>l.saetze).map(i=>CS[i]).filter(Boolean)}; // schon geübte Sätze des Lernpfads
+const kEndW=x=>{for(let j=x.t.length-1;j>=0;j--)if(x.t[j].a.includes("\u064c"))return j;return -1}; // letztes Wort mit -un
+const kEndF=w=>{const b=w.replace(/[\u064b-\u0652]+$/,""),an=w.replace("\u064c","\u064b")+(/[ةءأى]$/.test(b)?"":"ا");return [w,an,w.replace("\u064c","\u064d")].map(x=>x.normalize("NFC"))}; // -un, -an (stummes Alif außer nach ة und Hamza), -in
 function kWOpts(w,pool){const u=pool.filter(x=>!clash(w,x)),same=shuffle(u.filter(x=>x.cat===w.cat)),rest=shuffle(u.filter(x=>x.cat!==w.cat)),out=[];
   for(const x of [...same,...rest]){if(out.length>=3)break;if(!out.some(o=>clash(o,x)))out.push(x)}return shuffle([w,...out])}
 function kTasksW(l,hear){
@@ -1610,27 +1637,44 @@ function kTasksW(l,hear){
   const mix=shuffle(ws).map((w,k)=>({t:hear&&k%2===0?"whoer":"wrueck",wi:w.i}));
   const gr=l.gram==="genus"?shuffle(ws.filter(w=>GEN_F.has(w.i)||GEN_M.has(w.i))).slice(0,3).map(w=>({t:"genus",wi:w.i}))
     :l.gram==="plural"?shuffle(ws.filter(w=>PL[w.i])).slice(0,3).map(w=>({t:"plural",wi:w.i})):[];
-  const prev=[...new Set(KL.filter(x=>x.art==="wortschatz"&&x.k<l.k).flatMap(x=>x.woerter))].filter(i=>BY[i]&&S.box[i]!==undefined&&isDue(i));
+  const prev=[...new Set(kWLs(l.k-1).flatMap(x=>x.woerter))].filter(i=>BY[i]&&S.box[i]!==undefined&&isDue(i));
   const rest=shuffle([...mix,...gr,...shuffle(prev).slice(0,3).map(i=>({t:"wbed",wi:i}))]);
   const ps=[];for(const w of shuffle(ws))if(ps.length<5&&!ps.some(x=>clash(x,w)))ps.push(w); // zuordnen: fünf Wörter ohne Verwechslungsgefahr
   if(ps.length>=4)rest.splice(Math.min(3,rest.length),0,{t:"paare",de:true,set:ps.map(w=>({i:w.i,c:w.ar,n:w.de,sp:w.ar}))});
   return [...T,...rest];
 }
-function kTasksSa(l){ // Sätze der Einheit: erst verstehen (Arabisch → Deutsch), dann bauen (Deutsch → Arabisch); wenig Geübtes zuerst
-  const L=(SSTA[l.einheit]||[]).map(x=>({x,n:(S.sent||{})[x.k]||0,r:Math.random()})).sort((a,b)=>a.n-b.n||a.r-b.r).slice(0,6).map(o=>o.x);
-  return [...shuffle(L).map(x=>({t:"sversteh",sk:x.k})),...shuffle(L).map(x=>({t:"sbau",sk:x.k}))];
+function kTasksSa(l,hear){ // Satz-Lektion: kleine Wörter vorstellen, dann jeden Satz verstehen (Arabisch → Deutsch) oder bauen (Deutsch → Arabisch), dazu Endung wählen und Diktat
+  if(!l.saetze){const L=(SSTA[l.einheit]||[]).map(x=>({x,n:(S.sent||{})[x.k]||0,r:Math.random()})).sort((a,b)=>a.n-b.n||a.r-b.r).slice(0,6).map(o=>o.x); // Satzrunden einer Einheit (bisherige Daten)
+    return [...shuffle(L).map(x=>({t:"sversteh",sk:x.k})),...shuffle(L).map(x=>({t:"sbau",sk:x.k}))]}
+  const T=[],ws=(l.woerter||[]).filter(i=>BY[i]),L=l.saetze.filter(i=>CS[i]),u=l.uebungen||[],ex=[];
+  ws.forEach(i=>T.push({t:"wneu",wi:i},{t:"wbed",wi:i}));
+  L.forEach((k,j)=>T.push({t:j%2?"sbau":"sversteh",sk:k})); // in der Reihenfolge des Tipps, abwechselnd verstehen und bauen
+  if(u.includes("endung"))shuffle(L.filter(k=>kEndW(CS[k])>=0)).slice(0,3).forEach(k=>ex.push({t:"endung",sk:k}));
+  if(u.includes("diktat")&&hear)shuffle(L.filter(k=>CS[k].t.length<=3)).slice(0,2).forEach(k=>ex.push({t:"diktat",sk:k})); // kurze Sätze, nur mit Stimme
+  const lo=ws.length*2+3;ex.forEach(x=>T.splice(lo+Math.floor(Math.random()*(T.length-lo+1)),0,x)); // erst nach den ersten Sätzen
+  return T;
+}
+function kTasksD(l){ // Mini-Dialoge: jeden Wortwechsel zu Ende führen, dazwischen Sätze und Wörter der Etappe wiederholen
+  const E=KL.filter(x=>x.e===l.e&&x.k<l.k),D=(l.dialoge||[]).filter(i=>CD[i]);
+  const ss=shuffle(E.flatMap(x=>x.saetze||[]).filter(i=>CS[i])).slice(0,4),ws=shuffle(E.filter(x=>x.art==="wortschatz").flatMap(x=>x.woerter).filter(i=>BY[i])).sort((a,b)=>(S.box[a]||0)-(S.box[b]||0)).slice(0,2);
+  const R=shuffle([...ss.map((k,j)=>({t:j%2?"sbau":"sversteh",sk:k})),...ws.map(i=>({t:"wbed",wi:i}))]),T=[];
+  D.forEach((d,j)=>T.push({t:"dialog",dk:d},...R.slice(j*2,j*2+2)));T.push(...R.slice(D.length*2));
+  return T;
 }
 function kwOpts(it){ // Antworten der Stufe-2-Aufgaben: Wort-IDs, Satz-Nummern oder Text
   if(KWG.includes(it.t)){const w=BY[it.wi];it.opts=kWOpts(w,kWPool().concat(K&&K.l&&K.l.woerter?K.l.woerter.map(i=>BY[i]):[])).map(x=>x.i);it.ok=it.opts.indexOf(w.i);return}
   if(it.t==="genus"){it.opts=["männlich","weiblich"];it.ok=GEN_F.has(it.wi)?1:0;return}
   if(it.t==="plural"){const w=BY[it.wi],r=PL[it.wi][0],ks=Object.keys(PL).filter(i=>i!==it.wi&&BY[i]),o=[...shuffle(ks.filter(i=>BY[i].cat===w.cat)),...shuffle(ks)].map(i=>PL[i][0]);
     it.opts=shuffle([r,...[...new Set(o)].filter(x=>x!==r).slice(0,2)]);it.ok=it.opts.indexOf(r);return}
-  const x=SENT[it.sk],oth=shuffle(SENT.filter(o=>o!==x&&o.de!==x.de)),sh=oth.filter(o=>o.ids.some(i=>x.ids.includes(i))),out=[];
+  if(it.t==="endung"){const x=kSent(it.sk),w=x.t[kEndW(x)].a;it.opts=shuffle(kEndF(w));it.ok=it.opts.indexOf(w);return}
+  if(it.t==="dialog"){const d=CD[it.dk],r=d.z[d.z.length-1][1];it.opts=shuffle([r,...d.falsch]);it.ok=it.opts.indexOf(r);return}
+  const x=kSent(it.sk),P=x.e?(()=>{const s=kCSeen();return s.filter(o=>o!==x&&o.de!==x.de).length>=3?s:Object.values(CS)})():SENT; // Lernpfad: Sätze bis zu dieser Lektion
+  const oth=shuffle(P.filter(o=>o!==x&&o.de!==x.de)),sh=oth.filter(o=>o.ids.some(i=>x.ids.includes(i))),out=[];
   for(const o of [...sh,...oth])if(out.length<3&&!out.some(d=>d.de===o.de))out.push(o);
   it.opts=shuffle([x,...out]).map(o=>o.k);it.ok=it.opts.indexOf(x.k);
 }
 function kGen(l,hear){
-  const T=l.art==="wortschatz"?kTasksW(l,hear):l.art==="saetze"?kTasksSa(l):l.art==="test"?kTasksT(l,hear):l.art==="verbinden"?kTasksV(l):l.art==="suren"?kTasksS(l,hear):l.art==="vokale"&&QZ.includes(l.zeichen)?kTasksQ(l,hear):l.art==="vokale"?kTasksZ(l,hear):kTasks(kLet(l),kKnown(l.k),hear);
+  const T=l.art==="wortschatz"?kTasksW(l,hear):l.art==="saetze"?kTasksSa(l,hear):l.art==="dialog"?kTasksD(l):l.art==="test"?kTasksT(l,hear):l.art==="verbinden"?kTasksV(l):l.art==="suren"?kTasksS(l,hear):l.art==="vokale"&&QZ.includes(l.zeichen)?kTasksQ(l,hear):l.art==="vokale"?kTasksZ(l,hear):kTasks(kLet(l),kKnown(l.k),hear);
   if(l.tipp)T.unshift({t:"tipp",p:l.tipp});return T;
 }
 const kRevOk=e=>e==="s1"?kLearnt().length>=4:KL.some(l=>l.e===e&&kDone(l.id));
@@ -1737,7 +1781,7 @@ function startK(l,e){ // l = Lektion; ohne l: Wiederholung der Etappe e
 // Tests: keine Karten, kein Zuordnen, keine zweite Runde. Abschlusstest der Stufe (20 Aufgaben, 16 richtig), Sprungtest vor einer gesperrten Etappe (10 Aufgaben, 8 richtig),
 // Einstufungstest: Blöcke mit 4 Aufgaben aus einer Etappe, ab 3 richtigen sitzt sie. Er sucht wie bei einer Halbierung die erste Etappe, die noch nicht sitzt.
 const kTestable=x=>!KCARD.includes(x.t)&&x.t!=="paare";
-const kKey=x=>[x.t,x.a&&x.a.i,x.wo&&x.wo.w,x.y&&x.y.t,x.s&&x.s.t,x.w,x.q&&x.q.i,x.wi,x.sk].join("|");
+const kKey=x=>[x.t,x.a&&x.a.i,x.wo&&x.wo.w,x.y&&x.y.t,x.s&&x.s.t,x.w,x.q&&x.q.i,x.wi,x.sk,x.dk].join("|");
 function kPool(ls,n,hear){ // n Aufgaben aus diesen Lektionen, reihum aus verschiedenen
   const L=shuffle(ls.filter(l=>l.art!=="test")),out=[],seen=new Set();
   const ok3=x=>!KCHO.includes(x.t)||x.t==="formsuche"||(kOpts(x),x.opts.length>=3); // im Test nur Aufgaben mit mindestens drei Antworten (Formsuche hat immer vier)
@@ -1778,17 +1822,17 @@ function kEndT(){
     S.st.kurs=(S.st.kurs||0)+1;K.bonus=t.pass?10:0;K.xp+=K.bonus;if(K.bonus)addXP(K.bonus);else save();
     if(t.pass&&t.kind!=="wissen")confetti();if(t.pass)sfx("win")}
   const sc=`<div class="tiles"><div class="card"><p class="mute">Richtig</p><b>${ok} / ${n}</b>${t.need?`<span class="mute">nötig: ${t.need}</span>`:""}</div><div class="card"><p class="mute">XP verdient</p><b>+${K.xp}</b>${K.bonus?`<span class="mute">davon ${K.bonus} Bonus</span>`:""}</div></div>`;
-  const nxt=l=>l?`<button class="btn" data-kl="${l.id}">Weiter: Etappe ${l.e.toUpperCase()}, ${esc(l.titel)}</button>`:"";
+  const nxt=l=>l?`<button class="btn" data-kl="${l.id}">Weiter: Etappe ${eLab(l.e)}, ${esc(l.titel)}</button>`:"";
   let h;
   if(t.kind==="ab"){const st=kStOf(K.l.e),zl=KE[K.l.e]&&KE[K.l.e].ziel,nx=KL[K.l.k+1];
     h=t.pass?`<h1>Stufe ${st.id} geschafft</h1><p class="mute">Abschlusstest bestanden</p></div>${sc}<div class="card note" role="status"><p><b>${esc(st.titel)}: geschafft.</b> ${zl&&zl.geschafft?esc(zl.geschafft):""}${nx?"":" Die nächste Stufe ist in Arbeit."}</p></div>${nx?nxt(nx):""}<button class="btn ${nx?"alt":""}" data-go="path">Zum Lernpfad</button>`
       :`<h1>Noch nicht bestanden</h1><p class="mute">Abschlusstest · ${esc(st.titel)}</p></div>${sc}<div class="card note"><p>Für den Abschluss brauchst du ${t.need} richtige Antworten. Übe die Etappen mit „Alle üben“ und versuch es dann noch einmal.</p></div><button class="btn" data-kl="${K.l.id}">Nochmal versuchen</button><button class="btn alt" data-go="path">Zum Lernpfad</button>`}
   else if(t.kind==="sprung"){const et=kEtap(t.to);
-    h=t.pass?`<h1>Test bestanden</h1><p class="mute">Sprung zu Etappe ${t.to.toUpperCase()} · ${esc(et.titel)}</p></div>${sc}<div class="card note" role="status"><p>Die Lektionen davor zählen jetzt als geschafft. Du kannst sie jederzeit wiederholen.</p></div>${nxt(t.go)}<button class="btn alt" data-go="path">Zum Lernpfad</button>`
-      :`<h1>Noch nicht ganz</h1><p class="mute">Sprung zu Etappe ${t.to.toUpperCase()} · ${esc(et.titel)}</p></div>${sc}<div class="card note"><p>Zum Springen brauchst du ${t.need} richtige Antworten. Lerne die Etappen davor, dann klappt es.</p></div>${nxt(kCur())}<button class="btn alt" data-go="path">Zum Lernpfad</button>`}
+    h=t.pass?`<h1>Test bestanden</h1><p class="mute">Sprung zu Etappe ${eLab(t.to)} · ${esc(et.titel)}</p></div>${sc}<div class="card note" role="status"><p>Die Lektionen davor zählen jetzt als geschafft. Du kannst sie jederzeit wiederholen.</p></div>${nxt(t.go)}<button class="btn alt" data-go="path">Zum Lernpfad</button>`
+      :`<h1>Noch nicht ganz</h1><p class="mute">Sprung zu Etappe ${eLab(t.to)} · ${esc(et.titel)}</p></div>${sc}<div class="card note"><p>Zum Springen brauchst du ${t.need} richtige Antworten. Lerne die Etappen davor, dann klappt es.</p></div>${nxt(kCur())}<button class="btn alt" data-go="path">Zum Lernpfad</button>`}
   else{const all=t.lo>=E.length;
-    h=`<h1>Einstufung fertig</h1><p class="mute">${t.lo?all?"Du kannst schon alles aus Stufe 1 lesen.":`Etappe ${E.slice(0,t.lo).map(e=>e.id.toUpperCase()).join(", ")} ${t.lo>1?"sitzen":"sitzt"} schon.`:"Du fängst am besten von vorn an."}</p></div>${sc}
-    <div class="card note" role="status"><p>${all?"Es fehlt nur noch der Abschlusstest der Stufe.":t.lo?`Du startest bei <b>Etappe ${t.at.id.toUpperCase()} · ${esc(t.at.titel)}</b>. Was davor kommt, zählt als geschafft.`:"Du startest bei den Buchstaben. Keine Sorge, das geht schnell."}</p></div>${nxt(t.go)}<button class="btn alt" data-go="path">Zum Lernpfad</button>`}
+    h=`<h1>Einstufung fertig</h1><p class="mute">${t.lo?all?"Du kannst schon alles aus Stufe 1 lesen.":`Etappe ${E.slice(0,t.lo).map(e=>eLab(e.id)).join(", ")} ${t.lo>1?"sitzen":"sitzt"} schon.`:"Du fängst am besten von vorn an."}</p></div>${sc}
+    <div class="card note" role="status"><p>${all?"Es fehlt nur noch der Abschlusstest der Stufe.":t.lo?`Du startest bei <b>Etappe ${eLab(t.at.id)} · ${esc(t.at.titel)}</b>. Was davor kommt, zählt als geschafft.`:"Du startest bei den Buchstaben. Keine Sorge, das geht schnell."}</p></div>${nxt(t.go)}<button class="btn alt" data-go="path">Zum Lernpfad</button>`}
   paint(`<div style="text-align:center;margin-top:20px">${h}`);
 }
 function kAns(ok){ // Bewertung: Fehler kommen am Ende noch einmal (außer im Test), es gibt keine Herzen
@@ -1815,21 +1859,27 @@ function klek(){
     $("#sp").onclick=()=>speak(w.ar);if(S.auto!==false)speak(w.ar);
   }else if(KW.includes(it.t)){ // Stufe 2: eine von bis zu vier Antworten
     if(!it.opts)kwOpts(it);
-    const w=it.wi?BY[it.wi]:null,x=it.sk!==undefined?SENT[it.sk]:null,arO=it.t==="wrueck"||it.t==="plural",say=x?x.ar:w&&w.ar;
-    const lab=v=>it.t==="wrueck"?BY[v].ar:KWG.includes(it.t)?esc(BY[v].de):it.t==="sversteh"?esc(SENT[v].de):esc(v);
-    const prompt={wbed:"Was bedeutet das Wort?",whoer:"Was bedeutet das, was du hörst?",wrueck:"Wie heißt das auf Arabisch?",genus:"Ist das Wort männlich oder weiblich?",plural:"Wie heißt der Plural?",sversteh:"Was bedeutet der Satz?"}[it.t];
+    const w=it.wi?BY[it.wi]:null,x=it.sk!==undefined?kSent(it.sk):null,d=it.dk?CD[it.dk]:null,arO=["wrueck","plural","endung","dialog"].includes(it.t),say=d?sSay(d.z[d.z.length-1][1]):x?x.sp||x.ar:w&&w.ar;
+    const lab=v=>it.t==="wrueck"?BY[v].ar:KWG.includes(it.t)?esc(BY[v].de):it.t==="sversteh"?esc(kSent(v).de):it.t==="dialog"?esc(sSay(v)):esc(v);
+    const prompt={wbed:"Was bedeutet das Wort?",whoer:"Was bedeutet das, was du hörst?",wrueck:"Wie heißt das auf Arabisch?",genus:"Ist das Wort männlich oder weiblich?",plural:"Wie heißt der Plural?",sversteh:"Was bedeutet der Satz?",endung:"Welche Endung passt?",dialog:"Wie geht das Gespräch weiter?"}[it.t];
     const hearB=`<div style="text-align:center;margin:14px 0"><button class="btn alt" id="rp" style="width:auto;padding:14px 26px">${ic("speaker",22)} ${it.t==="whoer"?"Nochmal hören":"Anhören"}</button></div>`;
-    const stage=it.t==="whoer"?hearB:it.t==="sversteh"?`<div class="card sans kss"><div class="ar as3" lang="ar">${sentAr(x)}</div></div>${hearB}`
+    const gap=x&&it.t==="endung"?kEndW(x):-1,dz=d?d.z.length-1:-1;
+    const stage=it.t==="whoer"?hearB:it.t==="sversteh"?`<div class="card sans kss"><div class="ar as3" lang="ar">${x.disp||sentAr(x)}</div></div>${hearB}`
+      :it.t==="endung"?(()=>{const g=x.t[gap].a,i=x.disp.lastIndexOf(g);return `<div class="card sans kss"><div class="ar as3" lang="ar">${x.disp.slice(0,i)}<span class="kgp">${done?g:g.replace("\u064c","")}</span>${x.disp.slice(i+g.length)}</div><p class="kwl">${esc(x.de)}</p></div>`})()
+      :d?`<div class="kdl" aria-label="Gespräch">${d.z.map((z,j)=>`<div class="kdz ${z[0]==="A"?"a":"b"}"><span class="kdw" aria-hidden="true">${z[0]}</span>${j===dz&&!done?`<span class="kdb kdq" aria-label="Lücke">…</span>`:`<button class="kdb ar" lang="ar" data-dz="${j}" aria-label="${esc(sSay(z[1]))}, anhören">${esc(sSay(z[1]))}</button>`}${done?`<small>${esc(z[2])}</small>`:""}</div>`).join("")}</div>`
       :it.t==="wrueck"?`<p class="klaut kla">„${esc(w.de)}“</p>`:`<div class="ar kgl kwr" lang="ar">${w.ar}</div>${it.t==="plural"?`<p class="kwl">${esc(w.tr)} · ${esc(w.de)}</p>`:""}`;
     const opt=(v,k)=>`<button class="opt ${arO?"ar":""} ${done?(k===it.ok?"ok":k===p?"no":""):""}" ${arO?'lang="ar"':""} data-o="${k}" ${done?"disabled":""}>${lab(v)}</button>`;
     const fbt=it.t==="genus"?`<span class="ar kfa" lang="ar">${w.ar}</span> ${esc(w.de)} ist ${GEN_F.has(w.i)?"weiblich":"männlich"}${GEN_F.has(w.i)&&/ة$/.test(hkStrip(w.ar,2))?" (Endung ـة)":""}`
-      :it.t==="plural"?`<span class="ar kfa" lang="ar">${PL[w.i][0]}</span> ${esc(PL[w.i][1])}`:x?`<span class="ar kfa" lang="ar">${x.ar}</span> ${esc(x.tr)} · ${esc(x.de)}`:`<span class="ar kfa" lang="ar">${w.ar}</span> ${esc(w.tr)} · ${esc(w.de)}`;
-    paint(top+`<p class="kq">${prompt}</p>${stage}<div class="${arO?"og kog":""}">${it.opts.map(opt).join("")}</div>${fb(fbt)}${nx}`);
+      :it.t==="plural"?`<span class="ar kfa" lang="ar">${PL[w.i][0]}</span> ${esc(PL[w.i][1])}`:d?`<span class="ar kfa" lang="ar">${sPunct(d.z[dz][1])}</span> ${esc(d.z[dz][2])}`:x?`<span class="ar kfa" lang="ar">${x.ar}</span> ${esc(x.tr)} · ${esc(x.de)}`:`<span class="ar kfa" lang="ar">${w.ar}</span> ${esc(w.tr)} · ${esc(w.de)}`;
+    paint(top+`<p class="kq">${prompt}</p>${stage}<div class="${arO?(it.t==="endung"||it.t==="dialog"?"kog k1":"og kog"):""}">${it.opts.map(opt).join("")}</div>${fb(fbt)}${nx}`);
     if($("#rp")){$("#rp").onclick=()=>speak(say);if(!done&&(it.t==="whoer"||S.auto!==false))speak(say)}
+    document.querySelectorAll("[data-dz]").forEach(b=>b.onclick=()=>speak(sSay(d.z[+b.dataset.dz][1])));
+    if(d&&!done&&!it.heard&&S.auto!==false){it.heard=true;speak(sSay(d.z[dz-1][1]))} // Mini-Dialog: die Zeile vor der Lücke einmal vorlesen
     if(!done)document.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{K.picked=+b.dataset.o;kAns(K.picked===it.ok);if(say&&!$("#rp")&&S.auto!==false&&it.t!=="genus")speakLater(say);klek()});
   }else if(it.t==="sbau"){ // Satz aus Wortblöcken bauen, mit zwei Wörtern aus anderen Sätzen
-    const x=SENT[it.sk],L=x.t.map(o=>({c:o.a,k:o.a})),bad=done&&!K.fb.ok;
-    if(!it.bank){const own=new Set(x.t.map(o=>o.a)),ex=[];for(const o of shuffle(SENT.filter(y=>y!==x).flatMap(y=>y.t)))if(ex.length<2&&!own.has(o.a)&&!SFREE.has(o.i)&&!ex.some(e=>e.c===o.a))ex.push({c:o.a,k:o.a});
+    const x=kSent(it.sk),L=x.t.map(o=>({c:o.a,k:o.a})),bad=done&&!K.fb.ok;
+    if(!it.bank){const own=new Set(x.t.map(o=>o.a)),ex=[]; // Ablenker: Wörter aus anderen Sätzen, im Lernpfad zuerst aus schon geübten, sonst aus der Etappe
+      for(const P of x.e?[kCSeen(),Object.values(CS).filter(y=>y.e===x.e)]:[SENT])for(const o of shuffle(P.filter(y=>y!==x).flatMap(y=>y.t)))if(ex.length<2&&!own.has(o.a)&&!(!x.e&&SFREE.has(o.i))&&!ex.some(e=>e.c===o.a))ex.push({c:o.a,k:o.a});
       it.bank=shuffle([...L,...ex]).map((o,u)=>({...o,u}))}
     const used=new Set(K.sel);
     paint(top+`<p class="kq">Baue den Satz auf Arabisch</p><p class="gde">${esc(x.de)}</p>
@@ -1841,6 +1891,16 @@ function klek(){
       document.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>{if(K.sel.length<L.length){K.sel.push(+b.dataset.add);sfx("tap")}klek()});
       document.querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>{K.sel=K.sel.filter(u=>u!==+b.dataset.rm);sfx("tap");klek()});
       $("#chk").onclick=()=>{kAns(K.sel.map(u=>it.bank[u].k).join(" ")===L.map(o=>o.k).join(" "));speakLater(x.ar);klek()}}
+  }else if(it.t==="diktat"){ // Satz hören und schreiben, Vergleich ohne Vokalzeichen und Satzzeichen wie beim Schreiben im bisherigen Quiz (norm)
+    const x=kSent(it.sk),v=K.dk||"";
+    paint(top+`<p class="kq">Hör zu und schreib den Satz</p><div style="text-align:center;margin:10px 0"><button class="btn alt" id="rp" style="width:auto;padding:14px 26px">${ic("speaker",22)} Nochmal hören</button></div>
+    <p class="kwl kdh">${esc(x.de)} · ${x.t.length} Wörter</p><input class="t ar as2 kdi" id="tx" lang="ar" dir="auto" placeholder="Arabisch schreiben …" autocomplete="off" inputmode="none" aria-label="Dein Satz" ${done?"disabled":""} value="${esc(v)}">
+    ${done?fb(`<span class="ar kfa" lang="ar">${x.ar}</span> ${esc(x.tr)}`)+nx:kbHtml(false)+`<button class="btn" id="chk" ${v.trim()?"":"disabled"}>Prüfen</button>`}`);
+    $("#rp").onclick=()=>speak(x.sp||x.ar);if(!done&&!it.heard){it.heard=true;speak(x.sp||x.ar)}
+    if(!done){const tx=$("#tx"),up=()=>{$("#chk").disabled=!(K.dk||"").trim()};
+      tx.oninput=()=>{K.dk=tx.value;up()};tx.onkeydown=e=>{if(e.key==="Enter"&&(K.dk||"").trim())$("#chk").click()};
+      $("#kb").onclick=e=>{const k=e.target.closest("[data-k]");if(!k)return;const c=k.dataset.k;sfx("tap");K.dk=c==="⌫"?(K.dk||"").slice(0,-1):(K.dk||"")+c;tx.value=K.dk;up();tx.focus()};
+      $("#chk").onclick=()=>{kAns(kDik(K.dk||"",x.ar));klek()}}
   }else if(it.t==="neu"){
     paint(top+`<p class="kq">Neuer Buchstabe</p><div class="card flash slide"><div class="ar as6" lang="ar">${a.c}</div><p><b>${a.n}</b> · ${a.s}</p><p class="mute">${a.h}</p>${sp("Name anhören")}</div>${nx}`);
     $("#sp").onclick=()=>speak(a.sp);if(S.auto!==false)speak(a.sp);
@@ -1951,11 +2011,12 @@ function klek(){
     if(it.t==="hoeren"){$("#rp").onclick=()=>speak(a.sp);if(!done)speak(a.sp)}
     if(!done)document.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{K.picked=b.dataset.o;kAns(K.picked===a.i);if(it.t!=="hoeren"||!K.fb.ok)speakLater(a.sp);klek()});
   }
-  if($("#nx"))$("#nx").onclick=()=>{kRecStop();kSrStop();K.n++;K.fb=null;K.picked=null;K.ps=null;K.sel=[];K.rec=null;K.sr=null;kSnap();sfx("tap");klek()};
+  if($("#nx"))$("#nx").onclick=()=>{kRecStop();kSrStop();K.n++;K.fb=null;K.picked=null;K.ps=null;K.sel=[];K.rec=null;K.sr=null;K.dk="";kSnap();sfx("tap");klek()};
 }
+const kDik=(a,b)=>{const f=s=>norm(sPunct(s.replace(/ـ/g,""))).replace(/\s+/g," ");return !!f(a)&&f(a)===f(b)}; // Diktat: gleich ohne Vokalzeichen, Satzzeichen und Hamza-Träger
 const kKnownAll=()=>K&&K.test?ALPHA:K&&K.l?[...kKnown(K.l.k),...(K.l.art==="buchstaben"?kLet(K.l):[])]:kLearnt(); // im Test alle Buchstaben als Ablenker
 function kSum(l){ // was die Lektion gebracht hat: Buchstaben, gelesene Wörter oder Surenanfänge
-  const ws=l.art==="wortschatz"?l.woerter.map(i=>BY[i].ar):l.art==="saetze"?(SSTA[l.einheit]||[]).slice(0,3).map(x=>x.ar):l.art==="verbinden"?l.woerter:l.art==="suren"?l.suren.map(s=>s.t):l.art==="vokale"?l.woerter.map(w=>w[0]):null;
+  const ws=l.art==="wortschatz"?l.woerter.map(i=>BY[i].ar):l.art==="saetze"?(l.saetze?l.saetze.map(k=>CS[k]).filter(Boolean):SSTA[l.einheit]||[]).slice(0,3).map(x=>x.ar):l.art==="dialog"?[...new Set((l.dialoge||[]).map(k=>CD[k]).filter(Boolean).flatMap(d=>d.z.map(z=>sPunct(z[1]))))].slice(0,3):l.art==="verbinden"?l.woerter:l.art==="suren"?l.suren.map(s=>s.t):l.art==="vokale"?l.woerter.map(w=>w[0]):null;
   return ws?`<div class="ar klet kws" lang="ar">${ws.slice(0,6).map(w=>`<span>${w}</span>`).join("")}</div>`:`<div class="ar klet" lang="ar">${kLet(l).map(a=>a.c).join(" ")}</div>`;
 }
 function kEnd(){
@@ -1966,13 +2027,13 @@ function kEnd(){
     S.st.kurs=(S.st.kurs||0)+1;K.bonus=(l?10:5)+(K.miss?0:5);K.xp+=K.bonus;addXP(K.bonus);
     if(K.newDone)confetti();sfx("win")}
   const etDone=K.newDone&&(!nx||nx.e!==l.e),et=l&&kEtap(l.e),nxe=nx&&kEtap(nx.e),zl=l&&KE[l.e]&&KE[l.e].ziel;
-  paint(`<div style="text-align:center;margin-top:20px"><h1>${l?"Lektion geschafft":"Runde beendet"}</h1><p class="mute">${l?`Etappe ${l.e.toUpperCase()} · Lektion ${l.li+1}: ${esc(l.titel)}`:"Wiederholung · Etappe "+K.e.toUpperCase()}</p></div>
+  paint(`<div style="text-align:center;margin-top:20px"><h1>${l?"Lektion geschafft":"Runde beendet"}</h1><p class="mute">${l?`Etappe ${eLab(l.e)} · Lektion ${l.li+1}: ${esc(l.titel)}`:"Wiederholung · Etappe "+eLab(K.e)}</p></div>
   <div class="tiles"><div class="card"><p class="mute">Gleich richtig</p><b>${K.first} / ${K.graded}</b></div><div class="card"><p class="mute">XP verdient</p><b>+${K.xp}</b>${K.bonus?`<span class="mute">davon ${K.bonus} Bonus</span>`:""}</div></div>
-  ${l?`<div class="card" style="margin-top:10px"><p class="mute">${l.art==="wortschatz"?"Neue Wörter":l.art==="saetze"?"Sätze":l.art!=="buchstaben"?"Gelesen":K.newDone?"Neu gelernt":"Geübt"}</p>${kSum(l)}</div>`:""}
+  ${l?`<div class="card" style="margin-top:10px"><p class="mute">${l.art==="wortschatz"?"Neue Wörter":l.art==="saetze"?"Sätze":l.art==="dialog"?"Gespräche":l.art!=="buchstaben"?"Gelesen":K.newDone?"Neu gelernt":"Geübt"}</p>${kSum(l)}</div>`:""}
   ${etDone?`<div class="card note" role="status"><p><b>Etappe „${esc(et.titel)}“ geschafft.</b> ${zl&&zl.geschafft?esc(zl.geschafft):""}${nx?"":" Die nächste Etappe ist in Arbeit."}</p></div>`:""}
-  ${nx?`<button class="btn" data-kl="${nx.id}">Weiter: ${nxe.id!==l.e?"Etappe "+nx.e.toUpperCase()+", ":""}${esc(nx.titel)}</button><button class="btn alt" data-go="path">Zum Lernpfad</button>`:`<button class="btn" data-go="path">Zum Lernpfad</button>${l?"":`<button class="btn alt" data-krev="${K.e}">Noch eine Runde</button>`}`}`);
+  ${nx?`<button class="btn" data-kl="${nx.id}">Weiter: ${nxe.id!==l.e?"Etappe "+eLab(nx.e)+", ":""}${esc(nx.titel)}</button><button class="btn alt" data-go="path">Zum Lernpfad</button>`:`<button class="btn" data-go="path">Zum Lernpfad</button>${l?"":`<button class="btn alt" data-krev="${K.e}">Noch eine Runde</button>`}`}`);
 }
-const kSm=l=>l.art==="wortschatz"?l.woerter.length+" neue Wörter":l.art==="saetze"?Math.min(6,(SSTA[l.einheit]||[]).length)+" Sätze verstehen und bauen":l.art==="test"?"20 Aufgaben aus der ganzen Stufe":l.art==="verbinden"?(l.neu.length?l.neu.length+" Buchstaben verbinden":l.woerter.length+" Wörter lesen"):l.art==="suren"?l.suren.length+" Surenanfänge"
+const kSm=l=>l.art==="wortschatz"?l.woerter.length+" neue Wörter":l.art==="saetze"?(l.saetze?l.saetze.length:Math.min(6,(SSTA[l.einheit]||[]).length))+" Sätze verstehen und bauen":l.art==="dialog"?(l.dialoge||[]).length+" Mini-Dialoge":l.art==="test"?"20 Aufgaben aus der ganzen Stufe":l.art==="verbinden"?(l.neu.length?l.neu.length+" Buchstaben verbinden":l.woerter.length+" Wörter lesen"):l.art==="suren"?l.suren.length+" Surenanfänge"
   :l.art==="vokale"?(l.zeichen?"Neu: "+ZI[l.zeichen].n:l.woerter.length+(l.woerter.filter(w=>w[0].includes(" ")).length*2>l.woerter.length?" kurze Sätze":" Wörter lesen")):kLet(l).length+" neue Buchstaben";
 // Fußspuren statt Mittellinie: nur auf dem schon gegangenen Teil, alle 22 px ein Schritt, abwechselnd links und rechts, in der Farbe des Wegbelags.
 // Der Weg ist in Prozent gezeichnet, die Spuren in Pixeln, damit sie nicht verzerrt werden. Bei anderer Breite neu setzen.
@@ -2003,11 +2064,11 @@ function kpath(){
       nodes.push(`<div class="stb" style="top:${y}px"><span class="ar" lang="ar">${st.ar}</span><b>Stufe ${st.id} · ${esc(st.titel)}</b><small>Wörter, Sätze und erste Grammatik</small>${lk?`<button class="sbt" data-kt="wissen">Ich kann schon lesen<small>Einstufungstest machen</small></button>`:""}</div>`);
       y+=lk?220:150;br=true}}
     const ls=KL.filter(l=>l.e===e.id),jp=ls.length&&kLocked(ls[0])&&st.id===1;th=e.id==="s1"?"ths":"th"+(ei%10); // Sprungtest nur in Stufe 1
-    bands.push({y,th,h:`<div class="pgr" style="top:0"><span class="ar ut" lang="ar">${e.ar}</span><b>Etappe ${e.id.toUpperCase()} · ${esc(e.titel)}</b><small>${ls.length} Lektionen · ${esc(e.kurz)}</small>${jp?`<button class="sbt kjp ${th}" data-kj="${e.id}" aria-label="Mit einem Test bis Etappe ${e.id.toUpperCase()} springen">Hierher springen<small>Test mit 10 Aufgaben</small></button>`:""}</div>`}); // gesperrte Etappe: mit einem Test überspringen
+    bands.push({y,th,h:`<div class="pgr" style="top:0"><span class="ar ut" lang="ar">${e.ar}</span><b>Etappe ${eLab(e.id)} · ${esc(e.titel)}</b><small>${ls.length} Lektionen · ${esc(e.kurz)}</small>${jp?`<button class="sbt kjp ${th}" data-kj="${e.id}" aria-label="Mit einem Test bis Etappe ${eLab(e.id)} springen">Hierher springen<small>Test mit 10 Aufgaben</small></button>`:""}</div>`}); // gesperrte Etappe: mit einem Test überspringen
     y+=jp?196:140;br=true;bend(ei-1);
     ls.forEach(l=>{const lock=kLocked(l),dn=kDone(l.id),c=l===cur&&!dn,attr=`data-kl="${l.id}"`,x=Math.max(24,Math.min(76,50+amp*Math.sin(i*fr+ph))),pv=KL[l.k-1];i++;
       pts.push({x,y:y+32,dn,brk:br,th});br=false;
-      const rs=!lock&&rsm[l.id],rr=!!rs,sm=lock?(pv.e!==l.e?"nach Etappe "+pv.e.toUpperCase():"nach Lektion "+(pv.li+1)):rr?"Weitermachen · "+kResTxt(rs):dn?"geschafft":kSm(l);
+      const rs=!lock&&rsm[l.id],rr=!!rs,sm=lock?(pv.e!==l.e?"nach Etappe "+eLab(pv.e):"nach Lektion "+(pv.li+1)):rr?"Weitermachen · "+kResTxt(rs):dn?"geschafft":kSm(l);
       nodes.push(`<button class="pn abl ${lock?"lock":dn?"done":""} ${c?"cur":""} ${th}" ${attr} style="left:${x.toFixed(1)}%;top:${y}px" aria-label="Lektion ${l.li+1}: ${esc(l.titel)}, ${lock?"gesperrt":dn?"geschafft":"offen"}${rr?", weitermachen: "+kResTxt(rs):""}"><span class="nd">${dn&&!c?ic("check",24):`<span class="ar${l.station&&l.station.replace(/[ً-ٰۖ-ۭ]/g,"").length>5?" lng":""}" lang="ar">${l.station||kLet(l).slice(0,2).map(a=>a.c).join(" ")}</span>`}</span><span class="lb ${x>50?"l":"r"}"><b>${esc(l.titel)}</b><small>${sm}</small>${lock&&hint===attr?`<small class="hint" role="status">Schließe erst „${esc(pv.titel)}“ ab.</small>`:""}</span></button>`);
       y+=P});
     if(f.ziel&&f.ziel.art==="alle-buchstaben"){ // Ziel der Etappe: alle Buchstaben, gelernte färben sich grün
@@ -2040,13 +2101,14 @@ function kpath(){
   const road=`<svg viewBox="0 0 100 ${y}" preserveAspectRatio="none" aria-hidden="true">${lay(()=>"ed")}${lay(s=>"bed c"+s.k%5)}</svg>${FPS}`;FP=pts;
   const land=bands.map((b,n)=>`<div class="ub ${b.th}" style="top:${b.y+4}px;height:${(n+1<bands.length?bands[n+1].y:y)-b.y-8}px">${b.h}</div>`).join("");
   const dn=KL.filter(l=>kDone(l.id)).length,st1=kStOf(cur.e)||KURS.stufen[0],sl=KL.filter(l=>kStOf(l.e)===st1),sd=sl.filter(l=>kDone(l.id)).length; // Kopf: die Stufe des nächsten Halts
+  const dmn=KURS.stufen.filter(s=>s.demnaechst&&kStE(s).length).map(s=>`<p class="mute">${esc(s.demnaechst)}</p>`).join(""); // Stufe mit Inhalt, die gerade weiterwächst
   const old=`<p class="mute kold">Alle Wörter als Liste und die Satzrunden gibt es auch im bisherigen Lernpfad. Dein Fortschritt ist in beiden derselbe.</p>${off}`; // der bisherige Pfad bleibt erreichbar, am Ende statt über dem Weg
   paint(`<h1 class="hi">Lernpfad</h1><div class="kph"><span>Stufe ${st1.id} · ${esc(st1.titel)}</span><span class="kpb" role="img" aria-label="${sd} von ${sl.length} Lektionen geschafft"><i style="width:${Math.round(sd/sl.length*100)}%"></i></span><b>${sd}/${sl.length}</b></div>
   ${!dn&&!S.wt?`<div class="card askip kwt"><b>Kannst du schon etwas lesen?</b><p class="mute">Ein kurzer Einstufungstest zeigt, wo du einsteigst. Was du schon kannst, zählt dann als geschafft.</p><button class="btn" data-kt="wissen">Einstufungstest starten</button><button class="lnk" data-kt="nein">Ich fange von vorn an</button></div>`:""}
   <details class="card rule"><summary><b>So funktioniert der Lernpfad</b></summary><ol><li><i>1</i><span>Stufe 1 bringt dir das <b>Lesen</b> bei, von den Buchstaben bis zur Schrift des Korans. Danach lernst du in Stufe 2 die Sprache.</span></li><li><i>2</i><span>Jede <b>Lektion</b> mischt kurze Aufgaben: kennenlernen, erkennen, hören, zuordnen und Wörter in Buchstaben zerlegen.</span></li><li><i>3</i><span>Fehler kommen am Ende der Lektion noch einmal, bis sie sitzen. Danach öffnet sich die nächste Lektion.</span></li><li><i>4</i><span>Du kannst schon etwas? In Stufe 1 springst du vor jeder gesperrten Etappe mit einem <b>Test</b> weiter.</span></li></ol><button class="lnk" data-kt="wissen">Einstufungstest machen</button></details>
   <div class="pth" style="height:${y}px">${land}${road}${nodes.join("")}</div>
-  ${soon.length?`<div class="card ksoon"><b>Demnächst</b><p class="mute">Diese Etappen entstehen gerade.</p><ol>${soon.map(e=>`<li><span class="ar" lang="ar">${e.ar}</span><span><b>${e.id.toUpperCase()} · ${esc(e.titel)}</b><small>${esc(e.kurz||"")}</small></span></li>`).join("")}</ol>${KURS.stufen.filter(s=>!kStE(s).length&&!soon.some(e=>e.st===s)).map(s=>`<p class="mute">Danach: Stufe ${s.id} · ${esc(s.titel)}</p>`).join("")}${old}</div>`
-    :KURS.stufen.some(s=>!kStE(s).length)?`<div class="card ksoon"><b>Demnächst</b>${KURS.stufen.filter(s=>!kStE(s).length).map(s=>`<p class="mute">Stufe ${s.id} · ${esc(s.titel)} entsteht gerade: Wörter, Sätze und Grammatik, Lektion für Lektion.</p>`).join("")}${old}</div>`:`<p class="kold">${off}</p>`}`);
+  ${soon.length?`<div class="card ksoon"><b>Demnächst</b><p class="mute">Diese Etappen entstehen gerade.</p><ol>${soon.map(e=>`<li><span class="ar" lang="ar">${e.ar}</span><span><b>${eLab(e.id)} · ${esc(e.titel)}</b><small>${esc(e.kurz||"")}</small></span></li>`).join("")}</ol>${dmn}${KURS.stufen.filter(s=>!kStE(s).length&&!soon.some(e=>e.st===s)).map(s=>`<p class="mute">Danach: Stufe ${s.id} · ${esc(s.titel)}</p>`).join("")}${old}</div>`
+    :KURS.stufen.some(s=>!kStE(s).length)||dmn?`<div class="card ksoon"><b>Demnächst</b>${dmn}${KURS.stufen.filter(s=>!kStE(s).length).map(s=>`<p class="mute">Stufe ${s.id} · ${esc(s.titel)} entsteht gerade: Wörter, Sätze und Grammatik, Lektion für Lektion.</p>`).join("")}${old}</div>`:`<p class="kold">${off}</p>`}`);
   fpDraw();
   if(ui.keep){ui.keep=false;return}
   const c=$(".pn.cur");if(c&&dn)requestAnimationFrame(()=>c.scrollIntoView({block:"center"}));
@@ -2156,7 +2218,7 @@ function home(){
   ${(()=>{const p=mixPlan(),n=p.due.length+p.nw.length+p.weak.length;
     return n&&!alphaGate()?itm('data-go="mix"',"bolt","Heute dran",n+" Wörter · "+mixText(p),"main"):""})()}
   ${S.np&&KL.length?(()=>{const r=kSnapGet(),c=r?KL.find(l=>l.id===r.id):kCur(); // eine angefangene Lektion geht vor
-    return itm(`data-kl="${c.id}"`,"path",r?"Weitermachen":"Weiterlernen",`Etappe ${c.e.toUpperCase()} · Lektion ${c.li+1}: ${esc(c.titel)}${r?" · "+kResTxt(r):""}`,"main2")})():ns.t==="a"?itm("data-kn","path","Weiterlernen","Buchstaben lernen · Etappe S1 im neuen Lernpfad","main2"):itm(`data-les="${cur.k}"`,"path","Weiterlernen",`Lektion ${cur.k+1}: ${cur.t}`,"main2")}
+    return itm(`data-kl="${c.id}"`,"path",r?"Weitermachen":"Weiterlernen",`Etappe ${eLab(c.e)} · Lektion ${c.li+1}: ${esc(c.titel)}${r?" · "+kResTxt(r):""}`,"main2")})():ns.t==="a"?itm("data-kn","path","Weiterlernen","Buchstaben lernen · Etappe S1 im neuen Lernpfad","main2"):itm(`data-les="${cur.k}"`,"path","Weiterlernen",`Lektion ${cur.k+1}: ${cur.t}`,"main2")}
     ${itm('data-go="alphabet"',"list","Alphabet",alphaSure()+" von "+ALPHA.length+" Buchstaben sicher")}
   ${itm('data-go="badges"',"medal","Abzeichen",(S.badges||[]).length+" von "+BADGES.length+" freigeschaltet")}
   ${itm('data-go="stats"',"chart","Statistiken",knownN()+" von "+W.length+" Wörtern gelernt")}
@@ -2197,7 +2259,7 @@ function homeNp(){
   const sLast=KURS.stufen.filter(x=>kStE(x).length).pop()||KURS.stufen[0],more=KURS.stufen.some(x=>x.etappen.some(y=>!KE[y.id]));
   const nh=all?`<div class="card nh dk"><span class="nhc" aria-hidden="true"></span><p class="nhl">${sLast.id===1?"Stufe 1 geschafft":"Alles geschafft, was es bisher gibt"}</p><p class="ar nha" lang="ar">${esc(sLast.ar)}</p><h2>${sLast.id===1?"Du kannst Arabisch lesen":"Stark gelernt"}</h2><p class="mute">${sLast.id===1?"Alle Etappen sind geschafft. Die nächste Stufe ist in Arbeit.":"Alle Etappen sind geschafft."}${more?" Weitere Etappen sind in Arbeit.":""} Bis dahin kannst du jede Lektion wiederholen und unter Karten Wörter üben.</p>
       <button class="btn" data-go="path">Zum Lernpfad</button><button class="btn alt" data-go="cards">Wörter lernen</button></div>`
-    :`<div class="card nh dk"><span class="nhc" aria-hidden="true"></span><p class="nhl">${r?"Angefangen":fresh?"Dein erster Halt":"Nächster Halt"} · Etappe ${e.id.toUpperCase()} · ${esc(e.titel)}</p>
+    :`<div class="card nh dk"><span class="nhc" aria-hidden="true"></span><p class="nhl">${r?"Angefangen":fresh?"Dein erster Halt":"Nächster Halt"} · Etappe ${eLab(e.id)} · ${esc(e.titel)}</p>
       <p class="ar nha${lng}" lang="ar">${big}</p><h2>${l.art==="test"?esc(l.titel):`Lektion ${l.li+1}: ${esc(l.titel)}`}</h2><p class="mute">${r?kResTxt(r):kSm(l)}</p>
       <button class="btn" data-kl="${l.id}">${r?"Weitermachen":fresh?"Erste Lektion starten":"Lektion starten"}</button></div>`;
   const zp=all?"":zl&&zl.art==="alle-buchstaben"?`<p class="mute">${kLearnt().length} von ${ALPHA.length} Buchstaben gelernt</p>`:zl&&zl.ar?`<p class="ar zar" lang="ar">${zl.ar}</p><p class="mute">${esc(zl.de||"")}</p>`:zl&&zl.art==="woerter"?`<p class="ar zar" lang="ar">${(zl.woerter||[]).map(i=>BY[i]).filter(Boolean).map(w=>w.ar).join(" · ")}</p>`:"";
@@ -2210,7 +2272,7 @@ function homeNp(){
     <button data-go="stats"><svg width="42" height="42" viewBox="0 0 42 42" aria-hidden="true"><circle cx="21" cy="21" r="17" fill="none" stroke-width="6" style="stroke:var(--line)"/>${gf?`<circle cx="21" cy="21" r="17" fill="none" stroke-width="6" stroke-linecap="round" style="stroke:var(--mint)" stroke-dasharray="${(gf*C).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 21 21)"/>`:""}</svg><b>Tagesziel</b><small>${Math.min(xd,g)} von ${g} XP heute</small></button></div>`;
   const mix=(()=>{const p=mixPlan(),n=p.due.length+p.nw.length+p.weak.length;return n&&!alphaGate()&&Object.keys(S.box).length?itm('data-go="mix"',"bolt","Wörter: heute dran",n+" Wörter · "+mixText(p)):""})();
   paint(top+nh+ziel+mine+`${due?`<button class="cta alt2" data-go="review">${due} Wörter wiederholen</button>`:""}
-  ${tiles}<div class="menu">${mix}${itm('data-go="stats"',"chart","Dein Fortschritt",`Level ${lvl()} · ${S.xp||0} XP · ${Object.keys(kp().d).length} von ${KL.length} Lektionen`)}</div>`);
+  ${tiles}<div class="menu">${mix}${itm('data-go="stats"',"chart","Dein Fortschritt",`Level ${lvl()} · ${S.xp||0} XP · ${KL.filter(l=>kDone(l.id)).length} von ${KL.length} Lektionen`)}</div>`);
 }
 // nächster Schritt: erst Buchstaben (solange nicht erledigt, übersprungen oder schon Wörter gestartet), dann die aktuelle Lektion
 function nextStep(){
@@ -2282,7 +2344,7 @@ function more(){
   paint(`<h1>Mehr</h1><div class="menu">${[["alphabet","list","Alphabet",alphaSure()+" von "+ALPHA.length+" Buchstaben sicher"],["badges","medal","Abzeichen",(S.badges||[]).length+" von "+BADGES.length+" freigeschaltet"],["list","list","Wortliste",W.length+" Wörter mit Aussprache"],["stats","chart","Statistiken","Lektionen, Buchstaben, Wörter, Serie"],["fav","star","Favoriten",nf?nf+" gespeichert":"In den Karten mit dem Stern markieren"],["settings","gear","Einstellungen","Ziel, Vokalzeichen, Töne, Konto"],["legal","lock","Datenschutz &amp; Impressum","Was mit deinen Daten passiert"]].map(m=>itm(`data-go="${m[0]}"`,m[1],m[2],m[3])).join("")}</div>`);
 }
 function badges(){
-  const have=S.badges||[];
+  const have=(S.badges||[]).filter(id=>BADGES.some(b=>b.id===id)); // Abzeichen entfernter Etappen (früher W1–W10) zählen nicht mit
   const card=b=>`<div class="card bdg ${have.includes(b.id)?"":"lock"}"><span class="med">${medal(b.ic)}</span><b>${b.n}</b><small>${b.d}</small></div>`,rd=BADGES.filter(b=>BREAD.includes(b.id)),sp=BADGES.filter(b=>BSPR.includes(b.id)),rest=BADGES.filter(b=>!BREAD.includes(b.id)&&!BSPR.includes(b.id)),cnt=l=>l.filter(b=>have.includes(b.id)).length;
   paint(head("Abzeichen","more")+pgHead(have.length,BADGES.length,"freigeschaltet")+`
   <h2 class="bgh">Lesen lernen <small class="mute">${cnt(rd)} von ${rd.length}</small></h2><div class="bg">${rd.map(card).join("")}</div>
@@ -2295,7 +2357,7 @@ function badges(){
 const FREI={cards:"s3",pairs:"s3",blitz:"s5",magnet:"s1",zug:"s3",suq:"s3"};
 const fGate=k=>{const e=FREI[k];return e&&S.np&&!S.aok&&!hasWords()&&KL.length&&!kEDone(e)?e:null};
 const fLeft=e=>{const last=Math.max(...KL.filter(l=>l.e===e).map(l=>l.k));return KL.filter(l=>l.k<=last&&!kDone(l.id)).length};
-const fWhy=e=>{const n=fLeft(e);return `Öffnet sich nach Etappe ${e.toUpperCase()} · ${esc(kEtap(e).titel)} (noch ${n} ${n===1?"Lektion":"Lektionen"})`};
+const fWhy=e=>{const n=fLeft(e);return `Öffnet sich nach Etappe ${eLab(e)} · ${esc(kEtap(e).titel)} (noch ${n} ${n===1?"Lektion":"Lektionen"})`};
 const fFree=()=>`<button class="lnk ffree" id="ffree">Ich kann schon lesen: alles freischalten</button>`;
 function fFreeOn(again){const b=$("#ffree");if(b)b.onclick=()=>{S.aok="skip";save();sfx("tap");toast("Karten und Spiele sind frei.");again()}}
 // Spiele-Übersicht: oben das Spiel des Tages (wechselt täglich unter den offenen Spielen), darunter Kacheln nach Thema.
@@ -2349,7 +2411,7 @@ function cards(){
   const e=fGate("cards");
   if(e){const ls=KL.filter(l=>l.k<=Math.max(...KL.filter(x=>x.e===e).map(x=>x.k))),dn=ls.filter(l=>kDone(l.id)).length,c=kCur();
     paint(`<h1>Karteikarten</h1><div class="card nh"><p class="nhl">${ic("lock",16)} Noch gesperrt</p><p class="ar nha" lang="ar">كِتَابٌ</p>
-      <p>Die Karten öffnen sich nach <b>Etappe ${e.toUpperCase()} · ${esc(kEtap(e).titel)}</b>. Dann liest du Wörter mit Vokalzeichen, wie dieses: „kitābun“, ein Buch.</p>
+      <p>Die Karten öffnen sich nach <b>Etappe ${eLab(e)} · ${esc(kEtap(e).titel)}</b>. Dann liest du Wörter mit Vokalzeichen, wie dieses: „kitābun“, ein Buch.</p>
       <div class="zb" role="img" aria-label="${dn} von ${ls.length} Lektionen bis dahin geschafft"><i style="width:${Math.round(dn/ls.length*100)}%"></i></div><p class="mute zs">${dn} von ${ls.length} Lektionen bis dahin geschafft</p>
       <button class="btn" data-kl="${c.id}">Zum nächsten Halt</button></div>${fFree()}`);
     return fFreeOn(cards)}
@@ -2477,7 +2539,7 @@ function quiz(){
     document.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{Q.picked=b.dataset.o;answer(it,Q.picked===w.i);speakLater(w.ar);quiz()});
   }else{
     paint(bar+`<p style="text-align:center;font-weight:600;margin-top:12px">Schreibe das arabische Wort.</p><div style="text-align:center;margin:16px 0"><span class="chip on" style="font-size:20px;padding:10px 24px">${w.de}</span></div>
-    <input class="t ar as2" id="tx" lang="ar" placeholder="Arabisch schreiben …" autocomplete="off" inputmode="none" ${Q.res!==null?"disabled":""} value="${esc(Q.val||"")}"><div class="kb" id="kb">${[..."ابتثجحخدذرزسشصضطظعغفقكلمنهويءأإآؤئةى"].map(c=>`<button data-k="${c}" ${Q.res!==null?"disabled":""}>${c}</button>`).join("")}<button data-k=" " style="grid-column:span 4;font-family:var(--sans);font-size:14px" ${Q.res!==null?"disabled":""}>Leerzeichen</button><button data-k="⌫" aria-label="Löschen" style="grid-column:span 2;font-family:var(--sans)">⌫</button></div>
+    <input class="t ar as2" id="tx" lang="ar" placeholder="Arabisch schreiben …" autocomplete="off" inputmode="none" ${Q.res!==null?"disabled":""} value="${esc(Q.val||"")}">${kbHtml(Q.res!==null)}
     ${fbHtml}<button class="btn" id="nx">${Q.res===null?"Überprüfen":last}</button>`);
     const tx=$("#tx");tx.oninput=()=>Q.val=tx.value;tx.onkeydown=e=>{if(e.key==="Enter")$("#nx").click()};
     $("#kb").onclick=e=>{const k=e.target.closest("[data-k]");if(!k)return;const c=k.dataset.k;sfx("tap");Q.val=c==="⌫"?(Q.val||"").slice(0,-1):(Q.val||"")+c;tx.value=Q.val;tx.focus()};
@@ -2488,6 +2550,8 @@ function quiz(){
   };
 }
 
+// Arabische Bildschirm-Tastatur (das Eingabefeld hat inputmode="none", damit die Handy-Tastatur nicht aufgeht)
+const kbHtml=dis=>`<div class="kb" id="kb">${[..."ابتثجحخدذرزسشصضطظعغفقكلمنهويءأإآؤئةى"].map(c=>`<button data-k="${c}" ${dis?"disabled":""}>${c}</button>`).join("")}<button data-k=" " style="grid-column:span 4;font-family:var(--sans);font-size:14px" ${dis?"disabled":""}>Leerzeichen</button><button data-k="⌫" aria-label="Löschen" style="grid-column:span 2;font-family:var(--sans)">⌫</button></div>`;
 // ===== Spiel 1: Paare zuordnen =====
 function startPairs(){
   if(fGate("pairs"))return go("games");
@@ -3120,7 +3184,7 @@ loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v50"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v51"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>
