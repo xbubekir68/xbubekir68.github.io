@@ -858,13 +858,14 @@ const pick=a=>a[Math.floor(Math.random()*a.length)];
 let ARV=null,AVOICE=null,hintOff=false; // ARV: false = Gerät hat sicher keine arabische Stimme
 function pickVoice(){try{const v=speechSynthesis.getVoices();if(!v.length)return;const ar=v.filter(x=>/^(ar|ara)([-_]|$)/i.test(x.lang));ARV=ar.length>0;AVOICE=ar.find(x=>x.localService)||ar[0]||null}catch(e){}}
 try{pickVoice();speechSynthesis.onvoiceschanged=pickVoice}catch(e){}
-const tts=t=>{try{const u=new SpeechSynthesisUtterance(t);u.lang="ar-SA";if(AVOICE)u.voice=AVOICE;u.rate=.85;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}};
+const tts=t=>{try{if(AEL)AEL.pause()}catch(e){}try{const u=new SpeechSynthesisUtterance(t);u.lang="ar-SA";if(AVOICE)u.voice=AVOICE;u.rate=.85;u.onstart=()=>duck(true);u.onend=u.onerror=()=>duck(false);speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}};
 // Audiodateien (KI-Stimme oder eigene Aufnahme) aus audio/audio.json, Schlüssel = vorgelesener Text; ohne Datei liest die Gerätestimme
 let AUD={},AUDN=0,AEL=null;
 try{fetch("audio/audio.json").then(r=>r.ok?r.json():null).then(j=>{if(j&&j.items){AUD=j.items;AUDN=Object.keys(AUD).length;if(U&&AUDN&&ARV===false&&view==="home")home()}}).catch(()=>{})}catch(e){}
 const canSpeak=()=>ARV!==false||AUDN>0;
 const speak=t=>{const a=AUD[t];if(!a)return tts(t);try{speechSynthesis.cancel()}catch(e){}
-  try{if(AEL)AEL.pause();AEL=new Audio("audio/"+a.f+"?v="+a.v);AEL.play().catch(()=>tts(t))}catch(e){tts(t)}};
+  try{if(AEL)AEL.pause();const el=AEL=new Audio("audio/"+a.f+"?v="+a.v);el.onplaying=()=>duck(true);el.onended=el.onpause=el.onerror=()=>{if(AEL===el)duck(false)};
+    el.play().catch(e=>{if(AEL===el&&!(e&&e.name==="AbortError"))tts(t)})}catch(e){tts(t)}}; // abgebrochen (schnell nochmal angetippt): nicht das alte Wort nachsprechen
 const speakLater=t=>{if(S.auto!==false)setTimeout(()=>speak(t),420)};
 const toAr=n=>String(n).replace(/\d/g,d=>"٠١٢٣٤٥٦٧٨٩"[d]);
 function applyTheme(){S.theme==="system"?document.documentElement.removeAttribute("data-theme"):document.documentElement.setAttribute("data-theme",S.theme)}
@@ -982,39 +983,73 @@ const ic=(n,s=22,f=false)=>`<svg class="i" viewBox="0 0 24 24" width="${s}" heig
 const xbtn=(go,label="Beenden")=>`<button class="x" data-go="${go}" aria-label="${label}">${ic("close")}</button>`;
 
 // ===== Klang (synthetisch erzeugt, ohne Audiodateien) =====
-let AC,MG;
+// Klangfamilie „Holz und Glocke“: weicher Schlägel (Sinus mit leisen Teiltönen, kurzer Anschlag, langsames Ausklingen),
+// Töne aus C-Dur-pentatonisch wie die Leiter für richtige Antworten. Bedienklänge (tap, flip, path, game) laufen je über einen
+// eigenen Bus: ein neuer blendet den laufenden in etwa 15 ms aus, derselbe Klang zweimal in 40 ms zählt einmal. So stapelt sich nichts.
+let AC,MG;const MGV=.8;
 function actx(){
-  if(!AC){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;AC=new C();MG=AC.createGain();MG.gain.value=.8;const cp=AC.createDynamicsCompressor();MG.connect(cp);cp.connect(AC.destination)}
-  if(AC.state==="suspended")AC.resume();return AC;
+  if(!AC){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;
+    if(navigator.userActivation&&!navigator.userActivation.hasBeenActive)return null; // Browser-Regel: erst nach der ersten Berührung
+    AC=new C();MG=AC.createGain();MG.gain.value=MGV;const cp=AC.createDynamicsCompressor();MG.connect(cp);cp.connect(AC.destination)}
+  if(AC.state!=="running")try{AC.resume()}catch(e){} // auch „interrupted“ (Safari nach Anruf oder im Hintergrund)
+  return AC;
 }
-function tone(f,t0,d,o={}){
-  const c=actx();if(!c)return;const{type="sine",g=.2,a=.008,to=null}=o,n=c.currentTime+t0,s=c.createOscillator(),v=c.createGain();
-  s.type=type;s.frequency.setValueAtTime(f,n);if(to)s.frequency.exponentialRampToValueAtTime(to,n+d);
+function tone(f,t0,d,o={}){ // o: c = Kontext, out = Ziel, type, g = Pegel, a = Anschlag, to = Zielfrequenz, tt = Zeit bis dahin
+  const c=o.c||actx();if(!c)return;const{type="sine",g=.2,a=.008,to=null,tt=d}=o,out=o.out||MG,n=c.currentTime+t0,s=c.createOscillator(),v=c.createGain();
+  s.type=type;s.frequency.setValueAtTime(f,n);if(to)s.frequency.exponentialRampToValueAtTime(to,n+tt);
   v.gain.setValueAtTime(.0001,n);v.gain.exponentialRampToValueAtTime(g,n+a);v.gain.exponentialRampToValueAtTime(.0001,n+d);
-  s.connect(v);v.connect(MG);s.start(n);s.stop(n+d+.03);
+  s.connect(v);v.connect(out);s.start(n);s.stop(n+d+.03);
 }
-function hiss(t0,d,o={}){
-  const c=actx();if(!c)return;const{f=2000,q=1,g=.1,type="bandpass",to=null}=o,n=c.currentTime+t0,len=Math.floor(c.sampleRate*d),b=c.createBuffer(1,len,c.sampleRate),da=b.getChannelData(0);
-  for(let i=0;i<len;i++)da[i]=Math.random()*2-1;
-  const s=c.createBufferSource(),fl=c.createBiquadFilter(),v=c.createGain();s.buffer=b;fl.type=type;fl.frequency.setValueAtTime(f,n);if(to)fl.frequency.exponentialRampToValueAtTime(to,n+d);fl.Q.value=q;
-  v.gain.setValueAtTime(g,n);v.gain.exponentialRampToValueAtTime(.0001,n+d);s.connect(fl);fl.connect(v);v.connect(MG);s.start(n);
+const noiseBuf=c=>{if(!c._nb){const len=c.sampleRate,b=c.createBuffer(1,len,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<len;i++)d[i]=Math.random()*2-1;c._nb=b}return c._nb}; // ein Rauschpuffer je Kontext
+function hiss(t0,d,o={}){ // gefiltertes Rauschen; a = Einblenden (für ein Wischen statt eines Knacks)
+  const c=o.c||actx();if(!c)return;const{f=2000,q=1,g=.1,type="bandpass",to=null,a=0}=o,out=o.out||MG,n=c.currentTime+t0;
+  const s=c.createBufferSource(),fl=c.createBiquadFilter(),v=c.createGain();s.buffer=noiseBuf(c);fl.type=type;fl.frequency.setValueAtTime(f,n);if(to)fl.frequency.exponentialRampToValueAtTime(to,n+d);fl.Q.value=q;
+  if(a){v.gain.setValueAtTime(.0001,n);v.gain.exponentialRampToValueAtTime(g,n+a)}else v.gain.setValueAtTime(g,n);v.gain.exponentialRampToValueAtTime(.0001,n+d);
+  s.connect(fl);fl.connect(v);v.connect(out);s.start(n,Math.random()*.5,d+.02);
 }
+function mallet(c,out,f,t0,o={}){ // weicher Schlägel: Grundton, leise 2. und 3. Teiltöne; bend = kleiner Tonhöhen-Hüpfer zum Grundton
+  const{g=.2,d=.3,p2=.18,p3=.06,bend=0}=o,t=bend?{to:f,tt:.03}:{};
+  tone(f*(1+bend),t0,d,{c,out,g,a:.005,...t});
+  if(p2)tone(2*f*(1+bend),t0,d*.55,{c,out,g:g*p2,a:.004,...(bend?{to:2*f,tt:.03}:{})});
+  if(p3)tone(3*f,t0,d*.3,{c,out,g:g*p3,a:.003});
+}
+const SNDG={tap:.178,flip:.355,path:.115,game:.155}; // Pegel, gemessen auf gleiche Lautheit (tap etwas leiser, er kommt am häufigsten)
+const SND={ // Bedienklänge: (Kontext, Ziel, Startzeit, Zusatz)
+  tap:(c,out,t)=>{tone(880,t,.06,{c,out,g:SNDG.tap,a:.002,to:620,tt:.035});hiss(t,.012,{c,out,f:2400,q:.5,g:SNDG.tap*.5,type:"lowpass"})}, // kurzer, weicher Holz-Tick
+  flip:(c,out,t,dir)=>{const j=1+(Math.random()-.5)*.06,up=dir!==-1; // Umdrehen: Papier wischt (zur Rückseite hinauf, zurück hinunter), dann setzt die Karte weich auf
+    hiss(t,.15,{c,out,f:(up?700:1900)*j,to:(up?1900:700)*j,q:2.2,g:SNDG.flip*(up?3.3:2.4),a:.012});tone(196,t+.07,.12,{c,out,g:SNDG.flip*.5,a:.004});tone(392,t+.07,.06,{c,out,g:SNDG.flip*.12,a:.004})},
+  path:(c,out,t)=>{mallet(c,out,392,t,{g:SNDG.path,d:.32,p2:.14,p3:.04});mallet(c,out,523.25,t+.075,{g:SNDG.path,d:.38,p2:.14,p3:.04})}, // Lernpfad: warmer Schritt nach oben, G4 → C5
+  game:(c,out,t)=>{[523.25,659.25,783.99].forEach((f,i)=>mallet(c,out,f,t+i*.045,{g:SNDG.game*(i===2?1:.85),d:.14,p2:.3,p3:.12,bend:.02}))} // Spiele: drei hüpfende Zupfer C5–E5–G5
+};
+const SNDD={tap:.07,flip:.2,path:.46,game:.24};
+let uiV=null;const uiLast={};
+function voice(k){ // eigener Bus für einen Bedienklang; ein noch klingender wird kurz ausgeblendet
+  const c=AC,n=c.currentTime,v=c.createGain();v.connect(MG);
+  if(uiV&&uiV.end>n)try{uiV.g.gain.cancelScheduledValues(n);uiV.g.gain.setValueAtTime(uiV.g.gain.value,n);uiV.g.gain.setTargetAtTime(0,n,.005)}catch(e){}
+  uiV={g:v,end:n+SNDD[k],k};return v;
+}
+let duckT=0;
+function duck(on){ // Sprache hat Vorrang: solange eine Aufnahme oder die Gerätestimme spricht, werden die Klänge leiser
+  clearTimeout(duckT);if(on)duckT=setTimeout(()=>duck(false),8000);
+  if(!AC||!MG)return;try{const n=AC.currentTime;MG.gain.cancelScheduledValues(n);MG.gain.setValueAtTime(MG.gain.value,n);MG.gain.setTargetAtTime(on?MGV*.4:MGV,n,on?.02:.15)}catch(e){}
+}
+const GAMEGO=new Set(["games","pairs","blitz","listen","regen","kalli","magnet","zug","suq"]);
+const sndOf=t=>t==="path"?"path":GAMEGO.has(t)?"game":"tap"; // Klang je Ziel: Lernpfad, Spiele, sonst der leise Tick
 const LADDER=[523.25,587.33,659.25,783.99,880,1046.5];
-const PRI={tick:0,tap:0,flip:0,heart:1,good:1,bad:1,match:1,goal:2,lose:2,win:3,badge:3,level:4},DUR={goal:.8,lose:.8,win:1.5,badge:1.2,level:2};
+const PRI={tick:0,tap:0,flip:0,path:0,game:0,heart:1,good:1,bad:1,match:1,goal:2,lose:2,win:3,badge:3,level:4},DUR={goal:.8,lose:.8,win:1.5,badge:1.2,level:2};
 let sfxPri=0,sfxEnd=0;
 function sfx(k,n=1){
   if(S.sound===false)return;
   const now=Date.now(),p=PRI[k]||0;
+  if(SND[k]){if(now-(uiLast[k]||0)<40)return;const c=actx();if(!c)return;uiLast[k]=now;try{SND[k](c,voice(k),0,n)}catch(e){}return} // Bedienklänge kommen immer sofort, auch während eines Jubels
   if(now<sfxEnd&&p<sfxPri)return; // laufender wichtigerer Klang wird nicht übertönt
   if(DUR[k]){sfxPri=p;sfxEnd=now+DUR[k]*1000}else if(now>=sfxEnd){sfxPri=0}
   try{
-    if(k==="tap"){hiss(0,.035,{f:3200,q:.7,g:.05});tone(480,0,.05,{g:.05,type:"triangle"})}
-    else if(k==="good"){const f=LADDER[Math.min(n-1,5)];tone(f,0,.45,{g:.2});tone(f*2,0,.25,{g:.05});tone(f*1.26,.09,.5,{g:.18});tone(f*2.52,.09,.25,{g:.04})} // zwei Glockentöne, mit der Serie höher
+    if(k==="good"){const f=LADDER[Math.min(n-1,5)];tone(f,0,.45,{g:.2});tone(f*2,0,.25,{g:.05});tone(f*1.26,.09,.5,{g:.18});tone(f*2.52,.09,.25,{g:.04})} // zwei Glockentöne, mit der Serie höher
     else if(k==="bad"){tone(200,0,.28,{type:"triangle",g:.22,to:130});hiss(0,.1,{f:320,q:.6,g:.12,type:"lowpass"})}
     else if(k==="heart"){tone(360,.12,.4,{g:.14,to:170})}
-    else if(k==="flip"){hiss(0,.14,{f:1100,to:4200,q:.8,g:.07})}
     else if(k==="match"){tone(880,0,.55,{g:.16});tone(1320,0,.4,{g:.06});tone(1760,.02,.3,{g:.03})}
-    else if(k==="tick"){tone(1100,0,.04,{type:"square",g:.035})}
+    else if(k==="tick"){tone(1046.5,0,.07,{g:.07,a:.002});tone(2093,0,.03,{g:.015,a:.002})} // Countdown: Holz-Tick statt Rechteck-Piep
     else if(k==="goal"){[784,988,1175].forEach((f,i)=>tone(f,i*.1,.5,{g:.15}))}
     else if(k==="badge"){tone(880,0,.8,{g:.14});tone(1319,.12,.9,{g:.14});tone(1760,.12,.6,{g:.04})}
     else if(k==="level"){[523.25,659.25,783.99,1046.5,1318.5].forEach((f,i)=>{tone(f,i*.09,.5,{type:"triangle",g:.17});tone(f*2,i*.09,.3,{g:.03})});[523.25,659.25,783.99,1046.5].forEach(f=>tone(f,.5,1,{g:.07}))}
@@ -1027,6 +1062,7 @@ function vib(p){try{if(S.vib!==false&&navigator.vibrate)navigator.vibrate(p)}cat
 // ===== Rückmeldung: Hinweise, Konfetti, Level-Aufstieg =====
 function toast(m){
   let c=$("#toasts");if(!c){c=document.createElement("div");c.id="toasts";c.setAttribute("role","status");document.body.appendChild(c)}
+  while(c.children&&c.children.length>=3)c.firstChild.remove(); // höchstens drei Meldungen auf einmal
   const t=document.createElement("div");t.className="toast";t.textContent=m;c.appendChild(t);setTimeout(()=>t.remove(),3400);
 }
 function confetti(){
@@ -1084,7 +1120,8 @@ const BADGES=[
 ].map(a=>({id:a[0],ic:a[1],n:a[2],d:a[3],t:a[4]}));
 function checkBadges(){
   S.badges=S.badges||[];let n=0;
-  for(const b of BADGES)if(!S.badges.includes(b.id)&&b.t()){S.badges.push(b.id);toast("Abzeichen: "+b.n);n++}
+  const nb=[];for(const b of BADGES)if(!S.badges.includes(b.id)&&b.t()){S.badges.push(b.id);nb.push(b.n);n++}
+  if(nb.length>2)toast(nb.length+" neue Abzeichen: "+nb.slice(0,2).join(", ")+" und "+(nb.length-2)+" weitere");else nb.forEach(x=>toast("Abzeichen: "+x)); // nach Einstufung oder Stufenabschluss nicht den Bildschirm zudecken
   if(n){sfx("badge");vib([15,25,15]);confetti()}
   return n;
 }
@@ -2128,7 +2165,9 @@ let pView=null;
 const FQ=".kq,[data-fq],h1,h2";
 const fSel=el=>{if(!el||el===app||!app.contains(el))return null;if(el.id)return{s:"#"+el.id};const a=el.getAttributeNames().find(n=>n.startsWith("data-"));return a?{s:`[${a}="${String(el.getAttribute(a)).replace(/["\\]/g,"\\$&")}"]`,g:`[${a}]`}:null};
 const fTask=(o,n)=>{if(o.fn!==n){o.fn=n;ui.ff=FQ}}; // in jedem Spiel beim Zeichnen aufrufen: o = Zustand, n = Nummer der Aufgabe
+let tapAt=-1e9,tapIn=false,tapX=0,tapY=0,tapPt=""; // Doppeltipp-Schutz (siehe tapBlock): wann ein Tipp neu gezeichnet hat, wo er war, Zeiger-Art
 const paint=h=>{
+  if(tapIn)tapAt=Date.now(); // ein Tipp hat neu gezeichnet: ein zweiter Tipp gleich danach an derselben Stelle zählt nicht (tapBlock)
   const same=pView===view,k=same?fSel(document.activeElement):null,ff=ui.ff;pView=view;ui.ff=null;
   app.innerHTML=h;fx();
   const en=q=>{if(!q)return null;try{return [...app.querySelectorAll(q)].find(e=>!e.disabled)||null}catch(e){return null}};
@@ -2160,16 +2199,21 @@ addEventListener("popstate",()=>{if(popSkip){popSkip=false;return}hist=false;if(
   if(d)d.close();
   else if(view!=="home"){const b=document.querySelector("#app .top .x, #lback");if(b)b.click();else{const t=Object.keys(SUB).find(k=>SUB[k].includes(view));go(t||"home")}}
   if(!authOn())pushH()});
+// Doppeltipp-Schutz: Zeichnet ein Tipp den Bildschirm neu (Lektion startet, nächste Aufgabe, nächste Karte), landet ein zweiter Tipp
+// kurz danach sonst als Antwort auf dem neuen Element. Gesperrt wird nur ein Doppelklick oder ein Touch-Tipp an derselben Stelle; Tastatur und Einzelklicks nie.
+const tapBlock=e=>Date.now()-tapAt<450&&(e.detail>=2||tapPt==="touch"&&Math.hypot(e.clientX-tapX,e.clientY-tapY)<=24)&&!!e.target&&app.contains(e.target);
+document.addEventListener("pointerdown",e=>{tapPt=e.pointerType||""},true);
+document.addEventListener("click",e=>{if(tapBlock(e)){e.preventDefault();e.stopImmediatePropagation();return}tapIn=true;tapX=e.clientX;tapY=e.clientY;setTimeout(()=>{tapIn=false},0)},true);
 document.addEventListener("click",e=>{
   const g=e.target.closest("[data-go]");
-  if(g){const t=g.dataset.go;sfx("tap");if(t==="review")return startQuiz(null);if(t==="mix")return startMix();if(t==="satz")return startSatz();if(t==="pairs")return startPairs();if(t==="blitz")return startBlitz();if(t==="aquiz")return startAQ();if(t==="listen")return startListen();if(t==="regen")return startRegen();if(t==="kalli")return startKalli();if(t==="magnet")return startMagnet();if(t==="zug")return startZug();if(t==="suq")return startSuq();return go(t)}
+  if(g){const t=g.dataset.go;sfx(sndOf(t));if(t==="review")return startQuiz(null);if(t==="mix")return startMix();if(t==="satz")return startSatz();if(t==="pairs")return startPairs();if(t==="blitz")return startBlitz();if(t==="aquiz")return startAQ();if(t==="listen")return startListen();if(t==="regen")return startRegen();if(t==="kalli")return startKalli();if(t==="magnet")return startMagnet();if(t==="zug")return startZug();if(t==="suq")return startSuq();return go(t)}
   const ab=e.target.closest("[data-ab]");
   if(ab){const b=+ab.dataset.ab;sfx("tap");if(aLocked(b))return pHint(`data-ab="${b}"`);return startAQ(b,false,"path")}
   const kl=e.target.closest("[data-kl]");
-  if(kl){const l=KL.find(x=>x.id===kl.dataset.kl);sfx("tap");if(!l)return;if(kLocked(l))return pHint(`data-kl="${l.id}"`);return startK(l)}
-  const kr=e.target.closest("[data-krev]");if(kr){sfx("tap");return startK(null,kr.dataset.krev||"s1")}
-  const kj=e.target.closest("[data-kj]");if(kj){sfx("tap");return startKT("sprung",kj.dataset.kj)}
-  const kt=e.target.closest("[data-kt]");if(kt){sfx("tap");if(kt.dataset.kt==="nein"){S.wt={skip:true,d:today()};save();return go("path")}return startKT("wissen")}
+  if(kl){const l=KL.find(x=>x.id===kl.dataset.kl);if(!l)return sfx("tap");if(kLocked(l)){sfx("tap");return pHint(`data-kl="${l.id}"`)}sfx("path");return startK(l)} // Lernpfad: Schritt-Klang, gesperrte Station nur der Tick
+  const kr=e.target.closest("[data-krev]");if(kr){sfx("path");return startK(null,kr.dataset.krev||"s1")}
+  const kj=e.target.closest("[data-kj]");if(kj){sfx("path");return startKT("sprung",kj.dataset.kj)}
+  const kt=e.target.closest("[data-kt]");if(kt){sfx("path");if(kt.dataset.kt==="nein"){S.wt={skip:true,d:today()};save();return go("path")}return startKT("wissen")}
   const kz=e.target.closest("[data-kz]");if(kz){const f=KE[kz.dataset.kz];if(f&&f.ziel&&f.ziel.sp)speak(f.ziel.sp);return}
   const kn=e.target.closest("[data-kn],[data-ko]");if(kn){S.np=kn.hasAttribute("data-kn");save();sfx("tap");return go("path")}
   const gl=e.target.closest("[data-goal]");if(gl)return speak(SENT[+gl.dataset.goal].ar);
@@ -2429,7 +2473,7 @@ function cards(){
   <div class="row" style="margin-top:12px"><button class="btn alt" id="sp" style="margin:0">${ic("speaker",18)} Anhören</button><button class="btn alt" id="fv" style="margin:0" aria-pressed="${isF}">${ic("star",18,isF)} Favorit</button></div>
   <div class="row" style="margin-top:0"><button class="btn alt" id="again">Nochmal</button><button class="btn" id="got">Gewusst</button></div>`);
   cd.anim=false;
-  $("#fl").onclick=()=>{cd.flip=!cd.flip;cd.anim=true;sfx("flip");cards()};
+  $("#fl").onclick=()=>{cd.flip=!cd.flip;cd.anim=true;sfx("flip",cd.flip?1:-1);cards()}; // zur Rückseite hinauf, zurück hinunter
   $("#sp").onclick=()=>speak(w.ar);
   $("#fv").onclick=()=>{S.fav=S.fav||[];S.fav=isF?S.fav.filter(x=>x!==w.i):[...S.fav,w.i];save();sfx("tap");cards()};
   $("#again").onclick=()=>{grade(w.i,false);cd.n++;cd.flip=false;cd.anim=true;cards()};
@@ -2623,7 +2667,7 @@ function blitz(){
     if(B.locked)return;B.locked=true;B.pick=b.dataset.o;const ok=B.pick===w.i;
     if(ok){B.right++;B.combo++;sfx("good",B.combo);vib(10)}else{B.wrong++;B.combo=0;if(!B.free){B.t0-=3000;B.lost=(B.lost||0)+3}sfx("bad");vib([40,30,40])}
     if(B.free)B.n++;
-    blitz();setTimeout(()=>{if(B.end||view!=="blitz")return;if(B.free&&B.n>=BFREE)return endBlitz();nextB();blitz()},ok?260:700);
+    const run=B;blitz();setTimeout(()=>{if(B!==run||B.end||view!=="blitz")return;if(B.free&&B.n>=BFREE)return endBlitz();nextB();blitz()},ok?260:700); // nur im selben Spiel weiter (nach schnellem Neustart nicht)
   });
 }
 
@@ -3184,7 +3228,7 @@ loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v51"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v52"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>

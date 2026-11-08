@@ -7,11 +7,12 @@ const m=html.match(/<script>([\s\S]*)<\/script>/);
 let code=m[1].replace(/\nloadSb\(\)\.then[^\n]*\n[^\n]*serviceWorker[^\n]*\s*$/,"\n");
 if(/loadSb\(\)/.test(code.split("\n").slice(-6).join("\n")))code=code.split("\n").filter(l=>!/^loadSb\(\)|serviceWorker/.test(l)).join("\n");
 const store={},mk=()=>({innerHTML:"",style:{},querySelector:()=>null,scrollLeft:0,scrollWidth:0,clientWidth:0,offsetLeft:0,scrollIntoView(){},hidden:false,classList:{add(){},remove(){},toggle(){}},offsetWidth:0,parentNode:{classList:{toggle(){}}},dataset:{},set onclick(v){},set oninput(v){},set onkeydown(v){},click(){},focus(){},remove(){},appendChild(){},setAttribute(){},scrollIntoView(){},value:"",textContent:"",lastChild:{}});
-const el=mk(),doc={querySelector:()=>el,querySelectorAll:()=>[],addEventListener(){},createElement:()=>mk(),body:{appendChild(){}},documentElement:{removeAttribute(){},setAttribute(){}}};
+const el=mk(),doc={querySelector:()=>el,querySelectorAll:()=>[],addEventListener(){},createElement:()=>mk(),body:{appendChild(){}},head:{appendChild(){}},documentElement:{removeAttribute(){},setAttribute(){}}};
 const ctx={document:doc,localStorage:{getItem:k=>store[k]??null,setItem:(k,v)=>store[k]=v,removeItem:k=>delete store[k]},sessionStorage:{getItem(){return null},setItem(){}},
  matchMedia:()=>({matches:true}),setTimeout:(f)=>0,clearTimeout(){},setInterval:()=>1,clearInterval(){},requestAnimationFrame(f){},console,Notification:{permission:"denied"},addEventListener(){},navigator:{},crypto:{},SpeechSynthesisUtterance:function(){},speechSynthesis:{cancel(){},speak(){}},scrollTo(){}};
 // Spracherkennung zum Testen: merkt sich die letzte Erkennung, die Tests lösen Ergebnis und Ende selbst aus
 ctx.webkitSpeechRecognition=function(){ctx.SRLAST=this;this.start=()=>{this.started=true};this.stop=()=>{};this.abort=()=>{this.aborted=true}};
+ctx.Splash={hide(){},init(){}}; // Startbildschirm (eigenes Skript in index.html)
 ctx.window=ctx;vm.createContext(ctx);
 const run=c=>vm.runInContext(c,ctx);
 run(code);run(`U="gast";loadS();`);
@@ -1203,6 +1204,57 @@ run(`view="stats";stats()`);let s34=run(`app.innerHTML`);
 ok("Statistik: eigene Kacheln für Stufe 1 und Stufe 2",/<p class="gh">Lesen lernen<\/p>.*<span class="mute">von 43 geschafft<\/span>/s.test(s34)&&/<p class="gh">Sprache lernen<\/p>.*<span class="mute">von 12 geschafft<\/span>.*<span class="mute">von 2 geschafft<\/span>/s.test(s34));
 run(`for(const l of KL)S.kp.d[l.id]=1;home()`);ok("Alles geschafft: Startseite sagt es, der Lernpfad nennt, was als Nächstes kommt",/Alles geschafft, was es bisher gibt/.test(run(`app.innerHTML`))&&(run(`view="path";path(),app.innerHTML`)).includes(kidx.stufen[1].demnaechst));
 run(`U="gast";loadS()`);
+
+// ---------- 35. Klangfamilie, Doppeltipp-Schutz, Aussprache, Abzeichen-Meldung, Offline ----------
+{
+  // Klang mit einem aufzeichnenden Fake-AudioContext
+  run(`globalThis.__A={osc:0,targets:[]};const P=()=>({value:0,setValueAtTime(){},exponentialRampToValueAtTime(){},linearRampToValueAtTime(){},cancelScheduledValues(){},setTargetAtTime(v,t,c){__A.targets.push({p:this,v})}});
+    globalThis.AudioContext=function(){this.currentTime=0;this.state="running";this.sampleRate=48000;this.destination={}};
+    AudioContext.prototype={resume(){},createGain(){const g={gain:P(),connect(){}};g.gain.value=1;return g},createOscillator(){__A.osc++;return{frequency:P(),connect(){},start(){},stop(){}}},createDynamicsCompressor(){return{connect(){}}},
+      createBuffer(n,l){return{getChannelData:()=>new Float32Array(l)}},createBufferSource(){return{connect(){},start(){}}},createBiquadFilter(){return{frequency:P(),Q:{value:1},connect(){}}}};
+    AC=null;MG=null;uiV=null;for(const k in uiLast)delete uiLast[k];S.sound=false;sfx("path");sfx("game");sfx("flip",1);sfx("good",1)`);
+  ok("Klang: „Töne aus“ erzeugt keinen einzigen Klang",run(`__A.osc===0&&!AC`));
+  ok("… Klang je Ziel: Lernpfad, Spiele (Übersicht und jedes Spiel), sonst der Tick",run(`sndOf("path")==="path"&&["games","pairs","blitz","listen","regen","kalli","magnet","zug","suq"].every(t=>sndOf(t)==="game")&&["home","cards","more","stats"].every(t=>sndOf(t)==="tap")`));
+  run(`S.sound=true;sfx("path");globalThis.__b1=uiV.g;globalThis.__o1=__A.osc;sfx("game")`);
+  ok("… ein neuer Bedienklang blendet den laufenden aus, nichts stapelt sich",run(`__A.osc>__o1&&__A.targets.some(x=>x.p===__b1.gain&&x.v===0)&&uiV.k==="game"`));
+  run(`globalThis.__o2=__A.osc;sfx("game")`);ok("… derselbe Klang zweimal in 40 ms zählt einmal",run(`__A.osc===__o2`));
+  ok("… die drei Bedienklänge sind verschieden gebaut (nicht nur leiser oder lauter)",run(`(()=>{const n={};for(const k of ["flip","path","game"]){const o=__A.osc;for(const q in uiLast)delete uiLast[q];sfx(k,1);n[k]=__A.osc-o}return n.flip===2&&n.path===6&&n.game===9})()`),run(`JSON.stringify(SNDG)`));
+  // Aussprache: Ducking, abgebrochene Wiedergabe, Gerätestimme stoppt die Datei
+  run(`globalThis.__said=[];speechSynthesis.speak=u=>__said.push(u.text);globalThis.SpeechSynthesisUtterance=function(t){this.text=t};
+    globalThis.Audio=function(src){this.src=src;this.paused=true;__A.el=this};Audio.prototype.play=function(){this.paused=false;return __A.rej?Promise.reject(__A.rej):Promise.resolve()};Audio.prototype.pause=function(){this.paused=true};
+    AUD["كِتَاب"]={f:"w/kitab.mp3",v:1};__A.targets=[];__A.rej=null;speak("كِتَاب");__A.el.onplaying()`);
+  ok("Sprache hat Vorrang: während der Aufnahme werden die Klänge leiser",run(`__A.targets.some(x=>x.p===MG.gain&&Math.abs(x.v-MGV*.4)<1e-9)`));
+  run(`__A.targets=[];__A.el.onended()`);ok("… danach wieder normal",run(`__A.targets.some(x=>x.p===MG.gain&&x.v===MGV)`));
+  run(`__A.rej={name:"AbortError"};speak("كِتَاب")`);await new Promise(r=>setImmediate(r));
+  ok("… abgebrochene Wiedergabe (schnell nochmal angetippt) liest das Wort nicht mit der Gerätestimme nach",run(`__said.length===0`));
+  run(`__A.rej={name:"NotSupportedError"};speak("كِتَاب")`);await new Promise(r=>setImmediate(r));
+  ok("… nicht abspielbare Datei: dann liest die Gerätestimme",run(`__said.join()==="كِتَاب"`));
+  run(`__A.rej=null;speak("كِتَاب");globalThis.__el=__A.el;speak("نَصٌّ بِلَا مِلَفٍّ")`);
+  ok("… die Gerätestimme stoppt eine laufende Aufnahme",run(`__el.paused&&__said.at(-1)==="نَصٌّ بِلَا مِلَفٍّ"`));
+  run(`delete AUD["كِتَاب"];AC=null;MG=null;delete globalThis.AudioContext;delete globalThis.Audio`);
+  // Doppeltipp-Schutz
+  run(`app.contains=()=>true;tapAt=Date.now();tapX=100;tapY=200`);
+  ok("Doppeltipp-Schutz: ein Doppelklick gleich nach einem Neuzeichnen per Tipp zählt nicht",run(`(tapPt="mouse",tapBlock({detail:2,target:{},clientX:100,clientY:200}))`));
+  ok("… ein Touch-Tipp an derselben Stelle auch nicht, an anderer Stelle schon",run(`(tapPt="touch",tapBlock({detail:1,target:{},clientX:110,clientY:210})&&!tapBlock({detail:1,target:{},clientX:100,clientY:300}))`));
+  ok("… Einzelklicks, Tastatur und spätere Tipps bleiben ungebremst",run(`(tapPt="mouse",!tapBlock({detail:1,target:{},clientX:100,clientY:200})&&!tapBlock({detail:0,target:{},clientX:0,clientY:0})&&(tapAt=Date.now()-600,!tapBlock({detail:2,target:{},clientX:100,clientY:200})))`));
+  run(`tapAt=-1e9;tapPt=""`);
+  ok("… Wort-Blitz: der verzögerte Schritt prüft, dass es noch dasselbe Spiel ist",/const run=B;blitz\(\);setTimeout\(\(\)=>\{if\(B!==run\|\|/.test(html));
+  // Abzeichen: viele auf einmal in einer Meldung
+  run(`U="b35";loadS();globalThis.__t=[];globalThis.__toast=toast;toast=m=>__t.push(m);S.badges=[];for(const l of KL.filter(l=>l.e[0]==="s"))S.kp.d[l.id]=1;checkBadges();toast=__toast`);
+  ok("Abzeichen: viele auf einmal (Stufe 1 geschafft) ergeben eine Sammelmeldung statt einer Flut",run(`__t.length===1&&/^\\d+ neue Abzeichen: .+ und \\d+ weitere$/.test(__t[0])`),run(`__t`));
+  run(`__t=[];toast=m=>__t.push(m);S.badges=S.badges.filter(b=>b!=="e-s8");checkBadges();toast=__toast`);ok("… ein einzelnes Abzeichen wie bisher mit Namen",run(`__t.join()==="Abzeichen: Alles zusammen"`),run(`__t`));
+  run(`U="gast";loadS()`);
+  // Service Worker: nur die App selbst wird für offline gespeichert
+  const swc=fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)),"..","sw.js"),"utf8");
+  const swTest=async(url,res)=>{const puts=[],H={},store={"index.html":"APP"};
+    const sx={self:{addEventListener:(t,f)=>H[t]=f,registration:{scope:"https://x.test/mufradaat/"},skipWaiting(){},clients:{claim(){},matchAll:async()=>[]}},location:{origin:"https://x.test"},URL,
+      caches:{open:async()=>({put:(k)=>puts.push(k)}),match:async k=>store[k]},fetch:async()=>{if(res==="offline")throw new Error("offline");return{ok:res===200,status:res,clone(){return this}}}};
+    vm.createContext(sx);vm.runInContext(swc,sx);let pr=null;H.fetch({request:{method:"GET",url,mode:"navigate"},respondWith(p){pr=p}});const out=await pr;await new Promise(r=>setImmediate(r));return{puts,out}};
+  const a1=await swTest("https://x.test/mufradaat/",200),a2=await swTest("https://x.test/mufradaat/index.html?x=1",200),a3=await swTest("https://x.test/mufradaat/tools/audio-anleitung.md",200),a4=await swTest("https://x.test/mufradaat/gibt-es-nicht",404),a5=await swTest("https://x.test/mufradaat/",500),a6=await swTest("https://x.test/mufradaat/","offline");
+  ok("Offline: die App selbst wird für offline gespeichert",a1.puts.join()==="index.html"&&a2.puts.join()==="index.html");
+  ok("… andere Seiten im Ordner und Fehlerseiten überschreiben sie nicht",!a3.puts.length&&!a4.puts.length&&!a5.puts.length,[a3.puts,a4.puts,a5.puts]);
+  ok("… ohne Netz kommt die gespeicherte App",a6.out==="APP");
+}
 
 console.log("\n"+pass+" OK, "+fail+" FAIL");
 process.exit(fail?1:0);
