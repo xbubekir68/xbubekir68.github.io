@@ -15,140 +15,202 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="xbubekir">
 <style>
-:root{--bg:#07050c;--side:#0a0713;--card:#130e21;--field:#0c0917;--ink:#ece8f6;--soft:#c9c2da;--mute:#938ca8;--line:#251d38;--glass:rgba(167,139,250,.16);
---acc:#7c3aed;--acc2:#a78bfa;--accl:#1d1530;--on:#fff;--bad:#f39a88;--badl:#3a1820;--code:#1a1429;
---sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color-scheme:dark}
+:root{--bg:#07050c;--side:#0a0713;--card:#130e21;--field:#0c0917;--ink:#ece8f6;--soft:#c9c2da;--mute:#938ca8;--line:#251d38;--line2:#3b3056;--edge:#665a8c;--glass:rgba(167,139,250,.16);
+--acc:#7c3aed;--acc2:#a78bfa;--accl:#1d1530;--hov:rgba(124,58,237,.12);--on:#fff;--bad:#f39a88;--badl:#3a1820;--code:#1a1429;
+--col:760px;--pad:32px;--sw:280px;
+--sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+--ar:"Geeza Pro","Noto Naskh Arabic","Sakkal Majalla","Segoe UI","Noto Sans Arabic",Tahoma,sans-serif;color-scheme:dark}
 *,*::before,*::after{box-sizing:border-box}
-html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:16px/1.55 var(--sans);-webkit-text-size-adjust:100%}
-body{display:grid;grid-template-columns:320px minmax(0,1fr);grid-template-rows:minmax(0,1fr);overflow:hidden;height:100dvh;padding:env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left)}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:16px/1.55 var(--sans);-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+body{display:grid;grid-template-columns:var(--sw) minmax(0,1fr);grid-template-rows:minmax(0,1fr);overflow:hidden;height:100dvh;padding:env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left)}
 button{font:inherit;color:inherit;cursor:pointer}
+input,select,textarea{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--acc2);outline-offset:2px}
+::placeholder{color:#8a83a0;opacity:1}
+[hidden]{display:none!important}
 noscript{position:fixed;left:0;right:0;bottom:0;z-index:9;background:var(--card)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
-/* Seitenleiste */
-.side{display:flex;flex-direction:column;gap:0;padding:40px 30px 40px 30px;background:linear-gradient(180deg,#0d0a19,#0a0714 60%,#0c0818);border-right:1px solid rgba(255,255,255,.06);position:relative;z-index:2;min-height:0}
-.logo{display:flex;align-items:center;gap:18px;margin:0 0 72px 4px}
-.tile{display:block;width:70px;height:70px;flex:none;overflow:hidden;border-radius:16px;border:1.5px solid #8b5cf6;background:#170b2c;box-shadow:0 0 22px rgba(139,92,246,.45)}
+.ib{display:grid;place-items:center;width:44px;height:44px;flex:none;border:0;border-radius:12px;background:none}
+.ib:hover{background:var(--accl)}
+.ib svg{width:22px;height:22px}
+/* Seitenleiste am PC: Neuer Chat, Suche, Chats */
+.side{display:flex;flex-direction:column;min-height:0;padding:18px 12px 10px;background:linear-gradient(180deg,#0d0a19,#0a0714 60%,#0c0818);border-right:1px solid rgba(255,255,255,.06);position:relative;z-index:2}
+.logo{display:flex;align-items:center;gap:12px;padding:2px 8px 18px}
+.tile{display:block;width:40px;height:40px;flex:none;overflow:hidden;border-radius:11px;border:1.5px solid #8b5cf6;background:#170b2c;box-shadow:0 0 16px rgba(139,92,246,.4)}
 .tile img{display:block;width:100%;height:100%;object-fit:cover}
-.wmk{display:block;width:160px;height:auto;min-width:0}
-.nav{display:flex;flex-direction:column;gap:7px}
-.nv{display:flex;align-items:center;gap:25px;height:68px;padding:0 20px;border:1px solid transparent;border-radius:22px;background:none;color:#b3acc6;font-size:20px;text-align:left}
-.nv svg{width:30px;height:30px;flex:none;color:#8b5cf6}
-.nv:hover{background:rgba(124,58,237,.1)}
-.nv.on{color:#fff;background:linear-gradient(180deg,rgba(150,120,230,.2),rgba(88,52,160,.16));border-color:rgba(167,139,250,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 6px 24px rgba(0,0,0,.35)}
-.me{margin-top:auto;position:relative;overflow:hidden;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(160deg,rgba(255,255,255,.035),rgba(124,58,237,.05));padding:22px 26px 24px}
-.me::after{content:"";position:absolute;right:-70px;bottom:-120px;width:200px;height:150px;border-radius:50%;border-top:1px solid rgba(139,92,246,.45);box-shadow:0 -6px 18px -8px rgba(139,92,246,.4)}
-.me b{display:flex;align-items:center;gap:14px;font-size:20px;font-weight:500;color:var(--ink)}
-.me .mk{display:block;width:auto;height:30px;margin:-4px 0 -4px -3px}
-.me b i{width:12px;height:12px;border-radius:50%;background:#8b5cf6;box-shadow:0 0 10px #8b5cf6}
-.me small{display:block;margin-top:10px;font-size:17px;color:var(--soft)}
+.wmk{display:block;width:116px;height:auto;min-width:0}
+.newb{display:flex;align-items:center;gap:10px;width:100%;height:46px;flex:none;padding:0 14px;border:1px solid rgba(167,139,250,.2);border-radius:14px;background:linear-gradient(180deg,rgba(150,120,230,.2),rgba(88,52,160,.16));color:#fff;font-size:15px;font-weight:600;box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 6px 20px rgba(0,0,0,.3)}
+.newb:hover{border-color:rgba(167,139,250,.42)}
+.newb svg{width:20px;height:20px;color:var(--acc2)}
+.find{position:relative;flex:none;margin:10px 0 2px}
+.find svg{position:absolute;left:12px;top:50%;width:16px;height:16px;margin-top:-8px;color:var(--mute);pointer-events:none}
+.find input{width:100%;height:40px;padding:0 10px 0 36px;border:1px solid var(--edge);border-radius:12px;background:rgba(255,255,255,.025);font-size:14px;outline:0}
+.find input:focus{border-color:rgba(167,139,250,.55)}
+.lst{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;margin:4px -12px 0;padding:0 12px 10px;scrollbar-width:thin;scrollbar-color:#2c2343 transparent}
+.lst h3{margin:16px 10px 4px;font-size:12px;font-weight:600;color:var(--mute)}
+.lst ul{list-style:none;margin:0;padding:0}
+.lst li{display:flex;align-items:center;border-radius:12px}
+.lst li+li{margin-top:1px}
+.lst li:hover{background:var(--hov)}
+.lst li.on{background:var(--accl);box-shadow:inset 0 0 0 1px rgba(167,139,250,.14)}
+.lst .open{flex:1;min-width:0;display:block;padding:7px 10px;border:0;border-radius:12px;background:none;text-align:left}
+.lst .open b{display:block;font-size:14.5px;font-weight:500;color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lst li.on .open b{color:var(--ink)}
+.lst .open small{display:block;font-size:12px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lst .del{width:36px;height:36px;margin-right:2px;color:var(--mute);opacity:0}
+.lst li:hover .del,.lst li.on .del,.lst .del:focus-visible{opacity:1}
+.lst .del:hover{color:var(--bad);background:rgba(243,154,136,.08)}
+.lst .del svg{width:17px;height:17px}
+.empty{color:var(--mute);font-size:14px;margin:16px 10px}
+.sfoot{flex:none;margin:6px -4px 0;padding-top:6px;border-top:1px solid rgba(255,255,255,.06)}
+.sb{display:flex;align-items:center;gap:12px;width:100%;height:44px;padding:0 12px;border:0;border-radius:12px;background:none;color:var(--soft);font-size:15px;text-align:left}
+.sb:hover{background:var(--hov);color:var(--ink)}
+.sb svg{width:20px;height:20px;color:#8b5cf6}
 /* Hauptbereich mit Lichtbögen */
 .main{position:relative;display:flex;flex-direction:column;min-width:0;min-height:0;overflow:hidden;background:radial-gradient(ellipse 55% 45% at 100% 62%,rgba(91,33,182,.22),transparent 70%),radial-gradient(ellipse 50% 40% at 70% 100%,rgba(91,33,182,.18),transparent 70%)}
-body.start .main{padding-bottom:34px}
-.fx{position:absolute;inset:0;pointer-events:none;z-index:0}
+.fx{position:absolute;inset:0;pointer-events:none;z-index:0;transition:opacity .5s}
+body:not(.start) .fx{opacity:.28}
 .fx i{position:absolute;border-radius:50%}
 .fx i:nth-child(1){left:-597px;top:-777px;width:1054px;height:1054px;border:2px solid rgba(178,150,255,.6);background:radial-gradient(circle at 45% 40%,rgba(40,14,92,.55) 40%,rgba(72,28,150,.7) 82%,rgba(118,60,235,.85) 99%);box-shadow:0 0 80px 10px rgba(124,58,237,.38),inset 0 0 60px rgba(150,105,255,.5)}
 .fx i:nth-child(2){right:-888px;bottom:-1299px;width:1680px;height:1680px;border:2px solid rgba(178,150,255,.8);background:radial-gradient(circle,rgba(36,12,84,.45) 70%,rgba(70,26,150,.7) 90%,rgba(118,60,238,.85) 99.5%);box-shadow:0 0 90px 12px rgba(124,58,237,.35),inset 0 0 70px rgba(150,105,255,.45)}
 .fx i:nth-child(3){right:-1068px;bottom:-1429px;width:1840px;height:1840px;border:1px solid rgba(167,139,250,.35);box-shadow:0 0 30px rgba(124,58,237,.2)}
 .main>:not(.fx){position:relative;z-index:1}
-#log{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:8px 32px 24px}
-#log>*{max-width:820px;margin-left:auto;margin-right:auto}
-body.start .main{justify-content:center}
-body.start #log{flex:none;overflow:visible;padding-bottom:0}
-body.start #log>.hello{max-width:none}
+.top{display:none}
+#log{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:28px var(--pad) 20px}
+#log>*{max-width:var(--col);margin-left:auto;margin-right:auto}
+body.start .main{justify-content:center;padding-bottom:6vh}
+body.start #log{flex:none;overflow:visible;padding-top:0;padding-bottom:0}
 /* Startbild */
-.hello{text-align:center;padding:0 0 84px}
-.hello .mark{display:block;width:250px;height:auto;margin:0 auto}
-.hello .dom{display:block;width:230px;height:auto;margin:14px auto 0}
-.hello .tag{margin:32px 0 0;font-size:25px;font-weight:400;letter-spacing:.14em;color:#e6e0f2;padding-left:.14em}
+.hello{text-align:center;padding:0 0 44px}
+.hello .mark{display:block;width:190px;height:auto;margin:0 auto}
+.hello .hi{margin:18px 0 0;font-size:30px;font-weight:600;line-height:1.25;letter-spacing:-.01em;color:#f3effb}
+.hello .tag{margin:10px 0 0;font-size:15px;letter-spacing:.14em;padding-left:.14em;color:var(--soft)}
+.recent{display:none}
 /* Nachrichten */
-.msg{margin-top:20px}
+.msg{margin-top:22px}
+.msg:first-child{margin-top:0}
 .msg.u{display:flex;justify-content:flex-end}
 .bub{max-width:85%;background:rgba(124,58,237,.18);border:1px solid rgba(167,139,250,.2);border-radius:18px 18px 4px 18px;padding:9px 14px;white-space:pre-wrap;overflow-wrap:anywhere}
 .msg.a{overflow-wrap:anywhere}
-.msg.a,.bub{font-size:17px}
+.msg.a,.bub{font-size:17px;line-height:1.6}
+[lang=ar]{font-family:var(--ar);font-size:1.22em;line-height:1.5}
 .md>:first-child{margin-top:0}.md>:last-child{margin-bottom:0}
 .md p,.md ul,.md ol,.md pre,.md blockquote,.md .tbl{margin:0 0 .8em}
-.md h3,.md h4,.md h5,.md h6{margin:1.1em 0 .4em;font-size:1.05em;line-height:1.3}
-.md h3{font-size:1.18em}
-.md ul,.md ol{padding-left:1.4em}
+.md h2,.md h3,.md h4,.md h5,.md h6{margin:1.2em 0 .45em;line-height:1.3}
+.md h2{font-size:1.26em}.md h3{font-size:1.13em}.md h4,.md h5,.md h6{font-size:1.02em}
+.md ul,.md ol{padding-inline-start:1.4em}
 .md li+li,.md li>ul,.md li>ol{margin-top:.25em}
 .md li>ul,.md li>ol{margin-bottom:0}
 .md code{font-family:var(--mono);font-size:.88em;background:var(--code);padding:.1em .35em;border-radius:5px}
 .md pre{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:12px 14px;overflow-x:auto;overflow-wrap:normal}
 .md pre code{background:none;padding:0;font-size:.85em}
-.md blockquote{border-left:3px solid var(--line);margin-left:0;padding-left:12px;color:var(--mute)}
+.md blockquote{border-inline-start:3px solid var(--line2);margin-inline-start:0;padding-inline-start:12px;color:var(--soft)}
 .md a{color:var(--acc2)}
 .md hr{border:0;border-top:1px solid var(--line);margin:1.2em 0}
-.tbl{overflow-x:auto}
+.tbl{overflow-x:auto;scrollbar-width:thin;scrollbar-color:#3b3056 transparent}
 .md table{border-collapse:collapse;font-size:.94em;overflow-wrap:normal}
-.md th,.md td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+.md th,.md td{border:1px solid var(--line);padding:6px 10px;text-align:start;vertical-align:top}
 .md th{background:var(--card)}
 .md .r{text-align:right}.md .c{text-align:center}
 .think{margin:0 0 12px;font-size:14px;color:var(--mute)}
-.think summary{cursor:pointer;width:fit-content;padding:2px 0}
-.think .md{border-left:2px solid var(--line);padding:4px 0 2px 12px;margin-top:6px}
+.think summary{display:inline-flex;align-items:center;gap:8px;min-height:36px;margin-left:-8px;padding:4px 10px 4px 8px;border-radius:10px;cursor:pointer;list-style:none}
+.think summary::-webkit-details-marker{display:none}
+.think summary::before{content:"";width:6px;height:6px;border:solid currentColor;border-width:0 1.5px 1.5px 0;transform:rotate(-45deg);transition:transform .15s}
+.think[open] summary::before{transform:rotate(45deg)}
+.think summary:hover{background:var(--hov);color:var(--soft)}
+.think .md{border-inline-start:2px solid var(--line2);padding:4px 0 2px 12px;margin-top:6px}
 .tool{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--mute);margin:0 0 12px}
 .tool svg{width:16px;height:16px;flex:none}
 .wait{animation:pulse 1.6s ease-in-out infinite}
-@keyframes pulse{50%{opacity:.4}}
-@media (prefers-reduced-motion:reduce){.wait{animation:none}}
+@keyframes pulse{50%{opacity:.62}}
 .src{font-size:14px;margin-top:14px;padding-top:10px;border-top:1px solid var(--line)}
-.src ol{margin:4px 0 0;padding-left:1.4em}
+.src ol{margin:4px 0 0;padding-inline-start:1.4em}
 .src li+li{margin-top:2px}
-.src a{color:var(--ink)}
+.src a{display:inline-block;padding:4px 0;color:var(--ink)}
 .src span{color:var(--mute)}
 .note{font-size:14px;color:var(--mute);font-style:italic;margin:8px 0 0}
-.lstat{padding:10px 32px 12px;border-bottom:1px solid var(--line);font-size:14px;color:var(--mute);background:rgba(10,7,19,.7)}
-.lstat>*{max-width:820px;margin:0 auto}
+.msg.u+.note{text-align:right}
+.acts-a{display:flex;flex-wrap:wrap;gap:2px;margin:8px 0 0 -10px}
+.acts-a.end{justify-content:flex-end;margin:6px -10px 0 0}
+.mini{display:inline-flex;align-items:center;gap:6px;min-height:34px;padding:0 10px;border:0;border-radius:10px;background:none;color:var(--mute);font-size:13px}
+.mini svg{width:16px;height:16px;flex:none}
+.mini:hover{background:var(--accl);color:var(--ink)}
+.err{background:var(--badl);border:1px solid rgba(243,154,136,.22);color:#ffdcd3;border-radius:14px;padding:12px 14px;margin-top:20px;font-size:15px}
+.err p{margin:0}
+.eacts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.eacts .btn{padding:9px 16px;font-size:14px}
+.err details{margin-top:8px;font-size:13px;color:var(--bad)}
+.err summary{display:inline-flex;align-items:center;min-height:32px;cursor:pointer}
+.err details code{display:block;margin-top:2px;font-family:var(--mono);font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere}
+.lstat{padding:10px var(--pad) 12px;border-bottom:1px solid var(--line);font-size:14px;color:var(--mute);background:rgba(10,7,19,.75)}
+.lstat>*{max-width:var(--col);margin:0 auto}
 .lstat p{margin-bottom:6px}
 .lstat small{font-size:13px}
-.lstat progress{display:block;width:100%;height:6px;accent-color:var(--acc)}
-.lstat progress[hidden]{display:none}
+.lstat progress{display:block;width:100%;height:6px;border:0;border-radius:3px;background:var(--line);-webkit-appearance:none;appearance:none;overflow:hidden}
+.lstat progress::-webkit-progress-bar{background:var(--line);border-radius:3px}
+.lstat progress::-webkit-progress-value{background:var(--acc2);border-radius:3px}
+.lstat progress::-moz-progress-bar{background:var(--acc2);border-radius:3px}
+.lstat progress:indeterminate{background:linear-gradient(90deg,var(--line) 30%,var(--acc2) 50%,var(--line) 70%) 0 0/300% 100%;animation:load 1.4s linear infinite}
+.lstat progress:indeterminate::-webkit-progress-bar{background:transparent}
+@keyframes load{to{background-position:-150% 0}}
 .lstat.bad{color:var(--bad)}
-.msg.u+.note{text-align:right}
-.err{background:var(--badl);color:var(--bad);border-radius:12px;padding:10px 14px;margin-top:20px;font-size:15px}
-.acts-a{display:flex;gap:4px;margin:6px 0 0 -8px}
-.mini{border:0;background:none;color:var(--mute);font-size:13px;padding:6px 8px;border-radius:8px}
-.mini:hover{background:var(--accl);color:var(--ink)}
-/* Eingabe */
-.brain{flex:none;display:flex;align-items:center;gap:8px;width:calc(100% - 64px);max-width:1120px;margin:0 auto;padding:16px 38px 9px;border:0;background:none;color:var(--mute);font-size:13px;line-height:1.5;text-align:left}
-.brain:hover{color:var(--ink)}
-.brain::after{content:"";flex:none;width:5px;height:5px;border:solid;border-width:1.5px 1.5px 0 0;transform:rotate(45deg)}
-.composer{display:flex;align-items:center;gap:30px;width:calc(100% - 64px);max-width:1120px;min-height:96px;margin:0 auto calc(28px + env(safe-area-inset-bottom));padding:18px 18px 18px 36px;border:1.5px solid rgba(160,140,210,.28);border-radius:48px;background:rgba(28,22,44,.62);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 14px 50px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.04)}
-body.start .composer{margin-bottom:0}
+/* Eingabe mit Gehirn-Zeile */
+.dock{flex:none;width:calc(100% - 2*var(--pad));max-width:var(--col);margin:0 auto;padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+body.start .dock{padding-bottom:0}
+body.nokey .dock{display:none}
+.brain{display:inline-flex;align-items:center;gap:8px;max-width:100%;min-height:32px;margin:0 0 6px 8px;padding:4px 10px 4px 9px;border:1px solid transparent;border-radius:999px;background:none;color:var(--mute);font-size:13px;line-height:1.3;text-align:left}
+.brain:hover{color:var(--ink);background:rgba(255,255,255,.04);border-color:var(--line)}
+.brain .dot{width:7px;height:7px;flex:none;border-radius:50%;background:#8b5cf6;box-shadow:0 0 8px #8b5cf6}
+.brain .bt{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.brain svg{width:15px;height:15px;flex:none}
+.brain .gl{display:inline-flex;color:var(--acc2)}
+.brain .gl svg{width:14px;height:14px}
+.composer{display:flex;align-items:flex-end;gap:12px;min-height:62px;padding:8px 8px 8px 20px;border:1.5px solid rgba(160,140,210,.28);border-radius:31px;background:rgba(28,22,44,.72);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 14px 50px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.04)}
 .composer:focus-within{border-color:rgba(167,139,250,.6)}
-.spark{width:34px;height:34px;flex:none;color:#8b5cf6;filter:drop-shadow(0 0 6px rgba(139,92,246,.6))}
-.composer textarea{flex:1;resize:none;height:32px;max-height:40vh;padding:0;border:0;background:none;color:var(--ink);font:inherit;font-size:23px;line-height:1.4;outline:0}
+.spark{width:22px;height:22px;flex:none;margin-bottom:11px;color:#8b5cf6;filter:drop-shadow(0 0 6px rgba(139,92,246,.6))}
+.composer textarea{flex:1;min-width:0;resize:none;height:45px;max-height:40vh;padding:10px 0;border:0;background:none;color:var(--ink);font:inherit;font-size:17px;line-height:1.45;outline:0}
 .composer textarea::placeholder{color:#8a83a0}
-.send{flex:none;display:grid;place-items:center;width:58px;height:58px;border:0;border-radius:50%;background:radial-gradient(circle at 35% 30%,#9b6bff,#7c3aed 60%,#6d28d9);color:var(--on);box-shadow:0 0 22px rgba(124,58,237,.55)}
-.send:disabled{cursor:default;opacity:1}
-.send svg{width:26px;height:26px}
-body.nokey .composer,body.nokey .brain{display:none}
+.send{flex:none;display:grid;place-items:center;width:44px;height:44px;border:0;border-radius:50%;background:radial-gradient(circle at 35% 30%,#9b6bff,#7c3aed 60%,#6d28d9);color:var(--on);box-shadow:0 0 18px rgba(124,58,237,.5);transition:opacity .15s,box-shadow .15s}
+.send:disabled{cursor:default;opacity:.38;box-shadow:none}
+.send.stop{background:var(--ink);color:#1b1330;box-shadow:0 0 0 4px rgba(236,232,246,.12)}
+.send svg{width:22px;height:22px}
+.down{position:absolute;left:50%;bottom:calc(100% + 8px);display:grid;place-items:center;width:40px;height:40px;margin-left:-20px;border:1px solid var(--line2);border-radius:50%;background:rgba(19,14,33,.94);color:var(--ink);box-shadow:0 6px 20px rgba(0,0,0,.45)}
+.down svg{width:20px;height:20px}
+.toast{position:fixed;left:50%;bottom:calc(120px + env(safe-area-inset-bottom));z-index:30;max-width:calc(100% - 32px);padding:10px 16px;border:1px solid var(--line2);border-radius:12px;background:#231a38;color:var(--ink);font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);transform:translateX(-50%)}
 /* Anmelden und Einrichten */
+#log>.setup{max-width:560px}
 .setup{margin-top:6vh;background:rgba(19,14,33,.85);border:1px solid var(--glass);border-radius:22px;padding:22px 20px;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
 .setup img{width:48px;height:48px;border-radius:12px}
 .setup h2{font-size:22px;margin:12px 0 8px;letter-spacing:-.01em}
 .setup ol{padding-left:1.3em;margin:12px 0}
 .setup li+li{margin-top:6px}
 .setup a{color:var(--acc2)}
+.setup .wide{width:100%;margin-top:18px}
+.alts{margin-top:14px;border-top:1px solid var(--line);padding-top:4px;font-size:14px}
+.alts summary{display:inline-flex;align-items:center;min-height:44px;color:var(--soft);cursor:pointer}
+.alts summary,.danger summary{list-style:none}
+.alts summary::-webkit-details-marker,.danger summary::-webkit-details-marker{display:none}
+.alts summary::after,.danger summary::after{content:"";width:6px;height:6px;margin:0 0 3px 10px;border:solid currentColor;border-width:0 1.5px 1.5px 0;transform:rotate(45deg);transition:transform .15s}
+.alts[open] summary::after,.danger[open] summary::after{margin-bottom:-3px;transform:rotate(-135deg)}
+.alts div{display:flex;flex-direction:column;align-items:flex-start}
+.alts .linkbtn{min-height:44px;text-align:left}
 .btn{border:0;border-radius:999px;background:var(--acc);color:var(--on);padding:12px 22px;font-weight:600}
+.btn:hover{background:#8b4cf7}
 .btn:disabled{opacity:.5;cursor:default}
 .btn.alt{background:var(--accl);color:var(--ink);box-shadow:inset 0 0 0 1px var(--glass)}
-.f{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--field);color:var(--ink);font:inherit}
+.btn.alt:hover{background:#271c40}
+.f{width:100%;padding:11px 12px;border:1px solid var(--edge);border-radius:10px;background:var(--field);color:var(--ink);font:inherit;font-size:16px}
+.f:focus{border-color:rgba(167,139,250,.6);outline:0}
 textarea.f{resize:vertical;line-height:1.45}
 .keyrow{display:flex;gap:8px}
-.keyrow .f{flex:1;min-width:0;font-family:var(--mono);font-size:15px}
-.keyrow button:not(.btn){flex:none;border:1px solid var(--line);background:var(--field);border-radius:10px;padding:0 12px;font-size:14px}
+.keyrow .f{flex:1;min-width:0;font-family:var(--mono)}
+.keyrow button:not(.btn){flex:none;min-height:44px;border:1px solid var(--edge);background:var(--field);border-radius:10px;padding:0 12px;font-size:14px}
 .hint{font-size:13px;color:var(--mute);margin:6px 0 0}
 .hint a{color:var(--acc2)}
-.linkbtn{border:0;background:none;padding:0;color:var(--acc2);text-decoration:underline;font-size:inherit}
+.linkbtn{border:0;background:none;padding:0;color:var(--acc2);text-decoration:underline;text-underline-offset:2px;font-size:inherit}
 .status{min-height:1.4em;font-size:14px;margin:12px 0 0}
 .status.bad{color:var(--bad)}
 /* Fenster */
-.ib{display:grid;place-items:center;width:44px;height:44px;flex:none;border:0;border-radius:12px;background:none}
-.ib:hover{background:var(--accl)}
-.ib svg{width:22px;height:22px}
 dialog{border:1px solid var(--glass);border-radius:18px;padding:0;background:var(--card);color:var(--ink);width:min(560px,calc(100% - 24px));max-height:calc(100dvh - 24px)}
 dialog::backdrop{background:rgb(4 2 10/.65)}
 .dbody{padding:16px 20px 22px}
@@ -157,160 +219,252 @@ dialog::backdrop{background:rgb(4 2 10/.65)}
 fieldset{border:0;padding:0;margin:18px 0 0}
 legend{font-weight:700;font-size:16px;padding:0;margin-bottom:2px}
 label{display:block;font-size:14px;font-weight:600;margin:12px 0 5px}
-label.chk{display:flex;align-items:center;gap:10px;font-weight:500;font-size:15px;margin-top:16px;cursor:pointer}
+label.chk{display:flex;align-items:center;gap:10px;min-height:44px;font-weight:500;font-size:15px;margin-top:8px;cursor:pointer}
 .chk input{width:20px;height:20px;margin:0;accent-color:var(--acc)}
+.chk:has(input:disabled){color:var(--mute);cursor:default}
 .dacts{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
-.danger{margin-top:22px;border-top:1px solid var(--line);padding-top:12px;font-size:14px}
-.danger summary{cursor:pointer;color:var(--mute)}
-.danger div{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.danger button{border:1px solid var(--bad);color:var(--bad);background:none;border-radius:999px;padding:8px 14px}
+.danger{margin-top:22px;border-top:1px solid var(--line);padding-top:4px;font-size:14px}
+.danger summary{display:inline-flex;align-items:center;min-height:44px;cursor:pointer;color:var(--mute)}
+.danger div{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.danger button{min-height:40px;border:1px solid var(--bad);color:var(--bad);background:none;border-radius:999px;padding:8px 14px}
+/* Einstellungen: Kopf und Speichern bleiben stehen, nur die Mitte rollt */
+#dSet[open]{display:flex;flex-direction:column;overflow:hidden}
+#fSet{display:flex;flex-direction:column;flex:1;min-height:0}
+#fSet>.dh{flex:none;margin:0;padding:10px 10px 10px 20px;border-bottom:1px solid var(--line)}
+.dscroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:0 20px 22px}
+.dfoot{flex:none;padding:10px 20px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--card)}
+.dfoot .status{margin:0 0 8px}
+.dfoot .status:empty{display:none}
+.dfoot .dacts{margin-top:0}
+/* Chats als Schublade am Handy */
 .sheet{margin:0 auto 0 0;width:min(340px,88vw);height:100dvh;max-height:none;border-radius:0 18px 18px 0;border-left:0}
-.sheet .dbody{padding-top:calc(12px + env(safe-area-inset-top))}
-.sheet .btn{width:100%;margin-top:8px}
-#chList{list-style:none;margin:14px 0 0;padding:0}
-#chList li{display:flex;align-items:center;border-radius:12px}
-#chList li+li{margin-top:2px}
-#chList li.on{background:var(--accl)}
-#chList .open{flex:1;min-width:0;text-align:left;border:0;background:none;padding:9px 10px;border-radius:12px}
-#chList .open b{display:block;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#chList .open small{color:var(--mute);font-size:12px}
-#chList .ib{width:40px;height:40px;color:var(--mute)}
-#chList .ib svg{width:18px;height:18px}
-.empty{color:var(--mute);font-size:14px;margin-top:14px}
-/* kleinere Bildschirme */
-@media (max-width:1200px){
-  body{grid-template-columns:260px minmax(0,1fr)}
-  .side{padding:32px 20px}
-  .logo{gap:16px;margin-bottom:56px}
-  .tile{width:56px;height:56px;border-radius:14px}
-  .wmk{width:136px}
-  .nv{height:56px;gap:18px;font-size:18px;padding:0 16px;border-radius:18px}.nv svg{width:26px;height:26px}
-  .me{padding:18px 20px}.me b{font-size:18px}.me small{font-size:15px}
-  .hello .mark{width:210px}.hello .dom{width:196px}.hello .tag{font-size:21px;margin-top:34px}.hello{padding-bottom:64px}
-  .brain{padding-left:30px}
-  .composer{min-height:80px;padding:12px 12px 12px 28px;gap:18px}
-  .spark{width:28px;height:28px}.composer textarea{font-size:19px}.send{width:52px;height:52px}
+.sheet[open]{display:flex;flex-direction:column}
+.sheet .dbody{display:flex;flex-direction:column;flex:1;min-height:0;padding:calc(12px + env(safe-area-inset-top)) 16px calc(10px + env(safe-area-inset-bottom))}
+.sheet .dh{margin:0 -6px 10px 4px}
+.sheet .lst{margin-inline:-16px;padding-inline:16px}
+/* Gehirn wählen */
+.pick{width:min(460px,calc(100% - 24px))}
+.pick .dbody{padding:14px 14px calc(16px + env(safe-area-inset-bottom))}
+.pick .dh{margin:0 -4px 0 6px}
+.pick .dh h2{font-size:18px}
+.note2{margin:6px 6px 2px;font-size:14px;color:var(--soft)}
+.bp h3,.bh{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;margin:14px 6px 2px;font-size:12.5px;font-weight:600;color:var(--mute)}
+.bp h3 span{font-weight:400}
+.bp h3 em{margin-left:auto;font-style:normal;font-weight:500;color:var(--acc2)}
+.bm{display:flex;align-items:center;gap:12px;width:100%;min-height:50px;padding:6px 12px;border:1px solid transparent;border-radius:14px;background:none;text-align:left}
+.bm+.bm{margin-top:2px}
+.bm:hover{background:var(--hov)}
+.bm .mx{flex:1;min-width:0}
+.bm b{display:block;font-weight:500}
+.bm small{display:block;font-size:13px;color:var(--mute)}
+.bm .ck{display:grid;place-items:center;width:22px;height:22px;flex:none;border:1.5px solid var(--edge);border-radius:50%}
+.bm .ck svg{width:13px;height:13px;opacity:0}
+.bm[aria-current]{background:var(--accl);border-color:rgba(167,139,250,.24)}
+.bm[aria-current] .ck{background:var(--acc);border-color:var(--acc)}
+.bm[aria-current] .ck svg{opacity:1}
+.bm:disabled{opacity:.45;cursor:default}
+.bm:disabled:hover{background:none}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin:0 2px;padding:4px;border:1px solid var(--line);border-radius:14px;background:var(--field)}
+.seg button{min-height:40px;border:0;border-radius:10px;background:none;color:var(--soft);font-size:14px}
+.seg button:hover{background:var(--hov)}
+.seg button[aria-pressed=true]{background:var(--acc);color:#fff;font-weight:600}
+#brEff .hint{margin:6px 6px 0}
+.pick .sb{margin-top:12px;color:var(--soft)}
+@media (prefers-reduced-motion:no-preference){
+  dialog[open]{animation:pop .18s ease-out}
+  .sheet[open]{animation:slide .22s cubic-bezier(.2,.8,.3,1)}
 }
-@media (max-width:760px){
-  body{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
-  .side{flex-direction:row;align-items:center;padding:10px 12px;border-right:0;border-bottom:1px solid rgba(255,255,255,.06)}
-  .logo{gap:12px;margin:0}
-  .tile{width:42px;height:42px;border-radius:11px}
-  .wmk{width:112px}
-  .nav{flex-direction:row;gap:4px;margin-left:auto}
-  .nv{width:44px;height:44px;padding:0;justify-content:center;border-radius:14px}
-  .nv span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
-  .nv svg{width:24px;height:24px}
-  .me{display:none}
-  #log{padding:8px 16px 20px}
-  .lstat{padding:8px 16px 10px}
-  .hello .mark{width:150px}.hello .dom{width:140px;margin-top:8px}.hello .tag{font-size:16px;letter-spacing:.1em;margin-top:24px}.hello{padding-bottom:40px}
-  .brain{width:calc(100% - 24px);padding-inline:20px}
-  .composer{width:calc(100% - 24px);min-height:60px;margin-bottom:calc(12px + env(safe-area-inset-bottom));padding:8px 8px 8px 18px;gap:12px;border-radius:30px}
-  .spark{width:22px;height:22px}.composer textarea{font-size:17px;height:26px}.send{width:44px;height:44px}.send svg{width:22px;height:22px}
+@keyframes pop{from{opacity:0;transform:translateY(8px) scale(.985)}}
+@keyframes slide{from{transform:translateX(-100%)}}
+@keyframes rise{from{transform:translateY(100%)}}
+@media (prefers-reduced-motion:reduce){.wait,.lstat progress:indeterminate{animation:none}.fx{transition:none}}
+@media (pointer:coarse){
+  .mini{min-height:44px}
+  .brain{min-height:40px}
+  .lst .del{opacity:1;width:44px;height:44px;margin-right:0}
+}
+/* PC-Größen */
+@media (min-width:1200px){:root{--sw:288px;--col:780px}}
+@media (min-width:900px) and (max-width:1199px){:root{--sw:256px;--pad:24px}}
+@media (min-width:900px) and (max-height:700px){.hello .mark{width:140px}.hello .hi{font-size:24px}.hello{padding-bottom:28px}}
+/* Handy und Tablet hochkant, Handy quer */
+@media (max-width:899px),(max-height:540px) and (pointer:coarse){
+  :root{--pad:16px}
+  body{grid-template-columns:minmax(0,1fr)}
+  .side{display:none}
+  .top{display:flex;align-items:center;gap:4px;flex:none;height:52px;padding:0 4px}
+  .top .ib{color:var(--ink)}
+  .ttl{flex:1;min-width:0;display:flex;align-items:center;justify-content:center}
+  .ttl .wm{display:block;width:104px;height:auto}
+  #topT{font-size:15px;font-weight:600;color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #topT:empty{display:none}
+  #log{padding-top:10px}
+  body.start .main{justify-content:flex-start;padding-bottom:0}
+  body.start #log{flex:1;display:flex;flex-direction:column;overflow-y:auto;padding-top:8px;padding-bottom:14px}
+  body.start #log>*{width:100%}
+  body.start #log>:first-child{margin-top:auto}
+  body.start #log>:last-child{margin-bottom:auto}
+  .dock,body.start .dock{padding-bottom:calc(12px + env(safe-area-inset-bottom))}
+  .hello{padding-bottom:4px}
+  .hello .mark{width:124px}.hello .hi{font-size:24px;margin-top:14px}.hello .tag{font-size:13px;letter-spacing:.1em;padding-left:.1em;margin-top:8px}
+  .recent{display:block;margin-top:30px}
+  .recent h3{margin:0 4px 8px;font-size:13px;font-weight:600;color:var(--mute)}
+  .recent ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+  .recent .open{display:block;width:100%;min-height:56px;padding:9px 14px;border:1px solid var(--line);border-radius:14px;background:rgba(19,14,33,.72);text-align:left}
+  .recent .open b{display:block;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .recent .open small{display:block;font-size:12.5px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .recent .linkbtn{display:block;min-height:44px;margin:2px auto 0;font-size:14px}
+  .msg.a,.bub{font-size:16.5px}
+  .brain{margin-left:4px}
+  .composer{min-height:58px;padding:6px 6px 6px 16px;gap:10px;border-radius:29px}
+  .spark{width:20px;height:20px;margin-bottom:12px}
+  .find input{font-size:16px}
   .fx i:nth-child(1){left:-420px;top:-560px;width:700px;height:700px}
   .fx i:nth-child(2){right:-560px;bottom:-660px;width:900px;height:900px}
   .fx i:nth-child(3){right:-640px;bottom:-700px;width:1000px;height:1000px}
-  .msg.a,.bub{font-size:16px}
+  .pick{margin:auto 0 0;width:100%;max-width:100%;max-height:90dvh;border-radius:22px 22px 0 0;border-bottom:0}
+  #dSet{margin:0;width:100%;max-width:100%;height:100dvh;max-height:100dvh;border:0;border-radius:0}
+  #fSet>.dh{padding-top:calc(8px + env(safe-area-inset-top))}
+  .dscroll{padding-inline:16px}.dfoot{padding-inline:16px}
+  .dfoot .btn{flex:1}
+}
+@media (max-width:899px) and (prefers-reduced-motion:no-preference),(max-height:540px) and (pointer:coarse) and (prefers-reduced-motion:no-preference){.pick[open]{animation:rise .24s cubic-bezier(.2,.8,.3,1)}}
+@media (max-height:540px) and (pointer:coarse){
+  .top{height:44px}
+  .hello .mark,.hello .tag{display:none}.hello .hi{margin-top:0;font-size:21px}.recent{margin-top:14px}
+  .dock,body.start .dock{padding-bottom:calc(6px + env(safe-area-inset-bottom))}
+  .composer{min-height:52px}
 }
 </style>
 <script type="module" src="app.js"></script>
 </head>
 <body class="nokey">
 <h1 class="sr">xbubekir</h1>
-<aside class="side">
+<aside class="side" aria-label="Seitenleiste">
   <div class="logo"><span class="tile"><img src="icons/icon-192.png" alt=""></span><img class="wmk" src="brand/wortmarke.webp" alt="xbubekir" width="900" height="259"></div>
-  <nav class="nav" aria-label="Hauptmenü">
-    <button class="nv on" id="bNew" type="button" title="Neuer Chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 15.5a2.5 2.5 0 0 1-2.5 2.5H8l-4.5 3.5V6A2.5 2.5 0 0 1 6 3.5h11.5A2.5 2.5 0 0 1 20 6Z"/><path d="M15.5 9.5v.01"/></svg><span>Chat</span></button>
-    <button class="nv" id="bMenu" type="button" title="Verlauf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M12 6.5V12l3.5 2"/></svg><span>Verlauf</span></button>
-    <button class="nv" id="bSet" type="button" title="Einstellungen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg><span>Einstellungen</span></button>
-  </nav>
-  <div class="me"><b><i></i><img class="mk" src="brand/xbu.webp" alt="xbu" width="640" height="376"></b><small>Deine persönliche KI</small></div>
+  <button class="newb" id="bNew" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4H6.5A2.5 2.5 0 0 0 4 6.5v11A2.5 2.5 0 0 0 6.5 20h11a2.5 2.5 0 0 0 2.5-2.5V12"/><path d="M17.6 3.6a2 2 0 0 1 2.8 2.8L13 13.8l-3.6.8.8-3.6Z"/></svg><span>Neuer Chat</span></button>
+  <div class="find"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg><input id="qSide" type="search" placeholder="Chats durchsuchen" aria-label="Chats durchsuchen" autocomplete="off" spellcheck="false" enterkeyhint="search"></div>
+  <nav class="lst" id="sideList" aria-label="Deine Chats"></nav>
+  <div class="sfoot"><button class="sb" id="bSet" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg><span>Einstellungen</span></button></div>
 </aside>
 <div class="main">
   <div class="fx" aria-hidden="true"><i></i><i></i><i></i></div>
+  <header class="top">
+    <button class="ib" id="bMenu" type="button" aria-label="Chats öffnen" title="Chats"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16M4 16h10"/></svg></button>
+    <div class="ttl"><img class="wm" id="topWm" src="brand/wortmarke.webp" alt="xbubekir" width="900" height="259"><span id="topT"></span></div>
+    <button class="ib" id="bNewTop" type="button" aria-label="Neuer Chat" title="Neuer Chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4H6.5A2.5 2.5 0 0 0 4 6.5v11A2.5 2.5 0 0 0 6.5 20h11a2.5 2.5 0 0 0 2.5-2.5V12"/><path d="M17.6 3.6a2 2 0 0 1 2.8 2.8L13 13.8l-3.6.8.8-3.6Z"/></svg></button>
+  </header>
   <div id="lstat" class="lstat" role="status" hidden><p id="lstatT"></p><progress id="lstatP" max="1"></progress></div>
-  <main id="log" role="log" aria-live="polite" aria-relevant="additions"></main>
-  <button id="bBrain" class="brain" type="button"></button>
-  <form id="composer" class="composer">
-    <svg class="spark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.5c.7 5.6 3.3 8.6 10.5 10.5-7.2 1.9-9.8 4.9-10.5 10.5C11.3 16.9 8.7 13.9 1.5 12 8.7 10.1 11.3 7.1 12 1.5Z"/></svg>
-    <label class="sr" for="inp">Nachricht an xbubekir</label>
-    <textarea id="inp" rows="1" placeholder="Stelle deine Frage …" autocomplete="off" enterkeyhint="send"></textarea>
-    <button id="bSend" class="send" type="submit" aria-label="Senden" disabled></button>
-  </form>
+  <main id="log" aria-label="Gespräch"></main>
+  <div class="dock">
+    <button id="bDown" class="down" type="button" aria-label="Zum Ende des Gesprächs" title="Nach unten" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></button>
+    <button id="bBrain" class="brain" type="button"></button>
+    <form id="composer" class="composer">
+      <svg class="spark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.5c.7 5.6 3.3 8.6 10.5 10.5-7.2 1.9-9.8 4.9-10.5 10.5C11.3 16.9 8.7 13.9 1.5 12 8.7 10.1 11.3 7.1 12 1.5Z"/></svg>
+      <label class="sr" for="inp">Nachricht an xbubekir</label>
+      <textarea id="inp" rows="1" placeholder="Stelle deine Frage …" autocomplete="off" enterkeyhint="send" dir="auto"></textarea>
+      <button id="bSend" class="send" type="submit" aria-label="Senden" disabled></button>
+    </form>
+  </div>
 </div>
+<p id="say" class="sr" role="status"></p>
+<div id="toast" class="toast" role="status" hidden></div>
 
 <dialog id="dChats" class="sheet" aria-labelledby="chH">
   <div class="dbody">
     <div class="dh"><h2 id="chH">Chats</h2><button class="ib" type="button" data-close aria-label="Schließen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
-    <button class="btn" id="bNew2" type="button">Neuer Chat</button>
-    <ul id="chList"></ul>
+    <button class="newb" id="bNew2" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4H6.5A2.5 2.5 0 0 0 4 6.5v11A2.5 2.5 0 0 0 6.5 20h11a2.5 2.5 0 0 0 2.5-2.5V12"/><path d="M17.6 3.6a2 2 0 0 1 2.8 2.8L13 13.8l-3.6.8.8-3.6Z"/></svg><span>Neuer Chat</span></button>
+    <div class="find"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg><input id="qChats" type="search" placeholder="Chats durchsuchen" aria-label="Chats durchsuchen" autocomplete="off" spellcheck="false" enterkeyhint="search"></div>
+    <nav class="lst" id="chList" aria-label="Deine Chats"></nav>
+    <div class="sfoot"><button class="sb" id="bSet2" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg><span>Einstellungen</span></button></div>
+  </div>
+</dialog>
+
+<dialog id="dBrain" class="pick" aria-labelledby="brH">
+  <div class="dbody">
+    <div class="dh"><h2 id="brH">Wer denkt für xbubekir?</h2><button class="ib" type="button" data-close aria-label="Schließen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <p class="note2" id="brNote" hidden></p>
+    <div id="brList"></div>
+    <div id="brEff">
+      <h3 class="bh" id="brEffH">Denktiefe</h3>
+      <div class="seg" role="group" aria-labelledby="brEffH"><button type="button" data-eff="low">Schnell</button><button type="button" data-eff="medium">Normal</button><button type="button" data-eff="high">Gründlich</button></div>
+      <p class="hint">Gilt sofort, auch im laufenden Chat.</p>
+    </div>
+    <button class="sb" id="brMore" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg><span>Schlüssel, Konto und mehr</span></button>
   </div>
 </dialog>
 
 <dialog id="dSet" aria-labelledby="setH">
-  <form id="fSet" class="dbody" method="dialog">
+  <form id="fSet" method="dialog">
     <div class="dh"><h2 id="setH">Einstellungen</h2><button class="ib" type="button" data-close aria-label="Schließen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
-    <fieldset>
-      <legend>Gehirn</legend>
-      <label for="sProv">Wer denkt für xbubekir?</label>
-      <select class="f" id="sProv">
-        <option value="gemini">Google Gemini – kostenlos</option>
-        <option value="claude">Anthropic Claude – kostenpflichtig</option>
-        <option value="open">DeepSeek (Open Source) – über dein Konto, Cent-Beträge</option>
-        <option value="eigen">Eigene xbubekir-KI – im Browser, kostenlos</option>
-      </select>
-      <p class="hint" id="kEigen" hidden>Kein Schlüssel und kein Konto nötig. Läuft komplett auf diesem Gerät.</p>
-      <p class="hint" id="kOpen" hidden>Läuft über dein xbubekir-Konto: Der OpenRouter-Schlüssel liegt nur auf deinem Server.</p>
-      <label for="sModel">Modell</label>
-      <select class="f" id="sModel"></select>
-      <label for="sEffort">Denktiefe</label>
-      <select class="f" id="sEffort">
-        <option value="low">Schnell – für Alltägliches</option>
-        <option value="medium">Normal</option>
-        <option value="high">Gründlich – für knifflige Aufgaben</option>
-      </select>
-      <label class="chk"><input type="checkbox" id="sWeb"> Darf im Internet suchen</label>
-      <p class="hint" id="costHint"></p>
-      <div id="kGemini">
-        <label for="sGMode">Zugang zu Gemini</label>
-        <select class="f" id="sGMode">
-          <option value="konto">Über mein xbubekir-Konto (kein Schlüssel nötig)</option>
-          <option value="key">Mit eigenem Gemini-Schlüssel</option>
+    <div class="dscroll">
+      <fieldset>
+        <legend>Gehirn</legend>
+        <label for="sProv">Wer denkt für xbubekir?</label>
+        <select class="f" id="sProv">
+          <option value="gemini">Google Gemini – kostenlos</option>
+          <option value="claude">Anthropic Claude – kostenpflichtig</option>
+          <option value="open">DeepSeek (Open Source) – über dein Konto, Cent-Beträge</option>
+          <option value="eigen">Eigene xbubekir-KI – im Browser, kostenlos</option>
         </select>
-        <div id="kGKey" hidden>
-          <label for="sGKey">Gemini-API-Schlüssel</label>
-          <div class="keyrow"><input class="f" id="sGKey" type="password" autocomplete="off" spellcheck="false"><button type="button" class="eye" data-for="sGKey" aria-pressed="false">Zeigen</button></div>
-          <p class="hint">Kostenlos erstellen auf <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer">aistudio.google.com/apikey</a>.</p>
+        <p class="hint" id="kEigen" hidden>Kein Schlüssel und kein Konto nötig. Läuft komplett auf diesem Gerät.</p>
+        <p class="hint" id="kOpen" hidden>Läuft über dein xbubekir-Konto: Der OpenRouter-Schlüssel liegt nur auf deinem Server.</p>
+        <div id="mRow">
+          <label for="sModel">Modell</label>
+          <select class="f" id="sModel"></select>
         </div>
-      </div>
-      <div id="kKonto">
-        <p class="hint" id="kontoInfo"></p>
-        <button type="button" class="linkbtn hint" id="bLogout">Abmelden</button>
-      </div>
-      <div id="kClaude" hidden>
-        <label for="sCKey">Anthropic-API-Schlüssel</label>
-        <div class="keyrow"><input class="f" id="sCKey" type="password" autocomplete="off" spellcheck="false" placeholder="sk-ant-…"><button type="button" class="eye" data-for="sCKey" aria-pressed="false">Zeigen</button></div>
-        <p class="hint">Erstellen auf <a href="https://platform.claude.com/" target="_blank" rel="noopener noreferrer">platform.claude.com</a>, dafür ist Guthaben nötig.</p>
-      </div>
-      <p class="hint" id="kKey">Schlüssel bleiben nur auf diesem Gerät und gehen nur an den jeweiligen Anbieter.</p>
-    </fieldset>
-    <fieldset>
-      <legend>Über dich</legend>
-      <label for="sName">Wie soll xbubekir dich nennen?</label>
-      <input class="f" id="sName" type="text" maxlength="60" autocomplete="given-name">
-      <label for="sAbout">Was xbubekir über dich wissen soll</label>
-      <textarea class="f" id="sAbout" rows="4" maxlength="4000" placeholder="z. B. wo du wohnst, was du machst, wofür du dich interessierst, woran du gerade arbeitest"></textarea>
-      <label for="sStyle">Wie xbubekir antworten soll</label>
-      <textarea class="f" id="sStyle" rows="3" maxlength="2000" placeholder="z. B. „Antworte kurz und auf den Punkt.“ oder „Erklär mir Technik wie einem Anfänger.“"></textarea>
-    </fieldset>
-    <p class="hint">Name, „Über dich“, Antwortstil, Modell und Websuche gelten ab dem nächsten neuen Chat. Beim Wechsel des Anbieters beginnt gleich ein neuer Chat. Laufende Chats behalten ihre Einstellungen, damit xbubekir den Faden nicht verliert. Die Denktiefe gilt sofort.</p>
-    <p class="status" id="setMsg" role="status"></p>
-    <div class="dacts"><button type="button" class="btn alt" data-close>Abbrechen</button><button type="submit" class="btn" id="bSave">Speichern</button></div>
-    <details class="danger">
-      <summary>Daten löschen</summary>
-      <div><button type="button" id="bWipeChats">Alle Chats löschen</button><button type="button" id="bWipeKey">Schlüssel entfernen</button></div>
-    </details>
+        <div id="eRow">
+          <label for="sEffort">Denktiefe</label>
+          <select class="f" id="sEffort">
+            <option value="low">Schnell – für Alltägliches</option>
+            <option value="medium">Normal</option>
+            <option value="high">Gründlich – für knifflige Aufgaben</option>
+          </select>
+        </div>
+        <label class="chk"><input type="checkbox" id="sWeb"> Darf im Internet suchen</label>
+        <p class="hint" id="costHint"></p>
+        <div id="kGemini">
+          <label for="sGMode">Zugang zu Gemini</label>
+          <select class="f" id="sGMode">
+            <option value="konto">Über mein xbubekir-Konto (kein Schlüssel nötig)</option>
+            <option value="key">Mit eigenem Gemini-Schlüssel</option>
+          </select>
+          <div id="kGKey" hidden>
+            <label for="sGKey">Gemini-API-Schlüssel</label>
+            <div class="keyrow"><input class="f" id="sGKey" type="password" autocomplete="off" spellcheck="false"><button type="button" class="eye" data-for="sGKey" aria-pressed="false">Zeigen</button></div>
+            <p class="hint">Kostenlos erstellen auf <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer">aistudio.google.com/apikey</a>.</p>
+          </div>
+        </div>
+        <div id="kKonto">
+          <p class="hint" id="kontoInfo"></p>
+          <button type="button" class="linkbtn hint" id="bLogout">Abmelden</button>
+        </div>
+        <div id="kClaude" hidden>
+          <label for="sCKey">Anthropic-API-Schlüssel</label>
+          <div class="keyrow"><input class="f" id="sCKey" type="password" autocomplete="off" spellcheck="false" placeholder="sk-ant-…"><button type="button" class="eye" data-for="sCKey" aria-pressed="false">Zeigen</button></div>
+          <p class="hint">Erstellen auf <a href="https://platform.claude.com/" target="_blank" rel="noopener noreferrer">platform.claude.com</a>, dafür ist Guthaben nötig.</p>
+        </div>
+        <p class="hint" id="kKey">Schlüssel bleiben nur auf diesem Gerät und gehen nur an den jeweiligen Anbieter.</p>
+      </fieldset>
+      <fieldset>
+        <legend>Über dich</legend>
+        <label for="sName">Wie soll xbubekir dich nennen?</label>
+        <input class="f" id="sName" type="text" maxlength="60" autocomplete="given-name">
+        <label for="sAbout">Was xbubekir über dich wissen soll</label>
+        <textarea class="f" id="sAbout" rows="4" maxlength="4000" placeholder="z. B. wo du wohnst, was du machst, wofür du dich interessierst, woran du gerade arbeitest"></textarea>
+        <label for="sStyle">Wie xbubekir antworten soll</label>
+        <textarea class="f" id="sStyle" rows="3" maxlength="2000" placeholder="z. B. „Antworte kurz und auf den Punkt.“ oder „Erklär mir Technik wie einem Anfänger.“"></textarea>
+      </fieldset>
+      <p class="hint">Name, „Über dich“, Antwortstil, Modell und Websuche gelten ab dem nächsten neuen Chat. Beim Wechsel des Anbieters beginnt gleich ein neuer Chat. Laufende Chats behalten ihre Einstellungen, damit xbubekir den Faden nicht verliert. Die Denktiefe gilt sofort.</p>
+      <details class="danger">
+        <summary>Daten löschen</summary>
+        <div><button type="button" id="bWipeChats">Alle Chats löschen</button><button type="button" id="bWipeKey">Schlüssel entfernen</button></div>
+      </details>
+    </div>
+    <div class="dfoot">
+      <p class="status" id="setMsg" role="status"></p>
+      <div class="dacts"><button type="button" class="btn alt" data-close>Abbrechen</button><button type="submit" class="btn" id="bSave">Speichern</button></div>
+    </div>
   </form>
 </dialog>
 <noscript><p style="padding:16px">xbubekir braucht JavaScript.</p></noscript>

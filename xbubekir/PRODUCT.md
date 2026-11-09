@@ -47,7 +47,12 @@ Chats auf dem eigenen Gerät, geringe Kosten und Arabisch sind echte Eigenschaft
 
 ### Funktionen
 
-- Chat mit Markdown-Antworten, Denkblöcken und Anhalten der Antwort.
+- Chat mit Markdown-Antworten, Denkblöcken und Anhalten der Antwort. Die letzte Antwort lässt sich neu erzeugen, eine abgeschnittene fortsetzen. „Kopieren“ liefert Klartext ohne Markdown-Zeichen.
+- Gehirn wechseln per Tipp auf die Gehirn-Zeile: ein Blatt mit allen Modellen und der Denktiefe, ohne Speichern-Knopf. Im laufenden Chat beginnt dabei ein neuer Chat.
+- Am PC eine Seitenleiste mit Chats nach Datum und Suche, am Handy eine Kopfleiste mit Schublade (auch quer) und die letzten Chats auf dem Startbild.
+- Fehler stehen in kurzen Worten mit passenden Knöpfen da, die Originalmeldung eingeklappt darunter.
+- Arabisch wird als Arabisch gesetzt: eigene Schrift, größer für die Harakat, rein arabische Absätze von rechts nach links.
+- Der Entwurf im Eingabefeld bleibt gespeichert, falls die App zwischendurch zugeht.
 - „Über dich“, Name und „Wie xbubekir antworten soll“ fließen in den System-Prompt.
 - Denktiefe: Schnell, Normal, Gründlich.
 - Kein Gedächtnis über Chats hinaus. Dauerhaftes gehört in „Über dich“.
