@@ -31,6 +31,8 @@ body{min-height:100vh}
 main{max-width:560px;margin:0 auto;padding:calc(20px + env(safe-area-inset-top,0px)) 24px 110px}
 /* iPhone-Statusleiste (viewport-fit=cover): Inhalt fängt darunter an, und beim Scrollen läuft nichts unter die Uhr */
 body::before{content:"";position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:5;pointer-events:none}
+/* Bedienelemente des Browsers (Uhrzeit, Auswahllisten, Scrollleisten) im Farbschema der App */
+:root{color-scheme:light}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark}}:root[data-theme="dark"]{color-scheme:dark}
 h1,.h1{font-size:26px;font-weight:700;margin:6px 0 4px}h2{font-size:20px;margin:0}
 p{margin:0}.mute{color:var(--mute);font-size:14px}
 button{font:inherit;color:inherit;cursor:pointer}
@@ -123,6 +125,7 @@ html.splash-lock .wel,html.splash-lock .wel *{animation-play-state:paused}
 .big{font-size:30px;font-weight:700}
 .chips{position:relative;display:flex;gap:8px;overflow-x:auto;overscroll-behavior-x:contain;margin:12px -18px;padding:2px 18px 4px;scroll-padding:0 18px;scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 18px,#000 calc(100% - 22px),transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 18px,#000 calc(100% - 22px),transparent 100%)}
 .chips::-webkit-scrollbar{display:none}
+.hhd .chips{margin:0;padding:0;overflow:visible;scroll-snap-type:none} /* Serie und XP im Kopf der Startseite: ohne Abstände der Kategorien-Leiste, sonst rutscht die Begrüßung nach der ersten Antwort nach unten */
 .chip{flex:none;scroll-snap-align:start;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:11px 16px;min-height:44px;white-space:nowrap;font-size:14px}
 .chip.on{background:var(--g);color:var(--on);border-color:var(--g)}
 input[type=search],input.t{width:100%;padding:13px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit}
@@ -160,7 +163,7 @@ input[type=search],input.t{width:100%;padding:13px 14px;border-radius:12px;borde
 .ffree{display:block;margin:14px auto 0}.bzh{margin:6px 4px 0;font-size:14px}.nhl .i{display:inline-block;vertical-align:-3px;margin-right:4px}
 .obw h1{margin:14px 0 6px}.obw h2{margin:22px 0 4px;font-size:18px}.obw .top{margin-bottom:4px}
 .obar{font-size:var(--ar3);line-height:1.5;text-align:center;margin:18px 0 0;color:var(--g)}
-.obo b{display:block}.obo small{display:block;color:var(--mute);font-size:14px;margin-top:2px}
+.obo b{display:block}.obo small{display:block;color:var(--mute);font-size:14px;margin-top:2px;font-weight:500}
 .grp{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:8px 0 18px}.grp .set:last-child{border-bottom:0}
 .sw{width:46px;height:28px;border-radius:99px;background:var(--line);position:relative;flex:none}
 .sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:left .15s}
@@ -235,7 +238,7 @@ nav[hidden]{display:none}
 .pth>svg path{fill:none;stroke-linecap:round;vector-effect:non-scaling-stroke}.pth .ed{stroke:var(--re,transparent);stroke-width:calc(var(--rw,30px) + 2*var(--ew,0px))}.pth .bed{stroke:var(--rb,var(--line));stroke-width:var(--rw,30px)}.pth .fps use{fill:var(--fp,var(--mute))}
 .ub{position:absolute;left:0;right:0}
 .pgr{position:absolute;left:0;right:0;display:grid;justify-items:center;text-align:center;gap:2px;padding-top:14px}.pgr .ut{font-size:var(--ar3);line-height:1.5;color:var(--ac,var(--g))}.pgr b{font-size:16px}.pgr small{font-size:13px;color:var(--mute)}
-.pn{position:absolute;width:64px;height:64px;transform:translateX(-50%);display:grid;place-items:center;background:none;border:0;padding:0;color:var(--ink)}
+.pn{position:absolute;width:auto;min-width:64px;height:64px;transform:translateX(-50%);display:grid;place-items:center;background:none;border:0;padding:0;color:var(--ink)}
 .pn .nd{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;border:3px solid var(--ac,var(--g));background:var(--card);color:var(--ac,var(--g));overflow:hidden;box-shadow:0 4px 0 color-mix(in srgb,var(--ac,var(--g)) 30%,var(--line))}.pn .nd .ar{font-size:var(--ar1);line-height:1.4;padding-top:5px;white-space:nowrap}
 .pn .lb{position:absolute;top:50%;transform:translateY(-50%);width:clamp(96px,calc(50vw - 56px),140px);display:grid;gap:2px;text-align:left}.pn .lb.l{right:calc(100% + 10px);text-align:right}.pn .lb.r{left:calc(100% + 10px)}
 .pn b{font-size:15px;line-height:1.2}.pn small{font-size:12px;color:var(--mute)}.pn small .ar{font-size:var(--ar1);line-height:1.4}.pn .hint,.sgn .hint{display:block;color:var(--g);font-weight:600;margin-top:2px}
@@ -243,7 +246,8 @@ nav[hidden]{display:none}
 .askip{margin-top:12px}.askip .btn{margin-top:10px}.askip p{margin-top:4px}.note{margin-top:12px;border-color:var(--g);background:var(--gl)}.note p{font-size:14px;line-height:1.45}
 details.rule{display:block;margin-top:12px}details.rule>ol,details.rule>p{margin-top:10px}details.rule summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between}details.rule summary::-webkit-details-marker{display:none}details.rule summary::after{content:"+";font-size:20px;color:var(--mute);line-height:1}details.rule[open] summary::after{content:"–"}details.rule[open] summary{margin-bottom:8px}
 .pn:not(.cur) .nd{width:auto;min-width:58px;padding:0 6px;border-radius:999px} /* lange Stationswörter: der Kreis wird zur Pille, statt Zeichen abzuschneiden */
-.pn.done .nd{background:var(--mint);color:var(--night);border-color:var(--mint);box-shadow:0 4px 0 var(--band-d)}.pn.cur .nd{min-width:76px;width:auto;height:76px;padding:0 10px;box-sizing:border-box;border:0;border-radius:999px;background:var(--night);color:var(--mint);box-shadow:0 0 0 6px var(--gl),0 7px 0 var(--band-d)}.pn.cur .nd .ar{font-size:var(--ar3);line-height:1.5;padding-top:4px}.pn.cur .nd .ar.lng{font-size:var(--ar2);line-height:1.5}.pn.cur .lb.r{left:calc(100% + 18px)}.pn.cur .lb.l{right:calc(100% + 18px)}.pn.cur b{font-size:16px}
+.pn.done .nd{background:var(--mint);color:var(--night);border-color:var(--mint);box-shadow:0 4px 0 var(--band-d)}.pn.cur .nd{min-width:76px;width:auto;height:76px;padding:0 10px;box-sizing:border-box;border:0;border-radius:999px;background:var(--night);color:var(--mint);box-shadow:0 0 0 6px var(--gl),0 7px 0 var(--band-d)}.pn.cur .nd .ar{font-size:var(--ar3);line-height:1.5;padding-top:4px}.pn.cur .nd .ar.lng{font-size:var(--ar2);line-height:1.5}.pn.cur{width:auto;min-width:64px;height:76px;margin-top:-6px} /* aktuelle Station so breit wie ihr Kreis: mittig auf dem Weg, die Beschriftung bleibt neben dem Leuchtring */
+.pn.cur .lb.r{left:calc(100% + 12px)}.pn.cur .lb.l{right:calc(100% + 12px)}.pn.cur b{font-size:16px}
 .pn.lock .nd{box-shadow:none;border:3px dashed color-mix(in srgb,var(--ac,var(--mute)) 50%,transparent);color:var(--mute);background:var(--card)}.pn.lock b{color:var(--mute);font-weight:500}
 .sgn{position:absolute;left:50%;transform:translateX(-50%);width:min(320px,96%);display:grid;justify-items:center;gap:2px;text-align:center;background:var(--card);border:2px solid var(--line);border-radius:20px;padding:10px 14px 12px}.sgn.all,.sgn.done{border-color:var(--g)}
 .sgn .eta{font-size:12px;color:var(--mute)}.sgn .sent{background:none;border:0;padding:0;font-family:var(--ar);font-size:var(--ar3);line-height:1.7;color:var(--ink)}.sgn .sent .k{color:var(--g)}.sgn .sent .u{color:var(--mute);opacity:.6}.sgn .de{font-weight:600;font-size:15px}.sgn small{font-size:12px;color:var(--mute)}
@@ -350,7 +354,7 @@ details.rule{display:block;margin-top:12px}details.rule>ol,details.rule>p{margin
 .kgl{font-size:var(--ar6);line-height:1.4;text-align:center;margin:14px 0}
 .kog{margin-top:18px}.kog .opt.ar{font-size:var(--ar3);line-height:1.5;text-align:center;margin-top:0}
 .klaut{text-align:center;font-size:18px;font-weight:600;line-height:1.4;margin:22px 8px}
-.ktip{margin-top:16px;display:grid;gap:10px;justify-items:center;text-align:center;padding:22px 20px}.ktip>.ar{font-size:var(--ar4);line-height:1.5;color:var(--g)}.ktip p{font-size:15px;line-height:1.55;text-align:left}.ktip p .ar{font-size:var(--ar2);line-height:1.5}
+.ktip{margin-top:16px;display:grid;gap:10px;justify-items:center;text-align:center;padding:22px 20px}.ktip>.ar{font-size:var(--ar4);line-height:1.5;color:var(--g)}.ktip p{font-size:15px;line-height:1.8;text-align:left}.ktip p .ar{font-size:var(--ar2);line-height:1.4;display:inline-block;margin:-3.3px 0;vertical-align:-1px} /* Beispiele im Satz: gleiche Zeilenhöhe wie der deutsche Text (27 px), die Vokalzeichen ragen in den Zeilenabstand */
 .klet{font-size:34px;line-height:1.5;text-align:center;margin-top:2px}
 .kpv{display:grid;gap:4px}.kpv .btn{margin-top:8px}.kpv .lnk{justify-self:start}
 .ksg .sent{display:grid;grid-template-columns:repeat(10,1fr);gap:0 3px;width:100%;max-width:290px;margin:4px 0 6px;font-size:var(--ar2);line-height:1.75}
@@ -408,12 +412,13 @@ h1,.h1{font-size:28px;font-weight:900;letter-spacing:-.03em}h2{font-weight:800}
 .item{border-radius:20px;padding:12px 14px;min-height:64px}
 .item .ic{flex:none;width:40px;height:40px;border-radius:12px;background:var(--gl);color:var(--g)}
 .item.lock .ic{background:var(--line);color:var(--mute)}.item.main .ic{background:transparent;color:inherit}
+.item .ic .ar{font-size:var(--ar1);line-height:1.4;color:inherit;padding-top:2px} /* Zeichen statt Symbol (Alphabet) */
 .item .ch{color:var(--mute);opacity:1}
 .gh{margin:22px 4px 8px;font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}.card>.gh:first-child{margin:0 0 8px}
 .grp{border-radius:20px}.set{min-height:52px;padding:14px 16px}
 .sw{width:50px;height:30px}.sw::after{width:24px;height:24px}.sw.on::after{left:23px}
 .tiles .card b{font-size:28px;font-weight:900;letter-spacing:-.02em}
-.chart i{background:var(--mint)}
+.chart i{background:var(--mint)}.chart i.z{background:var(--line)} /* Tage ohne Übung: nur eine Grundlinie */
 .w{border-radius:16px}
 /* Spiele-Übersicht: Spiel des Tages (dunkle Karte wie „Nächster Halt“) und Kacheln */
 .ghd{display:flex;align-items:baseline;justify-content:space-between;gap:10px}.ghd .mute{font-size:13px}
@@ -508,6 +513,7 @@ h1,.h1{font-size:28px;font-weight:900;letter-spacing:-.03em}h2{font-weight:800}
 .zgl{position:relative;flex:none;width:62px;height:70px;border-radius:14px 14px 8px 8px;background:var(--night);box-shadow:0 4px 0 var(--band-d)}
 .zgl .zgf{position:absolute;left:10px;top:10px;width:22px;height:18px;border-radius:6px;background:var(--mint)}
 .zgl .zgc{position:absolute;right:8px;top:-16px;width:14px;height:18px;border-radius:6px 6px 0 0;background:var(--night)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .zgl,:root:not([data-theme="light"]) .zgl .zgc{background:var(--line-d)}}:root[data-theme="dark"] .zgl,:root[data-theme="dark"] .zgl .zgc{background:var(--line-d)} /* im Dunkeln hebt sich die Lok vom Nachthimmel ab */
 .zgl .zgp{position:absolute;right:-5px;bottom:14px;width:6px;height:10px;border-radius:0 2px 2px 0;background:var(--mint)}
 .zgl .zgs{position:absolute;right:6px;top:-30px;width:16px;height:16px;border-radius:50%;background:var(--line-d);animation:zgsmoke 1.4s ease-out infinite}
 @keyframes zgsmoke{0%{opacity:.8;transform:translate(0,0) scale(.6)}100%{opacity:0;transform:translate(-14px,-26px) scale(1.4)}}
@@ -623,6 +629,8 @@ h1,.h1{font-size:28px;font-weight:900;letter-spacing:-.03em}h2{font-weight:800}
 .chip{font-weight:700}.chip.on{background:var(--night);color:var(--mint);border-color:var(--night)}
 .wlc{font-size:13px;margin:10px 4px 0}
 .w{box-shadow:0 3px 0 var(--line-d)}.w .ar{color:var(--ink)}
+.w .tr .ar{font-size:1.45em;line-height:1.4;min-width:0;padding:0;color:inherit} /* Arabisch im Hinweis (Plural, Form für Frauen): Naskh in lesbarer Größe statt 13 px */
+.setx{color:var(--bad);font-weight:600}
 .emp{display:grid;justify-items:center;gap:8px;margin-top:12px;padding:22px 18px;text-align:center}.emp>svg{color:var(--g)}.emp .btn{width:auto;margin:4px 0 0;padding:11px 20px}
 .bgh{margin:22px 4px 8px;font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}.bgh small{text-transform:none;letter-spacing:0;font-weight:600}
 .bg{gap:12px}.bdg{border-radius:20px;padding:16px 10px}
@@ -1120,6 +1128,7 @@ const BADGES=[
 ...EBDG2.map(([e,ar,t],k)=>["e-"+e,ar,t,"Etappe "+(k+1)+" von Stufe 2 geschafft",()=>kEDone(e)]),
 ...GROUPS.map(g=>["g-"+g,GA[g]||"✓",g+" gemeistert","Alle Wörter im Thema „"+g+"“ gelernt",()=>W.filter(w=>w.cat===g).every(w=>isLearned(w.i))])
 ].map(a=>({id:a[0],ic:a[1],n:a[2],d:a[3],t:a[4]}));
+const badgeN=()=>(S.badges||[]).filter(id=>BADGES.some(b=>b.id===id)).length; // nur Abzeichen, die es gibt (die von W1–W10 sind entfallen)
 function checkBadges(){
   S.badges=S.badges||[];let n=0;
   const nb=[];for(const b of BADGES)if(!S.badges.includes(b.id)&&b.t()){S.badges.push(b.id);nb.push(b.n);n++}
@@ -1373,6 +1382,7 @@ const kLocked=l=>l.k>0&&!kDone(KL[l.k-1].id); // weiter erst, wenn die vorherige
 const kCur=()=>KL.find(l=>!kDone(l.id))||KL[KL.length-1];
 const kEtap=id=>KURS.stufen.flatMap(s=>s.etappen).find(e=>e.id===id);
 const eLab=id=>{const st=KURS&&KURS.stufen.find(s=>s.etappen.some(e=>e.id===id));return st&&st.id>1?String(st.etappen.findIndex(e=>e.id===id)+1):String(id).toUpperCase()}; // „Etappe S3“ in Stufe 1, „Etappe 2“ in Stufe 2
+const zAr=z=>z.ar+(/\?$/.test(z.de||"")&&!/[؟?]$/.test(z.ar)?"؟":""); // Ziel-Satz: eine Frage zeigt ihr „؟“ (in den Kursdaten steht der Satz ohne Satzzeichen)
 const kLet=l=>(l.neu||[]).map(i=>ALBY[i]);
 const kKnown=k=>KL.slice(0,k).filter(l=>l.art==="buchstaben").flatMap(kLet); // in früheren Lektionen eingeführte Buchstaben
 const kLearnt=()=>KL.filter(l=>l.art==="buchstaben"&&kDone(l.id)).flatMap(kLet);
@@ -2122,7 +2132,7 @@ function kpath(){
       const dl=ls.filter(l=>kDone(l.id)).length,all=dl===ls.length;
       pts.push({x:50,y:y+14,dn:false,brk:br,th});br=false;
       nodes.push(`<div class="sgn kzl ${all?"all":""} ${th}" style="top:${y}px"><span class="eta">Ziel der Etappe</span>
-        <button class="sent ar ${f.ziel.ar.split(" ").length>3?"lng":""}" lang="ar" ${f.ziel.sp?`data-kz="${e.id}" aria-label="Ziel anhören"`:'tabindex="-1"'}>${f.ziel.ar}</button>
+        <button class="sent ar ${f.ziel.ar.split(" ").length>3?"lng":""}" lang="ar" ${f.ziel.sp?`data-kz="${e.id}" aria-label="Ziel anhören"`:'tabindex="-1"'}>${zAr(f.ziel)}</button>
         <span class="de">${all?(f.ziel.de?`${esc(f.ziel.tr||kTr(f.ziel.ar))}<br>${esc(f.ziel.de)}`:esc(kLesung(f.ziel.ar))):esc(f.ziel.text)}</span><small>${all?"Geschafft: "+esc(f.ziel.text):dl+" von "+ls.length+" Lektionen geschafft"}</small>
         <span class="row" style="justify-content:center;gap:14px;margin-top:8px">${f.ziel.sp?`<button class="lnk" data-kz="${e.id}">${ic("speaker",16)} Anhören</button>`:""}<button class="sbt ${dl?"":"lock"}" data-krev="${e.id}" aria-label="Diese Etappe üben${dl?"":", noch gesperrt"}">Alle üben<small>${dl?dl+(dl>1?" Lektionen":" Lektion"):"nach Lektion 1"}</small></button></span></div>`);
       y+=f.ziel.de?280:236}
@@ -2156,6 +2166,10 @@ function kpath(){
 let view="home",ui={cat:"Alle",q:""},gt=0;
 const TABS=[["home","home","Start"],["games","pad","Spiele"],["path","path","Lernpfad"],["cards","cards","Karten"],["more","more","Mehr"]];
 const SUB={more:["stats","fav","settings","list","badges","legal"],games:["pairs","blitz","listen","regen","kalli","magnet","zug","suq"],path:["quiz","lesson","alphabet","letter","aquiz","satz","klek"]};
+// Leiste: markiert den Tab, zu dem der Zurück-Pfeil führt. Alphabet, Buchstabe, Wortliste und Statistiken gibt es an mehreren Stellen; sie gehören zum Tab, von dem man kam.
+const navTab=v=>{if(TABS.some(t=>t[0]===v))return v;const f=TABS.some(t=>t[0]===ui.from)?ui.from:null;
+  if(v==="alphabet"||v==="letter")return f||"home";if(v==="list")return f||"more";if(v==="stats")return ui.from==="home"?"home":"more";
+  return Object.keys(SUB).find(k=>SUB[k].includes(v))};
 const pHint=a=>{if(view!=="path"){ui.hint=a;return go("path")}ui.hint=ui.hint===a?null:a;ui.keep=true;path()}; // gesperrte Station: Grund direkt darunter zeigen statt als Toast
 function go(v){
   if(view==="klek"&&K&&K.l&&!K.test&&!K.fin&&(K.n||K.fb)){kSnap();const r=kSnapGet(K.l.id);if(r)toast(kRepAt(r)?"Gespeichert · du machst mit deinen Fehlern weiter":`Gespeichert · du machst bei ${kResTxt(r)} weiter`)} // X oder Zurück mitten in der Lektion
@@ -2181,7 +2195,8 @@ const paint=h=>{
 function fx(){requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelectorAll("[data-to]").forEach(e=>{e.style.width=e.dataset.to+"%"})))}
 function render(){
   clearInterval(gt);
-  $("#nav").innerHTML=TABS.map(t=>`<button class="${(view===t[0]||(SUB[t[0]]||[]).includes(view))?"on":""}${t[0]==="path"?" main":""}" data-go="${t[0]}" ${(view===t[0]||(SUB[t[0]]||[]).includes(view))?'aria-current="page"':""}><span>${ic(t[1])}</span>${t[2]}</button>`).join("");
+  const nt=navTab(view);
+  $("#nav").innerHTML=TABS.map(t=>`<button class="${nt===t[0]?"on":""}${t[0]==="path"?" main":""}" data-go="${t[0]}" ${nt===t[0]?'aria-current="page"':""}><span>${ic(t[1])}</span>${t[2]}</button>`).join("");
   $("#nav").hidden=["quiz","pairs","blitz","aquiz","listen","satz","klek","regen","kalli","magnet","zug","suq"].includes(view)||(view==="legal"&&!U);
   ({home,path,lesson,alphabet,letter,aquiz,listen,satz,cards,more,list,stats,settings,quiz,fav,games,badges,pairs,blitz,legal,klek,regen,kalli,magnet,zug,suq})[view]();
   app.classList.remove("enter");void app.offsetWidth;app.classList.add("enter");
@@ -2235,7 +2250,7 @@ document.addEventListener("click",e=>{
   const s=e.target.closest("[data-say]");if(s)speak(BY[s.dataset.say].ar);
 });
 function head(t,back="home"){return `<div class="top"><button class="x" data-go="${back}" aria-label="Zurück">${ic("back")}</button><h2>${t}</h2></div>`}
-const itm=(attr,icon,title,sub,cls="")=>`<button class="item ${cls}" ${attr}><span class="ic">${ic(icon)}</span><span><b>${title}</b>${sub?`<small>${sub}</small>`:""}</span><span class="ch">${ic("chev",18)}</span></button>`;
+const itm=(attr,icon,title,sub,cls="")=>`<button class="item ${cls}" ${attr}><span class="ic">${icon.startsWith("ar:")?`<span class="ar" lang="ar">${icon.slice(3)}</span>`:ic(icon)}</span><span><b>${title}</b>${sub?`<small>${sub}</small>`:""}</span><span class="ch">${ic("chev",18)}</span></button>`;
 
 // Kleiner Einblick in die Statistik für die Startseite: Wochenbalken plus drei Zahlen, antippen öffnet alles
 function miniStats(o){
@@ -2266,7 +2281,7 @@ function home(){
   ${S.np&&KL.length?(()=>{const r=kSnapGet(),c=r?KL.find(l=>l.id===r.id):kCur(); // eine angefangene Lektion geht vor
     return itm(`data-kl="${c.id}"`,"path",r?"Weitermachen":"Weiterlernen",`Etappe ${eLab(c.e)} · Lektion ${c.li+1}: ${esc(c.titel)}${r?" · "+kResTxt(r):""}`,"main2")})():ns.t==="a"?itm("data-kn","path","Weiterlernen","Buchstaben lernen · Etappe S1 im neuen Lernpfad","main2"):itm(`data-les="${cur.k}"`,"path","Weiterlernen",`Lektion ${cur.k+1}: ${cur.t}`,"main2")}
     ${itm('data-go="alphabet"',"list","Alphabet",alphaSure()+" von "+ALPHA.length+" Buchstaben sicher")}
-  ${itm('data-go="badges"',"medal","Abzeichen",(S.badges||[]).length+" von "+BADGES.length+" freigeschaltet")}
+  ${itm('data-go="badges"',"medal","Abzeichen",badgeN()+" von "+BADGES.length+" freigeschaltet")}
   ${itm('data-go="stats"',"chart","Statistiken",knownN()+" von "+W.length+" Wörtern gelernt")}
   </div>`);
 }
@@ -2308,7 +2323,7 @@ function homeNp(){
     :`<div class="card nh dk"><span class="nhc" aria-hidden="true"></span><p class="nhl">${r?"Angefangen":fresh?"Dein erster Halt":"Nächster Halt"} · Etappe ${eLab(e.id)} · ${esc(e.titel)}</p>
       <p class="ar nha${lng}" lang="ar">${big}</p><h2>${l.art==="test"?esc(l.titel):`Lektion ${l.li+1}: ${esc(l.titel)}`}</h2><p class="mute">${r?kResTxt(r):kSm(l)}</p>
       <button class="btn" data-kl="${l.id}">${r?"Weitermachen":fresh?"Erste Lektion starten":"Lektion starten"}</button></div>`;
-  const zp=all?"":zl&&zl.art==="alle-buchstaben"?`<p class="mute">${kLearnt().length} von ${ALPHA.length} Buchstaben gelernt</p>`:zl&&zl.ar?`<p class="ar zar" lang="ar">${zl.ar}</p><p class="mute">${esc(zl.de||"")}</p>`:zl&&zl.art==="woerter"?`<p class="ar zar" lang="ar">${(zl.woerter||[]).map(i=>BY[i]).filter(Boolean).map(w=>w.ar).join(" · ")}</p>`:"";
+  const zp=all?"":zl&&zl.art==="alle-buchstaben"?`<p class="mute">${kLearnt().length} von ${ALPHA.length} Buchstaben gelernt</p>`:zl&&zl.ar?`<p class="ar zar" lang="ar">${zAr(zl)}</p><p class="mute">${esc(zl.de||"")}</p>`:zl&&zl.art==="woerter"?`<p class="ar zar" lang="ar">${(zl.woerter||[]).map(i=>BY[i]).filter(Boolean).map(w=>w.ar).join(" · ")}</p>`:"";
   const ziel=all?"":`<div class="card zk"><p class="nhl">Ziel der Etappe</p><p><b>${esc(zl?zl.text:e.kurz)}</b></p>${zp}
     <div class="zseg" role="img" aria-label="${dnE} von ${ls.length} Lektionen dieser Etappe geschafft">${ls.map(x=>`<i class="${kDone(x.id)?"on":""}"></i>`).join("")}</div><p class="mute zs">${dnE} von ${ls.length} Lektionen geschafft</p></div>`;
   const z8=(KE.s8||{}).ziel,mine=S.ob&&S.ob.z==="koran"&&l.e!=="s8"&&!all&&z8?`<p class="mute obz">Dein Ziel, den Koran zu lesen: In Etappe S8 liest du die Basmala.</p>`
@@ -2387,7 +2402,7 @@ function lesson(){
 }
 function more(){
   const nf=(S.fav||[]).length;
-  paint(`<h1>Mehr</h1><div class="menu">${[["alphabet","list","Alphabet",alphaSure()+" von "+ALPHA.length+" Buchstaben sicher"],["badges","medal","Abzeichen",(S.badges||[]).length+" von "+BADGES.length+" freigeschaltet"],["list","list","Wortliste",W.length+" Wörter mit Aussprache"],["stats","chart","Statistiken","Lektionen, Buchstaben, Wörter, Serie"],["fav","star","Favoriten",nf?nf+" gespeichert":"In den Karten mit dem Stern markieren"],["settings","gear","Einstellungen","Ziel, Vokalzeichen, Töne, Konto"],["legal","lock","Datenschutz &amp; Impressum","Was mit deinen Daten passiert"]].map(m=>itm(`data-go="${m[0]}"`,m[1],m[2],m[3])).join("")}</div>`);
+  paint(`<h1>Mehr</h1><div class="menu">${[["alphabet","ar:أ ب","Alphabet",alphaSure()+" von "+ALPHA.length+" Buchstaben sicher"],["badges","medal","Abzeichen",badgeN()+" von "+BADGES.length+" freigeschaltet"],["list","list","Wortliste",W.length+" Wörter mit Aussprache"],["stats","chart","Statistiken","Lektionen, Buchstaben, Wörter, Serie"],["fav","star","Favoriten",nf?nf+" gespeichert":"In den Karten mit dem Stern markieren"],["settings","gear","Einstellungen","Ziel, Vokalzeichen, Töne, Konto"],["legal","lock","Datenschutz &amp; Impressum","Was mit deinen Daten passiert"]].map(m=>itm(`data-go="${m[0]}"`,m[1],m[2],m[3])).join("")}</div>`);
 }
 function badges(){
   const have=(S.badges||[]).filter(id=>BADGES.some(b=>b.id===id)); // Abzeichen entfernter Etappen (früher W1–W10) zählen nicht mit
@@ -2414,7 +2429,7 @@ const GAMES=[
   {k:"magnet",g:"b",t:"Buchstaben-Magnet",d:()=>"Wörter aus Buchstaben bauen"+(S.st.magnet?" · "+S.st.magnet+(S.st.magnet===1?" Runde":" Runden"):""),ar:"كتـ"},
   {k:"listen",g:"w",t:"Hörübung",d:()=>!canSpeak()?"Braucht eine arabische Stimme auf dem Gerät":"Hören und die Bedeutung wählen",ic:"speaker"},
   {k:"pairs",g:"w",t:"Paare zuordnen",d:()=>"6 Wortpaare, so schnell du kannst",ic:"pairs"},
-  {k:"blitz",g:"w",t:"Wort-Blitz",d:()=>"60 Sekunden oder ohne Zeitlimit · Rekord: "+(S.st.blitz||0)+" Treffer",ic:"bolt"},
+  {k:"blitz",g:"w",t:"Wort-Blitz",d:()=>"60 Sekunden oder ohne Zeitlimit"+(S.st.blitz?" · Rekord: "+S.st.blitz+" Treffer":""),ic:"bolt"}, // Rekord erst, wenn es einen gibt (wie beim Regen)
   {k:"zug",g:"w",t:"Satz-Zug",d:()=>"Wörter als Wagen ordnen"+(S.st.zug?" · "+S.st.zug+(S.st.zug===1?" Fahrt":" Fahrten"):""),ic:"train"},
   {k:"suq",g:"w",t:"Im Suq",d:()=>"Einkaufszettel lesen, Waren einpacken"+(S.st.suq?" · "+S.st.suq+(S.st.suq===1?" Einkauf":" Einkäufe"):""),ic:"basket"}
 ];
@@ -2436,7 +2451,7 @@ function games(){
   document.querySelectorAll("[data-fl]").forEach(b=>b.onclick=()=>{ui.fl=ui.fl===b.dataset.fl?null:b.dataset.fl;sfx("tap");games()});
   fFreeOn(games);
 }
-function wordRow(w){const nt=noteOf(w);return `<button class="w" data-say="${w.i}"><span class="ar" lang="ar">${w.ar}</span><span style="flex:1"><b>${w.de}</b><span class="tr"><br>(${w.tr})${nt?" · "+esc(nt):""}</span></span><span class="mute" style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">${memBar(w.i)}${isLearned(w.i)?ic("check",16):""}${ic("speaker",18)}</span></button>`}
+function wordRow(w){const nt=noteOf(w);return `<button class="w" data-say="${w.i}"><span class="ar" lang="ar">${w.ar}</span><span style="flex:1"><b>${w.de}</b><span class="tr"><br>(${w.tr})${nt?" · "+arIn(nt):""}</span></span><span class="mute" style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">${memBar(w.i)}${isLearned(w.i)?ic("check",16):""}${ic("speaker",18)}</span></button>`}
 function list(){
   const cats=["Alle",...GROUPS];
   const q=ui.q.toLowerCase();
@@ -2449,7 +2464,8 @@ function list(){
   if(on){const l=on.offsetLeft-36,r=on.offsetLeft+on.offsetWidth+40;if(l<ch.scrollLeft)ch.scrollLeft=l;else if(r>ch.scrollLeft+ch.clientWidth)ch.scrollLeft=r-ch.clientWidth}
   ch.onwheel=e=>{if(e.deltaX||!e.deltaY||ch.scrollWidth<=ch.clientWidth)return;e.preventDefault();ch.scrollLeft+=e.deltaY} // Maus: Rad scrollt die Leiste seitlich
 }
-function fav(){paint(head("Favoriten","more")+`<p class="mute">Tippe bei den Karteikarten auf den Stern, um Wörter zu speichern.</p><div id="fv">${(S.fav||[]).map(i=>BY[i]).filter(Boolean).map(wordRow).join("")||`<div class="card emp">${ic("star",28)}<p><b>Noch keine Favoriten.</b> Öffne die Karteikarten und markiere ein Wort mit dem Stern.</p><button class="btn alt" data-go="cards">Zu den Karteikarten</button></div>`}</div>`)}
+function fav(){const fw=(S.fav||[]).map(i=>BY[i]).filter(Boolean); // leer erklärt die Karte, was zu tun ist; der Hinweis oben nur mit Favoriten
+  paint(head("Favoriten","more")+`${fw.length?`<p class="mute">Tippe bei den Karteikarten auf den Stern, um Wörter zu speichern.</p>`:""}<div id="fv">${fw.map(wordRow).join("")||`<div class="card emp">${ic("star",28)}<p><b>Noch keine Favoriten.</b> Öffne die Karteikarten und markiere ein Wort mit dem Stern.</p><button class="btn alt" data-go="cards">Zu den Karteikarten</button></div>`}</div>`)}
 
 // ===== Karteikarten =====
 let cd={order:[],n:0,flip:false,sig:0,anim:false};
@@ -2654,7 +2670,7 @@ function endBlitz(){
 function blitz(){
   if(B.intro){
     paint(`<div class="top">${xbtn("games")}<h2 style="flex:1">Wort-Blitz</h2></div><p class="mute">Ein arabisches Wort, vier Bedeutungen: Tippe die richtige.</p>
-    <button class="bzc dk" id="bz60"><span class="mgc" aria-hidden="true"></span><span class="bzi">${ic("bolt",22)}</span><b>60 Sekunden</b><small>So viele Treffer wie möglich. Jeder Fehler kostet 3 Sekunden.</small><span class="bzr">Rekord: ${S.st.blitz||0}</span></button>
+    <button class="bzc dk" id="bz60"><span class="mgc" aria-hidden="true"></span><span class="bzi">${ic("bolt",22)}</span><b>60 Sekunden</b><small>So viele Treffer wie möglich. Jeder Fehler kostet 3 Sekunden.</small><span class="bzr">${S.st.blitz?`Rekord: ${S.st.blitz}`:"Noch kein Rekord"}</span></button>
     <button class="bzc" id="bzf"><span class="bzi">${ic("repeat",22)}</span><b>Ohne Zeitlimit · ${BFREE} Wörter</b><small>In deinem Tempo, ohne Rekord.</small></button>`);
     $("#bz60").onclick=()=>startBlitz(false);$("#bzf").onclick=()=>startBlitz(true);return;
   }
@@ -2982,10 +2998,10 @@ function stats(){
   const sp2=S.np&&es2.length?`<p class="gh">Sprache lernen</p><div class="tiles" style="margin-bottom:18px"><div class="card"><p class="mute">Lektionen</p><b>${s2L.filter(l=>kDone(l.id)).length}</b><span class="mute">von ${s2L.length} geschafft</span></div><div class="card"><p class="mute">Etappen</p><b>${es2.filter(e=>kEDone(e.id)).length}</b><span class="mute">von ${es2.length} geschafft</span></div></div>`:"";
   const rd=S.np&&KL.length?`<p class="gh">Lesen lernen</p><div class="tiles" style="margin-bottom:18px"><div class="card"><p class="mute">Lektionen</p><b>${s1L.filter(l=>kDone(l.id)).length}</b><span class="mute">von ${s1L.length} geschafft</span></div><div class="card"><p class="mute">Etappen</p><b>${es.filter(e=>kEDone(e.id)).length}</b><span class="mute">von ${es.length} geschafft</span></div><div class="card"><p class="mute">Buchstaben sicher</p><b>${alphaSure()}</b><span class="mute">von ${ALPHA.length}</span></div><div class="card"><p class="mute">Tagesziel</p><b>${Math.min(xd,g)} / ${g}</b><span class="mute">XP heute</span></div></div>${sp2}<p class="gh">Wörter</p>`:"";
   paint(head("Statistiken",ui.from==="home"?"home":"more")+rd+`<div class="card row"><div><p class="mute">Lernfortschritt</p><p class="big">${pct()}%</p><p class="mute">${knownN()} von ${W.length} Wörtern</p></div><div class="ring" style="--p:${pct()};margin-left:auto"><span>${pct()}%</span></div></div>
-  <div class="tiles"><div class="card"><p class="mute">Heute geübt</p><b>${S.days[today()]||0}</b><span class="mute">Wörter</span></div><div class="card"><p class="mute">Aktuelle Serie</p><b>${streak()}</b><span class="mute">Tage</span></div><div class="card"><p class="mute">Gefestigt</p><b>${Object.values(S.box).filter(b=>b>=3).length}</b><span class="mute">von ${W.length}</span></div><div class="card"><p class="mute">Gelernt gesamt</p><b>${knownN()}</b></div><div class="card"><p class="mute">Level</p><b>${lvl()}</b></div><div class="card"><p class="mute">XP gesamt</p><b>${S.xp||0}</b></div></div>
+  <div class="tiles"><div class="card"><p class="mute">Heute geübt</p><b>${S.days[today()]||0}</b><span class="mute">${(S.days[today()]||0)===1?"Wort":"Wörter"}</span></div><div class="card"><p class="mute">Aktuelle Serie</p><b>${streak()}</b><span class="mute">${streak()===1?"Tag":"Tage"}</span></div><div class="card"><p class="mute">Gefestigt</p><b>${Object.values(S.box).filter(b=>b>=3).length}</b><span class="mute">von ${W.length}</span></div><div class="card"><p class="mute">Gelernt gesamt</p><b>${knownN()}</b><span class="mute">${knownN()===1?"Wort":"Wörter"}</span></div><div class="card"><p class="mute">Level</p><b>${lvl()}</b></div><div class="card"><p class="mute">XP gesamt</p><b>${S.xp||0}</b></div></div>
   <div class="card" style="margin-top:10px"><p class="gh">Gedächtnis</p><p class="mute" style="margin-top:2px">Wie frisch deine angefangenen Wörter gerade sind.</p>${(()=>{const c=[0,0,0,0];W.forEach(w=>{const m=mem(w.i);if(m)c[m.k]++});const tot=c.reduce((a,b)=>a+b,0);
     return tot?[[3,"frisch","var(--g)"],[2,"wackelig","var(--amber)"],[1,"fällig","var(--amber)"],[0,"vergessen","var(--bad)"]].map(([k,n,col])=>`<div class="row sp" style="margin-top:10px"><span style="width:92px;font-size:14px">${n}</span><div class="bar"><i style="width:${Math.round(c[k]/tot*100)}%;background:${col}"></i></div><span class="mute" style="width:32px;text-align:right">${c[k]}</span></div>`).join(""):'<p class="mute" style="margin-top:10px">Noch keine Wörter angefangen.</p>'})()}</div>
-  <div class="card" style="margin-top:10px"><p class="gh">Lernverlauf</p><div class="chart" role="img" aria-label="Geübte Wörter der letzten 7 Tage: ${days.map(d=>d[0]+" "+d[1]).join(", ")}">${days.map(d=>`<div><i style="height:${d[1]/mx*80}px"></i>${d[0]}</div>`).join("")}</div></div><div class="card" style="margin-top:10px"><p class="gh">Nach Thema</p>${GROUPS.map(c=>{const t=W.filter(w=>w.cat===c),k=t.filter(w=>isLearned(w.i)).length;return `<div class="row sp" style="margin-top:10px"><span style="width:130px;font-size:14px">${c}</span><div class="bar"><i style="width:${k/t.length*100}%"></i></div><span class="mute">${k}/${t.length}</span></div>`}).join("")}</div>`);
+  <div class="card" style="margin-top:10px"><p class="gh">Lernverlauf</p><div class="chart" role="img" aria-label="Geübte Wörter der letzten 7 Tage: ${days.map(d=>d[0]+" "+d[1]).join(", ")}">${days.map(d=>`<div><i ${d[1]?"":'class="z" '}style="height:${d[1]/mx*80}px"></i>${d[0]}</div>`).join("")}</div></div><div class="card" style="margin-top:10px"><p class="gh">Nach Thema</p>${GROUPS.map(c=>{const t=W.filter(w=>w.cat===c),k=t.filter(w=>isLearned(w.i)).length;return `<div class="row sp" style="margin-top:10px"><span style="width:130px;font-size:14px">${c}</span><div class="bar"><i style="width:${k/t.length*100}%"></i></div><span class="mute">${k}/${t.length}</span></div>`}).join("")}</div>`);
 }
 const remOn=()=>{try{return !!S.rem&&typeof Notification!=="undefined"&&Notification.permission==="granted"}catch(e){return false}};
 function settings(){
@@ -2996,7 +3012,7 @@ function settings(){
   <p class="mute" style="margin:-10px 0 18px">Bei „automatisch“ verschwinden die Vokalzeichen Schritt für Schritt, sobald ein Wort sicher sitzt – so wie in echten Texten. Antippen zeigt sie jederzeit wieder.</p>
   <p class="gh">Spiel</p><div class="grp">${swr("sd","Töne",S.sound!==false)}${swr("vb","Vibration",S.vib!==false)}${swr("au","Aussprache automatisch",S.auto!==false)}</div>
   <p class="gh">Benachrichtigungen</p><div class="grp">${swr("rm","Tägliche Lern-Erinnerung",remOn())}<label class="set"><span>Uhrzeit</span><input type="time" id="tm" value="${S.time}" style="border:0;background:none;color:var(--mute);font:inherit"></label></div>
-  <p class="mute" style="margin:-10px 0 18px">Die Erinnerung erscheint, solange die Seite geöffnet ist.</p><p class="gh">Darstellung und Konto</p><div class="grp">${pick("th","Darstellung",[["system","System"],["light","Hell"],["dark","Dunkel"]],S.theme)}${U!=="gast"?row("sy","Synchronisierung",`<span class="mute">${SY||"–"}</span>`):""}${row("lo",U==="gast"?"Anmelden oder registrieren":"Abmelden",`<span class="mute" style="max-width:50%;overflow:hidden;text-overflow:ellipsis">${U==="gast"?"Gast":esc(U)}</span>`)}${row("ex","Meine Daten exportieren",'<span class="mute">JSON</span>')}${row("lg","Datenschutz &amp; Impressum",ic("chev",18))}${row("rs","Fortschritt zurücksetzen",'<span class="mute">Löschen</span>')}${U!=="gast"?row("dl","Konto löschen",'<span class="mute" style="color:var(--bad)">Endgültig</span>'):""}</div>`);
+  <p class="mute" style="margin:-10px 0 18px">Die Erinnerung erscheint, solange die Seite geöffnet ist.</p><p class="gh">Darstellung und Konto</p><div class="grp">${pick("th","Darstellung",[["system","System"],["light","Hell"],["dark","Dunkel"]],S.theme)}${U!=="gast"?row("sy","Synchronisierung",`<span class="mute">${SY||"–"}</span>`):""}${row("lo",U==="gast"?"Anmelden oder registrieren":"Abmelden",`<span class="mute" style="max-width:50%;overflow:hidden;text-overflow:ellipsis">${U==="gast"?"Gast":esc(U)}</span>`)}${row("ex","Meine Daten exportieren",'<span class="mute">JSON</span>')}${row("lg","Datenschutz &amp; Impressum",ic("chev",18))}${row("rs","Fortschritt zurücksetzen",'<span class="setx">Löschen</span>')}${U!=="gast"?row("dl","Konto löschen",'<span class="mute" style="color:var(--bad)">Endgültig</span>'):""}</div>`);
   $("#sd").onclick=()=>{S.sound=S.sound===false;save();if(S.sound)sfx("good",1);settings()};
   $("#vb").onclick=()=>{S.vib=S.vib===false;save();if(S.vib)vib(30);settings()};
   $("#gl").onchange=e=>{S.goal=+e.target.value;save();settings()};
@@ -3088,10 +3104,10 @@ document.addEventListener("click",e=>{if(e.target.closest("#hx")){hintOff=true;i
 // Zurücksetzen: Dialog mit allem, was verloren geht. „Abbrechen“ hat den Fokus, Esc und die Zurück-Geste brechen ab, vorher exportieren geht direkt.
 function resetAll(){S.seen=[];S.seenDay="";S.xp=0;S.xpDays={};S.badges=[];S.st={perfect:0,rounds:0,goals:0,pairs:0,blitz:0,mix:0,sent:0};S.alpha={};S.aok="";S.kp={d:{}};S.wt=null;S.sent={};S.days={};S.fav=[];S.box={};S.due={};S.ef={};S.streak=0;S.last="";S.epoch=Date.now();kSnapDel();save()}
 function resetAsk(){
-  const lost=[[S.xp||0,"XP"],[streak(),"Tag Serie","Tage Serie"],[(S.badges||[]).length,"Abzeichen"],[alphaSure(),"sicherer Buchstabe","sichere Buchstaben"],[Object.keys(kp().d).length,"geschaffte Lektion","geschaffte Lektionen"],[knownN(),"gelerntes Wort","gelernte Wörter"],[(S.fav||[]).length,"Favorit","Favoriten"]];
+  const lost=[[S.xp||0,"XP"],[streak(),"Tag Serie","Tage Serie"],[badgeN(),"Abzeichen"],[alphaSure(),"sicherer Buchstabe","sichere Buchstaben"],[KL.length?KL.filter(l=>kDone(l.id)).length:Object.keys(kp().d).length,"geschaffte Lektion","geschaffte Lektionen"],[knownN(),"gelerntes Wort","gelernte Wörter"],[(S.fav||[]).length,"Favorit","Favoriten"]].filter(([n])=>n>0); // nur, was es wirklich gibt
   const d=document.createElement("dialog");d.className="dlg";d.setAttribute("aria-labelledby","dlgh");d.setAttribute("aria-describedby","dlgt");
   d.innerHTML=`<h2 id="dlgh">Fortschritt zurücksetzen?</h2><p id="dlgt">Das wird auf diesem Gerät${U&&U!=="gast"?" und in deinem Konto":""} gelöscht und lässt sich nicht wiederherstellen:</p>
-    <ul>${lost.map(([n,t,pl])=>`<li><b>${n}</b> ${n===1||!pl?t:pl}</li>`).join("")}</ul><button class="lnk" id="dex">Vorher exportieren (JSON)</button>
+    ${lost.length?`<ul>${lost.map(([n,t,pl])=>`<li><b>${n}</b> ${n===1||!pl?t:pl}</li>`).join("")}</ul>`:`<p class="mute">Bisher ist noch kein Lernstand gespeichert.</p>`}<button class="lnk" id="dex">Vorher exportieren (JSON)</button>
     <div class="dlga"><button class="btn alt" id="dno">Abbrechen</button><button class="btn bad" id="dyes">Alles löschen</button></div>`;
   document.body.appendChild(d);d.addEventListener("close",()=>d.remove());
   d.querySelector("#dno").onclick=()=>d.close();d.querySelector("#dex").onclick=exportData;
@@ -3230,7 +3246,7 @@ loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v53"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v54"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>
