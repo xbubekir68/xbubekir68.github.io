@@ -972,7 +972,7 @@ run(`U="gast";loadS()`);
 
 // ---------- 25. Spiele-Übersicht und Buchstaben-Regen ----------
 run(`U="sp25";loadS();S.ob={z:"lesen",d:today()};ui.fl=null;games()`);let g25=run(`app.innerHTML`);
-ok("Übersicht: Spiel des Tages als dunkle Karte, Kacheln in zwei Gruppen, Zähler der offenen Spiele",/<button class="gday" data-go="(regen|listen|kalli)">/.test(g25)&&/<p class="gh">Buchstaben<\/p><div class="gtg"><button class="gtl" data-go="regen">/.test(g25)&&/<p class="gh">Wörter und Sätze<\/p>/.test(g25)&&/3 von 8 offen/.test(g25),g25.slice(0,300));
+ok("Übersicht: Spiel des Tages als dunkle Karte, Kacheln in zwei Gruppen, Zähler der offenen Spiele",/<button class="gday" data-go="(regen|listen|kalli)">/.test(g25)&&/<p class="gh">Buchstaben<\/p><div class="gtg"><button class="gtl" data-go="regen">/.test(g25)&&/<p class="gh">Wörter und Sätze<\/p>/.test(g25)&&/3 von 11 offen/.test(g25),g25.slice(0,300));
 ok("… Spiel des Tages bleibt am selben Tag gleich und ist nie gesperrt",run(`gDay()===gDay()`)&&run(`!fGate(gDay().k)`)&&run(`(()=>{const ks=new Set();for(let d=1;d<31;d++){const x=gDay("2026-11-"+String(d).padStart(2,"0"));if(fGate(x.k))return false;ks.add(x.k)}return ks.size===3})()`));
 ok("… gesperrte Kachel mit Grund, Antippen zeigt den Hinweis",/<button class="gtl lock" data-fl="pairs" aria-expanded="false">/.test(g25)&&(run(`(ui.fl="pairs",games(),app.innerHTML)`).match(/Lerne im Lernpfad weiter/g)||[]).length===1);run(`ui.fl=null`);
 ok("… ohne Stimme und Aufnahmen ist die Hörübung nie das Spiel des Tages",run(`(()=>{const a=ARV,n=AUDN;ARV=false;AUDN=0;let ok=true;for(let d=1;d<31;d++){if(gDay("2026-12-"+String(d).padStart(2,"0")).k==="listen")ok=false}ARV=a;AUDN=n;return ok})()`));
@@ -1105,7 +1105,7 @@ run(`G.miss=0;G.done=G.L.map(w=>w.i);finishPairs();pairs()`);ok("… Ergebnis mi
 run(`clearInterval(gt);startBlitz()`);let b30=run(`app.innerHTML`);
 ok("Wort-Blitz: zwei Wahlkarten (dunkel mit Rekord, hell ohne Zeit)",/<button class="bzc dk" id="bz60">.*(?:Rekord: \d+|Noch kein Rekord)<\/span><\/button>/s.test(b30)&&/<button class="bzc" id="bzf">.*Ohne Zeitlimit · 20 Wörter/s.test(b30));
 run(`startBlitz(true)`);ok("… das Wort steht auf einer dunklen Bühne",/<div class="bzb"><span class="mgc"[^>]*><\/span><div class="ar bzw" lang="ar" data-fq>/.test(run(`app.innerHTML`)));
-ok("Ergebnis-Seite: alle sieben Spiele nutzen gEnd",["startListen","startPairs","startBlitz(B.free)","rGo","startMagnet","startZug","startSuq"].every(f=>html.includes(f+");"))&&(html.match(/return gEnd\(/g)||[]).length===7);
+ok("Ergebnis-Seite: alle zehn Spiele mit Runden nutzen gEnd",["startListen","startPairs","startBlitz(B.free)","rGo","startMagnet","startZug","startSuq","rkGo","fkGo","tzGo"].every(f=>html.includes(f+");"))&&(html.match(/return gEnd\(/g)||[]).length===10);
 run(`clearInterval(gt);U="alt30b";loadS();S.badges=[];checkBadges()`);
 ok("Abzeichen der neuen Spiele: noch keins ohne Spielen",run(`["regen","kalli","magnet","zug","suq"].every(b=>!S.badges.includes(b))`));
 run(`S.st.regen=20;S.st.magnet=3;S.st.zug=3;S.st.suq=3;for(const x of KALI)S.st["kal_"+x.i]=3;checkBadges()`);
@@ -1214,7 +1214,7 @@ run(`U="gast";loadS()`);
       createBuffer(n,l){return{getChannelData:()=>new Float32Array(l)}},createBufferSource(){return{connect(){},start(){}}},createBiquadFilter(){return{frequency:P(),Q:{value:1},connect(){}}}};
     AC=null;MG=null;uiV=null;for(const k in uiLast)delete uiLast[k];S.sound=false;sfx("path");sfx("game");sfx("flip",1);sfx("good",1)`);
   ok("Klang: „Töne aus“ erzeugt keinen einzigen Klang",run(`__A.osc===0&&!AC`));
-  ok("… Klang je Ziel: Lernpfad, Spiele (Übersicht und jedes Spiel), sonst der Tick",run(`sndOf("path")==="path"&&["games","pairs","blitz","listen","regen","kalli","magnet","zug","suq"].every(t=>sndOf(t)==="game")&&["home","cards","more","stats"].every(t=>sndOf(t)==="tap")`));
+  ok("… Klang je Ziel: Lernpfad, Spiele (Übersicht und jedes Spiel), sonst der Tick",run(`sndOf("path")==="path"&&["games","pairs","blitz","listen","regen","kalli","magnet","zug","suq","funken","rakete","duell"].every(t=>sndOf(t)==="game")&&["home","cards","more","stats"].every(t=>sndOf(t)==="tap")`));
   run(`S.sound=true;sfx("path");globalThis.__b1=uiV.g;globalThis.__o1=__A.osc;sfx("game")`);
   ok("… ein neuer Bedienklang blendet den laufenden aus, nichts stapelt sich",run(`__A.osc>__o1&&__A.targets.some(x=>x.p===__b1.gain&&x.v===0)&&uiV.k==="game"`));
   run(`globalThis.__o2=__A.osc;sfx("game")`);ok("… derselbe Klang zweimal in 40 ms zählt einmal",run(`__A.osc===__o2`));
@@ -1271,7 +1271,102 @@ run(`U="gast";loadS()`);
   run(`U="gast";loadS()`);
 }
 
-// ---------- 37. Design-Feinschliff ----------
+// ---------- 37. Funkenflug ----------
+run(`U="fk37";loadS();S.ob={z:"lesen",d:today()};ui.fl=null;games()`);let g37=run(`app.innerHTML`);
+ok("Funkenflug: gesperrt bis S1, mit Grund",/<button class="gtl lock" data-fl="funken"/.test(g37)&&/Öffnet sich nach Etappe S1 · Die Buchstaben/.test(g37.slice(g37.indexOf('data-fl="funken"'))));
+run(`view="games";startFunken()`);ok("… lässt sich nicht an der Sperre vorbei starten",run(`view`)==="games");
+run(`for(const l of KL.filter(l=>l.e==="s1"))S.kp.d[l.id]=1;games()`);g37=run(`app.innerHTML`);
+ok("… nach S1 offen, Kachel bei den Buchstaben",/<p class="gh">Buchstaben<\/p><div class="gtg">.*<button class="gtl" data-go="funken"><span class="gi"><svg.*<p class="gh">Wörter und Sätze/s.test(g37));
+run(`startFunken()`);let f37=run(`app.innerHTML`);
+ok("… Startseite: Regeln, die vier Formen von Bāʾ, 60 Sekunden",run(`view`)==="funken"&&/Los geht's · 60 Sekunden/.test(f37)&&(f37.match(/<p class="ar fkx" lang="ar">(.*?)<\/p>/)||[,""])[1].split("<span>").length===5&&/Ein falscher Schnitt kostet 3 Sekunden/.test(f37));
+ok("… Formen: verbindende Buchstaben vier, nicht verbindende zwei",run(`fkForms(ALBY.ba).join()`)==="i,b,m,e"&&run(`["alif","dal","dhal","ra","zay","waw"].every(i=>fkForms(ALBY[i]).join()==="i,e")`));
+run(`fkGo()`);f37=run(`app.innerHTML`);
+ok("… Runde: gesuchter Buchstabe oben mit seinen Formen, dunkles Feld mit Wischspur",run(`FK.pool.includes(FK.tgt)`)&&/Wisch durch: <b id="fkn" aria-live="polite" data-fq><span class="ar" lang="ar">/.test(f37)&&(f37.match(/class="fkfc"/g)||[]).length===fkN()&&/<div class="fkf" id="fkf">.*<svg class="fkt" aria-hidden="true"><path id="fkp"/s.test(f37));
+function fkN(){return run(`fkForms(FK.tgt).length`)}
+ok("Strecke trifft Kreis (Wisch-Erkennung)",run(`segHit(0,0,100,0,50,10,12)&&!segHit(0,0,100,0,50,20,12)&&segHit(0,0,0,0,5,5,8)&&!segHit(0,0,40,0,60,0,12)`));
+run(`FK.it=[];FK.next=99;globalThis.fkT=FK.tgt;const a=fkSpawn(FK.tgt),b=fkSpawn(FK.tgt),d=fkSpawn(fkDecoy());a.x=100;a.y=200;b.x=200;b.y=205;d.x=300;d.y=400;globalThis.fd=d`);
+ok("… Scheiben fliegen von unten nach oben (Startgeschwindigkeit nach oben), Ablenker ist nie der gesuchte Buchstabe",run(`FK.it.length===3&&FK.it.every(it=>it.vy<0)&&fd.a!==FK.tgt&&[...Array(200)].every(()=>fkDecoy()!==FK.tgt)`));
+run(`fkDown(40,200);fkMove(260,200);fkUp()`);
+ok("… ein Wisch durch zwei Formen: beide geschnitten, der zweite gibt einen Bonus-Funken",run(`FK.score===3&&FK.hits===2&&FK.combo===2&&FK.it.length===1&&FK.it[0]===fd`));
+run(`fkDown(300,400);fkUp()`);
+ok("… Antippen eines Ablenkers: 3 Sekunden weniger, Serie weg, Scheibe zählt nicht noch einmal",run(`FK.miss===1&&FK.pen===3&&FK.combo===0&&fd.bad`)&&near(run(`fkLeft()`),57,.01)&&run(`(fkCut(fd),FK.miss===1)`));
+run(`FK.it=[];const t=fkSpawn(FK.tgt);fkCut(t)`);ok("… Tastatur-Schnitt ohne Wisch zählt einfach",run(`FK.score===4&&FK.combo===1`));
+run(`FK.it=[];FK.combo=4;const m=fkSpawn(FK.tgt);m.y=FK.H+FKR+20;m.vy=10;fkStep(.01)`);
+ok("… verpasste Form fällt hinaus: nur die Serie reißt ab, keine Strafe",run(`FK.it.length===0&&FK.combo===0&&FK.pen===3`));
+run(`FK.it=[];FK.next=0;fkStep(.01)`);ok("… nach der Pause kommt eine Welle mit ein bis drei Scheiben",run(`FK.it.length>=1&&FK.it.length<=3&&FK.next>0`));
+run(`globalThis.s37=FK.seq;for(let k=0;k<160;k++)fkStep(.05)`);
+ok("… die Zeit läuft mit der Spielschleife, Scheiben fallen wieder hinaus",near(run(`FK.el`),8.01,.01)&&run(`FK.seq>s37&&FK.it.every(it=>!(it.vy>0&&it.y>FK.H+FKR+8))`));
+run(`FK.it=[];FK.th=5;globalThis.o37=FK.tgt;const old=fkSpawn(FK.tgt),hit=fkSpawn(FK.tgt);globalThis.ol=old;fkCut(hit)`);
+ok("… nach sechs Treffern ist ein anderer Buchstabe dran, was vom alten noch fliegt, zählt nicht mehr",run(`FK.tgt!==o37&&FK.th===0&&ol.dead&&FK.had.includes(FK.tgt)`)&&run(`(()=>{const s=FK.score;fkCut(ol);return FK.score===s&&FK.miss===1})()`));
+ok("… mit „Bewegung reduzieren“ fliegen die Scheiben langsamer",run(`lowMo()&&fkG()===FK.H*1.7*.45`));
+run(`FK.score=12;S.st.funken=5;globalThis.x37=S.xp||0;FK.el=FKSEC-FK.pen-.01;fkStep(.05)`);f37=run(`app.innerHTML`);
+ok("… nach 60 Sekunden: Rekord, 2 XP je Funke, Ergebnis mit Serie und Fehlern",run(`FK.end&&S.st.funken===12&&FK.xp===24&&FK.rec`)&&run(`S.xp-x37`)===24&&/<h1>Zeit um!<\/h1><b class="gxp">\+24 XP<\/b><p class="gen">Neuer Rekord/.test(f37)&&/Beste Serie/.test(f37)&&/−3 s je Fehler/.test(f37));
+run(`FK.it=[];const z=fkSpawn(FK.tgt);fkCut(z)`);ok("… nach dem Ende zählt nichts mehr",run(`FK.score===12`));
+ok("… Kachel zeigt den Rekord",/Durch alle Formen eines Buchstabens wischen · Rekord: 12/.test(run(`(games(),app.innerHTML)`)));
+run(`U="gast";loadS()`);
+
+// ---------- 38. Wort-Rakete ----------
+run(`U="rk38";loadS();S.ob={z:"lesen",d:today()};ui.fl=null;games()`);let g38=run(`app.innerHTML`);
+ok("Wort-Rakete: gesperrt bis S5, mit Grund",/<button class="gtl lock" data-fl="rakete"/.test(g38)&&/Öffnet sich nach Etappe S5 · Lange Vokale/.test(g38.slice(g38.indexOf('data-fl="rakete"'))));
+run(`view="games";startRakete()`);ok("… lässt sich nicht an der Sperre vorbei starten",run(`view`)==="games");
+run(`for(const l of KL.filter(l=>["s1","s2","s3","s4","s5"].includes(l.e)))S.kp.d[l.id]=1;games()`);
+ok("… nach S5 offen, Kachel bei „Wörter und Sätze“",/<p class="gh">Wörter und Sätze<\/p>.*<button class="gtl" data-go="rakete"><span class="gi"><svg/s.test(run(`app.innerHTML`)));
+run(`startRakete()`);let r38=run(`app.innerHTML`);
+ok("… Startseite: dunkle Karte mit Rakete, Regeln, 60 Sekunden",run(`view`)==="rakete"&&/<div class="rkin">.*<svg class="rks"/s.test(r38)&&/Los geht's · 60 Sekunden/.test(r38)&&/Falsche Wörter kommen gleich wieder/.test(r38));
+run(`rkGo()`);r38=run(`app.innerHTML`);
+ok("… Runde: drei Tore, eins mit der Bedeutung, keine Überschneidung, Wort oben auf der Bühne",run(`RK.row.opts.length===3&&RK.row.opts[RK.row.ok]===RK.row.w&&new Set(RK.row.opts.map(o=>o.i)).size===3&&RK.row.opts.every((o,k)=>RK.row.opts.every((p,j)=>j===k||!clash(o,p)))`)
+  &&(r38.match(/class="rkg" data-rl="\d"/g)||[]).length===3&&new RegExp('<span class="ar rkw[^"]*" lang="ar" id="rkw" data-fq>'+run(`RK.row.w.ar`)).test(r38)&&/<div class="rkr" id="rkr" style="left:50%">/.test(r38));
+ok("… Lenken bleibt in den drei Spuren",run(`(rkLane(-3),RK.lane===0)&&(rkLane(9),RK.lane===2)&&(rkLane(1),RK.lane===1)`));
+const rkFly=()=>run(`(()=>{const r=RK.row;let n=0;while(RK.row===r&&n++<400)rkStep(.05);return n})()`);
+run(`globalThis.w38=RK.row.w;globalThis.t38=RK.T;rkLane(RK.row.ok)`);const n38=rkFly();
+ok("… richtige Spur: Treffer, Serie, schneller; das Tor kommt nach gut drei Sekunden an",run(`RK.hits===1&&RK.combo===1&&RK.T<t38&&RK.row.w!==w38&&RK.fb.ok`)&&n38>=60&&n38<=72,n38);
+run(`globalThis.w38=RK.row.w;globalThis.t38=RK.T;globalThis.e38=RK.el;rkLane((RK.row.ok+1)%3)`);rkFly();
+ok("… falsche Spur: 3 Sekunden weniger, langsamer, das Wort kommt höchstens zwei Tore später wieder",run(`RK.miss===1&&RK.combo===0&&RK.pen===3&&RK.T>t38&&RK.T<=RKT0&&RK.q.indexOf(w38)>=0&&RK.q.indexOf(w38)<=2`)&&near(run(`rkLeft()`),run(`RKSEC-RK.el-3`),1e-9));
+ok("… Rückmeldung nennt Wort und Bedeutung",new RegExp('<span class="ar" lang="ar">'+run(`w38.ar`)+'</span> = ').test(run(`rkFbH()`)));
+run(`for(let k=0;k<40;k++){rkLane(RK.row.ok);RK.row.y=rkHitY();rkStep(0)}`);
+ok("… auch nach vielen Treffern nie schneller als die Grenze",run(`RK.T>=rkTMin()&&RK.hits===41&&RK.best===40`));
+ok("… nie zweimal dasselbe Wort hintereinander",run(`(()=>{let p=RK.row.w;for(let k=0;k<60;k++){rkLane(k%3);RK.pen=0;RK.row.y=rkHitY();rkStep(0);if(RK.end||RK.row.w===p)return false;p=RK.row.w}return true})()`));
+run(`RK.hits=12;RK.best=4;S.st.rakete=5;globalThis.x38=S.xp||0;RK.el=RKSEC-RK.pen-.01;rkStep(.05)`);r38=run(`app.innerHTML`);
+ok("… nach 60 Sekunden: Rekord, 2 XP je Treffer, Ergebnis",run(`RK.end&&S.st.rakete===12&&RK.xp===24&&RK.rec`)&&run(`S.xp-x38`)===24&&/<h1>Zeit um!<\/h1><b class="gxp">\+24 XP<\/b><p class="gen">Neuer Rekord/.test(r38));
+run(`globalThis.l38=RK.lane;rkLane((RK.lane+1)%3);RK.row.y=rkHitY();rkStep(0)`);ok("… nach dem Ende lenkt und zählt nichts mehr",run(`RK.lane===l38&&RK.hits===12`));
+ok("… Pfeiltasten lenken, Ziehen auf dem Feld wählt die Spur unter dem Finger",/e\.key==="ArrowLeft"\?-1:1/.test(html)&&/f\.addEventListener\("pointermove",e=>\{if\(down\)rkLane\(lane\(e\)\)\}\)/.test(html));
+run(`U="gast";loadS()`);
+
+// ---------- 39. Tauziehen und Abzeichen der bewegten Spiele ----------
+run(`U="tz39";loadS();S.ob={z:"lesen",d:today()};ui.fl=null;games()`);let g39=run(`app.innerHTML`);
+ok("Tauziehen: gesperrt bis S5, mit Grund",/<button class="gtl lock" data-fl="duell"/.test(g39)&&/Öffnet sich nach Etappe S5/.test(g39.slice(g39.indexOf('data-fl="duell"'))));
+run(`for(const l of KL.filter(l=>["s1","s2","s3","s4","s5"].includes(l.e)))S.kp.d[l.id]=1;games()`);
+ok("… nach S5 offen, aber nie Spiel des Tages (braucht zwei)",/<button class="gtl" data-go="duell">/.test(run(`app.innerHTML`))&&run(`(()=>{for(let d=1;d<=60;d++){const x=gDay("2026-"+(d>30?"12":"11")+"-"+String((d-1)%30+1).padStart(2,"0"));if(!x||x.k==="duell")return false}return true})()`));
+run(`startDuell()`);let t39=run(`app.innerHTML`);
+ok("… Startseite erklärt die Regeln mit Seil und A/B",run(`view`)==="duell"&&/Zu zweit an einem Handy/.test(t39)&&/<div class="tzr demo"/.test(t39)&&/Vier Schritte gewinnen/.test(t39));
+run(`tzGo()`);t39=run(`app.innerHTML`);
+ok("… Countdown: Zahl auf der Bühne, Antworten noch leer und gesperrt",run(`TZ.cd===3&&!TZ.w`)&&/<span class="tzcd" role="status" aria-live="assertive">3<\/span>/.test(t39)&&(t39.match(/data-tz="\d-\d" disabled/g)||[]).length===8);
+run(`tzTap(0,0)`);ok("… während des Countdowns zählt kein Tipp",run(`TZ.pts[0]===0&&TZ.ans[0]===-1`));
+run(`tzNext()`);t39=run(`app.innerHTML`);
+ok("… Wort für beide, jeder hat dieselben vier Antworten (eigene Reihenfolge)",run(`TZ.n===1&&TZ.cd===0&&TZ.o.every(c=>c.length===4&&c.includes(TZ.w))&&TZ.o[0].map(o=>o.i).sort().join()===TZ.o[1].map(o=>o.i).sort().join()`)&&new RegExp('lang="ar" data-fq>'+run(`TZ.w.ar`)).test(t39)&&(t39.match(/data-tz="\d-\d" >/g)||[]).length===8);
+const tzR=(pl,good)=>run(`TZ.o[${pl}].findIndex(o=>${good?"o===TZ.w":"o!==TZ.w"})`);
+run(`tzTap(0,${tzR(0,true)})`);
+ok("… A tippt zuerst richtig: Punkt für A, Seil einen Schritt nach links, gelöst",run(`TZ.pts[0]===1&&TZ.p===-1&&TZ.solved&&TZ.last===0`)&&/class="tzr pa"/.test(run(`app.innerHTML`)));
+run(`tzTap(1,${tzR(1,true)})`);ok("… B kommt danach zu spät",run(`TZ.pts[1]===0&&TZ.p===-1`));
+run(`tzNext()`);run(`tzTap(0,${tzR(0,false)})`);
+ok("… A tippt falsch: bei diesem Wort raus, noch nicht gelöst",run(`!TZ.solved&&TZ.ans[0]!==-1`)&&/<div class="tzp a out">/.test(run(`app.innerHTML`))&&run(`(tzTap(0,TZ.o[0].indexOf(TZ.w)),TZ.pts[0]===1)`));
+run(`tzTap(1,${tzR(1,true)})`);ok("… B tippt richtig: Seil zurück zur Mitte",run(`TZ.pts[1]===1&&TZ.p===0`));
+run(`tzNext()`);run(`tzTap(0,${tzR(0,false)});tzTap(1,${tzR(1,false)})`);t39=run(`app.innerHTML`);
+ok("… beide falsch: aufgelöst ohne Punkt, Wort mit Bedeutung steht da",run(`TZ.solved&&TZ.last===-1&&TZ.p===0&&TZ.pts.join()==="1,1"`)&&/<p class="tzx" role="status"><span class="ar" lang="ar">/.test(t39)&&(t39.match(/class="opt ok"/g)||[]).length===2);
+run(`for(let k=0;k<3;k++){tzNext();tzTap(1,TZ.o[1].indexOf(TZ.w))}`);
+ok("… drei Schritte bei B: Matchball",run(`TZ.p===3`)&&/<span class="tzm b">Matchball B<\/span>/.test(run(`app.innerHTML`)));
+run(`globalThis.x39=S.xp||0;tzNext();tzTap(1,TZ.o[1].indexOf(TZ.w));tzNext()`);t39=run(`app.innerHTML`);
+ok("… vier Schritte: B gewinnt, gezählt, 5 XP plus 1 je richtige Antwort",run(`TZ.end&&TZ.win===1&&S.st.duell===1&&TZ.xp===5+TZ.ok&&TZ.ok===6`)&&run(`S.xp-x39`)===11&&/<h1>B gewinnt!<\/h1><b class="gxp">\+11 XP<\/b><p class="gen">Vier Schritte zu B/.test(t39));
+run(`tzGo();TZ.n=TZMAX;TZ.p=0;tzNext()`);ok("… nach 24 Wörtern gleich auf: unentschieden",run(`TZ.end&&TZ.win===-1`)&&/<h1>Unentschieden<\/h1>/.test(run(`app.innerHTML`)));
+run(`tzGo();TZ.n=TZMAX;TZ.p=-1;tzNext()`);ok("… nach 24 Wörtern vorn: gewonnen",run(`TZ.win===0`)&&/Nach 24 Wörtern vorn/.test(run(`app.innerHTML`)));
+ok("… Kachel zählt Partien",/Zu zweit an einem Handy · 3 Partien/.test(run(`(games(),app.innerHTML)`)));
+run(`S.badges=[];S.st.funken=29;S.st.rakete=19;S.st.duell=0;checkBadges()`);
+ok("Abzeichen: Funkenmeister, Raketenpilot, Tauzieher erst ab 30, 20 und einer Partie",run(`!["funken","rakete","duell"].some(b=>S.badges.includes(b))`)&&run(`(S.st.funken=30,S.st.rakete=20,S.st.duell=1,checkBadges(),["funken","rakete","duell"].every(b=>S.badges.includes(b)))`)&&run(`BADGES.filter(b=>["funken","rakete","duell"].includes(b.id)).map(b=>b.n).join()`)==="Funkenmeister,Raketenpilot,Tauzieher");
+ok("Navigation: Ansichten ohne Leiste, eigener Klang, Start über data-go",/"suq","funken","rakete","duell"\]\.includes\(view\)/.test(html)&&/if\(t==="funken"\)return startFunken\(\);if\(t==="rakete"\)return startRakete\(\);if\(t==="duell"\)return startDuell\(\)/.test(html)&&run(`["funken","rakete","duell"].every(t=>SUB.games.includes(t)&&sndOf(t)==="game")`));
+ok("Wusch-Klang für Spurwechsel und Wisch gehört zur Klangfamilie (eigener Bus, leise)",run(`typeof SND.wusch==="function"&&SNDG.wusch<SNDG.flip*2.4&&SNDD.wusch>0&&PRI.wusch===0`));
+run(`U="gast";loadS()`);
+
+// ---------- 40. Design-Feinschliff ----------
 {
   const css=html.slice(html.indexOf("<style>"),html.indexOf("</style>"));
   ok("Start: Serie und XP im Kopf ohne die Abstände der Kategorien-Leiste (die Begrüßung springt nicht)",/\.hhd \.chips\{margin:0;padding:0;overflow:visible/.test(css));

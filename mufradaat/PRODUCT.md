@@ -51,7 +51,7 @@ The following are directions in progress, not promises yet:
 - A lesson is 12–15 mixed tasks, about 3–5 minutes. The types run from recognising and building to producing: hearing letters, picking meanings, building sentences from tiles, choosing endings, dictation with an Arabic keyboard, and repeating aloud. Speech recognition starts at S8, where the browser supports it.
 - Grammar arrives as a short tip card before the first task that needs it: one example and one sentence of explanation, in plain German.
 - Spaced repetition runs in the background. Due words appear on the home screen ("Heute dran", "Wiederholen").
-- Around the path: games (Paare zuordnen, Wort-Blitz, Hörübung), flashcards, a searchable word list, favourites, an alphabet reference, badges, stats, and daily XP goals with a streak.
+- Around the path: games (letters: Buchstaben-Regen, Kalligrafie, Buchstaben-Magnet, Funkenflug; words and sentences: Hörübung, Paare zuordnen, Wort-Blitz, Satz-Zug, Im Suq, Wort-Rakete, and Tauziehen for two players on one phone), flashcards, a searchable word list, favourites, an alphabet reference, badges, stats, and daily XP goals with a streak.
 - Content is made stage by stage. Claude drafts it, the owner proofreads every sentence, and then audio is generated on the owner's PC with `tools/gen-audio.mjs`.
 
 ## Capabilities and Constraints
