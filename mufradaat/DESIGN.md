@@ -351,7 +351,7 @@ A warm, earthy neutral base (paper, cream, sand, sage) under a single deep green
 | Step | Size | Line height | Use |
 |---|---|---|---|
 | `--ar1` | 20px | 1.4 | Only inside small round shapes: long words on path stops, level and badge circles, the preview list |
-| `--ar2` | 24px | 1.5 | Running text and lists: word-list rows, Arabic inside tips and feedback, the Arabic input |
+| `--ar2` | 24px | 1.5 | Running text and lists: word-list rows, Arabic inside tips and feedback, the Arabic input (inside a tip's German text at line height 1.4 as an inline block that does not stretch its line, so all lines stay 27px apart) |
 | `--ar3` | 30px | 1.5 | Tiles and answers: Arabic options, builder tiles, pairs, Etappe and unit names, goal sentences on signs |
 | `--ar4` | 44px | 1.5 | Featured words: the next stop on Start, letter forms, the goal sentence inside a lesson, the tip-card header |
 | `--ar5` | 64px | 1.4 | Display: flashcard, lesson word, Wort-Blitz and quiz word |
@@ -451,18 +451,19 @@ A 32px-rounded card on a stack of two offset cards (deck1, deck2). The front is 
 - **Progress head** (Alphabet, Abzeichen): "x von y" at 20px/900, a sage label and a full-width 10px mint bar.
 - **Alphabet tiles:** white 20px tiles with a Line Depth edge. Letters already known for sure get a Mist fill, a Mist Depth edge and a green letter.
 - **Letter page:** a Logo Night head card with a Night Circle. The letter is mint at `--ar6`, name and sound in white, the hint in Night Mute, and a mint "Name anhören" button with a Ribbon Depth edge. Form cards have depth. Previous and next are white pills that also show the neighbouring letter in green.
-- **Word list:** a search field with a magnifier (16px corners) and category chips (active: Logo Night with mint text, or the reverse in dark mode, with `aria-pressed`). A word count follows, then word rows with a 3px Line Depth edge. Empty states (no results, no favourites) are a card with a green icon and, where it helps, a way onward.
+- **Word list:** a search field with a magnifier (16px corners) and category chips (active: Logo Night with mint text, or the reverse in dark mode, with `aria-pressed`). A word count follows, then word rows with a 3px Line Depth edge. Arabic inside a note (plural, the form for women) is set in Naskh at 1.45em with `lang="ar"`, never in the 13px Latin face. Empty states (no results, no favourites) are a card with a green icon and, where it helps, a way onward; the empty favourites page shows its hint only once, in that card.
 - **Badges:** earned badges are Logo Night cards with a mint-ringed medal on Night 2. Locked badges are transparent with a dashed Line Depth border. Section titles use the uppercase section style.
-- **Menu items:** 20px-rounded white rows (64px tall) with a 40px icon tile (12px corners, mist fill, green icon) on the left and a chevron on the right; locked items use a hairline-grey tile.
+- **Menu items:** 20px-rounded white rows (64px tall) with a 40px icon tile (12px corners, mist fill, green icon) on the left and a chevron on the right; locked items use a hairline-grey tile. No two rows share an icon: Alphabet shows the letters أ ب (`--ar1`) instead of an icon. Counts only include things that still exist (badges of removed sections do not count).
 - **Section titles** (settings, statistics): 13px extra bold, uppercase, 0.06em tracking, sage grey.
 - **Settings groups:** 20px-rounded cards with 52px rows; switches are 50×30 with a white knob, green when on (Logo Mint in dark mode).
-- **Statistic tiles:** numbers at 28px/900.
+- **Statistic tiles:** numbers at 28px/900, the unit below in singular or plural (1 Wort, 1 Tag). In the learning history, days without practice are a hairline-coloured base line, active days mint.
+- **Danger row:** "Löschen" in the reset row is brick red, like "Alles löschen" in the dialog. The dialog lists only what actually exists (no "0 Favoriten").
 
 ### Navigation
 A cream bar fixed to the bottom with a hairline top border. It has five tabs (Start, Spiele, Lernpfad, Karten, Mehr), each a 20px line icon over a 12px label. Inactive tabs are sage grey, and the active tab is green and bold. The centre **Lernpfad** tab is a 46px Logo Night orb with a mint icon, raised out of the bar, wrapped in a 5px card-coloured ring and resting on a 4px Ribbon Depth edge (in dark mode a Logo Mint orb with a night icon). When active, its icon scales in (0.9 → 1) and gains a soft mint glow; the label turns green. Violet is no longer used.
 
 ### Start (next stop)
-- **Header:** the transparent logo (130px, no outline) on the left; on the right a saffron streak chip (only with a streak) and a mint XP chip (only with XP).
+- **Header:** the transparent logo (130px, no outline) on the left; on the right a saffron streak chip (only with a streak) and a mint XP chip (only with XP). The chips never change the header height, so the greeting stays put when they appear.
 - **Greeting:** 30px, weight 900.
 - **Next stop:** a Logo Night card (20px corners) with a Night Circle in the top right corner: a mint label, the stop's Arabic in mint (`--ar5`, long words `--ar4`), a white title, a Night Mute line and one mint button with a night label and Ribbon Depth edge. In dark mode it gets a 1px hairline.
 - **Goal of the Etappe:** a white card with one segment per lesson; finished lessons are mint.
@@ -475,7 +476,7 @@ A cream bar fixed to the bottom with a hairline top border. It has five tabs (St
 - **Result screen (all games):** one shared layout. A Logo Night card with a Night Circle shows the title in white (24px), the XP in mint at 44px/900 (it pops in) and an optional Night Mute note (record, bonus, no mistakes). Below it come the round's numbers as statistic tiles, then "Nochmal" and "Zu den Spielen".
 - **Hörübung:** a 170px Logo Night stage with a 66px mint speaker disc (night icon, Ribbon Depth edge) labelled "Anhören". After answering, the word appears in mint at `--ar5` with its transliteration, and the speaker shrinks into a small "Nochmal hören" row. Progress shows as segments.
 - **Paare:** the time is a white pill at the top right, and progress shows as six segments above the grid.
-- **Wort-Blitz:** the start screen shows two large choice cards: "60 Sekunden" as a Logo Night card with the record in a mint pill, and "Ohne Zeitlimit" as a white card. Both have a 44px icon tile and depth. The word stands in mint on a Logo Night stage.
+- **Wort-Blitz:** the start screen shows two large choice cards: "60 Sekunden" as a Logo Night card with the record in a mint pill ("Noch kein Rekord" before the first timed round; the game tile mentions the record only once there is one), and "Ohne Zeitlimit" as a white card. Both have a 44px icon tile and depth. The word stands in mint on a Logo Night stage.
 - **Buchstaben-Regen:** a Logo Night "Fang: name · sound" pill (speaker in mint, tap to hear again), the score in green at 24px/900 and a full-width field with a mist ground strip. Letters are 64px white discs with a 5px Line Depth edge, in five fixed lanes so they never overlap. A hit turns the disc mint and makes it pop; a miss tints it brick red and shakes the field. Under reduced motion they fall in 9s.
 - **Kalligrafie:** a scrolling row of 52px letter chips (stars below, the active one Logo Night with a mint letter) and a square white drawing card (32px corners). The shape lies there as a wide Deck track with a running mint dash line, a Logo Night "1" at the start and an arrow beside it. The learner's stroke is 20px mint, turning green when it passes and brick red when it fails. Dots to place show as dashed mint rings and fill with ink. The score combines how close the stroke stays, how much of the shape it covers and whether it starts at the right end (otherwise ×0.7); 45 % passes, 60 % earns two stars and 80 % three.
 - **Buchstaben-Magnet:** a white "Du hörst: transliteration · meaning" pill with a green speaker, then a 190px Logo Night stage with a Night Circle. Inside it, the word being built appears in mint at `--ar5`, and the browser joins the letters as they dock, with a short snap. Under the word is one slot line per letter (Night Track, mint when filled). The letter bank holds 64px white tiles with a 5px Line Depth edge, laid out right to left; used tiles fade to 25 %. A wrong tile shakes the stage once. When the word is done, a row of form cards (right to left) shows each letter's form and name with Anfang/Mitte/Ende/allein, and a hint explains letters that only join to the right.
@@ -505,9 +506,9 @@ The learning path is drawn as an SVG road of 30px stroke, with footprints along 
 
 In dark mode the roads are deep tints of the same family (S8 is Night 2 with a mint edge) and the accents are light, with mint on S8.
 
-- **Stops:** 58px circles with a 3px accent border and a 4px bottom edge, showing the stop's own Arabic word at `--ar2` (long words at `--ar1`; too wide, the circle becomes a pill). **Done** stops are Logo Mint with a night check and a Ribbon Depth edge. The **current** stop is a 76px Logo Night pill with its Arabic in mint (`--ar3`), a 6px mist halo and a 7px Ribbon Depth edge (Logo Mint with night text in dark mode). **Locked** stops use a dashed border at 50% accent, with muted text and no edge.
+- **Stops:** 58px circles with a 3px accent border and a 4px bottom edge, showing the stop's own Arabic word at `--ar2` (long words at `--ar1`; too wide, the circle becomes a pill). **Done** stops are Logo Mint with a night check and a Ribbon Depth edge. The **current** stop is a Logo Night pill at least 76px wide (as wide as its word), centred on its waypoint, with its Arabic in mint (`--ar3`), a 6px mist halo and a 7px Ribbon Depth edge (Logo Mint with night text in dark mode). Its label sits 12px beside the halo, never touching it. **Locked** stops use a dashed border at 50% accent, with muted text and no edge.
 - **Unit header:** the Arabic unit name at 30px in the accent colour, then "Einheit N · Title" and a 13px description.
-- **Goal sign:** the unit's longest sentence in Naskh at `--ar3`. Words already begun turn green and unknown ones are muted. Below it sit the German translation, a listen link and a "Sätze üben" button.
+- **Goal sign:** the unit's longest sentence in Naskh at `--ar3` (a question shows its ؟, on the sign and on Start). Words already begun turn green and unknown ones are muted. Below it sit the German translation, a listen link and a "Sätze üben" button.
 
 ### Stage 2 (Sprache lernen)
 - **Stage band:** at the start of every further stage the path shows a Logo Night card spanning the width. It carries the stage's Arabic title in mint (`--ar3`), "Stufe 2 · Sprache lernen" at 18px/900 and a Night Mute line. While the stage is still locked, it adds a mint "Ich kann schon lesen" pill that opens the placement test. When only the previous stage's final test is left, the pill reads "Zum Abschlusstest" and opens that test instead, because the placement test cannot replace it. Jump tests appear only in stage 1.
@@ -523,6 +524,7 @@ In dark mode the roads are deep tints of the same family (S8 is Night 2 with a m
 ### Layers and safe areas
 - The bottom tab bar sits on layer 20, above everything on the path and the pages (stage band, jump pills: layer 1). Confetti (50), toasts and the update banner (60), the level effect (70) and the splash screen sit above it.
 - Content starts below the iPhone status bar (`env(safe-area-inset-top)` on top of the 20px main padding). A fixed strip in the page background covers that area, so scrolled content never runs under the clock.
+- `color-scheme` follows the theme (light, or dark via both dark selectors), so browser controls such as the time picker, select menus and scrollbars match. In dark mode the Satz-Zug locomotive uses Line Depth so it stands out from the night.
 
 ### Sound
 One small sound family, "Holz und Glocke": a soft mallet (a sine fundamental with quiet 2nd and 3rd partials, a 3–6ms attack and an exponential decay). Its notes come from C major pentatonic, the same ladder as the "correct" chime. No square or saw waves and no standard beeps. Everything is synthesised with Web Audio, with no files.

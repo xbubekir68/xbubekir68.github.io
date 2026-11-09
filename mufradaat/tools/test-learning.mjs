@@ -1103,7 +1103,7 @@ run(`startPairs()`);let p30=run(`app.innerHTML`);
 ok("Paare: Zeit als Chip, Fortschritt in sechs Segmenten",/<span class="tch" id="pt">/.test(p30)&&(p30.match(/<div class="zseg pgs"[^>]*>(.*?)<\/div>/)||[,""])[1].match(/<i/g).length===6);
 run(`G.miss=0;G.done=G.L.map(w=>w.i);finishPairs();pairs()`);ok("… Ergebnis mit Zeit und Fehlern",/<h1>Geschafft<\/h1><b class="gxp">\+\d+ XP<\/b>/.test(run(`app.innerHTML`))&&/<p class="mute">Zeit<\/p>/.test(run(`app.innerHTML`)));
 run(`clearInterval(gt);startBlitz()`);let b30=run(`app.innerHTML`);
-ok("Wort-Blitz: zwei Wahlkarten (dunkel mit Rekord, hell ohne Zeit)",/<button class="bzc dk" id="bz60">.*Rekord: \d+<\/span><\/button>/s.test(b30)&&/<button class="bzc" id="bzf">.*Ohne Zeitlimit · 20 Wörter/s.test(b30));
+ok("Wort-Blitz: zwei Wahlkarten (dunkel mit Rekord, hell ohne Zeit)",/<button class="bzc dk" id="bz60">.*(?:Rekord: \d+|Noch kein Rekord)<\/span><\/button>/s.test(b30)&&/<button class="bzc" id="bzf">.*Ohne Zeitlimit · 20 Wörter/s.test(b30));
 run(`startBlitz(true)`);ok("… das Wort steht auf einer dunklen Bühne",/<div class="bzb"><span class="mgc"[^>]*><\/span><div class="ar bzw" lang="ar" data-fq>/.test(run(`app.innerHTML`)));
 ok("Ergebnis-Seite: alle zehn Spiele mit Runden nutzen gEnd",["startListen","startPairs","startBlitz(B.free)","rGo","startMagnet","startZug","startSuq","rkGo","fkGo","tzGo"].every(f=>html.includes(f+");"))&&(html.match(/return gEnd\(/g)||[]).length===10);
 run(`clearInterval(gt);U="alt30b";loadS();S.badges=[];checkBadges()`);
@@ -1184,7 +1184,7 @@ run(`playK([]);`);ok("… Lektion geschafft zeigt die Gespräche",/Lektion gesch
 run(`U="st33b";loadS();for(const l of KL.filter(l=>l.e[0]==="s"))S.kp.d[l.id]=1;S.box={};globalThis.L37=KL.find(l=>l.id==="a2-5");globalThis.T37=kGen(L37,true)`);
 ok("Etappe 2 „Wer ist das?“: Namen sind keine Wörter, Sätze mit وَ und أَ werden gebaut wie geschrieben",run(`T37.filter(x=>x.sk).every(x=>CS[x.sk].e==="a2")`)&&run(`CS.a2s23.t.map(x=>x.a).join("|")`)==="وَذَلِكَ|حَامِدٌ"&&run(`CS.a2s24.t[0].i`)==="a+#hamid");
 run(`view="path";ui.hint=null;path()`);let p33=run(`app.innerHTML`);
-ok("Lernpfad: Band von Stufe 2, Etappe 1 und 2 mit Zahl statt Kürzel, keine Sprungtests, Ziel als Satz",/class="stb"/.test(p33)&&/<b>Etappe 1 · Was ist das\?<\/b><small>6 Lektionen/.test(p33)&&/<b>Etappe 2 · Das dort<\/b>/.test(p33)&&!/data-kj="a\d"/.test(p33)&&/<div class="sgn kzl[^"]*"[^>]*><span class="eta">Ziel der Etappe<\/span>\s*<button class="sent ar[^"]*" lang="ar" data-kz="a1"[^>]*>أَهَذَا قَلَمٌ<\/button>/.test(p33));
+ok("Lernpfad: Band von Stufe 2, Etappe 1 und 2 mit Zahl statt Kürzel, keine Sprungtests, Ziel als Satz",/class="stb"/.test(p33)&&/<b>Etappe 1 · Was ist das\?<\/b><small>6 Lektionen/.test(p33)&&/<b>Etappe 2 · Das dort<\/b>/.test(p33)&&!/data-kj="a\d"/.test(p33)&&/<div class="sgn kzl[^"]*"[^>]*><span class="eta">Ziel der Etappe<\/span>\s*<button class="sent ar[^"]*" lang="ar" data-kz="a1"[^>]*>أَهَذَا قَلَمٌ؟<\/button>/.test(p33)); // Fragesatz mit „؟“ (zAr)
 ok("… Kopf zeigt Stufe 2, Stationen mit arabischen Wörtern, „Demnächst“ nennt Etappe 3 und 4",/class="kph"><span>Stufe 2 · Sprache lernen<\/span>/.test(p33)&&/data-kl="a1-2"[^>]*><span class="nd"><span class="ar" lang="ar">هَذَا<\/span>/.test(p33)&&/Etappe 3 „Der, die, das“ und Etappe 4 „Wo ist es\?“/.test(p33));
 run(`kSnapDel();home()`);let h33=run(`app.innerHTML`);
 ok("Startseite: nächster Halt in Stufe 2 mit Zahl der neuen Wörter",/Etappe 1 · Was ist das\?/.test(h33)&&/Lektion 1: Im Zimmer/.test(h33)&&/7 neue Wörter/.test(h33),h33.match(/<div class="card nh dk">[\s\S]{0,500}/)&&h33.match(/<div class="card nh dk">[\s\S]{0,500}/)[0]);
@@ -1365,6 +1365,44 @@ ok("Abzeichen: Funkenmeister, Raketenpilot, Tauzieher erst ab 30, 20 und einer P
 ok("Navigation: Ansichten ohne Leiste, eigener Klang, Start über data-go",/"suq","funken","rakete","duell"\]\.includes\(view\)/.test(html)&&/if\(t==="funken"\)return startFunken\(\);if\(t==="rakete"\)return startRakete\(\);if\(t==="duell"\)return startDuell\(\)/.test(html)&&run(`["funken","rakete","duell"].every(t=>SUB.games.includes(t)&&sndOf(t)==="game")`));
 ok("Wusch-Klang für Spurwechsel und Wisch gehört zur Klangfamilie (eigener Bus, leise)",run(`typeof SND.wusch==="function"&&SNDG.wusch<SNDG.flip*2.4&&SNDD.wusch>0&&PRI.wusch===0`));
 run(`U="gast";loadS()`);
+
+// ---------- 40. Design-Feinschliff ----------
+{
+  const css=html.slice(html.indexOf("<style>"),html.indexOf("</style>"));
+  ok("Start: Serie und XP im Kopf ohne die Abstände der Kategorien-Leiste (die Begrüßung springt nicht)",/\.hhd \.chips\{margin:0;padding:0;overflow:visible/.test(css));
+  ok("Lernpfad: jede Station so breit wie ihr Kreis (mindestens 64 px), die aktuelle mittig auf dem Weg, Beschriftung 12 px daneben",/\n\.pn\{position:absolute;width:auto;min-width:64px;height:64px;transform:translateX\(-50%\)/.test(css)&&/\.pn\.cur\{width:auto;min-width:64px;height:76px;margin-top:-6px\}/.test(css)&&/\.pn\.cur \.lb\.r\{left:calc\(100% \+ 12px\)\}/.test(css)&&/\.pn\.cur \.lb\.l\{right:calc\(100% \+ 12px\)\}/.test(css));
+  ok("Dunkles Design: Bedienelemente des Browsers im Farbschema, Lok hebt sich ab (beide Dark-Selektoren)",/:root\{color-scheme:light\}/.test(css)&&/:root:not\(\[data-theme="light"\]\)\{color-scheme:dark\}/.test(css)&&/:root\[data-theme="dark"\]\{color-scheme:dark\}/.test(css)
+    &&/:root:not\(\[data-theme="light"\]\) \.zgl,[^{]*\{background:var\(--line-d\)\}/.test(css)&&/:root\[data-theme="dark"\] \.zgl,[^{]*\{background:var\(--line-d\)\}/.test(css));
+  ok("Tipp-Karten: Beispiele im Satz mit gleicher Zeilenhöhe, Einstieg: Unterzeilen schlanker, Lernverlauf: leere Tage als Grundlinie",/\.ktip p\{[^}]*line-height:1\.8/.test(css)&&/\.ktip p \.ar\{font-size:var\(--ar2\);line-height:1\.4;display:inline-block/.test(css)&&/\.obo small\{[^}]*font-weight:500/.test(css)&&/\.chart i\.z\{background:var\(--line\)\}/.test(css));
+  run(`U="f37";loadS();S.np=true;S.days[today()]=1;S.streak=1;S.last=today();S.box={kitab:2};view="stats";stats()`);let s37=run(`app.innerHTML`);
+  ok("Statistik: „1 Wort“, „1 Tag“ und „1 Wort“ gelernt",/Heute geübt<\/p><b>1<\/b><span class="mute">Wort<\/span>/.test(s37)&&/Aktuelle Serie<\/p><b>1<\/b><span class="mute">Tag<\/span>/.test(s37)&&/Gelernt gesamt<\/p><b>1<\/b><span class="mute">Wort<\/span>/.test(s37));
+  run(`S.days[today()]=2;S.streak=2;S.box={kitab:2,bayt:2};stats()`);s37=run(`app.innerHTML`);
+  ok("… mehrere: „2 Wörter“, „2 Tage“",/Heute geübt<\/p><b>2<\/b><span class="mute">Wörter<\/span>/.test(s37)&&/Aktuelle Serie<\/p><b>2<\/b><span class="mute">Tage<\/span>/.test(s37)&&/Gelernt gesamt<\/p><b>2<\/b><span class="mute">Wörter<\/span>/.test(s37));
+  ok("… Lernverlauf: Tage ohne Übung tragen die Klasse z, der heutige nicht",/<i class="z" style="height:0px"><\/i>/.test(s37)&&!/<i class="z" style="height:80px">/.test(s37)&&/<i style="height:80px"><\/i>/.test(s37));
+  run(`S.badges=["first","e-w3","st2","e-a1"];view="more";more()`);let m37=run(`app.innerHTML`);
+  ok("Abzeichen-Zahl: entfernte Abzeichen (W1–W10, „Sprache gelernt“) zählen nicht mit",run(`badgeN()`)===2&&m37.includes(`2 von ${run(`BADGES.length`)} freigeschaltet`));
+  ok("Mehr: Alphabet zeigt die Buchstaben أ ب, Wortliste das Listen-Symbol",/data-go="alphabet"><span class="ic"><span class="ar" lang="ar">أ ب<\/span><\/span>/.test(m37)&&/data-go="list"><span class="ic"><svg/.test(m37)&&/\.item \.ic \.ar\{font-size:var\(--ar1\);line-height:1\.4/.test(css));
+  ok("Wortliste: Arabisch im Hinweis als arabischer Text in lesbarer Größe",run(`wordRow(BY.kitab)`).includes(`Plural: <span class="ar" lang="ar">كُتُب</span>`)&&/\.w \.tr \.ar\{font-size:1\.45em;line-height:1\.4;min-width:0/.test(css));
+  run(`S.st.blitz=0;clearInterval(gt);startBlitz()`);let z37=run(`app.innerHTML`);
+  ok("Wort-Blitz ohne Rekord: Kachel ohne „Rekord: 0“, Wahlkarte „Noch kein Rekord“",!/Rekord/.test(run(`GAMES.find(g=>g.k==="blitz").d()`))&&/<span class="bzr">Noch kein Rekord<\/span>/.test(z37));
+  run(`S.st.blitz=12;startBlitz()`);z37=run(`app.innerHTML`);
+  ok("… mit Rekord: „Rekord: 12 Treffer“ und „Rekord: 12“",/Rekord: 12 Treffer$/.test(run(`GAMES.find(g=>g.k==="blitz").d()`))&&/<span class="bzr">Rekord: 12<\/span>/.test(z37));
+  run(`ui.from="more"`);const t37a=[run(`navTab("alphabet")`),run(`navTab("letter")`),run(`navTab("list")`),run(`navTab("stats")`)];
+  run(`ui.from="home"`);const t37b=[run(`navTab("alphabet")`),run(`navTab("letter")`),run(`navTab("list")`),run(`navTab("stats")`)];
+  run(`ui.from="path"`);const t37c=[run(`navTab("alphabet")`),run(`navTab("klek")`),run(`navTab("pairs")`),run(`navTab("badges")`),run(`navTab("games")`)];
+  ok("Leiste markiert den Tab, zu dem der Zurück-Pfeil führt",t37a.join()==="more,more,more,more"&&t37b.join()==="home,home,home,home"&&t37c.join()==="path,path,games,more,games",[t37a,t37b,t37c]);
+  run(`S.fav=[];fav()`);let f37=run(`app.innerHTML`);run(`S.fav=["kitab"];fav()`);let f37b=run(`app.innerHTML`);
+  ok("Favoriten leer: Hinweis nur in der Karte, mit Favoriten oben",!/Tippe bei den Karteikarten/.test(f37)&&/Noch keine Favoriten/.test(f37)&&/Tippe bei den Karteikarten/.test(f37b));
+  run(`view="settings";settings()`);ok("Einstellungen: „Löschen“ in Ziegelrot",/id="rs"[^>]*><span>Fortschritt zurücksetzen<\/span><span class="setx">Löschen<\/span>/.test(run(`app.innerHTML`))&&/\.setx\{color:var\(--bad\)/.test(css));
+  run(`globalThis.__dh="";globalThis.__oc=document.createElement;document.createElement=()=>({set innerHTML(v){__dh=v},className:"",setAttribute(){},addEventListener(){},showModal(){},close(){},remove(){},querySelector:()=>({focus(){}})})`);
+  run(`S.xp=30;S.streak=0;S.last="";S.badges=[];S.fav=[];S.alpha={};S.box={};S.kp={d:{}};resetAsk()`);let d37=run(`__dh`);
+  ok("Zurücksetzen-Dialog: nur Posten, die es gibt (30 XP, keine Nullen)",/<li><b>30<\/b> XP<\/li>/.test(d37)&&!/<b>0<\/b>/.test(d37)&&(d37.match(/<li>/g)||[]).length===1,d37.match(/<ul>.*<\/ul>/s)&&d37.match(/<ul>.*<\/ul>/s)[0]);
+  run(`S.xp=0;resetAsk()`);ok("… ohne Lernstand: ein Satz statt einer leeren Liste",/Bisher ist noch kein Lernstand gespeichert/.test(run(`__dh`))&&!/<ul>/.test(run(`__dh`)));
+  run(`document.createElement=__oc`);
+  ok("Ziel-Sätze: Fragen zeigen „؟“, andere Sätze bleiben, wie sie sind",run(`zAr(KE.s6.ziel)`)==="مِنْ أَيْنَ أَنْتَ؟"&&run(`zAr(KE.a1.ziel)`)==="أَهَذَا قَلَمٌ؟"&&run(`zAr(KE.s3.ziel)===KE.s3.ziel.ar&&zAr(KE.a2.ziel)===KE.a2.ziel.ar`));
+  run(`view="path";ui.hint=null;path()`);ok("… auch auf dem Schild im Lernpfad",/data-kz="s6"[^>]*>مِنْ أَيْنَ أَنْتَ؟<\/button>/.test(run(`app.innerHTML`)));
+  run(`U="gast";loadS()`);
+}
 
 console.log("\n"+pass+" OK, "+fail+" FAIL");
 process.exit(fail?1:0);
