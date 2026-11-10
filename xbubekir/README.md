@@ -8,6 +8,7 @@ Persönliche KI als Web-App: https://xbubekir68.github.io/xbubekir/
 - **Eigene xbubekir-KI** im Browser (WebLLM, nachtrainiertes Qwen3-1.7B, siehe `training/`): kostenlos und offline, aber klein.
 - Einstellungen und Chats bleiben im Browser auf dem eigenen Gerät (Einstellungen in localStorage, Chats in IndexedDB). Eigene Schlüssel gehen nur an den jeweiligen Anbieter.
 - **Eigener Server** (Supabase-Projekt „xbubekir“, getrennt von Mufradaat): Die Edge Functions `server/gemini` und `server/openrouter` halten die Schlüssel als Secrets (`GEMINI_API_KEY`, `OPENROUTER_API_KEY`) und lassen nur Konten aus `public.allowed_users` durch. `openrouter` legt Modelle, Länge und erlaubte Anbieter fest (keine Datenspeicherung, keine Anbieter mit Sitz in China, keine fp4-Fassungen).
+- **mufradaat.AI** (powered by xbu): Die Edge Function `server/mufradaat` im selben Projekt bedient den Übungspartner in Mufradaat mit DeepSeek V4.1 Flash über OpenRouter (gleicher Schlüssel, gleiche Anbieter-Regeln). Sie lässt angemeldete Mufradaat-Konten durch (geprüft bei der Anmeldung von Mufradaat), legt die Anweisung an die KI fest und zählt pro Konto und Tag mit (60 Nachrichten, 600 für alle; Tabelle und Funktionen in `server/mufradaat/zaehler.sql`).
 - „Über dich“ und „Wie xbubekir antworten soll“ landen im System-Prompt. Anbieter, Modell, System-Prompt und Werkzeuge werden pro Chat festgehalten, damit die gespeicherten Denkblöcke früherer Antworten gültig bleiben.
 - Als App installierbar (Teilen → „Zum Home-Bildschirm“), die Oberfläche lädt auch offline.
 
