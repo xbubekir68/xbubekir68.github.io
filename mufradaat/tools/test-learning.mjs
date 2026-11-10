@@ -1404,5 +1404,36 @@ run(`U="gast";loadS()`);
   run(`U="gast";loadS()`);
 }
 
+// ---------- 41. mufradaat.AI: Übungspartner mit DeepSeek über den Server von xbubekir ----------
+{
+  const csp=(html.match(/http-equiv="Content-Security-Policy" content="([^"]+)"/)||[])[1]||"";
+  ok("CSP: Server von xbubekir erlaubt, kein WebAssembly, kein Hugging Face",/connect-src[^;]*https:\/\/ydasoikczdjjdtdarrpx\.supabase\.co/.test(csp)&&!/wasm-unsafe-eval|huggingface/.test(csp),csp);
+  ok("Übungspartner gehört zum Tab Spiele, ohne Leiste",run(`SUB.games.includes("ki")&&navTab("ki")==="games"`)&&/\|\|view==="ki"\|\|/.test(html));
+  run(`U="ki41";loadS();S.np=true;S.ob={z:"lesen",d:today()};S.kp={d:{"s1-1":1}};ui.fl=null`);
+  ok("Gesperrt bis S3 wie die Karteikarten, mit Grund in der Kachel",run(`fGate("ki")`)==="s3"&&/<button class="gtl kitl lock" data-fl="ki"[^>]*>.*Öffnet sich nach Etappe S3/.test(run(`kiTile()`)));
+  run(`S.aok="skip"`);ok("… „kann schon lesen“ öffnet ihn",run(`fGate("ki")`)===null&&/<button class="gtl kitl" data-go="ki">/.test(run(`kiTile()`)));
+  run(`games()`);ok("… Kachel unter „Gespräch“ in den Spielen",/<p class="gh">Gespräch<\/p><button class="gtl kitl" data-go="ki">/.test(run(`app.innerHTML`)));
+  run(`U="gast";UID=null;loadS();S.aok="skip";view="ki";ki()`);let g41=run(`app.innerHTML`);
+  ok("Gast: Hinweis auf ein Konto statt Gespräch",/id="kiin"/.test(g41)&&!/id="kii"/.test(g41));
+  // Antworten zerlegen
+  const P=t=>run(`JSON.stringify(kiParse(${JSON.stringify(t)}))`);
+  ok("Antwort im Format: Arabisch, Umschrift, Deutsch, Rest",P("**هَذَا كِتَابٌ.**\n*hādhā kitābun*\nDas ist ein Buch.\n\nSehr gut! Und jetzt?")===JSON.stringify({ar:"هَذَا كِتَابٌ.",tr:"hādhā kitābun",de:"Das ist ein Buch.",q:"Sehr gut! Und jetzt?"}),P("**هَذَا كِتَابٌ.**\n*hādhā kitābun*\nDas ist ein Buch.\n\nSehr gut! Und jetzt?"));
+  ok("… ohne Format bleibt alles Text",JSON.parse(P("Gern! كِتَاب heißt Buch.")).ar===""&&JSON.parse(P("Gern! كِتَاب heißt Buch.")).q==="Gern! كِتَاب heißt Buch.");
+  ok("… halbe Antwort beim Mitlesen",JSON.parse(P("**هَذَا")).ar==="هَذَا"&&JSON.parse(P("")).q==="");
+  // Was an den Server geht
+  run(`globalThis.__p=kiPayload({t:"Was ist das?",g:"Sprache lernen",w:[BY.kitab,BY.qalam]},[{role:"assistant",content:"x"},...Array.from({length:30},(_,i)=>({role:i%2?"assistant":"user",content:"n"+i+"  "}))])`);
+  const pl=JSON.parse(run(`JSON.stringify(__p)`));
+  ok("Anfrage: nur Thema und Gespräch, Wörter als [Arabisch, Umschrift, Deutsch]",Object.keys(pl).join()==="topic,messages"&&JSON.stringify(pl.topic)===JSON.stringify({t:"Was ist das?",g:"Sprache lernen",w:[["كِتَاب","kitāb","Buch"],["قَلَم","qalam","Stift"]]}),pl.topic);
+  ok("… höchstens 20 Nachrichten, die erste von der Person, Text getrimmt",pl.messages.length<=20&&pl.messages[0].role==="user"&&pl.messages.at(-1).content==="n29"&&pl.messages.every(m=>m.content===m.content.trim()),[pl.messages.length,pl.messages[0]]);
+  ok("… kein System-Prompt aus der App",!/system/.test(run(`JSON.stringify(__p)`)));
+  // Fehlertexte
+  const E=(st,r)=>JSON.parse(run(`JSON.stringify(kiErrText(Object.assign(new Error("Für heute sind deine 60 Nachrichten aufgebraucht."),{status:${st},reason:"${r}"})))`));
+  ok("Fehler: Limit zeigt die Meldung des Servers",E(429,"limit")[0]==="Für heute sind deine 60 Nachrichten aufgebraucht."&&E(429,"limit")[1]==="");
+  ok("… abgemeldet bietet „Neu anmelden“",E(401,"auth")[1]==="acc");
+  ok("… Guthaben oder Anbieter: nicht erreichbar, ohne Details",/nicht erreichbar/.test(E(502,"credit")[0])&&!/Guthaben/.test(E(502,"credit")[0]));
+  ok("Datenschutz nennt Server, OpenRouter und DeepSeek",/KI-Übungspartner \(mufradaat\.AI\)/.test(html)&&/Supabase, Serverstandort EU, Frankfurt/.test(html)&&/OpenRouter \(USA\)/.test(html)&&!/Qwen/.test(html));
+  run(`U="gast";UID=null;loadS()`);
+}
+
 console.log("\n"+pass+" OK, "+fail+" FAIL");
 process.exit(fail?1:0);

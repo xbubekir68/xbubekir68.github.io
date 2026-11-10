@@ -1,5 +1,5 @@
 // Mufradaat Service Worker: App-Hülle offline, Anmeldung/Sync nie aus dem Cache.
-const V="mfr-v55",AC="mfr-audio",SHELL=["./","index.html","manifest.webmanifest","icons/icon-192.png","icons/icon-512.png","icons/favicon-64.png","icons/icon-180.png","fonts/noto-naskh-arabic-500.woff2","fonts/noto-naskh-arabic-700.woff2","brand/mufradaat.webp","brand/mufradaat-nacht.webp","fonts/figtree-latin-400.woff2","fonts/figtree-latin-600.woff2","fonts/figtree-latin-800.woff2","fonts/figtree-latin-900.woff2","fonts/figtree-latin-ext-400.woff2","fonts/figtree-latin-ext-600.woff2","fonts/figtree-latin-ext-800.woff2","fonts/figtree-latin-ext-900.woff2","vendor/supabase.js","kurs/kurs.json","kurs/s1.json","kurs/s2.json","kurs/s3.json","kurs/s4.json","kurs/s5.json","kurs/s6.json","kurs/s7.json","kurs/s8.json","kurs/a1.json","kurs/a2.json"];
+const V="mfr-v56",AC="mfr-audio",SHELL=["./","index.html","manifest.webmanifest","icons/icon-192.png","icons/icon-512.png","icons/favicon-64.png","icons/icon-180.png","fonts/noto-naskh-arabic-500.woff2","fonts/noto-naskh-arabic-700.woff2","brand/mufradaat.webp","brand/mufradaat-nacht.webp","fonts/figtree-latin-400.woff2","fonts/figtree-latin-600.woff2","fonts/figtree-latin-800.woff2","fonts/figtree-latin-900.woff2","fonts/figtree-latin-ext-400.woff2","fonts/figtree-latin-ext-600.woff2","fonts/figtree-latin-ext-800.woff2","fonts/figtree-latin-ext-900.woff2","vendor/supabase.js","kurs/kurs.json","kurs/s1.json","kurs/s2.json","kurs/s3.json","kurs/s4.json","kurs/s5.json","kurs/s6.json","kurs/s7.json","kurs/s8.json","kurs/a1.json","kurs/a2.json","../xbubekir/brand/xbu.webp"]; // xbu.webp: „powered by xbu“ am Übungspartner
 self.addEventListener("install",e=>{
   e.waitUntil(caches.open(V).then(c=>Promise.all(SHELL.map(u=>c.add(u).catch(()=>{})))).then(()=>self.skipWaiting()));
 });
@@ -8,7 +8,7 @@ self.addEventListener("activate",e=>{
 });
 self.addEventListener("fetch",e=>{
   const r=e.request,u=new URL(r.url);
-  if(r.method!=="GET"||u.origin!==location.origin)return; // Supabase bleibt unberührt
+  if(r.method!=="GET"||u.origin!==location.origin)return; // Supabase bleibt unberührt (auch der Server von xbubekir für den Übungspartner)
   if(/\/audio\/audio\.json$/.test(u.pathname)||/\/kurs\/[^/]+\.json$/.test(u.pathname)){ // Audioliste und Kursdateien: erst Netz, damit Korrekturen sofort ankommen
     e.respondWith(fetch(r,{cache:"no-cache"}).then(res=>{if(res.ok){const cp=res.clone();caches.open(V).then(c=>c.put(r,cp))}return res}).catch(()=>caches.match(r)));
     return;

@@ -75,7 +75,7 @@ Gehirn (Modellwahl), Anbieter, Denktiefe, Schlüssel, Konto, eigene xbubekir-KI,
 ### Noch offen
 
 - Die Anleitung zum eigenen API-Schlüssel richtet sich an jede Person, obwohl die App nur für eine gedacht ist. Ob sie bleibt, ist nicht entschieden.
-- Die eigene KI ist auch für Mufradaat Pro gedacht. Wie andere Apps xbu technisch nutzen, ist nicht entschieden. Der Server lässt heute nur Konten aus `public.allowed_users` durch, und das Supabase-Projekt ist von Mufradaat getrennt.
+- Wie weitere Apps xbu nutzen, folgt dem Beispiel Mufradaat: Für mufradaat.AI gibt es im Projekt „xbubekir AI“ die eigene Edge Function `mufradaat` (DeepSeek V4.1 Flash über OpenRouter, derselbe Schlüssel). Sie prüft Konten von Mufradaat bei dessen eigener Anmeldung, legt die Anweisung an die KI selbst fest und zählt Nachrichten pro Konto und Tag (`public.mufradaat_ai_usage`). Die eigene Browser-KI (Qwen3) nutzt Mufradaat nicht.
 
 ## Brand Commitments
 
