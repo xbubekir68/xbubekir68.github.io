@@ -1,0 +1,30 @@
+name: xbubekir checks
+on:
+  pull_request:
+    paths:
+      - 'xbubekir/**'
+      - 'mufradaat/index.html'
+      - '.github/workflows/xbubekir-checks.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'xbubekir/**'
+      - 'mufradaat/index.html'
+      - '.github/workflows/xbubekir-checks.yml'
+permissions:
+  contents: read
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check xbubekir/app.js && node --check xbubekir/conversation.js && node --check xbubekir/sw.js
+      - run: node xbubekir/training/check_dataset.mjs
+      - run: node --test xbubekir/tests/*.test.mjs
+      - name: Reproduce dataset
+        run: |
+          node xbubekir/training/make_dataset.mjs
+          git diff --exit-code -- xbubekir/training/train.jsonl xbubekir/training/eval.jsonl xbubekir/training/split-manifest.json

@@ -13,3 +13,15 @@ Persönliche KI als Web-App: https://xbubekir68.github.io/xbubekir/
 - Als App installierbar (Teilen → „Zum Home-Bildschirm“), die Oberfläche lädt auch offline.
 
 Dateien: `index.html` (Oberfläche), `app.js` (Logik), `vendor/genai.js` und `vendor/anthropic.js` (offizielle SDKs als je eine Datei, neu bauen mit `bash tools/build-sdk.sh`, danach `V` in `sw.js` hochzählen).
+
+
+## Chat-Bedienung und Prüfung
+
+- „Nochmal“ behält die bisherige Antwort und speichert eine erfolgreiche neue Antwort als Variante. Beim Umschalten bleibt auch der Verlauf der jeweiligen Variante erhalten. Nur der aktive Verlauf geht an den Anbieter.
+- „Bearbeiten“ öffnet einen neuen Chat ab der geänderten Frage; der ursprüngliche Chat bleibt erhalten.
+- Codeblöcke haben Sprachangabe, Syntaxfarben (lokal gebündeltes Highlight.js 11.11.1, BSD-3-Clause) und einen eigenen Kopierknopf. Unbekannte Sprachen bleiben Klartext.
+- Quellenmarker beziehen sich auf den jeweiligen vom Anbieter zitierten Textblock. Quellen werden mitkopiert; normale Markdown-Links werden nicht nachträglich als verifizierte Belege ausgegeben.
+- Modellwechsel beginnen über beide Auswahlwege einen neuen Chat. Während einer Antwort gilt die Auswahl für den nächsten Chat.
+- Promptänderungen gelten für neue Chats. Der kurze Browser-Prompt wird gegen `training/persona.json` geprüft; die geänderten Trainingsdaten benötigen einen separaten Trainingslauf.
+
+Tests und Browserprüfungen: [tests/README.md](tests/README.md).
