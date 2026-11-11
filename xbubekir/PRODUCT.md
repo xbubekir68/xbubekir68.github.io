@@ -47,7 +47,10 @@ Chats auf dem eigenen Gerät, geringe Kosten und Arabisch sind echte Eigenschaft
 
 ### Funktionen
 
-- Chat mit Markdown-Antworten, Denkblöcken und Anhalten der Antwort. Die letzte Antwort lässt sich neu erzeugen, eine abgeschnittene fortsetzen. „Kopieren“ liefert Klartext ohne Markdown-Zeichen.
+- Chat mit Markdown-Antworten, Denkblöcken und Anhalten der Antwort. Die letzte Antwort lässt sich als neue Variante erzeugen; bisherige Varianten und ihre Gesprächsverläufe bleiben erhalten. Eine abgeschnittene Antwort lässt sich fortsetzen. „Kopieren“ liefert Klartext mit Belegnummern und Quellenlinks. Codeblöcke zeigen Sprache, Syntaxfarben und einen eigenen Kopierknopf.
+- Gesendete Fragen lassen sich bearbeiten: Die Änderung öffnet einen neuen Chat mit dem bisherigen Kontext bis zu dieser Frage; der ursprüngliche Chat bleibt erhalten.
+- Drei Einstiegshilfen und höchstens zwei kontextabhängige Folgeaktionen füllen den Entwurf, ohne ihn zu überschreiben oder automatisch zu senden.
+- Speicher- und Kopierfehler sind sichtbar.
 - Gehirn wechseln per Tipp auf die Gehirn-Zeile: ein Blatt mit allen Modellen und der Denktiefe, ohne Speichern-Knopf. Im laufenden Chat beginnt dabei ein neuer Chat.
 - Am PC eine Seitenleiste mit Chats nach Datum und Suche, am Handy eine Kopfleiste mit Schublade (auch quer) und die letzten Chats auf dem Startbild.
 - Fehler stehen in kurzen Worten mit passenden Knöpfen da, die Originalmeldung eingeklappt darunter.
@@ -60,12 +63,12 @@ Chats auf dem eigenen Gerät, geringe Kosten und Arabisch sind echte Eigenschaft
 
 ### Feste Regeln
 
-- **Der Faden bleibt:** Ein laufender Chat behält Anbieter, Modell, System-Prompt und Werkzeuge. Ein Wechsel des Anbieters beginnt einen neuen Chat.
+- **Der Faden bleibt:** Ein laufender Chat behält Anbieter, Modell, System-Prompt und Werkzeuge. Ein anderes Modell beginnt einen neuen Chat, sowohl in der schnellen Wahl als auch beim Speichern der Einstellungen. Während einer laufenden Antwort gilt die Wahl für den nächsten neuen Chat.
 - **Datenaussagen je Gehirn:** Einstellungen und Chats liegen immer nur im Browser. Nachrichten gehen aber bei Gemini, Claude und DeepSeek an den jeweiligen Anbieter. „Verlässt dein Gerät nicht“ gilt nur für die eigene KI.
 - **Gratis-Stufe von Gemini:** Der Hinweis, dass Google Nachrichten je nach Wohnort lesen und nutzen darf, bleibt in der Einrichtung mit eigenem Schlüssel erhalten.
 - **DeepSeek über OpenRouter:** keine Datenspeicherung, keine Anbieter mit Sitz in China, keine fp4-Fassungen.
 - **Oberfläche nur auf Deutsch.** xbubekir antwortet in der Sprache, in der die Person schreibt.
-- **Statische Seite ohne Build-Schritt für die App:** Oberfläche in `index.html`, Logik in `app.js`, SDKs gebündelt in `vendor/`.
+- **Statische Seite ohne Build-Schritt für die App:** Oberfläche in `index.html`, Logik in `app.js` und `conversation.js`, SDKs gebündelt in `vendor/`.
 - **Strenge CSP als Meta-Tag in `index.html`:** Diese Datei geht unverändert live, Ausnahmen nur für die Entwicklung sind deshalb nicht möglich.
 
 ### Begriffe
@@ -91,8 +94,9 @@ Gehirn (Modellwahl), Anbieter, Denktiefe, Schlüssel, Konto, eigene xbubekir-KI,
 
 - `training/persona.json`: 102 handgeschriebene Beispielgespräche für Ton und Grenzen, die beste Quelle für echte Texte.
 - `app.js` (`PERSONA`): ausführliche Persönlichkeit für Gemini, Claude und DeepSeek.
-- `training/train.jsonl` und `training/eval.jsonl`: 617 und 33 Zeilen Trainingsdaten.
+- `training/train.jsonl` und `training/eval.jsonl`: 619 Trainingsgespräche und 28 unabhängige Prüfgespräche. Die Gruppentrennung erfolgt vor der Gewichtung.
 - `training/uebung.json`: Übungsgespräche je Mufradaat-Lektion. Die arabischen Sätze sind noch ungeprüft, die Prüfliste liegt in `training/dialoge-pruefen.md`.
+- `training/quality-cases.json`: zwölf zusätzliche, unabhängige Aufgaben mit automatischen Regeln und manuellen Prüfkriterien; keine gemessenen Modellresultate enthalten.
 - Öffentliches Modell: https://huggingface.co/xbubekir/xbubekir-qwen3-1.7b-q4f16_1-MLC
 
 Es gibt keine Nutzerstimmen, Kennzahlen, Benchmarks oder Presse. Nichts davon darf erfunden werden.

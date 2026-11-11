@@ -1,7 +1,7 @@
 # Eigene xbubekir-KI: Trainingsdaten und Training
 
 Ziel: Das Open-Source-Modell **Qwen3-1.7B** (Apache-2.0) wird auf xbubekirs Persönlichkeit und auf einfache Arabisch-Übungsgespräche
-nachtrainiert und läuft danach mit WebLLM **im Browser** (kostenlos, keine Daten an Server). In Mufradaat ist es nur für **Pro** gedacht.
+nachtrainiert und läuft danach mit WebLLM **im Browser** (kostenlos, keine Daten an Server). Der aktuelle Übungspartner in Mufradaat nutzt separat DeepSeek; diese Dateien trainieren die eigene Browser-KI.
 
 ## Dateien
 | Datei | Inhalt |
@@ -9,7 +9,7 @@ nachtrainiert und läuft danach mit WebLLM **im Browser** (kostenlos, keine Date
 | `persona.json` | Beispielgespräche für xbubekirs Persönlichkeit (Deutsch), von Hand geschrieben |
 | `uebung.json` | Handgeschriebene Übungsgespräche je Mufradaat-Lektion (Arabisch mit Harakat, Umschrift, Deutsch) |
 | `make_dataset.mjs` | baut `train.jsonl` / `eval.jsonl`: Persona + Übungsgespräche + automatische Vokabel-Übungen aus `mufradaat/index.html` (`W_RAW`, `LES_RAW`, `SENT_RAW`) |
-| `check_dataset.mjs` | prüft Format, Rollen und Harakat der Übungsantworten |
+| `check_dataset.mjs` | prüft Format, Rollen, Harakat, überschneidungsfreie Gruppen und Übereinstimmung des kurzen System-Prompts |
 | `review.mjs` → `dialoge-pruefen.md` | Prüfliste der neuen arabischen Sätze für Muttersprachler |
 | `xbubekir_training.ipynb` | Colab-Notebook: Training (LoRA), Probelauf, Umwandlung ins WebLLM-Format, Upload zu Hugging Face |
 | `mlc_convert.py` | eigener Umwandler ins WebLLM-Format q4f16_1 (reines Python/NumPy, ohne `mlc_llm`); Aufbau aus der `tensor-cache.json` des offiziellen Modells `mlc-ai/Qwen3-1.7B-q4f16_1-MLC`, mit Selbsttest gegen dessen Dateien |
@@ -35,5 +35,25 @@ nachtrainiert und läuft danach mit WebLLM **im Browser** (kostenlos, keine Date
 
 ## Gut zu wissen
 - Gelernt wird nur, was xbubekir antwortet (die Eingaben sind im Training ausgeblendet).
-- Der System-Prompt der Übungen (`practiceSystem()` in `make_dataset.mjs`) wird später in Mufradaat Pro genauso verwendet.
+- `practiceSystem()` beschreibt die Übungsdaten dieses Browser-Modells; es ist nicht der Server-Prompt von mufradaat.AI.
 - Ein 1,7B-Modell ist klein: Für Persönlichkeit, einfache Gespräche und kurze Übungsdialoge reicht es, für Fakten und perfekte Harakat nicht immer.
+
+## Saubere Prüfung vor dem nächsten Training
+
+`split_dataset.mjs` teilt eindeutige Originalgespräche und Gruppen auf, bevor Trainingsbeispiele gewichtet werden. Alle Varianten einer Lektion bleiben zusammen; identische Dialoge über unterschiedliche Gruppen werden zusammengeführt. `split-manifest.json` hält Gruppe und Inhalts-Hash jeder Zeile fest. Die Prüfmenge wird nicht vervielfacht. Der bestehende veröffentlichte Modellstand wird durch Änderungen an diesen Dateien **nicht** nachtrainiert.
+
+Die zwölf Aufgaben in `quality-cases.json` gehören weder ins Training noch in `eval.jsonl`. Das Notebook erzeugt nach dem Training `quality-results.jsonl` für das noch nicht quantisierte Modell. Dieselben Aufgaben separat mit dem Browser-Modell und jedem Cloud-Modell testen; keine Ergebnisse zwischen Modellen vermischen.
+
+Jede Ergebniszeile hat dieses Format:
+
+```json
+{"case_id":"fact-short","provider":"local","model":"genauer-modellstand","output":"120 Minuten.","review_pass":true,"review_note":"Ergebnis korrekt und direkt."}
+```
+
+`review_pass` erst nach Prüfung anhand des jeweiligen `review`-Kriteriums setzen, insbesondere bei Arabisch und Code. Automatische Regeln prüfen unter anderem Länge, Floskeln, fehlende Fakten und unerwünschte Zusagen; sie beweisen keine vollständige fachliche Richtigkeit.
+
+```sh
+node xbubekir/training/check_quality.mjs quality-results.jsonl
+```
+
+Der Befehl meldet fehlende Fälle, automatische Fehler und offene manuelle Prüfungen je Modell getrennt. Solange ein Fall fehlt, fehlschlägt oder ungeprüft ist, ist der Exit-Code 1. Die vorhandenen Modellgewichte erst nach dem erneuten Training, der Prüfung und der Umwandlung ersetzen.

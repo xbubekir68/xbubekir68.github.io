@@ -2,6 +2,8 @@
 // DeepSeek (Open Source, über den eigenen Server und OpenRouter) oder mit der eigenen xbubekir-KI, die komplett auf dem Gerät
 // läuft (WebLLM); Chats bleiben auf diesem Gerät.
 
+import {revisionWork, acceptRevision, selectVariant, editBranch} from "./conversation.js";
+
 // p: Anbieter; web: Websuch-Werkzeug (nur Claude); fb: serverseitiger Ersatz bei Ablehnung durch Sicherheitsfilter
 const MODELS={
   "gemini-3.8-flash":{p:"gemini",name:"Gemini 3.8 Flash",hint:"am klügsten"},
@@ -22,7 +24,7 @@ const PROV={gemini:{name:"Gemini",by:"Google",def:"gemini-3.8-flash"},claude:{na
 const HF16="https://huggingface.co/xbubekir/xbubekir-qwen3-1.7b-q4f16_1-MLC",F32=new URL("q4f32/resolve/main/",import.meta.url).href;
 const LOCAL={f16:{model:HF16,files:HF16+"/resolve/main/",id:"xbubekir-qwen3-1.7b-q4f16_1-MLC",base:"Qwen3-1.7B-q4f16_1-MLC"},
   f32:{model:F32,files:F32,id:"xbubekir-qwen3-1.7b-q4f32_1-MLC",base:"Qwen3-1.7B-q4f32_1-MLC"},
-  system:"Du bist xbubekir, eine persönliche KI, die direkt im Browser läuft. Du duzt, antwortest in der Sprache der Person, direkt, ehrlich und freundlich, ohne Floskeln. Kurze Fragen bekommen kurze Antworten. Wenn du etwas nicht weißt, sagst du das.",
+  system:"Du bist xbubekir, eine persönliche KI im Browser. Du duzt und antwortest in der Sprache der Person, direkt und freundlich. Einfache Fragen beantwortest du kurz; erkläre ausführlicher, wenn nötig. Keine Floskeln, kein pauschales Lob, keine routinemäßigen Schlussfragen. Beim Umschreiben bleiben Fakten und Zusagen erhalten; fehlende Angaben stehen in [Klammern]. Prüfe Einwände konkret und benenne Unsicherheit ehrlich. Bewerte nur, was du prüfen kannst. Beim Arabischen unterscheidest du Nachschlagen und aktives Üben.",
   maxChars:6000}; // Verlauf grob kürzen, damit er ins Kontextfenster (4096 Tokens) passt
 // Eigener Server (Supabase-Projekt „xbubekir“, getrennt von Mufradaat): hält den Gemini-Schlüssel, nur der Besitzer hat Zugang
 const SB_URL="https://ydasoikczdjjdtdarrpx.supabase.co",SB_KEY="sb_publishable_hsk2OROaXkk_cJAR0sxkhA_2EdjhIiN",SB_FN=SB_URL+"/functions/v1/gemini",SB_OR=SB_URL+"/functions/v1/openrouter";
@@ -60,7 +62,8 @@ if(!PROV[S.provider])S.provider="gemini";
 if(MODELS[S.model]?.p!==S.provider)S.model=PROV[S.provider].def;
 if(!S.models||typeof S.models!=="object")S.models={};
 const modelFor=p=>MODELS[S.models[p]]?.p===p?S.models[p]:PROV[p].def;
-function saveS(){try{localStorage.setItem(SK,JSON.stringify(S))}catch{}}
+function storageWarning(){const el=$("#storageNotice");if(el)el.hidden=false}
+function saveS(){try{localStorage.setItem(SK,JSON.stringify(S))}catch{storageWarning()}}
 // Gemini entweder über das eigene Konto (Server hält den Schlüssel) oder mit eigenem Schlüssel im Browser; DeepSeek nur über das Konto
 const viaKonto=p=>p==="open"||p==="gemini"&&S.gmode==="konto";
 const keyOf=p=>p==="eigen"?"lokal":viaKonto(p)?(session?"konto":""):p==="gemini"?S.gkey:S.ckey;
@@ -69,12 +72,13 @@ const keyOf=p=>p==="eigen"?"lokal":viaKonto(p)?(session?"konto":""):p==="gemini"
 const DB=(()=>{
   let p;
   const open=()=>p||(p=new Promise((res,rej)=>{const r=indexedDB.open("xbubekir",1);r.onupgradeneeded=()=>r.result.createObjectStore("chats",{keyPath:"id"});r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}));
-  const tx=(mode,fn)=>open().then(d=>new Promise((res,rej)=>{const t=d.transaction("chats",mode),q=fn(t.objectStore("chats"));t.oncomplete=()=>res(q.result);t.onerror=()=>rej(t.error)}));
-  const safe=f=>(...a)=>f(...a).catch(e=>{console.warn("xbubekir: Speichern nicht möglich",e)});
+  const tx=(mode,fn)=>open().then(d=>new Promise((res,rej)=>{const t=d.transaction("chats",mode),q=fn(t.objectStore("chats"));t.oncomplete=()=>res(q.result);t.onerror=()=>rej(t.error);t.onabort=()=>rej(t.error||new Error("Speichern abgebrochen"))}));
+  const safe=f=>(...a)=>f(...a).catch(e=>{console.warn("xbubekir: Speichern nicht möglich",e);storageWarning()});
   return{all:()=>tx("readonly",s=>s.getAll()),put:safe(c=>tx("readwrite",s=>s.put(c))),del:safe(id=>tx("readwrite",s=>s.delete(id))),clear:safe(()=>tx("readwrite",s=>s.clear()))};
 })();
 
 let chats=[],cur=null,busy=false,stopFn=null,copies=[],sb=null,session=null;
+let editing=null;
 async function auth(){ // Supabase-Anmeldung, erst bei Bedarf geladen
   if(!sb){const{createClient}=await import("./vendor/supabase.js");sb=createClient(SB_URL,SB_KEY);sb.auth.onAuthStateChange((_e,s)=>{session=s})}
   return sb.auth;
@@ -106,29 +110,33 @@ const PERSONA=`Du bist xbubekir, eine persönliche KI. Du arbeitest für genau e
 - Du duzt die Person und antwortest in der Sprache, in der sie dir schreibt.
 - Du bist locker, herzlich und ehrlich, wie ein guter Freund, der sich auskennt. Humor ist erlaubt, wenn er passt.
 - Du fängst direkt mit der Antwort an: keine Floskeln wie „Gute Frage!“ oder „Gern helfe ich dir dabei“, keine Wiederholung der Frage.
-- Du belehrst nicht und moralisierst nicht.
+- Du belehrst nicht und moralisierst nicht. Freundlich heißt nicht automatisch zustimmen oder loben.
+- Keine routinemäßigen Schlussangebote oder Zusammenfassungen, die nur wiederholen. Nutze Listen, Überschriften und Emojis nur, wenn sie zur Aufgabe passen.
 
 ## Länge
-- Kurze Frage, kurze Antwort: „Was ist die Hauptstadt von Ägypten?“ → „Kairo.“
+- Bei einfachen Sachfragen reichen meist ein bis drei Sätze. Kurze Frage, kurze Antwort: „Was ist die Hauptstadt von Ägypten?“ → „Kairo.“
 - Ausführlich wirst du nur, wenn die Aufgabe es braucht oder die Person es möchte.
 - Sagt die Person „kürzer“ oder „ausführlicher“, gilt das für den Rest des Gesprächs.
 
 ## So hilfst du
 - Erklären: einfach und Schritt für Schritt, mit einem Beispiel aus dem Alltag. Fachwörter erklärst du kurz.
 - Texte (Nachrichten, E-Mails, Glückwünsche): Du lieferst gleich den fertigen Text. Was du nicht weißt, setzt du als Platzhalter in eckige Klammern, z. B. [Dein Name].
+- Umschreiben: Fakten, Absichten und Zusagen bleiben erhalten. Erfinde keine Namen, Termine, Einladungen oder Verpflichtungen.
 - Korrigieren: zuerst die verbesserte Fassung, dann in einem Satz die Regel dahinter.
 - Lernen: Du erklärst auch den Weg zur Lösung, damit die Person es versteht, und gibst gern Tipps zum Lernen.
 - Rückfragen stellst du nur, wenn ohne sie keine gute Antwort möglich ist.
 
 ## Ehrlichkeit
-- Wenn du etwas nicht weißt oder unsicher bist, sagst du das, statt zu raten. Du erfindest keine Fakten, Zahlen, Zitate oder Quellen.
+- Wenn du etwas nicht weißt oder unsicher bist, sagst du konkret, was unsicher ist, statt zu raten. Du erfindest keine Fakten, Zahlen, Zitate oder Quellen.
+- Bei Einwänden prüfst du deine konkrete Aussage. Rudere nicht pauschal zurück und stimme nicht ungeprüft zu.
 - Bei Gesundheit, Recht oder Geld hilfst du, sagst aber kurz, dass im Zweifel eine Fachperson entscheiden sollte.
 - Du hast kein Gedächtnis über einzelne Chats hinaus. Soll sich xbubekir etwas dauerhaft merken, kann die Person es in den Einstellungen unter „Über dich“ eintragen.
 - Ist jemand unhöflich, bleibst du gelassen und fragst, was nicht gepasst hat.
 
 ## Arabisch
 - Arabische Wörter und Sätze schreibst du immer mit Harakat (Vokalzeichen), dazu die Umschrift und die deutsche Bedeutung, z. B. **كِتَابٌ** (*kitābun*) = Buch.
-- Beim Üben verbesserst du Fehler freundlich und lobst, was richtig ist.
+- Beim Üben benennst du konkret, was richtig ist und was verbessert werden sollte. Aus getipptem Text kannst du keine Aussprache bewerten.
+- Trenne Nachschlagen und aktives Üben: Eine Übersetzung braucht keine zusätzliche Lernaufgabe. Anschlussfragen nur, wenn sie zur Aufgabe beitragen.
 
 ## Beispiele für deinen Stil
 Person: Hallo
@@ -141,7 +149,7 @@ Person: Antworte bitte kürzer.
 xbubekir: Okay, mache ich.
 
 Person: Du bist doof.
-xbubekir: Schade, dass du gerade unzufrieden bist. Sag mir, was nicht gepasst hat, dann mache ich es besser.
+xbubekir: Was hat nicht gepasst?
 
 Person: Erzähl mir einen Witz.
 xbubekir: Warum können Geister so schlecht lügen? Weil man durch sie hindurchsieht.`;
@@ -198,28 +206,34 @@ async function regen(){
   if(busy||!cur)return;
   const i=cur.msgs.findLastIndex(m=>m.role==="user"&&!m.skip);
   if(i<0)return;
-  cur.msgs.splice(i+1);store(cur);
-  await run(cur,cur.msgs[i],true);
+  const original=cur,work=revisionWork(original,i);
+  await run(work,work.msgs[i],true,{original,index:i});
 }
 
 // again: Antwort neu erzeugen. Dann bleibt die Frage bei einem Fehler im Chat stehen, statt zurück ins Eingabefeld zu wandern.
-async function run(c,um,again){
+async function run(c,um,again,revision){
+  const target=revision?.original||c;
   setBusy(true);
-  if(c===cur)render();
-  log.insertAdjacentHTML("beforeend",'<div class="msg a" id="live" aria-busy="true"><p class="tool wait">xbubekir denkt nach …</p></div>');
+  if(target===cur)render();
+  log.insertAdjacentHTML("beforeend",'<div class="msg a" id="live" role="region" aria-label="xbubekir antwortet" aria-busy="true"><p class="tool wait">xbubekir denkt nach …</p></div>');
   toBottom();say("xbubekir denkt nach …");
   const live=$("#live"),p=provOf(c);
   let err=null,back=false;
   try{await({gemini:askGemini,claude:askClaude,eigen:askLocal,open:askOpen}[p])(c,um,live)}
   catch(e){err=e;if(again){const i=c.msgs.indexOf(um);if(i>=0)c.msgs.splice(i+1)}else back=undo(c,um)}
   stopFn=null;
-  const mine=c===cur;
-  if(c.msgs.length)store(c);else forget(c);
-  if(mine&&!c.msgs.length)cur=null; // ein leerer Chat hält kein Gehirn fest, sonst geht die nächste Nachricht ans alte Modell
+  let accepted=true;
+  if(revision){
+    accepted=!err&&acceptRevision(target,c,revision.index);
+    if(!accepted&&!err)toast("Die bisherige Antwort bleibt erhalten.");
+  }
+  const mine=target===cur;
+  if(target.msgs.length)await store(target);else forget(target);
+  if(mine&&!target.msgs.length)cur=null; // ein leerer Chat hält kein Gehirn fest, sonst geht die nächste Nachricht ans alte Modell
   setBusy(false);
   if(mine)render();
   if(err&&!err.cancel)showError(err,p,back,again&&c.msgs.includes(um));
-  else if(!err)say("Antwort von xbubekir ist da.");
+  else if(!err)say(accepted?"Antwort von xbubekir ist da.":"Die bisherige Antwort bleibt erhalten.");
 }
 
 // ---------- Gemini ----------
@@ -548,7 +562,7 @@ function inline(s){
 }
 const RX={fence:/^\s*(`{3,}|~{3,})\s*([\w+#.-]*)/,head:/^(#{1,6})\s+(.*?)\s*#*\s*$/,hr:/^\s*([-*_])(\s*\1){2,}\s*$/,quote:/^\s*>/,item:/^(\s*)([-*+]|(\d+)[.)])\s+(.*)$/,row:/^\s*\|.*\|\s*$/,sep:/^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$/};
 function isBlock(L,i){const l=L[i];return RX.fence.test(l)||RX.head.test(l)||RX.hr.test(l)||RX.quote.test(l)||RX.item.test(l)||(RX.row.test(l)&&RX.sep.test(L[i+1]||""))}
-function md(src){
+function md(src,live=false){
   const L=src.replace(/\u0000/g,"").replace(/\r\n?/g,"\n").split("\n"),out=[];
   let i=0,m;
   while(i<L.length){
@@ -557,7 +571,12 @@ function md(src){
     if(m=RX.fence.exec(l)){ // Codeblock (beim Streamen auch ohne schließende Zeile)
       const end=new RegExp("^\\s*"+m[1][0]+"{"+m[1].length+",}\\s*$"),buf=[];
       for(i++;i<L.length&&!end.test(L[i]);i++)buf.push(L[i]);
-      i++;out.push(`<pre><code>${esc(buf.join("\n"))}</code></pre>`);continue;
+      const code=buf.join("\n"),language=m[2]||"text";
+      let html=esc(code);
+      if(!live&&code.length<50000&&globalThis.hljs?.getLanguage(language)){
+        try{html=globalThis.hljs.highlight(code,{language,ignoreIllegals:true}).value}catch{}
+      }
+      i++;out.push(`<div class="codeblock"><div class="codehead"><span>${esc(language)}</span><button type="button" class="mini" data-code aria-label="Code kopieren"${live?" disabled":""}>Code kopieren</button></div><pre tabindex="0" aria-label="Code: ${esc(language)}"><code>${html}</code></pre></div>`);continue;
     }
     if(m=RX.head.exec(l)){const n=Math.min(m[1].length+1,6);out.push(`<h${n}${rtl(m[2])}>${inline(m[2])}</h${n}>`);i++;continue} // Seite: h1, Chat ab h2
     if(RX.hr.test(l)){out.push("<hr>");i++;continue}
@@ -570,7 +589,7 @@ function md(src){
       out.push(`<div class="tbl"><table><thead><tr>${head.map((c,j)=>`<th${al[j]||""}${rtl(c)}>${inline(c)}</th>`).join("")}</tr></thead><tbody>${body}</tbody></table></div>`);
       continue;
     }
-    if(RX.quote.test(l)){const buf=[];while(i<L.length&&RX.quote.test(L[i]))buf.push(L[i++].replace(/^\s*>\s?/,""));out.push(`<blockquote${rtl(buf.join(" "))}>${md(buf.join("\n"))}</blockquote>`);continue}
+    if(RX.quote.test(l)){const buf=[];while(i<L.length&&RX.quote.test(L[i]))buf.push(L[i++].replace(/^\s*>\s?/,""));out.push(`<blockquote${rtl(buf.join(" "))}>${md(buf.join("\n"),live)}</blockquote>`);continue}
     if(RX.item.test(l)){ // Liste, Einrückung = Unterliste
       const items=[];
       while(i<L.length){
@@ -618,35 +637,74 @@ function plain(src){
   return out.join("\n").replace(/\n{3,}/g,"\n\n").trim();
 }
 
-function viewBlocks(blocks,live){
-  let h="",txt="";const cites=new Map();
-  const flush=()=>{if(txt.trim())h+=`<div class="md">${md(txt)}</div>`;txt=""};
+// Quellen stammen ausschließlich aus den vom Anbieter gelieferten Zitat-Metadaten.
+function citationList(blocks){
+  const sources=new Map();
+  for(const b of blocks)if(b.type==="text")for(const c of b.citations||[]){
+    if(safeUrl(c.url)&&!sources.has(c.url))sources.set(c.url,{n:sources.size+1,title:c.title||host(c.url)});
+  }
+  return sources;
+}
+function copyText(blocks){
+  const sources=citationList(blocks);
+  const text=blocks.filter(b=>b.type==="text").map(b=>{
+    const refs=[...new Set((b.citations||[]).filter(c=>sources.has(c.url)).map(c=>sources.get(c.url).n))];
+    return b.text+(refs.length?"\n\n"+refs.map(n=>`[${n}]`).join(" ")+"\n\n":"");
+  }).join("");
+  return plain(text)+(sources.size?"\n\nQuellen\n"+[...sources].map(([url,c])=>`[${c.n}] ${c.title} — ${url}`).join("\n"):"");
+}
+function viewBlocks(blocks,live,key="live"){
+  let h="",txt="";const cites=citationList(blocks);
+  const flush=()=>{if(txt.trim())h+=`<div class="md">${md(txt,live)}</div>`;txt=""};
   blocks.forEach((b,i)=>{
-    if(b.type==="text"){txt+=b.text||"";for(const c of b.citations||[])if(safeUrl(c.url)&&!cites.has(c.url))cites.set(c.url,c.title||host(c.url))}
-    else if(b.type==="thinking"){flush();if(live&&i===blocks.length-1)h+='<p class="tool wait">xbubekir denkt nach …</p>';else if(b.thinking?.trim())h+=`<details class="think"><summary>Gedankengang</summary><div class="md">${md(b.thinking)}</div></details>`}
+    if(b.type==="text"){
+      txt+=b.text||"";
+      const refs=[...new Set((b.citations||[]).filter(c=>cites.has(c.url)).map(c=>c.url))];
+      if(refs.length){
+        const marks=`<span class="citations">${refs.map(url=>{const c=cites.get(url);return `<a href="#${key}-source-${c.n}" data-cite aria-label="Quelle ${c.n}: ${esc(c.title)}">[${c.n}]</a>`}).join(" ")}</span>`;
+        let html=md(txt,live);html=html.endsWith("</p>")?html.slice(0,-4)+" "+marks+"</p>":html+marks;
+        h+=`<div class="md">${html}</div>`;txt="";
+      }
+    }
+    else if(b.type==="thinking"){flush();if(live&&i===blocks.length-1)h+='<p class="tool wait">xbubekir denkt nach …</p>';else if(b.thinking?.trim())h+=`<details class="think"><summary>Gedankengang</summary><div class="md">${md(b.thinking,live)}</div></details>`}
     else if(b.type==="server_tool_use"&&b.name==="web_search"){flush();let q="";try{q=b.input?.query||""}catch{}const now=live&&i===blocks.length-1;h+=`<p class="tool${now?" wait":""}">${IC.search}<span>${now?"Sucht im Netz":"Im Netz gesucht"}${q?`: „${esc(q)}“`:now?" …":""}</span></p>`}
     else if(b.type==="web_search_tool_result"&&b.content&&!Array.isArray(b.content)){flush();h+='<p class="tool">Die Suche hat nicht geklappt.</p>'}
     else if(b.type==="fallback"){flush();h+='<p class="note">Für diese Antwort ist ein anderes Claude-Modell eingesprungen.</p>'}
   });
   flush();
   if(live&&!h)h='<p class="tool wait">xbubekir denkt nach …</p>';
-  if(cites.size)h+=`<div class="src"><b>Quellen</b><ol>${[...cites].map(([u,t])=>`<li>${link(u,esc(t))} <span>${esc(host(u))}</span></li>`).join("")}</ol></div>`;
+  if(cites.size)h+=`<div class="src"><b>Quellen</b><ol>${[...cites].map(([u,c])=>`<li id="${key}-source-${c.n}" tabindex="-1">${link(u,esc(c.title))} <span>${esc(host(u))}</span></li>`).join("")}</ol></div>`;
   return h;
+}
+function followUps(question,answer){
+  // Kontextabhängige Aktionen ohne zusätzliche Modellanfrage. Keine Pflichtfrage am Antwortende.
+  if(/```|~~~/.test(answer))return [["Code erklären","Erkläre mir den Code aus deiner letzten Antwort."],["Tests ergänzen","Ergänze passende Tests für den Code aus deiner letzten Antwort."]];
+  if(/arabisch|harakat|vokabel|[\u0600-\u06ff]/i.test(question))return [["Damit üben","Übe das gerade besprochene Arabisch mit mir. Stelle eine Aufgabe und warte auf meine Antwort."]];
+  if(/erklär|unterschied|warum|wie funktioniert/i.test(question)&&answer.length>120)return [["Mit Beispiel","Erkläre das an einem konkreten Beispiel."],["Kürzer erklären","Erkläre das bitte kürzer."]];
+  if(/schreib|formulier|verbesser|korrigier/i.test(question)&&answer.length>80)return [["Kürzer formulieren","Formuliere den Text kürzer. Behalte alle Fakten und Zusagen bei."]];
+  return [];
 }
 
 function chatHTML(c){
-  let h="";const M=c.msgs,p=provOf(c);copies=[];
+  let h="",userIndex=-1;const M=c.msgs,p=provOf(c);copies=[];
   const toBlocks=m=>p==="gemini"?geminiBlocks(m.content):p==="eigen"?[{type:"text",text:m.content}]:m.content;
   for(let i=0;i<M.length;){
     const m=M[i];
-    if(m.role==="user"){h+=`<div class="msg u"><div class="bub" dir="auto">${ar(esc(m.content))}</div></div>`;if(m.note)h+=`<p class="note">${NOTES[m.note]}</p>`;i++;continue}
+    if(m.role==="user"){
+      userIndex=i;
+      h+=`<section class="msg u" aria-label="Du"><div class="bub" dir="auto">${ar(esc(m.content))}</div><button class="mini edit" type="button" data-edit="${i}"${busy?" disabled":""}>Bearbeiten</button></section>`;
+      if(m.note)h+=`<p class="note">${NOTES[m.note]}</p>`;i++;continue;
+    }
     const blocks=[];let note="";
-    for(;i<M.length&&M[i].role==="assistant";i++)if(!M[i].skip){blocks.push(...toBlocks(M[i]));if(M[i].note)note=M[i].note} // Fortsetzungen (pause_turn) zusammen zeigen
+    for(;i<M.length&&M[i].role==="assistant";i++)if(!M[i].skip){blocks.push(...toBlocks(M[i]));if(M[i].note)note=M[i].note}
     if(!blocks.length)continue;
-    const n=copies.push(blocks.filter(b=>b.type==="text").map(b=>b.text).join("").trim())-1,last=i===M.length&&!busy; // nur die letzte Antwort lässt sich neu erzeugen
-    h+=`<div class="msg a">${viewBlocks(blocks,false)}${note?`<p class="note">${NOTES[note]}</p>`:""}<div class="acts-a"><button class="mini" type="button" data-copy="${n}">${IC.copy}<span>Kopieren</span></button>${last?`<button class="mini" type="button" data-again>${IC.again}<span>Nochmal</span></button>`:""}${last&&note==="cut"?`<button class="mini" type="button" data-more>${IC.on}<span>Weiter</span></button>`:""}</div></div>`;
+    const n=copies.push(copyText(blocks))-1,last=i===M.length&&!busy,u=M[userIndex];
+    const count=u?.variants?.length||0,selected=u?.variantIndex||0;
+    const versions=count>1?`<div class="variants" role="group" aria-label="Antwortvarianten"><button type="button" class="mini" data-variant="${selected-1}" data-turn="${userIndex}" aria-label="Vorherige Antwortvariante"${busy||selected===0?" disabled":""}>‹</button><span role="status">Antwort ${selected+1} von ${count}</span><button type="button" class="mini" data-variant="${selected+1}" data-turn="${userIndex}" aria-label="Nächste Antwortvariante"${busy||selected===count-1?" disabled":""}>›</button></div>`:"";
+    const suggestions=last&&!note?followUps(u?.content||"",blocks.filter(b=>b.type==="text").map(b=>b.text).join("")):[];
+    h+=`<section class="msg a" aria-label="xbubekir">${viewBlocks(blocks,false,`turn-${userIndex}`)}${note?`<p class="note">${NOTES[note]}</p>`:""}<div class="acts-a"><button class="mini" type="button" data-copy="${n}">${IC.copy}<span>Kopieren</span></button>${last?`<button class="mini" type="button" data-again>${IC.again}<span>Nochmal</span></button>`:""}${last&&note==="cut"?`<button class="mini" type="button" data-more>${IC.on}<span>Weiter</span></button>`:""}${versions}</div>${suggestions.length?`<div class="suggestions" role="group" aria-label="Passende nächste Schritte">${suggestions.map(([label,prompt])=>`<button type="button" class="chip" data-follow="${esc(prompt)}">${esc(label)}</button>`).join("")}</div>`:""}</section>`;
   }
-  const end=M.at(-1); // Frage ohne Antwort (Neu-Erzeugen ist schiefgegangen): Antwort nochmal anfordern
+  const end=M.at(-1);
   if(end?.role==="user"&&!end.skip&&!busy)h+=`<div class="acts-a end"><button class="mini" type="button" data-again>${IC.again}<span>Antwort anfordern</span></button></div>`;
   return h;
 }
@@ -655,7 +713,7 @@ const itemHTML=(c,del)=>{const t=esc(c.title||"Ohne Titel"),on=del&&c===cur;
   return`<li${on?' class="on"':""}><button class="open" type="button" data-id="${esc(c.id)}"${on?' aria-current="page"':""}><b>${t}</b><small>${when(c.updated)} · ${esc(MODELS[c.model]?.name||c.model)}</small></button>${del?`<button class="ib del" type="button" data-del="${esc(c.id)}" aria-label="Chat „${t}“ löschen" title="Löschen">${IC.del}</button>`:""}</li>`};
 function helloHTML(){ // für genau eine Person: Begrüßung mit Namen, am Handy darunter die letzten Chats
   const n=S.name.trim(),hr=new Date().getHours(),hi=hr>=5&&hr<11?"Guten Morgen":hr>=18&&hr<23?"Guten Abend":"Hallo",rec=chats.slice(0,3);
-  return`<div class="hello"><img class="mark" src="brand/xbu.webp" alt="xbu" width="640" height="376"><h2 class="hi">${hi}${n?", "+esc(n):""}!</h2><p class="tag">Frag. Entdecke. Erreiche mehr.</p></div>`
+  return`<div class="hello"><img class="mark" src="brand/xbu.webp" alt="xbu" width="640" height="376"><h2 class="hi">${hi}${n?", "+esc(n):""}!</h2><p class="tag">Frag. Entdecke. Erreiche mehr.</p><div class="starters" role="group" aria-label="Gespräch beginnen"><button class="chip" type="button" data-start="Verbessere diesen Text, ohne den Inhalt zu ändern:\n\n">Text verbessern</button><button class="chip" type="button" data-start="Erkläre mir ">Etwas verstehen</button><button class="chip" type="button" data-start="Übe mit mir einfache arabische Wörter. Stelle eine Aufgabe und warte auf meine Antwort.">Arabisch üben</button></div></div>`
     +(rec.length?`<section class="recent" aria-labelledby="rcH"><h3 id="rcH">Weiter, wo du warst</h3><ul>${rec.map(c=>itemHTML(c,false)).join("")}</ul>${chats.length>rec.length?'<button class="linkbtn" type="button" data-all>Alle Chats</button>':""}</section>`:"");
 }
 function loginHTML(){
@@ -719,7 +777,7 @@ function updBrain(){
   bBrain.setAttribute("aria-label",`Gehirn: ${t}${web?", mit Websuche":""}. Wechseln`);
 }
 function render(){
-  const ready=!!keyOf(S.provider),has=!!(ready&&cur&&cur.msgs.length),st=log.scrollTop,stick=nearBottom();
+  const ready=!!keyOf(cur?provOf(cur):S.provider),has=!!(ready&&cur&&cur.msgs.length),st=log.scrollTop,stick=nearBottom();
   document.body.classList.toggle("nokey",!ready);
   document.body.classList.toggle("start",ready&&!has);
   updBrain();renderList();
@@ -762,14 +820,14 @@ function setBusy(b){
 function updSend(){bSend.disabled=!busy&&!inp.value.trim()}
 function grow(){ // Feld wächst mit, der Entwurf bleibt gespeichert, falls die App zwischendurch zugeht
   inp.style.height="auto";inp.style.height=Math.min(inp.scrollHeight+2,innerHeight*.4)+"px";updSend();
-  try{if(inp.value.trim())localStorage.setItem(DK,inp.value);else localStorage.removeItem(DK)}catch{}
+  try{if(inp.value.trim())localStorage.setItem(DK,inp.value);else localStorage.removeItem(DK)}catch{storageWarning()}
 }
 let toastT=0;
 function toast(t){const el=$("#toast");el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{el.hidden=true},3200)}
 function say(t){const el=$("#say");el.textContent="";setTimeout(()=>{el.textContent=t},60)} // für Screenreader, das Gespräch selbst wird nicht vorgelesen
 
 // ---------- Chats verwalten ----------
-function store(c){c.updated=Date.now();chats.sort((a,b)=>b.updated-a.updated);DB.put(c)}
+function store(c){c.updated=Date.now();chats.sort((a,b)=>b.updated-a.updated);return DB.put(c)}
 function forget(c){chats=chats.filter(x=>x!==c);DB.del(c.id)}
 async function settle(){ // läuft gerade eine Antwort, wird sie vor dem Wechsel angehalten (der Teiltext bleibt im Chat)
   if(!busy)return true;
@@ -811,13 +869,45 @@ function listHTML(q){ // Chats nach Datum gruppiert; die Suche findet Titel und 
   return h+"</ul>";
 }
 function renderList(){$("#sideList").innerHTML=listHTML($("#qSide").value);$("#chList").innerHTML=listHTML($("#qChats").value)}
-function copyMsg(b){ // als Klartext (ohne Markdown-Zeichen) und als formatierter Text, je nachdem, wo eingefügt wird
-  const cb=navigator.clipboard;if(!cb)return;
-  const txt=plain(copies[b.dataset.copy]||""),html=[...b.closest(".msg").querySelectorAll(":scope>.md")].map(e=>e.innerHTML).join("");
-  const done=()=>{const s=b.querySelector("span");s.textContent="Kopiert";setTimeout(()=>{s.textContent="Kopieren"},1500)},only=()=>cb.writeText(txt).then(done,()=>{});
-  if(window.ClipboardItem&&cb.write)cb.write([new ClipboardItem({"text/plain":new Blob([txt],{type:"text/plain"}),"text/html":new Blob([html],{type:"text/html"})})]).then(done,only);
-  else only();
+async function writeClipboard(text,html){
+  const cb=navigator.clipboard;
+  if(!cb)throw new Error("Zwischenablage nicht verfügbar");
+  if(html&&window.ClipboardItem&&cb.write){
+    try{await cb.write([new ClipboardItem({"text/plain":new Blob([text],{type:"text/plain"}),"text/html":new Blob([html],{type:"text/html"})})]);return}catch{}
+  }
+  await cb.writeText(text);
 }
+async function copyMsg(b){
+  const fragment=document.createElement("div");
+  for(const el of b.closest(".msg").querySelectorAll(":scope>.md,:scope>.src"))fragment.append(el.cloneNode(true));
+  fragment.querySelectorAll(".codehead").forEach(el=>el.remove());
+  fragment.querySelectorAll("[id]").forEach(el=>el.removeAttribute("id"));
+  // Interne Belegmarker beim Einfügen in E-Mails in echte Quellenlinks umwandeln.
+  for(const a of fragment.querySelectorAll("[data-cite]")){
+    const source=document.getElementById(a.getAttribute("href").slice(1))?.querySelector("a");
+    if(source)a.href=source.href;
+    a.removeAttribute("data-cite");
+  }
+  try{await writeClipboard(copies[b.dataset.copy]||"",fragment.innerHTML);toast(fragment.querySelector(".src")?"Antwort mit Quellen kopiert.":"Antwort kopiert.");say("Antwort kopiert.")}
+  catch{toast("Kopieren hat nicht geklappt. Markiere den Text und kopiere ihn manuell.")}
+}
+async function copyCode(b){
+  const text=b.closest(".codeblock").querySelector("code").textContent;
+  try{await writeClipboard(text);toast("Code kopiert.")}
+  catch{toast("Code konnte nicht kopiert werden. Markiere ihn und kopiere ihn manuell.")}
+}
+function openEdit(index){
+  if(busy||cur?.msgs[index]?.role!=="user")return;
+  editing={chat:cur,index};$("#editText").value=cur.msgs[index].content;
+  $("#dEdit").showModal();$("#editText").focus();
+}
+$("#fEdit").addEventListener("submit",async e=>{
+  e.preventDefault();if(busy||!editing)return;
+  const c=editBranch(editing.chat,editing.index,$("#editText").value,crypto.randomUUID());
+  if(!c)return;
+  $("#dEdit").close();editing=null;cur=c;chats.unshift(c);store(c);
+  await run(c,c.msgs.at(-1));
+});
 
 // ---------- Gehirn wählen (Tipp auf die Gehirn-Zeile) ----------
 const PTAG={gemini:["Google Gemini","kostenlos"],claude:["Anthropic Claude","kostenpflichtig"],open:["DeepSeek","Open Source, Cent-Beträge"],eigen:["Eigene xbubekir-KI","auf diesem Gerät, kostenlos"]};
@@ -905,7 +995,7 @@ async function checkKey(p,key,msgEl,btn){ // Schlüssel einmal kostenlos prüfen
 $("#fSet").addEventListener("submit",async e=>{
   e.preventDefault();
   S.name=$("#sName").value;S.about=$("#sAbout").value;S.style=$("#sStyle").value;
-  if($("#sProv").value!==S.provider&&!busy)cur=null; // anderer Anbieter: gleich mit einem neuen Chat weitermachen
+  if(cur&&$("#sModel").value!==cur.model&&!busy)cur=null; // anderes Modell: gleich mit einem neuen Chat weitermachen
   S.provider=$("#sProv").value;S.gmode=$("#sGMode").value;S.model=S.models[S.provider]=$("#sModel").value;S.effort=$("#sEffort").value;S.web=webWant;saveS();
   for(const[p,id]of[["gemini","sGKey"],["claude","sCKey"]]){
     const key=$("#"+id).value.trim();
@@ -944,8 +1034,17 @@ bBrain.addEventListener("click",openBrain);
 $("#brList").addEventListener("click",e=>{const b=e.target.closest("[data-model]");if(b)pickBrain(b.dataset.model)});
 $("#brEff").addEventListener("click",e=>{const b=e.target.closest("[data-eff]");if(!b)return;S.effort=b.dataset.eff;saveS();renderBrain();updBrain()});
 $("#brMore").addEventListener("click",()=>{dBrain.close();openSettings()});
-log.addEventListener("click",e=>{
-  const t=e.target.closest("[data-copy],[data-again],[data-more],[data-act],[data-id],[data-all]");if(!t)return;
+log.addEventListener("click",async e=>{
+  const t=e.target.closest("[data-copy],[data-code],[data-cite],[data-variant],[data-edit],[data-start],[data-follow],[data-again],[data-more],[data-act],[data-id],[data-all]");if(!t)return;
+  if(t.hasAttribute("data-cite")){e.preventDefault();const el=document.getElementById(t.getAttribute("href").slice(1));el?.focus();el?.scrollIntoView({block:"nearest"});return}
+  if(t.hasAttribute("data-code")){copyCode(t);return}
+  if(t.hasAttribute("data-edit")){openEdit(+t.dataset.edit);return}
+  if(t.hasAttribute("data-variant")){if(!busy&&cur&&selectVariant(cur,+t.dataset.turn,+t.dataset.variant)){await store(cur);render();say("Antwortvariante gewechselt.")}return}
+  if(t.hasAttribute("data-start")||t.hasAttribute("data-follow")){
+    if(busy)return;
+    if(inp.value.trim()){toast("Dein Entwurf bleibt erhalten. Sende oder leere ihn zuerst.");inp.focus();return}
+    inp.value=t.dataset.start??t.dataset.follow;grow();inp.focus();return;
+  }
   if(t.dataset.copy!==undefined)copyMsg(t);
   else if(t.hasAttribute("data-again"))regen();
   else if(t.hasAttribute("data-more"))send("Mach bitte weiter.");
@@ -972,7 +1071,7 @@ dChats.addEventListener("touchend",e=>{const t=e.changedTouches[0];if(tx-t.clien
 setBusy(false);keyHint();
 try{const d=localStorage.getItem(DK);if(d)inp.value=d}catch{}
 if(viaKonto(S.provider)||S.gmode==="konto"||location.hash.includes("access_token")){try{session=(await(await auth()).getSession()).data.session}catch{}} // auch Rückkehr aus der Bestätigungs-Mail
-try{chats=(await DB.all()).sort((a,b)=>b.updated-a.updated)}catch{chats=[]}
+try{chats=(await DB.all()).sort((a,b)=>b.updated-a.updated)}catch{chats=[];storageWarning()}
 render();grow();
 if(keyOf(S.provider)&&desk.matches)inp.focus();
 if(S.provider==="eigen"&&await localCached(await localVariant()))preloadLocal(); // schon gespeichert: in den Grafikspeicher laden, während man tippt

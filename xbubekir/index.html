@@ -69,7 +69,11 @@ noscript{position:fixed;left:0;right:0;bottom:0;z-index:9;background:var(--card)
 /* Hauptbereich mit Lichtbögen */
 .main{position:relative;display:flex;flex-direction:column;min-width:0;min-height:0;overflow:hidden;background:radial-gradient(ellipse 55% 45% at 100% 62%,rgba(91,33,182,.22),transparent 70%),radial-gradient(ellipse 50% 40% at 70% 100%,rgba(91,33,182,.18),transparent 70%)}
 .fx{position:absolute;inset:0;pointer-events:none;z-index:0;transition:opacity .5s}
-body:not(.start) .fx{opacity:.28}
+body:not(.start) .fx{display:none}
+body:not(.start) .main{background:var(--bg)}
+body:not(.start) .composer{background:var(--card);box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+body:not(.start) .spark{filter:none}
+body:not(.start) .send{box-shadow:none}
 .fx i{position:absolute;border-radius:50%}
 .fx i:nth-child(1){left:-597px;top:-777px;width:1054px;height:1054px;border:2px solid rgba(178,150,255,.6);background:radial-gradient(circle at 45% 40%,rgba(40,14,92,.55) 40%,rgba(72,28,150,.7) 82%,rgba(118,60,235,.85) 99%);box-shadow:0 0 80px 10px rgba(124,58,237,.38),inset 0 0 60px rgba(150,105,255,.5)}
 .fx i:nth-child(2){right:-888px;bottom:-1299px;width:1680px;height:1680px;border:2px solid rgba(178,150,255,.8);background:radial-gradient(circle,rgba(36,12,84,.45) 70%,rgba(70,26,150,.7) 90%,rgba(118,60,238,.85) 99.5%);box-shadow:0 0 90px 12px rgba(124,58,237,.35),inset 0 0 70px rgba(150,105,255,.45)}
@@ -89,7 +93,7 @@ body.start #log{flex:none;overflow:visible;padding-top:0;padding-bottom:0}
 /* Nachrichten */
 .msg{margin-top:22px}
 .msg:first-child{margin-top:0}
-.msg.u{display:flex;justify-content:flex-end}
+.msg.u{display:flex;flex-direction:column;align-items:flex-end}
 .bub{max-width:85%;background:rgba(124,58,237,.18);border:1px solid rgba(167,139,250,.2);border-radius:18px 18px 4px 18px;padding:9px 14px;white-space:pre-wrap;overflow-wrap:anywhere}
 .msg.a{overflow-wrap:anywhere}
 .msg.a,.bub{font-size:17px;line-height:1.6}
@@ -102,8 +106,30 @@ body.start #log{flex:none;overflow:visible;padding-top:0;padding-bottom:0}
 .md li+li,.md li>ul,.md li>ol{margin-top:.25em}
 .md li>ul,.md li>ol{margin-bottom:0}
 .md code{font-family:var(--mono);font-size:.88em;background:var(--code);padding:.1em .35em;border-radius:5px}
-.md pre{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:12px 14px;overflow-x:auto;overflow-wrap:normal}
+.md pre{max-width:100%;background:var(--code);border:1px solid var(--line);border-radius:10px;padding:12px 14px;overflow-x:auto;overflow-wrap:normal}
 .md pre code{background:none;padding:0;font-size:.85em}
+.codeblock{max-width:100%;margin:0 0 .8em;border:1px solid var(--line2);border-radius:12px;overflow:hidden;background:var(--code)}
+.codehead{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:2px 8px 2px 14px;border-bottom:1px solid var(--line2);color:var(--soft);font:13px var(--mono)}
+.md .codeblock pre{border:0;border-radius:0;margin:0;padding:14px}
+.codeblock .hljs-keyword,.codeblock .hljs-selector-tag,.codeblock .hljs-literal{color:#c4a5ff}
+.codeblock .hljs-string,.codeblock .hljs-attr{color:#a6dfb5}
+.codeblock .hljs-number,.codeblock .hljs-symbol{color:#ffc494}
+.codeblock .hljs-comment{color:#b4abc8}
+.codeblock .hljs-title,.codeblock .hljs-built_in{color:#a5d5ff}
+.citations{white-space:nowrap;font-size:.85em}
+.citations a{display:inline-flex;align-items:center;justify-content:center;min-width:28px;min-height:28px;padding:0 3px;text-decoration:none}
+.src li:target,.src li:focus{outline:2px solid var(--acc2);outline-offset:3px;border-radius:4px}
+.mini:disabled{opacity:.45;cursor:default}
+.variants{display:inline-flex;align-items:center;gap:4px;font-size:13px;color:var(--soft)}
+.variants .mini{min-width:36px;font-size:22px}
+.chip{min-height:44px;max-width:100%;padding:8px 14px;border:1px solid var(--line2);border-radius:14px;background:var(--card);color:var(--soft);font-size:14px;white-space:normal;text-align:start}
+.chip:hover{background:var(--accl);border-color:var(--acc2);color:var(--ink)}
+.starters,.suggestions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.starters{justify-content:center;margin-top:24px}
+.storage-notice{padding:10px 16px;background:var(--badl);color:#ffdcd3;font-size:14px}
+.edit{margin-top:2px}
+#editText{min-height:150px;max-height:45dvh}
+#dEdit .dacts{flex-wrap:wrap}
 .md blockquote{border-inline-start:3px solid var(--line2);margin-inline-start:0;padding-inline-start:12px;color:var(--soft)}
 .md a{color:var(--acc2)}
 .md hr{border:0;border-top:1px solid var(--line);margin:1.2em 0}
@@ -336,6 +362,7 @@ label.chk{display:flex;align-items:center;gap:10px;min-height:44px;font-weight:5
   .composer{min-height:52px}
 }
 </style>
+<script src="vendor/highlight.js" defer></script>
 <script type="module" src="app.js"></script>
 </head>
 <body class="nokey">
@@ -354,6 +381,7 @@ label.chk{display:flex;align-items:center;gap:10px;min-height:44px;font-weight:5
     <div class="ttl"><img class="wm" id="topWm" src="brand/wortmarke.webp" alt="xbubekir" width="900" height="259"><span id="topT"></span></div>
     <button class="ib" id="bNewTop" type="button" aria-label="Neuer Chat" title="Neuer Chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4H6.5A2.5 2.5 0 0 0 4 6.5v11A2.5 2.5 0 0 0 6.5 20h11a2.5 2.5 0 0 0 2.5-2.5V12"/><path d="M17.6 3.6a2 2 0 0 1 2.8 2.8L13 13.8l-3.6.8.8-3.6Z"/></svg></button>
   </header>
+  <p id="storageNotice" class="storage-notice" role="status" hidden>Änderungen konnten nicht auf diesem Gerät gespeichert oder Chats nicht geladen werden. Lass die Seite geöffnet und sichere wichtige Texte durch Kopieren.</p>
   <div id="lstat" class="lstat" role="status" hidden><p id="lstatT"></p><progress id="lstatP" max="1"></progress></div>
   <main id="log" aria-label="Gespräch"></main>
   <div class="dock">
@@ -455,7 +483,7 @@ label.chk{display:flex;align-items:center;gap:10px;min-height:44px;font-weight:5
         <label for="sStyle">Wie xbubekir antworten soll</label>
         <textarea class="f" id="sStyle" rows="3" maxlength="2000" placeholder="z. B. „Antworte kurz und auf den Punkt.“ oder „Erklär mir Technik wie einem Anfänger.“"></textarea>
       </fieldset>
-      <p class="hint">Name, „Über dich“, Antwortstil, Modell und Websuche gelten ab dem nächsten neuen Chat. Beim Wechsel des Anbieters beginnt gleich ein neuer Chat. Laufende Chats behalten ihre Einstellungen, damit xbubekir den Faden nicht verliert. Die Denktiefe gilt sofort.</p>
+      <p class="hint">Name, „Über dich“, Antwortstil und Websuche gelten ab dem nächsten neuen Chat. Ein anderes Modell beginnt beim Speichern einen neuen Chat; während einer Antwort gilt es für den nächsten neuen Chat. Laufende Chats behalten ihre Einstellungen, damit xbubekir den Faden nicht verliert. Die Denktiefe gilt sofort.</p>
       <details class="danger">
         <summary>Daten löschen</summary>
         <div><button type="button" id="bWipeChats">Alle Chats löschen</button><button type="button" id="bWipeKey">Schlüssel entfernen</button></div>
@@ -465,6 +493,15 @@ label.chk{display:flex;align-items:center;gap:10px;min-height:44px;font-weight:5
       <p class="status" id="setMsg" role="status"></p>
       <div class="dacts"><button type="button" class="btn alt" data-close>Abbrechen</button><button type="submit" class="btn" id="bSave">Speichern</button></div>
     </div>
+  </form>
+</dialog>
+<dialog id="dEdit" aria-labelledby="editH">
+  <form id="fEdit" class="dbody">
+    <div class="dh"><h2 id="editH">Nachricht bearbeiten</h2><button class="ib" type="button" data-close aria-label="Schließen">×</button></div>
+    <p class="hint" id="editHint">Die Änderung startet einen neuen Chat ab dieser Frage. Der bisherige Chat bleibt erhalten.</p>
+    <label for="editText">Deine Nachricht</label>
+    <textarea class="f" id="editText" rows="6" required dir="auto" aria-describedby="editHint"></textarea>
+    <div class="dacts"><button class="btn alt" type="button" data-close>Abbrechen</button><button class="btn" type="submit">Neuen Chat starten</button></div>
   </form>
 </dialog>
 <noscript><p style="padding:16px">xbubekir braucht JavaScript.</p></noscript>

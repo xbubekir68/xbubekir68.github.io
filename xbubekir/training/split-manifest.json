@@ -1,0 +1,2594 @@
+{
+  "train": [
+    {
+      "group": "persona:hast du gefühle",
+      "hash": "93691fc835690c23fa81610897bccd53874f84a916f04836318326b0a32af8fa"
+    },
+    {
+      "group": "persona:hast du gefühle",
+      "hash": "93691fc835690c23fa81610897bccd53874f84a916f04836318326b0a32af8fa"
+    },
+    {
+      "group": "persona:was ist die hauptstadt von ägypten",
+      "hash": "48386e8a38ce3123ecda075f08781a3f39d1b9090ee7a3426441e4bd5021d1d2"
+    },
+    {
+      "group": "persona:was ist die hauptstadt von ägypten",
+      "hash": "48386e8a38ce3123ecda075f08781a3f39d1b9090ee7a3426441e4bd5021d1d2"
+    },
+    {
+      "group": "persona:auf welchem modell basierst du",
+      "hash": "d6a8d6f56a43395802a2cfc732112170d2424d929cc6f60bfc37f3e3a44737e9"
+    },
+    {
+      "group": "persona:auf welchem modell basierst du",
+      "hash": "d6a8d6f56a43395802a2cfc732112170d2424d929cc6f60bfc37f3e3a44737e9"
+    },
+    {
+      "group": "persona:antworte bitte kürzer",
+      "hash": "94ba2acf1c73019859708ba6a70711390d3867d833d20967b9546ead6593bdf6"
+    },
+    {
+      "group": "persona:antworte bitte kürzer",
+      "hash": "94ba2acf1c73019859708ba6a70711390d3867d833d20967b9546ead6593bdf6"
+    },
+    {
+      "group": "persona:du hast 9 mal 8 mit 74 beantwortet stimmt das",
+      "hash": "37f706df4c7f8d2a1324553d13c23b8d6d112885fe62da76c9ecc7ae6749bfba"
+    },
+    {
+      "group": "persona:du hast 9 mal 8 mit 74 beantwortet stimmt das",
+      "hash": "37f706df4c7f8d2a1324553d13c23b8d6d112885fe62da76c9ecc7ae6749bfba"
+    },
+    {
+      "group": "persona:wie viele tage hat ein jahr",
+      "hash": "ac7607f0a47969c38ea51b452a4967b54c6caf3cbba4d6f24b3a8e899f2e40b4"
+    },
+    {
+      "group": "persona:wie viele tage hat ein jahr",
+      "hash": "ac7607f0a47969c38ea51b452a4967b54c6caf3cbba4d6f24b3a8e899f2e40b4"
+    },
+    {
+      "group": "persona:erklär mir brüche",
+      "hash": "8f56d930ec0286111924e0eae6e739fadaddb2211bb752e3d9a6c0cbcc8eddd8"
+    },
+    {
+      "group": "persona:erklär mir brüche",
+      "hash": "8f56d930ec0286111924e0eae6e739fadaddb2211bb752e3d9a6c0cbcc8eddd8"
+    },
+    {
+      "group": "lesson:Familie",
+      "hash": "0bcae722eb517873d708a12c83623582a3ad4fe77de85f2d5091bbe35f2b95f1"
+    },
+    {
+      "group": "lesson:Familie",
+      "hash": "0bcae722eb517873d708a12c83623582a3ad4fe77de85f2d5091bbe35f2b95f1"
+    },
+    {
+      "group": "lesson:Familie",
+      "hash": "0bcae722eb517873d708a12c83623582a3ad4fe77de85f2d5091bbe35f2b95f1"
+    },
+    {
+      "group": "lesson:Familie",
+      "hash": "c97e5e8ef2d7839f32481a7a9781e162f0a7f29ae0d5789599fa8222b1f959d3"
+    },
+    {
+      "group": "lesson:Familie",
+      "hash": "3601f44189c44d95e1ca558fa60a99d14c74813304e5b9790d0b5ace8c0e4c4b"
+    },
+    {
+      "group": "lesson:Familie",
+      "hash": "c3b83008b014b0b16a70a80e4d7bf82c2ed7488737a6a24f6427663a63b8222d"
+    },
+    {
+      "group": "lesson:Familie",
+      "hash": "687cd90723fe376d84c7e1e6e13ff6c0d69b1457d2aaa54732206afd95ad78e7"
+    },
+    {
+      "group": "lesson:Familie",
+      "hash": "f719bfd58910670bf5d9aa7ba52bed5620726e9bc1a7dd21fb6d444b8d5ca2ce"
+    },
+    {
+      "group": "lesson:Familie",
+      "hash": "a229a5f1859efed3638c46fb6f0432d0a80af9abd7c1a5c1e1b91d4ba8e00894"
+    },
+    {
+      "group": "lesson:Familie",
+      "hash": "53527d69cebbe5fdca53894aa25ababc015ef61cf6d3a6522b5f057d503b8a82"
+    },
+    {
+      "group": "lesson:Familie",
+      "hash": "b9291d2672850ff9c1dfd285c68e49ffe1c4828aa3efa7eca2fac76c6abea744"
+    },
+    {
+      "group": "lesson:Familie",
+      "hash": "56aa36d164a963d9a343e8b9b5ec58d9bff85a9a276f41924849111ad4c82036"
+    },
+    {
+      "group": "lesson:Familie",
+      "hash": "a279fe7b3f694dce47716db5418d1769422529d8ceb6184e9a8bb25ab796e3c6"
+    },
+    {
+      "group": "lesson:Familie",
+      "hash": "8d531b0ed867bb9d510a18d6b3ab599acec92033e7b9110e1e31e6ad00ad87a9"
+    },
+    {
+      "group": "lesson:Familie",
+      "hash": "244415d44e2b837ad0df866e28ef6acaec438d4f04636eae9a8f3b1187e90c4c"
+    },
+    {
+      "group": "lesson:Familie",
+      "hash": "27e5614d1f6c9d61b6b40d4a960cbfc786e36ca853126657e59e94fdbc85b4b6"
+    },
+    {
+      "group": "persona:noch einen witz bitte",
+      "hash": "9eb1dcd3b892142d8bc06bc2e457c5ffa1822e497302e681a04951a9e2ba63f8"
+    },
+    {
+      "group": "persona:noch einen witz bitte",
+      "hash": "9eb1dcd3b892142d8bc06bc2e457c5ffa1822e497302e681a04951a9e2ba63f8"
+    },
+    {
+      "group": "persona:erklär mir einfach was ein atom ist",
+      "hash": "8c08a516045670b9d154ce6b3f01f7bbabd060a904a49ea02d7fecb43ecf7598"
+    },
+    {
+      "group": "persona:erklär mir einfach was ein atom ist",
+      "hash": "8c08a516045670b9d154ce6b3f01f7bbabd060a904a49ea02d7fecb43ecf7598"
+    },
+    {
+      "group": "persona:verbessere er hat mehr geld wie ich",
+      "hash": "1cb89cf98a261252addab5908337659861f80cb6ff35a7f3d756bcbda396b891"
+    },
+    {
+      "group": "persona:verbessere er hat mehr geld wie ich",
+      "hash": "1cb89cf98a261252addab5908337659861f80cb6ff35a7f3d756bcbda396b891"
+    },
+    {
+      "group": "lesson:Obst & Gemüse",
+      "hash": "f31c581dff99cf07c3da87c3c7f76a0a6070ec4cc38f2a5841a455a2b7e9801a"
+    },
+    {
+      "group": "lesson:Obst & Gemüse",
+      "hash": "d7aeffca3793b1ae2724b5fd5d6a5940cb3dd9fa33068804a63557c7335244c6"
+    },
+    {
+      "group": "lesson:Obst & Gemüse",
+      "hash": "a964532dbb6930dcb6199d5a6c25bc8f9124bfd051948cefeb24a60b33430421"
+    },
+    {
+      "group": "lesson:Obst & Gemüse",
+      "hash": "d5194f93f187180232815f8490f38d145c49b0efa2ba9c87656f0fef564dace8"
+    },
+    {
+      "group": "lesson:Obst & Gemüse",
+      "hash": "d7598e1f89eb7df706f10b2af6fc4bd01fd81d663194b3e9a5e4a408034b7de7"
+    },
+    {
+      "group": "lesson:Obst & Gemüse",
+      "hash": "1412cc1ec486e8fc870dc483d9946cc55791ec5562b94ade4e0852cc1a287ab9"
+    },
+    {
+      "group": "lesson:Obst & Gemüse",
+      "hash": "f1945df86653e1681b274ece645b7aa98f4f802dc80e5accb9284a125adb345c"
+    },
+    {
+      "group": "persona:ich bin müde und hab keine lust zu lernen",
+      "hash": "af2c7b2b9def8ddfd8688d8953aab475bd615efba4dc28b80026acde0ff03a8f"
+    },
+    {
+      "group": "persona:ich bin müde und hab keine lust zu lernen",
+      "hash": "af2c7b2b9def8ddfd8688d8953aab475bd615efba4dc28b80026acde0ff03a8f"
+    },
+    {
+      "group": "persona:was sind harakat",
+      "hash": "fa8e02c30122ebd1c5042e19649c20f77d53f9cdf920837887867e155ffd4033"
+    },
+    {
+      "group": "persona:was sind harakat",
+      "hash": "fa8e02c30122ebd1c5042e19649c20f77d53f9cdf920837887867e155ffd4033"
+    },
+    {
+      "group": "persona:merhaba nasılsın",
+      "hash": "388bc4170a4c5023b2b3cfbaa29722197c983121f52139dc11ccc880ff963909"
+    },
+    {
+      "group": "persona:merhaba nasılsın",
+      "hash": "388bc4170a4c5023b2b3cfbaa29722197c983121f52139dc11ccc880ff963909"
+    },
+    {
+      "group": "persona:welcher tag ist heute",
+      "hash": "31ef0f4a600101a1cf0f3d68262fbb9e6868a8e23729d8ad22b12156eac9d390"
+    },
+    {
+      "group": "persona:welcher tag ist heute",
+      "hash": "31ef0f4a600101a1cf0f3d68262fbb9e6868a8e23729d8ad22b12156eac9d390"
+    },
+    {
+      "group": "lesson:Gefühle & Zustand",
+      "hash": "ef2ae5390519fb0a949e7df89907df03d44e595678c01d691d744fd157f7abc8"
+    },
+    {
+      "group": "lesson:Gefühle & Zustand",
+      "hash": "ef2ae5390519fb0a949e7df89907df03d44e595678c01d691d744fd157f7abc8"
+    },
+    {
+      "group": "lesson:Gefühle & Zustand",
+      "hash": "ef2ae5390519fb0a949e7df89907df03d44e595678c01d691d744fd157f7abc8"
+    },
+    {
+      "group": "lesson:Gefühle & Zustand",
+      "hash": "c6ce68ef87cf57a22569bdbb524d662060380cef03822559b5f9a89c982500b0"
+    },
+    {
+      "group": "lesson:Gefühle & Zustand",
+      "hash": "2d5cf496486ad05c69fcb5026cb9fde95a3ec3c07dfb009eaa275d00e3c718b1"
+    },
+    {
+      "group": "lesson:Gefühle & Zustand",
+      "hash": "83396eda139437329b90987d0b6f21246d0504389f699192ed00cfdbd4754ce5"
+    },
+    {
+      "group": "lesson:Gefühle & Zustand",
+      "hash": "7baf6d221f81ab8e10b226f8a9d1322ae6e55b1fe06d09d025a6e5cc3563b491"
+    },
+    {
+      "group": "lesson:Gefühle & Zustand",
+      "hash": "c28edf845eccaff29d7ab891ac17afc2b3ddd7765c07eaa78582be351ad37841"
+    },
+    {
+      "group": "lesson:Gefühle & Zustand",
+      "hash": "e284d14ff78a923ca20f53564b17d0f4c5b153e2d5491057b139f22c320d49f2"
+    },
+    {
+      "group": "lesson:Gefühle & Zustand",
+      "hash": "edcc0dbeba4ae47c45fe1fdac56657ee99e6465fc348617ade07e4624a5b0e81"
+    },
+    {
+      "group": "lesson:Gefühle & Zustand",
+      "hash": "21d266e7dc81866e98f60bd0d5f187e1d7f985f77f6019985f4f8546d052dbfe"
+    },
+    {
+      "group": "persona:danke",
+      "hash": "fa18c0601707826ac7e7101c7a79b4cd996d626a753b3f52994a1a374253474f"
+    },
+    {
+      "group": "persona:danke",
+      "hash": "fa18c0601707826ac7e7101c7a79b4cd996d626a753b3f52994a1a374253474f"
+    },
+    {
+      "group": "persona:kannst du arabisch",
+      "hash": "a8588c4bc3e7456aa7144babfaf87f34fa47c3d980803302381ef44c6d975c54"
+    },
+    {
+      "group": "persona:kannst du arabisch",
+      "hash": "a8588c4bc3e7456aa7144babfaf87f34fa47c3d980803302381ef44c6d975c54"
+    },
+    {
+      "group": "persona:langweilig",
+      "hash": "f0a9ad12df54dd50c36e5b74c7e9e05127995a3c6dd443791f0be87d0fd53eae"
+    },
+    {
+      "group": "persona:langweilig",
+      "hash": "f0a9ad12df54dd50c36e5b74c7e9e05127995a3c6dd443791f0be87d0fd53eae"
+    },
+    {
+      "group": "lesson:Unterwegs",
+      "hash": "5f62573a9900a40f5310cf0dda32aded20380ea57ee349ddb96ba5673d7abfa5"
+    },
+    {
+      "group": "lesson:Unterwegs",
+      "hash": "5f62573a9900a40f5310cf0dda32aded20380ea57ee349ddb96ba5673d7abfa5"
+    },
+    {
+      "group": "lesson:Unterwegs",
+      "hash": "5f62573a9900a40f5310cf0dda32aded20380ea57ee349ddb96ba5673d7abfa5"
+    },
+    {
+      "group": "lesson:Unterwegs",
+      "hash": "97be62890d3bd8cf60c9c4d6999955f9ca2adc4a1857bf0078e370972d3b043b"
+    },
+    {
+      "group": "lesson:Unterwegs",
+      "hash": "e19b02c8b5d071a3207119658aea458da783f5d090d164a549e44bb64d67826c"
+    },
+    {
+      "group": "lesson:Unterwegs",
+      "hash": "d80883b60f4104b144e8f6eb051a84fc8b2275af6a973cc33450a45d35f2cdeb"
+    },
+    {
+      "group": "lesson:Unterwegs",
+      "hash": "ad3b72e93ff8b12316e43f1ebb59cfdfb93130f927b7dff877e7af8a255baa52"
+    },
+    {
+      "group": "lesson:Unterwegs",
+      "hash": "8318115185d63d912eab212748bc6a02b5a5f182eb307361aeca4cfa7ed9c301"
+    },
+    {
+      "group": "lesson:Unterwegs",
+      "hash": "391d7b712d227d63e02e1e65bd644c8bb42a341797a92acc3e8adc8ac54d8b2a"
+    },
+    {
+      "group": "lesson:Unterwegs",
+      "hash": "8fca0fd236648d1898d5fc3e1c6ce4c1105c2dc5d936af46b8ed749c18ea5db7"
+    },
+    {
+      "group": "lesson:Unterwegs",
+      "hash": "3886bbb8e2a3ee320be8e89e6c7d6a08044860db31fe5c7dd930abc6ca10a4b4"
+    },
+    {
+      "group": "lesson:Unterwegs",
+      "hash": "277129d6f6ef0d4fc7ab65ad4f69cb4269dbb7c7af6da7241ed50b05f9ae675c"
+    },
+    {
+      "group": "lesson:Unterwegs",
+      "hash": "4ae9a778adecb67b972e7801855e00a58a7beeac41405e9294345e620243d79b"
+    },
+    {
+      "group": "lesson:Unterwegs",
+      "hash": "045121dcef1d21c1c1d844e67c9b80b79d6b50fd2bc016737245479df1461688"
+    },
+    {
+      "group": "lesson:Unterwegs",
+      "hash": "3bb82196fc08b4937a6f51c4fa96caa48d4a21158784d712a3585a8b28ae896a"
+    },
+    {
+      "group": "lesson:Unterwegs",
+      "hash": "e33a127a2bcf5f38fe4692c9b07d135879ada99af6021011b0e1ee88f07e00a9"
+    },
+    {
+      "group": "lesson:Unterwegs",
+      "hash": "c2f603a71a0cb9e4c0d6566d8ce8572b92e6d50b8216f308acad5c76767ca2e1"
+    },
+    {
+      "group": "persona:schreib eine absage an meinen freund für heute abend",
+      "hash": "404729f0b699b5b887a954406bd8dff76c227354899a727d67007514e69c47cc"
+    },
+    {
+      "group": "persona:schreib eine absage an meinen freund für heute abend",
+      "hash": "404729f0b699b5b887a954406bd8dff76c227354899a727d67007514e69c47cc"
+    },
+    {
+      "group": "persona:antworte nur mit einem wort farbe von gras",
+      "hash": "f552f8b21ecb4748108d5b84eba7bf6a398cf0f146dc7820731e71990add1311"
+    },
+    {
+      "group": "persona:antworte nur mit einem wort farbe von gras",
+      "hash": "f552f8b21ecb4748108d5b84eba7bf6a398cf0f146dc7820731e71990add1311"
+    },
+    {
+      "group": "persona:was ist der unterschied zwischen fusha und dialekt",
+      "hash": "ea9801d312f1a43a066bea1ea2e16975628fd5e8fa5a7a06f9dbe6553ed4a526"
+    },
+    {
+      "group": "persona:was ist der unterschied zwischen fusha und dialekt",
+      "hash": "ea9801d312f1a43a066bea1ea2e16975628fd5e8fa5a7a06f9dbe6553ed4a526"
+    },
+    {
+      "group": "persona:wann begann der zweite weltkrieg",
+      "hash": "6dcefca8d702b721c6aee0cd7da600cacbd7398ea3e518c39a6639635532bbb1"
+    },
+    {
+      "group": "persona:wann begann der zweite weltkrieg",
+      "hash": "6dcefca8d702b721c6aee0cd7da600cacbd7398ea3e518c39a6639635532bbb1"
+    },
+    {
+      "group": "persona:wer hat gestern das fußballspiel gewonnen",
+      "hash": "ff594270dec5de4d99ebd29a48183c0c525ef9ce1594e6af71d83c129fb75f66"
+    },
+    {
+      "group": "persona:wer hat gestern das fußballspiel gewonnen",
+      "hash": "ff594270dec5de4d99ebd29a48183c0c525ef9ce1594e6af71d83c129fb75f66"
+    },
+    {
+      "group": "lesson:Landschaft",
+      "hash": "b8beeb28a4f69412cc2c100874f488f4c983cb22662983dbd45bcaf2d7cd8e55"
+    },
+    {
+      "group": "lesson:Landschaft",
+      "hash": "580d4ebfa7b5d5d2e7a9b5bacf3809f2945326ffd5c9dbd5fa461bab689aca3c"
+    },
+    {
+      "group": "lesson:Landschaft",
+      "hash": "d7fdfe3e43ffd3f32b5135aafcd8a2a48a971f146e2836a693c65ebf678a4752"
+    },
+    {
+      "group": "lesson:Landschaft",
+      "hash": "b606044b6cdb86e2165fb606b34a6df9f5d24366bb2c396c9d3025b4d196dff0"
+    },
+    {
+      "group": "lesson:Landschaft",
+      "hash": "91b94de6451746a4629fc8fedd48d2875ffd16f218afed745909e53b835cd365"
+    },
+    {
+      "group": "lesson:Landschaft",
+      "hash": "e92ea20e530d4202d1b1e6b0d485f0a7c35937923a5acd1b3ee9af2b9dffea57"
+    },
+    {
+      "group": "lesson:Landschaft",
+      "hash": "e5679462476f221e66e04c5dd4c22647fe743e982030437f4cce9c925a55688c"
+    },
+    {
+      "group": "persona:ich heiße sara",
+      "hash": "db3948fc4ee95175c9a9d4f69ad9f5e72278f35378bfdd060f9b8fb75445a89a"
+    },
+    {
+      "group": "persona:ich heiße sara",
+      "hash": "db3948fc4ee95175c9a9d4f69ad9f5e72278f35378bfdd060f9b8fb75445a89a"
+    },
+    {
+      "group": "lesson:Fragewörter",
+      "hash": "72660d787c289239f06e1d48dc7990124a44456610067ddaa0b9a58a1ad323ef"
+    },
+    {
+      "group": "lesson:Fragewörter",
+      "hash": "72660d787c289239f06e1d48dc7990124a44456610067ddaa0b9a58a1ad323ef"
+    },
+    {
+      "group": "lesson:Fragewörter",
+      "hash": "72660d787c289239f06e1d48dc7990124a44456610067ddaa0b9a58a1ad323ef"
+    },
+    {
+      "group": "lesson:Fragewörter",
+      "hash": "64f7d1df68afe6d429b22a9c6b7a755ed01d272e99511bfd8501d9c4419a89fc"
+    },
+    {
+      "group": "lesson:Fragewörter",
+      "hash": "54e856a27307e6d02cca782b85ba7a8be56b1ac84d5df28a112c65bff5d378b5"
+    },
+    {
+      "group": "lesson:Fragewörter",
+      "hash": "8ccadfa798f0bf2805f620c5ac65a188b5852e37a5115e6e712664d71806c71c"
+    },
+    {
+      "group": "lesson:Fragewörter",
+      "hash": "919eefd900ac6b43cb284799ef2f67ac68252df821a451083238d9ed78aa0b17"
+    },
+    {
+      "group": "lesson:Fragewörter",
+      "hash": "315b2a389de8277b190d59d950903dd287f7867d495ba35d12c90d0fd839ac76"
+    },
+    {
+      "group": "lesson:Fragewörter",
+      "hash": "26a4748ca31280e41b8d65ddf7f00df940e1be829122ffdd6998bc84203c4886"
+    },
+    {
+      "group": "lesson:Fragewörter",
+      "hash": "45e920e8300c0a1f5e1ff3222c7434d43faff851c5aa6d00b4a13a5cf6519ee7"
+    },
+    {
+      "group": "lesson:Fragewörter",
+      "hash": "a2b89f8638c8895ed245fbe9280535968e83aa9ceccd83938700eb6d209e0789"
+    },
+    {
+      "group": "lesson:Fragewörter",
+      "hash": "e8739870c62d2ccb1a824decaf29114dfc49801c2a617264b5404db91e7b5e8b"
+    },
+    {
+      "group": "persona:du bist doof",
+      "hash": "0cb3dfc459ab017e22e7a6930b6c71fdf79663c650dd8bad0353063280fd2c82"
+    },
+    {
+      "group": "persona:du bist doof",
+      "hash": "0cb3dfc459ab017e22e7a6930b6c71fdf79663c650dd8bad0353063280fd2c82"
+    },
+    {
+      "group": "lesson:Lernen",
+      "hash": "23cad897a1b2c190cbf1fbf16e644d846dbad042a422da5d3f9664b3ccdbc2cc"
+    },
+    {
+      "group": "lesson:Lernen",
+      "hash": "9709d25d7cb8fbfebce5eedebd21f6aba248861a89d5c93a36c23fd9c2d62fc6"
+    },
+    {
+      "group": "lesson:Lernen",
+      "hash": "a9a2589bec1fec36c3b7b2ee39da70f7109d9285092faa74d3306063e21caabd"
+    },
+    {
+      "group": "lesson:Lernen",
+      "hash": "ff9c32d6a5d6623e5a5753260dcf926021492c6550482be8c4113bfb242707fa"
+    },
+    {
+      "group": "lesson:Lernen",
+      "hash": "4412c660a7b0cceea66d3aac3520cb19fee7a6ab831fa288d5d154cf6f4a03ec"
+    },
+    {
+      "group": "lesson:Lernen",
+      "hash": "c28cdf4fb5c0aff74872a1f1b1fb97e8c9259f9a406da7b5e53d8c452a6a28fd"
+    },
+    {
+      "group": "lesson:Lernen",
+      "hash": "b43a40bb04f8f142b97db1c5f7c2030b03bc8550db4be2f57d01381a96f8de5e"
+    },
+    {
+      "group": "lesson:Lernen",
+      "hash": "728912e9f33e9e79a4ebe4a3215d0407cac00e1bce12a86227879f8c047fe211"
+    },
+    {
+      "group": "lesson:Lernen",
+      "hash": "62a66d5b24a404f41978d7bccb129362f5c68b2cf0679fb3a6f085729356bcfb"
+    },
+    {
+      "group": "lesson:Im Haus",
+      "hash": "54c340a57f659f2433c838e47e441297a0788a22929fb7d0690cd04a2272050b"
+    },
+    {
+      "group": "lesson:Im Haus",
+      "hash": "54c340a57f659f2433c838e47e441297a0788a22929fb7d0690cd04a2272050b"
+    },
+    {
+      "group": "lesson:Im Haus",
+      "hash": "54c340a57f659f2433c838e47e441297a0788a22929fb7d0690cd04a2272050b"
+    },
+    {
+      "group": "lesson:Im Haus",
+      "hash": "3e330d33cc987ae4db9cc3cbe5095fc9d4e4ca6fb23b50c7af6229a9a32da157"
+    },
+    {
+      "group": "lesson:Im Haus",
+      "hash": "16dab70d14c0fb3d54b526125104e0818bf0a2653099c315965be8a082170da1"
+    },
+    {
+      "group": "lesson:Im Haus",
+      "hash": "898ab6c413c9f92dd28bdf0e0cb9e610fcb852a3733f6fed83d2b87cab3f67e7"
+    },
+    {
+      "group": "lesson:Im Haus",
+      "hash": "aea89c72e74a6bd3bf9acdc82c64945f5241221cfbc516d23be4e1bdb1460b7a"
+    },
+    {
+      "group": "lesson:Im Haus",
+      "hash": "9abf3152de7e463d92a4f339b43c65bb8ce1eb8515de067a30b8ad0219eea9f2"
+    },
+    {
+      "group": "lesson:Im Haus",
+      "hash": "8412b193ec00f85021ca498e3f61493717657f73200cbda68a772e009babecda"
+    },
+    {
+      "group": "lesson:Im Haus",
+      "hash": "d38df3f225ac7e096d89b3202707326b2616a5b78792f84c7d55ddde66dc255b"
+    },
+    {
+      "group": "lesson:Im Haus",
+      "hash": "078d42692b31ffa9b36d906b1dc545963f9591749a82b54d0fc1a62c1c9d56f7"
+    },
+    {
+      "group": "lesson:Im Haus",
+      "hash": "028947b0aee406b50c2d7d1061a751622e84ca3339650424da61af5b8eb69a6e"
+    },
+    {
+      "group": "lesson:Im Haus",
+      "hash": "30c276ee5f9d4be4536c5b5a8d46e2d6d37a27f59321924dd107461ce8f74ea0"
+    },
+    {
+      "group": "lesson:Im Haus",
+      "hash": "d2c34618798a08d0e36f9f2534f19555b0e633bf0b74ad8b8e3f105a4459835b"
+    },
+    {
+      "group": "lesson:Im Haus",
+      "hash": "66966a96089d7e67195373b9e0a2bd4ead73c1d7ee136ce29a7b175d4b376f7c"
+    },
+    {
+      "group": "persona:was ist ein nomen",
+      "hash": "9cbd51601302e99d028d787612f73993593f7688a5f439de92adf677fd7cf4fd"
+    },
+    {
+      "group": "persona:was ist ein nomen",
+      "hash": "9cbd51601302e99d028d787612f73993593f7688a5f439de92adf677fd7cf4fd"
+    },
+    {
+      "group": "persona:was ist besser iphone oder android",
+      "hash": "a3c71c9b581fd160ff592cc8d0e458b9b67d2a127343ad0d71dd9089b2afe8d3"
+    },
+    {
+      "group": "persona:was ist besser iphone oder android",
+      "hash": "a3c71c9b581fd160ff592cc8d0e458b9b67d2a127343ad0d71dd9089b2afe8d3"
+    },
+    {
+      "group": "persona:was soll ich heute kochen",
+      "hash": "04fce83aac07b61c71afa070c3ea7c60f361e0c8bddbe055c37b03a126771de5"
+    },
+    {
+      "group": "persona:was soll ich heute kochen",
+      "hash": "04fce83aac07b61c71afa070c3ea7c60f361e0c8bddbe055c37b03a126771de5"
+    },
+    {
+      "group": "persona:was kannst du alles",
+      "hash": "5787d3bd630c7a8ec57bd6805b2a215cf365a1706929cdfdc861775f98945d69"
+    },
+    {
+      "group": "persona:was kannst du alles",
+      "hash": "5787d3bd630c7a8ec57bd6805b2a215cf365a1706929cdfdc861775f98945d69"
+    },
+    {
+      "group": "persona:gib mir drei tipps zum lernen",
+      "hash": "e1afa9d3cb11bbc340320382e8765ff715f2d895093e4797b0be5dadb07e8d2b"
+    },
+    {
+      "group": "persona:gib mir drei tipps zum lernen",
+      "hash": "e1afa9d3cb11bbc340320382e8765ff715f2d895093e4797b0be5dadb07e8d2b"
+    },
+    {
+      "group": "persona:stell mir ein rätsel",
+      "hash": "fa3be4ad3f1d62c6276acbc11f592f636c7848b0b961223c9b4e14eaa7c5f5fd"
+    },
+    {
+      "group": "persona:stell mir ein rätsel",
+      "hash": "fa3be4ad3f1d62c6276acbc11f592f636c7848b0b961223c9b4e14eaa7c5f5fd"
+    },
+    {
+      "group": "lesson:Größere Zahlen",
+      "hash": "a040f9e2f98fa31ce45d51ec6d24e20b17a7c56de1582fdb4dab61c4f9f36b26"
+    },
+    {
+      "group": "lesson:Größere Zahlen",
+      "hash": "c26c383b8aaa1448c423f62a2a8f4fa38e9ef1dc14c2296a01d2c4d64114b879"
+    },
+    {
+      "group": "lesson:Größere Zahlen",
+      "hash": "b6492be36d78b41b18a4894089c1a8f39b82b693e602dd0426955a157c51fa33"
+    },
+    {
+      "group": "lesson:Größere Zahlen",
+      "hash": "6c563d2432e7b95b49469f78c8c437f139ca82c2d526f6a1aca55d14956245df"
+    },
+    {
+      "group": "lesson:Größere Zahlen",
+      "hash": "ed49a2e0c5acc0386165b85c3a6b81bbccc893e7fd3612a36866ac31d77a0dfa"
+    },
+    {
+      "group": "lesson:Größere Zahlen",
+      "hash": "72ef099619c5ef596c7a1de9191ddf95fdba44548e52bce2fe515100fb3922f4"
+    },
+    {
+      "group": "lesson:Größere Zahlen",
+      "hash": "241484e7d2d11b0272664adbf84026503b6eec1f45082351f3b891060d394ba2"
+    },
+    {
+      "group": "lesson:Größere Zahlen",
+      "hash": "30824c859bb1f84d0282781f2e2e5453abc03914773873b9a6a86c4875421f92"
+    },
+    {
+      "group": "lesson:Größere Zahlen",
+      "hash": "fb9bb5f323d52a24065bf79880996999fd5dc10c6b0a1655a49a66bc71e70143"
+    },
+    {
+      "group": "lesson:Möbel & Dinge",
+      "hash": "443fb8f9669382707b2e75909082578b58a1ef40be2c487d6bd4f944fae0125c"
+    },
+    {
+      "group": "lesson:Möbel & Dinge",
+      "hash": "71e1495b7c91c6eb150dab0f30fa7950d6a4e71ae19a274ff1e538655d1c865a"
+    },
+    {
+      "group": "lesson:Möbel & Dinge",
+      "hash": "38fa2850f4ddfe99db565d1e5d43b850208ec2ae62c3f703b15c982f13541e8a"
+    },
+    {
+      "group": "lesson:Möbel & Dinge",
+      "hash": "16838f472587c97081b0a0572a77626738146dd9e67dbedd779a2b0ca2692e18"
+    },
+    {
+      "group": "lesson:Möbel & Dinge",
+      "hash": "69718f584b485b869fad0482cbcae0cd631ea8ba4776c0734950ff70e0108bfd"
+    },
+    {
+      "group": "lesson:Möbel & Dinge",
+      "hash": "6a6f9704817e619435527c524da957a757c8f91d7a6010482feb51eeb497a88d"
+    },
+    {
+      "group": "lesson:Möbel & Dinge",
+      "hash": "c585f03ccbf368f9d7ceb3a3fc61c70469a3b56ac58d22c6c40c50a9fe30be41"
+    },
+    {
+      "group": "lesson:Möbel & Dinge",
+      "hash": "e8b9487fa8b44470b39761c90026a2336ac10976555dd09630047855c9031d99"
+    },
+    {
+      "group": "lesson:Möbel & Dinge",
+      "hash": "4f38daf946b3b2d09f045703fa5f3715e4deda43f6dc63ffacbbc676d71c54d5"
+    },
+    {
+      "group": "lesson:Möbel & Dinge",
+      "hash": "fe816408eb9b2ccb2b018664d7585cead7fba560dd97eaf32ea605fe80b980a4"
+    },
+    {
+      "group": "lesson:Pronomen",
+      "hash": "b2cd6135f0f378d5a6b1ca74629497b2f46bbec1b993c90c077909f3d13cb43f"
+    },
+    {
+      "group": "lesson:Pronomen",
+      "hash": "b2cd6135f0f378d5a6b1ca74629497b2f46bbec1b993c90c077909f3d13cb43f"
+    },
+    {
+      "group": "lesson:Pronomen",
+      "hash": "b2cd6135f0f378d5a6b1ca74629497b2f46bbec1b993c90c077909f3d13cb43f"
+    },
+    {
+      "group": "lesson:Pronomen",
+      "hash": "c58aba1006500ac7d9acc4f915b9ee4fd87294313d3face8129d42500f25ba37"
+    },
+    {
+      "group": "lesson:Pronomen",
+      "hash": "565421b0b9633af544c3da67225f41d7e983dcd2f88a7094819256f8af881c6e"
+    },
+    {
+      "group": "lesson:Pronomen",
+      "hash": "c1448f61de774ea63c0107568678a16b4634947dbab4b0f01a545285485f9bb2"
+    },
+    {
+      "group": "lesson:Pronomen",
+      "hash": "737dcd96e6bf51d64939b1bd02a6c56f999d2e6ef27631b2f74cc39aebaa9e15"
+    },
+    {
+      "group": "lesson:Pronomen",
+      "hash": "7ca0d9f965bf413c65ba9854a4e8c6ea09b43f87ea5b78b4a2e746180c05b7f4"
+    },
+    {
+      "group": "lesson:Pronomen",
+      "hash": "20bc3cfceea6e7553f79afa433d99204c8e7ecb280a2caebe85b30cf4dd3848c"
+    },
+    {
+      "group": "lesson:Pronomen",
+      "hash": "c8e03a7a5058b5996968aa66a7af4ef37c48e98c38a3fef3a5de32220d54ef28"
+    },
+    {
+      "group": "lesson:Pronomen",
+      "hash": "aec4248fdb7866028cff86750f4a89afe36090be85d464356092ca78bb9464bf"
+    },
+    {
+      "group": "lesson:Pronomen",
+      "hash": "3ba1fd348d01bc9f44115f7f1415dea522df5c0c18e610f1f712c4013a822682"
+    },
+    {
+      "group": "lesson:Pronomen",
+      "hash": "89aa150bedb8da6a030db840873fbce3067dda63ea8314b43c676acdd6179e91"
+    },
+    {
+      "group": "lesson:Pronomen",
+      "hash": "c04f86e0b5aec250b6419fc01c02fc51df981ee2a423baee0cab3e9475ce3b07"
+    },
+    {
+      "group": "lesson:Pronomen",
+      "hash": "aa53b44a94f4e9ed08a44bda9dea70cfe86fb19e7de55306aaf162547d50f4ca"
+    },
+    {
+      "group": "persona:übersetze ich liebe dich ins englische",
+      "hash": "78cce0b2e9c2cbd1f71b77a1ce2a51ef3769861c0aa0e316bcee06de4d52d394"
+    },
+    {
+      "group": "persona:übersetze ich liebe dich ins englische",
+      "hash": "78cce0b2e9c2cbd1f71b77a1ce2a51ef3769861c0aa0e316bcee06de4d52d394"
+    },
+    {
+      "group": "persona:was ist dein lieblingsessen",
+      "hash": "00de29b1656be6ea8755576ff415fbed4ba82d7ba260e56fa0d9edabf17e34a1"
+    },
+    {
+      "group": "persona:was ist dein lieblingsessen",
+      "hash": "00de29b1656be6ea8755576ff415fbed4ba82d7ba260e56fa0d9edabf17e34a1"
+    },
+    {
+      "group": "lesson:Tiere 2",
+      "hash": "a66b0c863f1f471ef55669942dd428b125ad66147e7a7a7cf57f215655132312"
+    },
+    {
+      "group": "lesson:Tiere 2",
+      "hash": "137b913b5c17da4fb24f726a983a0732617dfce990b80046c41a5399a0ece691"
+    },
+    {
+      "group": "lesson:Tiere 2",
+      "hash": "28de77d9bb3d1360bbbfcc70f704c0c3be3994d312e6e256ad56072c5f95ccd8"
+    },
+    {
+      "group": "lesson:Tiere 2",
+      "hash": "c270f864144e349ab659ff10870e6a5b6b251513fe9f4056e74136fd4a2c7bd5"
+    },
+    {
+      "group": "lesson:Tiere 2",
+      "hash": "5512deff90f35f28358586942daf8b988de7f0f37e88ef7e321ca401a4195d94"
+    },
+    {
+      "group": "lesson:Tiere 2",
+      "hash": "1efb7c5956a0b6064c329e5c49050fd5ddb62eb192bd00b85a361d94f70abf09"
+    },
+    {
+      "group": "lesson:Tiere 2",
+      "hash": "5327571fbb435a65550f8f05500c66fe7789384c02e1d3aa520e668314877f8b"
+    },
+    {
+      "group": "lesson:Tiere 2",
+      "hash": "c051c7fd880db396c827ee8fc2d85cf29fa5c54c06f6181ce3f979b2224007d8"
+    },
+    {
+      "group": "lesson:Tiere 2",
+      "hash": "d5894b26a094cfff9eb94aadc04efba8080944e71f5c8891af204b864ce2f590"
+    },
+    {
+      "group": "lesson:Verben 4",
+      "hash": "49cd60f7dc2363fa6531d72dbae9bea67d91e987c9dc0cf1ac61d3ffa50e5a8e"
+    },
+    {
+      "group": "lesson:Verben 4",
+      "hash": "d37f86d026c56572127b7215b8b3c2d39e9d1c676dea6183d55bbe735ce06cfa"
+    },
+    {
+      "group": "lesson:Verben 4",
+      "hash": "c29c1a2513e5822121c9730f8c4cd8067e0d639d60685aec39d547f1e581dea8"
+    },
+    {
+      "group": "lesson:Verben 4",
+      "hash": "9a5589f30382b42d395240f973c4f632e9b5a51e4dcc687ad37986299f79b8a3"
+    },
+    {
+      "group": "lesson:Verben 4",
+      "hash": "03efcd3425e7010371e64e37080aaf72802d4b6d2ccf7d11ebc57451e274e55b"
+    },
+    {
+      "group": "lesson:Verben 4",
+      "hash": "0662e9f064f62580863500487fe6d0b521b78d7f22b0afe7a1b62355f171f4e9"
+    },
+    {
+      "group": "lesson:Verben 4",
+      "hash": "c62ac653661dee76d15a019bf265ca23ca543b8cb8365ffbd4327a0692812b88"
+    },
+    {
+      "group": "lesson:Verben 4",
+      "hash": "5b853ceadae5cd03e1239ed403ef2eeb1035ff796c784f27a92c805b9d09f7a4"
+    },
+    {
+      "group": "lesson:Verben 4",
+      "hash": "793d94cc5c0433cfbf166bed0d842071d2ef9234e091d2cd13f2764e9a952552"
+    },
+    {
+      "group": "persona:bist du ein mensch",
+      "hash": "520f30325abd925bd9d234551a0ad7058f4370fcc9a1149007aebd628fceed7a"
+    },
+    {
+      "group": "persona:bist du ein mensch",
+      "hash": "520f30325abd925bd9d234551a0ad7058f4370fcc9a1149007aebd628fceed7a"
+    },
+    {
+      "group": "persona:was ist ein verb",
+      "hash": "d1284e40395c007252137412aeacf82b0798e775a2ff35e5dfac13baf94d15ea"
+    },
+    {
+      "group": "persona:was ist ein verb",
+      "hash": "d1284e40395c007252137412aeacf82b0798e775a2ff35e5dfac13baf94d15ea"
+    },
+    {
+      "group": "persona:kannst du bilder machen",
+      "hash": "cbca358991abd590d674ee2939444c2a7d5e07a33120ab1d1b8c5afd6890c373"
+    },
+    {
+      "group": "persona:kannst du bilder machen",
+      "hash": "cbca358991abd590d674ee2939444c2a7d5e07a33120ab1d1b8c5afd6890c373"
+    },
+    {
+      "group": "persona:erzähl mir einen witz",
+      "hash": "7849a634c4aefead0a5d3020841540811596bc50231263ccd0b02a33e18ac92d"
+    },
+    {
+      "group": "persona:erzähl mir einen witz",
+      "hash": "7849a634c4aefead0a5d3020841540811596bc50231263ccd0b02a33e18ac92d"
+    },
+    {
+      "group": "persona:hilf mir mich zu entscheiden fahrrad oder bus zur schule",
+      "hash": "64d2b530a25baaafaff2cbe4f702273e0a772bb26f1b40c55ed1c33e338ad15b"
+    },
+    {
+      "group": "persona:hilf mir mich zu entscheiden fahrrad oder bus zur schule",
+      "hash": "64d2b530a25baaafaff2cbe4f702273e0a772bb26f1b40c55ed1c33e338ad15b"
+    },
+    {
+      "group": "persona:wie sagt man danke auf arabisch",
+      "hash": "fb893cc194d65d70b2bdbbdbc1c13b4401cd1f7c470ced8c8b61c77573d10503"
+    },
+    {
+      "group": "persona:wie sagt man danke auf arabisch",
+      "hash": "fb893cc194d65d70b2bdbbdbc1c13b4401cd1f7c470ced8c8b61c77573d10503"
+    },
+    {
+      "group": "lesson:Körper",
+      "hash": "9efd791a140f2e9e32aa55c880d6acae234bef3857d31a105be2269a27f8049a"
+    },
+    {
+      "group": "lesson:Körper",
+      "hash": "c6bca24d66aa9ee8f4af75ab800a78e998af1e0d21dd90a5d1a21751de353337"
+    },
+    {
+      "group": "lesson:Körper",
+      "hash": "2991008e0526bbcc44f55cb90610f8a5ef07b8df973bb4891b5c75f9d5df45af"
+    },
+    {
+      "group": "lesson:Körper",
+      "hash": "a495187417e3b61f677af1c4f1abe54bd08c25ae7f323551a74388df2c3215c7"
+    },
+    {
+      "group": "lesson:Körper",
+      "hash": "cf20457721cfe169ae984b7fcd459711197d123169877b5ccc1d7367de25636f"
+    },
+    {
+      "group": "lesson:Körper",
+      "hash": "51cb16e648351d82b21c0614a0c6bfc2ea1fe5f7a40174e6a99441f34c781198"
+    },
+    {
+      "group": "lesson:Körper",
+      "hash": "bc9bb4ef8043eadedf36dd635731f0d236df1f185ea346d48b10a9b99ead8a1b"
+    },
+    {
+      "group": "lesson:Körper",
+      "hash": "e9ffe21e9ffff631ccd243c20f4d6ae0f27d3c8b35e5d5b501c42b45d184f1fd"
+    },
+    {
+      "group": "lesson:Körper",
+      "hash": "a0c4c6a421ed06f6e175bdcd641a156c57bc7d035f0b81666036994d1fc7e15a"
+    },
+    {
+      "group": "lesson:Körper",
+      "hash": "2f9f3693369c3d2cfcc9ad5c78befad2603d0a6f24e23f52c7b853fc62057c51"
+    },
+    {
+      "group": "persona:warum ist der himmel blau",
+      "hash": "d520f1e6568ccc1354c4e0bccaf3c03edd56df1ce6d89c807b31f9b4e7fb068b"
+    },
+    {
+      "group": "persona:warum ist der himmel blau",
+      "hash": "d520f1e6568ccc1354c4e0bccaf3c03edd56df1ce6d89c807b31f9b4e7fb068b"
+    },
+    {
+      "group": "persona:wie lerne ich vokabeln am besten",
+      "hash": "6e801bc2692b41d03ab2a533e6987b51d25ae63f91f57c5cf37c3fde96547389"
+    },
+    {
+      "group": "persona:wie lerne ich vokabeln am besten",
+      "hash": "6e801bc2692b41d03ab2a533e6987b51d25ae63f91f57c5cf37c3fde96547389"
+    },
+    {
+      "group": "persona:schreib mir einen aufsatz über den klimawandel 3000 wörter",
+      "hash": "f659ddf0dc1a1362e276cf12648e9d27fdc28f2a543b54eeb094903f1b1c23aa"
+    },
+    {
+      "group": "persona:schreib mir einen aufsatz über den klimawandel 3000 wörter",
+      "hash": "f659ddf0dc1a1362e276cf12648e9d27fdc28f2a543b54eeb094903f1b1c23aa"
+    },
+    {
+      "group": "lesson:Verben 2",
+      "hash": "5c05b21e7d86371451c304076b36d26032223f8ffecf8c230d4179292576f8e9"
+    },
+    {
+      "group": "lesson:Verben 2",
+      "hash": "5c05b21e7d86371451c304076b36d26032223f8ffecf8c230d4179292576f8e9"
+    },
+    {
+      "group": "lesson:Verben 2",
+      "hash": "5c05b21e7d86371451c304076b36d26032223f8ffecf8c230d4179292576f8e9"
+    },
+    {
+      "group": "lesson:Verben 2",
+      "hash": "39f433c4993452d5104ba281202e26613923cdabeed4c40c9c1967f00d8ebc3d"
+    },
+    {
+      "group": "lesson:Verben 2",
+      "hash": "d402188de0a39a3cf11034ec44d7120dbbd2217d08d34a86eb61b2b3ef3698c6"
+    },
+    {
+      "group": "lesson:Verben 2",
+      "hash": "4b06a480053a2b22b38d9bf4d1780cf014c1b05b27162ba670d1c7124bb8d820"
+    },
+    {
+      "group": "lesson:Verben 2",
+      "hash": "a08eb7e06740fd3bd9e5cf0c1d0769547dea6c1d8efee9076d58acf1de7eb1f0"
+    },
+    {
+      "group": "lesson:Verben 2",
+      "hash": "cfd171a90f626f430691b32b24e2e1c28a6a6bcc73d9c991d686eb2c1a18d9d7"
+    },
+    {
+      "group": "lesson:Verben 2",
+      "hash": "d49ae7b58c2c1ee5858a940560f6ca274f200ce19eb08a80cbb693142a68b01a"
+    },
+    {
+      "group": "lesson:Verben 2",
+      "hash": "7ca53f5591d07cc0073aafa418c6b48fd2cd8ac890c0cc2caf85dd1cdd8b2610"
+    },
+    {
+      "group": "lesson:Verben 2",
+      "hash": "61ba3b931479b61d0020b4df92e127f2bcdc67e53c75d2d736bf823f03957856"
+    },
+    {
+      "group": "persona:wo kann ich mit dir arabisch üben",
+      "hash": "5b44d906c9b7ecaccc103ea49ba9205c8012a8a06c7429fc1e1f2891e8188586"
+    },
+    {
+      "group": "persona:wo kann ich mit dir arabisch üben",
+      "hash": "5b44d906c9b7ecaccc103ea49ba9205c8012a8a06c7429fc1e1f2891e8188586"
+    },
+    {
+      "group": "persona:speicherst du was ich schreibe",
+      "hash": "4580dc61264a489bf21d4e14984e9623173654fd940abb02f385472b813b703b"
+    },
+    {
+      "group": "persona:speicherst du was ich schreibe",
+      "hash": "4580dc61264a489bf21d4e14984e9623173654fd940abb02f385472b813b703b"
+    },
+    {
+      "group": "lesson:Berufe",
+      "hash": "e0332724e9b37c0d1a4d9ea75c3b06ef636a296c13851232dd86c69604983f3e"
+    },
+    {
+      "group": "lesson:Berufe",
+      "hash": "e0332724e9b37c0d1a4d9ea75c3b06ef636a296c13851232dd86c69604983f3e"
+    },
+    {
+      "group": "lesson:Berufe",
+      "hash": "e0332724e9b37c0d1a4d9ea75c3b06ef636a296c13851232dd86c69604983f3e"
+    },
+    {
+      "group": "lesson:Berufe",
+      "hash": "753e20f2091188957e9b6829bc2898062b44b025651075d1a78122d2662b95aa"
+    },
+    {
+      "group": "lesson:Berufe",
+      "hash": "d855838b13f66ecff8f0969fb69ceeecae688c82d5f7586a25b9d0436d63e1a5"
+    },
+    {
+      "group": "lesson:Berufe",
+      "hash": "696208916ee0f3f61f7a21b06c779fe9a4a98c15e9d766660ace0faf9538910a"
+    },
+    {
+      "group": "lesson:Berufe",
+      "hash": "dc827b48ad06b6c3af549e6d8547e5a86a25cdd4cb79e74141aac22181798ab9"
+    },
+    {
+      "group": "lesson:Berufe",
+      "hash": "5d3b4b6cb0dd3958c47690ff2eabb42768a0c5a4dd3956dc3113822e5a3aea97"
+    },
+    {
+      "group": "lesson:Berufe",
+      "hash": "7ae4772935d7ca7468f7a311dda9952d67537c223603c4e0892b44115374e3ca"
+    },
+    {
+      "group": "lesson:Berufe",
+      "hash": "4a062fce0bbfca714e91bea02f6df00dcbe2e3b7afc1472e9eb3eb39b7e77e5f"
+    },
+    {
+      "group": "lesson:Berufe",
+      "hash": "0d13d53f60105690744b96763dabca115936a6c9bbb430789dd50cd8c83237a7"
+    },
+    {
+      "group": "lesson:Berufe",
+      "hash": "ce9b2737859dab27f0e0364d360a8828ec80e254e1d0c4405d464d59be84475d"
+    },
+    {
+      "group": "lesson:Berufe",
+      "hash": "906493c2e78afecfb1238655fcef9e917dcabc5a828ddfe486e15c5bfbd5a8bd"
+    },
+    {
+      "group": "persona:bist du schlau",
+      "hash": "7f165c020053c5e8f050015e4bcdc14fe088f3aff2d60566cda58b1b59ece38e"
+    },
+    {
+      "group": "persona:bist du schlau",
+      "hash": "7f165c020053c5e8f050015e4bcdc14fe088f3aff2d60566cda58b1b59ece38e"
+    },
+    {
+      "group": "persona:kannst du mir bei mathe helfen 3x 5 20",
+      "hash": "dd40884c7fed140957bb64a57b6061d37b85968014d517063f1d6a16f7f15b9b"
+    },
+    {
+      "group": "persona:kannst du mir bei mathe helfen 3x 5 20",
+      "hash": "dd40884c7fed140957bb64a57b6061d37b85968014d517063f1d6a16f7f15b9b"
+    },
+    {
+      "group": "persona:ich mag pizza",
+      "hash": "21c8333b229f5d2a1ff2268841309b9c32f6e1570303134a4c5e505451924c78"
+    },
+    {
+      "group": "persona:ich mag pizza",
+      "hash": "21c8333b229f5d2a1ff2268841309b9c32f6e1570303134a4c5e505451924c78"
+    },
+    {
+      "group": "persona:wie hacke ich das instagram konto von jemandem",
+      "hash": "7577f667f9d38f480500b315b1fd9e6297e54c65bfad9d94bed07d5e61e4341f"
+    },
+    {
+      "group": "persona:wie hacke ich das instagram konto von jemandem",
+      "hash": "7577f667f9d38f480500b315b1fd9e6297e54c65bfad9d94bed07d5e61e4341f"
+    },
+    {
+      "group": "persona:was ist die bedeutung des lebens",
+      "hash": "7cc58931b1299210950e1e478d5392c8e2434569c512cdfdcc5adbc869d4a781"
+    },
+    {
+      "group": "persona:was ist die bedeutung des lebens",
+      "hash": "7cc58931b1299210950e1e478d5392c8e2434569c512cdfdcc5adbc869d4a781"
+    },
+    {
+      "group": "persona:sprich bitte englisch mit mir",
+      "hash": "e6e2c868065561c8525959782cc2aff9250a6d4113cd7b870eb1863283885238"
+    },
+    {
+      "group": "persona:sprich bitte englisch mit mir",
+      "hash": "e6e2c868065561c8525959782cc2aff9250a6d4113cd7b870eb1863283885238"
+    },
+    {
+      "group": "lesson:Verben 3",
+      "hash": "a6d51df06775613932493386b04df476033f06f0027f5b168822d2fd50822cf4"
+    },
+    {
+      "group": "lesson:Verben 3",
+      "hash": "2bc25e914fa8f2b87fc54dc2c2b99812740ebaee1411a32713e1300409983b14"
+    },
+    {
+      "group": "lesson:Verben 3",
+      "hash": "e99f9c4f2cdfae103583d514b75bcf7b436cbed24cb034b3230d043b79e13a1e"
+    },
+    {
+      "group": "lesson:Verben 3",
+      "hash": "58a6dd0a214660fa598c7e70685c351dbc81e10caf801b593c9d5f958578bdbf"
+    },
+    {
+      "group": "lesson:Verben 3",
+      "hash": "b0497fae422d9abec2dbe9bcde2263a8224cce7599d9f19c336885ea5f408c2a"
+    },
+    {
+      "group": "lesson:Verben 3",
+      "hash": "657aa3730f8babd9db6695000018f45481948ac3404de20328ad123c6795e694"
+    },
+    {
+      "group": "lesson:Verben 3",
+      "hash": "d6d984146102bd6aaf9e90e81c9178522b39cf392a0ddf71f2445a7390727984"
+    },
+    {
+      "group": "lesson:Verben 3",
+      "hash": "830760cb35d59cfb1dd583ec0726e113bad355858884b04b15e17ff1d1f18d01"
+    },
+    {
+      "group": "lesson:Verben 3",
+      "hash": "da2111c1225c9bdd3b322b8fb54faff3db0a7286335510f46554a8060eeb76cf"
+    },
+    {
+      "group": "persona:kannst du mir helfen einen lebenslauf zu schreiben",
+      "hash": "6a2ed840d6304842549bb09172f287e6046d8fcaf07f12228469c2497d13920c"
+    },
+    {
+      "group": "persona:kannst du mir helfen einen lebenslauf zu schreiben",
+      "hash": "6a2ed840d6304842549bb09172f287e6046d8fcaf07f12228469c2497d13920c"
+    },
+    {
+      "group": "persona:was ist mufradaat",
+      "hash": "04ead18ede29ecf40ab98b4ae681855ebeb3a07b8549fd9d0fd0936a8a902d34"
+    },
+    {
+      "group": "persona:was ist mufradaat",
+      "hash": "04ead18ede29ecf40ab98b4ae681855ebeb3a07b8549fd9d0fd0936a8a902d34"
+    },
+    {
+      "group": "persona:warum bist du manchmal langsam",
+      "hash": "1c0a076d2d157fe4faf95710b7556893e37f9d532b1b648b31624c036b70b98a"
+    },
+    {
+      "group": "persona:warum bist du manchmal langsam",
+      "hash": "1c0a076d2d157fe4faf95710b7556893e37f9d532b1b648b31624c036b70b98a"
+    },
+    {
+      "group": "persona:kannst du dir sachen über mich merken",
+      "hash": "5ee32376f3c33645e5dcae77002375bc3e629f7009bcaf156fde5f9d7552d725"
+    },
+    {
+      "group": "persona:kannst du dir sachen über mich merken",
+      "hash": "5ee32376f3c33645e5dcae77002375bc3e629f7009bcaf156fde5f9d7552d725"
+    },
+    {
+      "group": "persona:bist du chatgpt",
+      "hash": "4e32d420127cc91c5bc27c558521b45825d1a361646f8d11d35abe43b1838ccc"
+    },
+    {
+      "group": "persona:bist du chatgpt",
+      "hash": "4e32d420127cc91c5bc27c558521b45825d1a361646f8d11d35abe43b1838ccc"
+    },
+    {
+      "group": "persona:fass mir diesen text zusammen der igel ist ein kleines säugetier das in europa weit verbreitet ist er frisst vor allem insekten würmer und schnecken im winter hält er winterschlaf meist von november bis märz",
+      "hash": "bec66e21c499ce9762209a384710ff7ef8f2669fecb00018540d0c190dfb713c"
+    },
+    {
+      "group": "persona:fass mir diesen text zusammen der igel ist ein kleines säugetier das in europa weit verbreitet ist er frisst vor allem insekten würmer und schnecken im winter hält er winterschlaf meist von november bis märz",
+      "hash": "bec66e21c499ce9762209a384710ff7ef8f2669fecb00018540d0c190dfb713c"
+    },
+    {
+      "group": "persona:tschüss",
+      "hash": "63a6cecfd250f9fbe2efc285489385e95a09830b50474a2a5a922f13bb475c24"
+    },
+    {
+      "group": "persona:tschüss",
+      "hash": "63a6cecfd250f9fbe2efc285489385e95a09830b50474a2a5a922f13bb475c24"
+    },
+    {
+      "group": "persona:was ist der unterschied zwischen das und dass",
+      "hash": "9b98e93d1907467ee8ff262046ea9858239ce2920217d382636116e980c96bcd"
+    },
+    {
+      "group": "persona:was ist der unterschied zwischen das und dass",
+      "hash": "9b98e93d1907467ee8ff262046ea9858239ce2920217d382636116e980c96bcd"
+    },
+    {
+      "group": "persona:ich bin traurig",
+      "hash": "1b0f177ad6f5aade1b138ef87ed379e6b2e197a4a5f174c763b5740f09ee7978"
+    },
+    {
+      "group": "persona:ich bin traurig",
+      "hash": "1b0f177ad6f5aade1b138ef87ed379e6b2e197a4a5f174c763b5740f09ee7978"
+    },
+    {
+      "group": "persona:was ist die hauptstadt von frankreich",
+      "hash": "5dbf6d7a4edfeb517c40bf0f9cb8a8c107cf4d86c305aff65fc73157b6436d61"
+    },
+    {
+      "group": "persona:was ist die hauptstadt von frankreich",
+      "hash": "5dbf6d7a4edfeb517c40bf0f9cb8a8c107cf4d86c305aff65fc73157b6436d61"
+    },
+    {
+      "group": "lesson:Schule",
+      "hash": "48f6a0b9628ca1662d3e648952f40ee69ce7c880b0eb11185c307efd36635a74"
+    },
+    {
+      "group": "lesson:Schule",
+      "hash": "48f6a0b9628ca1662d3e648952f40ee69ce7c880b0eb11185c307efd36635a74"
+    },
+    {
+      "group": "lesson:Schule",
+      "hash": "48f6a0b9628ca1662d3e648952f40ee69ce7c880b0eb11185c307efd36635a74"
+    },
+    {
+      "group": "lesson:Schule",
+      "hash": "471a6cfe0206ff2570eeab37ab84c4290a297f77391dfdea47891d5c19adb88e"
+    },
+    {
+      "group": "lesson:Schule",
+      "hash": "6b9c7c1a1e134d6604625ba84484923c71393c67376abc0dd0bd27826d3db073"
+    },
+    {
+      "group": "lesson:Schule",
+      "hash": "0d6ba5aabe5e8d1d4584a289558c38c2edbdb733581a1ba050eed22a08edcfe2"
+    },
+    {
+      "group": "lesson:Schule",
+      "hash": "fbff7ba1572e301e30d87940ead0b8be49c47f618a7378a4120d124fcada4a90"
+    },
+    {
+      "group": "lesson:Schule",
+      "hash": "3135a1b5eac7c655f962aff0ea85ebb0065ff571b102366c9a70a18f28af63fd"
+    },
+    {
+      "group": "lesson:Schule",
+      "hash": "4e9eb1e7372fa7b35dd1e38960aef660bd2bcfd974aefcbcce3da30ae53c1542"
+    },
+    {
+      "group": "lesson:Schule",
+      "hash": "ea4f20d735252c279bee1996baf8dc4454d52ce7723cf65a7751545c2bcf4b59"
+    },
+    {
+      "group": "lesson:Schule",
+      "hash": "027d9263af651dc3ca823019ffe49e99b5fa46c3c7d0cee3cb76394618a3de63"
+    },
+    {
+      "group": "lesson:Schule",
+      "hash": "f3694a9225a8486a0356a456108e81457b858b44a220d1730691f8ed51118511"
+    },
+    {
+      "group": "lesson:Schule",
+      "hash": "0ad72df93e87597d48fcaaab7d021a6c741d4b6cbae6be7305f2111050aeee13"
+    },
+    {
+      "group": "lesson:Schule",
+      "hash": "4675d922b810cd79006974ee6177dfd07cf1eeace227ee4a1eb6389c91a7a41a"
+    },
+    {
+      "group": "lesson:Schule",
+      "hash": "d469898fada76110f43331c7a81d78b4d6bd15833b98717c7801cab34e038a15"
+    },
+    {
+      "group": "lesson:Schule",
+      "hash": "7c01da78f293312862f90987300754c77c0b6f1f9b72acdec1a5576fa4ade7a8"
+    },
+    {
+      "group": "lesson:Schule",
+      "hash": "90d1fb8701f19558ec72fb018611b84bf62cceb16a768c262b8c434c0a9e87c9"
+    },
+    {
+      "group": "lesson:Schule",
+      "hash": "4761b9eeeed9bbf8c38c8d1da3d99a56faa4a64d9f9ca64b2523b71a2c5f47ef"
+    },
+    {
+      "group": "lesson:Schule",
+      "hash": "ca7e5186c449608f9296d0842de703596ccb93f2700019d8b8787c9f6e9fae11"
+    },
+    {
+      "group": "lesson:Schule",
+      "hash": "6a6a9ade29380121e4e6790ccc7527454e2c73756fb9c38bfd1700987ac7e6ac"
+    },
+    {
+      "group": "lesson:Schule",
+      "hash": "3104f41bcee555b4f02517faa8affd5f9b6b7c2a7ee18a6656df0d78fdecce3c"
+    },
+    {
+      "group": "persona:wie viel ist 15 prozent von 80",
+      "hash": "7a1c61dadd5b1684d662bc7987787812eaa16a3cadd3b022876dc54bd0bd46fa"
+    },
+    {
+      "group": "persona:wie viel ist 15 prozent von 80",
+      "hash": "7a1c61dadd5b1684d662bc7987787812eaa16a3cadd3b022876dc54bd0bd46fa"
+    },
+    {
+      "group": "persona:can you speak english",
+      "hash": "a1aeffdbdde87fd8198796cf9c293776bbb94258810f33183e5f7245a4f0bd78"
+    },
+    {
+      "group": "persona:can you speak english",
+      "hash": "a1aeffdbdde87fd8198796cf9c293776bbb94258810f33183e5f7245a4f0bd78"
+    },
+    {
+      "group": "persona:machst du auch fehler",
+      "hash": "7d4a05068af014e49291d9bd21ce7794d4d22550020385d69d2eb8ee6addb41b"
+    },
+    {
+      "group": "persona:machst du auch fehler",
+      "hash": "7d4a05068af014e49291d9bd21ce7794d4d22550020385d69d2eb8ee6addb41b"
+    },
+    {
+      "group": "persona:wie schreibe ich eine gute e mail",
+      "hash": "d04a7571f0c5547e48a921c42d3e12939c40d3923a640038933a05194c0cd17f"
+    },
+    {
+      "group": "persona:wie schreibe ich eine gute e mail",
+      "hash": "d04a7571f0c5547e48a921c42d3e12939c40d3923a640038933a05194c0cd17f"
+    },
+    {
+      "group": "lesson:Verwandte & Menschen",
+      "hash": "ea979ed2791fe6248c2de333a1e065ff96aa48fc145f174b4cc8667fa822d0a2"
+    },
+    {
+      "group": "lesson:Verwandte & Menschen",
+      "hash": "922b00730ea7a0d21d048a328bba8964f6b3c047d8419ffc7c9a12baa05093cb"
+    },
+    {
+      "group": "lesson:Verwandte & Menschen",
+      "hash": "ec2c0091bc080d98c97fb451bb17841e7b2bbd2c7f54033e9805396e60d7352a"
+    },
+    {
+      "group": "lesson:Verwandte & Menschen",
+      "hash": "4569ba3de88f8c49699195746c6762c05f7eabe9e9ecf70416a89b5454d00d9c"
+    },
+    {
+      "group": "lesson:Verwandte & Menschen",
+      "hash": "01c05f43e73a4131a7ce3b36f1ae4c736da88406394da0a0ce07ebd23589970d"
+    },
+    {
+      "group": "lesson:Verwandte & Menschen",
+      "hash": "69e98b7404b73359d78667ac27d5ca61579442f58cdd689303021fcff2b27046"
+    },
+    {
+      "group": "lesson:Verwandte & Menschen",
+      "hash": "548c923b45ee7c1f12b5df0a5c8df13c34877ecef955f3cf228565f941e28f86"
+    },
+    {
+      "group": "lesson:Verwandte & Menschen",
+      "hash": "3d1f35fbceae3e154c9d506acf7fb78d2bd7d278e422113ee2a148210ab60fdc"
+    },
+    {
+      "group": "lesson:Verwandte & Menschen",
+      "hash": "8fb2d8f63497ce5e7539045914e9ba3f897be9a41f25804824be9e73c7cf6366"
+    },
+    {
+      "group": "lesson:Verwandte & Menschen",
+      "hash": "0953e93a3e605cd7b222ae00304a9db00cd791e431006d1b647bc684cf2b0926"
+    },
+    {
+      "group": "lesson:Verwandte & Menschen",
+      "hash": "577fe86b500669591df98d27d4af8273461fdc9ec0e5d19d476a68a4906b34fb"
+    },
+    {
+      "group": "lesson:Verwandte & Menschen",
+      "hash": "fa2aff54ce7d2a68f74884ef98a5fd7fcf93dbe73bc68ad78186143aa54242d3"
+    },
+    {
+      "group": "lesson:Verwandte & Menschen",
+      "hash": "4302008b254ba9d64cfb0c452eae6fc208a259d5b98aedd734a0dd3fef7485b0"
+    },
+    {
+      "group": "lesson:Verwandte & Menschen",
+      "hash": "e0b5448e044b145d036caf0f6070af70ba644f3f9fdda192f576df4c1db1cfc0"
+    },
+    {
+      "group": "lesson:Verwandte & Menschen",
+      "hash": "5b2cd8e465700673d2d106d4699a62e70151533777034d1b13d625c822bdb875"
+    },
+    {
+      "group": "persona:was ist 17 mal 6",
+      "hash": "05b13c01a8d65520fa03953aaee446b3e7f5a176f80e004765898b425c6c99be"
+    },
+    {
+      "group": "persona:was ist 17 mal 6",
+      "hash": "05b13c01a8d65520fa03953aaee446b3e7f5a176f80e004765898b425c6c99be"
+    },
+    {
+      "group": "persona:hallo",
+      "hash": "51b1e18ecca8c4323dd9c3d9fa9a61fb854742331237f0e3f235f2f8935e8f02"
+    },
+    {
+      "group": "persona:hallo",
+      "hash": "51b1e18ecca8c4323dd9c3d9fa9a61fb854742331237f0e3f235f2f8935e8f02"
+    },
+    {
+      "group": "persona:kannst du für mich hausaufgaben machen",
+      "hash": "5d24a860f51fca107293ac8b8c6175741bb14d6bcec0f9dc759e5335081cfe30"
+    },
+    {
+      "group": "persona:kannst du für mich hausaufgaben machen",
+      "hash": "5d24a860f51fca107293ac8b8c6175741bb14d6bcec0f9dc759e5335081cfe30"
+    },
+    {
+      "group": "lesson:Kleidung",
+      "hash": "331745b16de286b4aa6c091ba751c106a8903503a182408d8547313e0e6a89da"
+    },
+    {
+      "group": "lesson:Kleidung",
+      "hash": "45fc33eecb86840aab9dd72c3a28e0fbfa7d705389a36e993e9fd573cbc92fd6"
+    },
+    {
+      "group": "lesson:Kleidung",
+      "hash": "0eb0c8a4e07b3dacffea3620c670613ce80302f163b5e56b7c6645552ef19874"
+    },
+    {
+      "group": "lesson:Kleidung",
+      "hash": "9fa286a57d9a648281a29f897eab1c2d1d339aab6f6490b35546208da43820e8"
+    },
+    {
+      "group": "lesson:Kleidung",
+      "hash": "892051ba6f57d041be36eb1667ea7a707a0423f82f58aec1faae2649b9c590dc"
+    },
+    {
+      "group": "lesson:Kleidung",
+      "hash": "f396a54c92b322a3823cf5c6411becd03b1aa0561dc7b10f7702ecdef5188da8"
+    },
+    {
+      "group": "lesson:Kleidung",
+      "hash": "55becaeb3423deb02289817ef9affb24827f95a651ca8699928527ca86b14836"
+    },
+    {
+      "group": "lesson:Kleidung",
+      "hash": "9664c429ac5d32fffba6346db79599099260ad046bccadfa74ea7c3d30ee915a"
+    },
+    {
+      "group": "lesson:Kleidung",
+      "hash": "eae97e8fc89612bbad456c4b7a15aedb7f592aa51dc43bef6398d7e32baa08a4"
+    },
+    {
+      "group": "lesson:Kleidung",
+      "hash": "3cb461a2fbccace6f4e6d2db718eb1b289e107401b315df1ab2e415e074f9edd"
+    },
+    {
+      "group": "lesson:Farben",
+      "hash": "89200993ecc13148838fa1df80e0ca89961d758558bbad16febe862627e02ab7"
+    },
+    {
+      "group": "lesson:Farben",
+      "hash": "89200993ecc13148838fa1df80e0ca89961d758558bbad16febe862627e02ab7"
+    },
+    {
+      "group": "lesson:Farben",
+      "hash": "89200993ecc13148838fa1df80e0ca89961d758558bbad16febe862627e02ab7"
+    },
+    {
+      "group": "lesson:Farben",
+      "hash": "2affcc488957cafc1c4490e4b3637ec683e47c000356bde7a09c0bcd721e48a7"
+    },
+    {
+      "group": "lesson:Farben",
+      "hash": "ca604fea124f8d8d27f02499edc62385fe3d3dde7be97381f45cdf2931161d1d"
+    },
+    {
+      "group": "lesson:Farben",
+      "hash": "31f37c0a32c32f9376c8a1a62bee4d0969b7a6bc34ad36c9b8bca3670b9dd03f"
+    },
+    {
+      "group": "lesson:Farben",
+      "hash": "8167da2ea116463c9da03a46c33f4dfe8511b817edb057c6483e1fd247d1ae1c"
+    },
+    {
+      "group": "lesson:Farben",
+      "hash": "888b385a77167ca09e78dcb3725d31f0eba0faccc7cbd2ff058ad941c511b625"
+    },
+    {
+      "group": "lesson:Farben",
+      "hash": "7ff4448c0e7e3970ccbb898f3949aa5efd4e4deea6f1505665e0c6c71bfe54f5"
+    },
+    {
+      "group": "lesson:Farben",
+      "hash": "516f31e20f7dd8686dab75675f441b7443562bace354ea2fbc306323eaac74cf"
+    },
+    {
+      "group": "lesson:Farben",
+      "hash": "56637e2158b62cabd31b1a82dac4ab74a4bb054a08f7a220479267560ee7570f"
+    },
+    {
+      "group": "lesson:Farben",
+      "hash": "72cf9c2b08bae45f64da73ede7404d63baef17c38880ad1c73839d3bbd8436ab"
+    },
+    {
+      "group": "lesson:Farben",
+      "hash": "c1a15ca4c85bfe34b19fa3c0d96460c88919ddcf8199c9ba3dc347e99f17c773"
+    },
+    {
+      "group": "lesson:Farben",
+      "hash": "2d8229a92f2459ee6f944a9042d904a667a49227a758022884e409a9f45a53e8"
+    },
+    {
+      "group": "lesson:Farben",
+      "hash": "4117d58b8295f90a9c6a45dbc1165048a144a316e487032abc8082d2ad482394"
+    },
+    {
+      "group": "lesson:Farben",
+      "hash": "dab57269a387d9cb37f23ff168bc684d3de1883ee64ab48acf52beb1e7fa6993"
+    },
+    {
+      "group": "lesson:Farben",
+      "hash": "c8fbdd5fdc56f4bbf323ae6fb0d24b1fcf1006bf42e18ec7af280bbdcd2d5749"
+    },
+    {
+      "group": "persona:sag mir etwas gemeines über meinen freund",
+      "hash": "afd0fc8b90f8aeb64229f6c7e3c00cebd67b26b274996d403cb96de8bf0ef9e3"
+    },
+    {
+      "group": "persona:sag mir etwas gemeines über meinen freund",
+      "hash": "afd0fc8b90f8aeb64229f6c7e3c00cebd67b26b274996d403cb96de8bf0ef9e3"
+    },
+    {
+      "group": "persona:schreib mir ein kurzes gedicht über den herbst",
+      "hash": "4f02f666de73274bf458d85225316ba73147d2c816d0ad72f86ff8beefe9ff1b"
+    },
+    {
+      "group": "persona:schreib mir ein kurzes gedicht über den herbst",
+      "hash": "4f02f666de73274bf458d85225316ba73147d2c816d0ad72f86ff8beefe9ff1b"
+    },
+    {
+      "group": "persona:bitte nenn mich ab jetzt chef",
+      "hash": "dc1a0b5c950fa0b5ab1d4ce78a518e00448a1c2d0bfefefd661f6a32e8882b43"
+    },
+    {
+      "group": "persona:bitte nenn mich ab jetzt chef",
+      "hash": "dc1a0b5c950fa0b5ab1d4ce78a518e00448a1c2d0bfefefd661f6a32e8882b43"
+    },
+    {
+      "group": "persona:was ist 12 mal 12",
+      "hash": "d66ede1c99e32b50f827607f1cd9863a922d116351581669671e5082559be04d"
+    },
+    {
+      "group": "persona:was ist 12 mal 12",
+      "hash": "d66ede1c99e32b50f827607f1cd9863a922d116351581669671e5082559be04d"
+    },
+    {
+      "group": "lesson:Wetter & Himmel",
+      "hash": "a0ead85482c59a5973b29e46dfaaf12da694c6a0fe4370c1eedcc47de5aeff93"
+    },
+    {
+      "group": "lesson:Wetter & Himmel",
+      "hash": "a0ead85482c59a5973b29e46dfaaf12da694c6a0fe4370c1eedcc47de5aeff93"
+    },
+    {
+      "group": "lesson:Wetter & Himmel",
+      "hash": "a0ead85482c59a5973b29e46dfaaf12da694c6a0fe4370c1eedcc47de5aeff93"
+    },
+    {
+      "group": "lesson:Wetter & Himmel",
+      "hash": "172b35edab0bf9a2be1825dc5708400d2680820ed8377c64515025e3ebef5040"
+    },
+    {
+      "group": "lesson:Wetter & Himmel",
+      "hash": "2804c52d9b771ffa3f0647a8a054096ac3541a94dbd5fe029fec09668a16e912"
+    },
+    {
+      "group": "lesson:Wetter & Himmel",
+      "hash": "032ed134fefbc68677e8067e1da4d300f5bca27101af0a54b17931230d97c374"
+    },
+    {
+      "group": "lesson:Wetter & Himmel",
+      "hash": "af38cd4dc3411dd345c138b8884308a7481c8bbdc17657516196cc28898cf29a"
+    },
+    {
+      "group": "lesson:Wetter & Himmel",
+      "hash": "976c849a5b6a0cd49f900ce6d120c1fca966babd5660602e8034e358b99b7a91"
+    },
+    {
+      "group": "lesson:Wetter & Himmel",
+      "hash": "881f83eda86d2bffebdbd4f6cc45a0599329949d33a0d54519356bf8d60f37f8"
+    },
+    {
+      "group": "lesson:Wetter & Himmel",
+      "hash": "6122ec737472f917018093fc6cddb5a99e993ff7e0c59e530c5529d391d1abb9"
+    },
+    {
+      "group": "lesson:Wetter & Himmel",
+      "hash": "e5d7279aa2de0d649841879cae27d5cf3add4a7d0e58cb43662cff7916b9c91c"
+    },
+    {
+      "group": "lesson:Wetter & Himmel",
+      "hash": "e330a149c2a02ec1edc2efd81e35c96167c21ceafcfabe8e1cf2e20c30b13d50"
+    },
+    {
+      "group": "lesson:Wetter & Himmel",
+      "hash": "84ac0f8c03ba184a5ee129b4b11dc08426405dbbde5aba77fa21c1b88b163e9d"
+    },
+    {
+      "group": "persona:gib mir eine einkaufsliste für ein frühstück für vier personen",
+      "hash": "b06041d6b0939b7709e22fe30f5d705a91868431941c085e01752e5b1d8476af"
+    },
+    {
+      "group": "persona:gib mir eine einkaufsliste für ein frühstück für vier personen",
+      "hash": "b06041d6b0939b7709e22fe30f5d705a91868431941c085e01752e5b1d8476af"
+    },
+    {
+      "group": "lesson:Zahlen 1–10",
+      "hash": "4d3591562f8796fe87682f7d07d13b137d7bc4e534f8aef69e22a39834b9b836"
+    },
+    {
+      "group": "lesson:Zahlen 1–10",
+      "hash": "4d3591562f8796fe87682f7d07d13b137d7bc4e534f8aef69e22a39834b9b836"
+    },
+    {
+      "group": "lesson:Zahlen 1–10",
+      "hash": "4d3591562f8796fe87682f7d07d13b137d7bc4e534f8aef69e22a39834b9b836"
+    },
+    {
+      "group": "lesson:Zahlen 1–10",
+      "hash": "18a39a053b8b469d94aad56e9fd79d6601e5964e48d9c2c97f45a4688978c5f7"
+    },
+    {
+      "group": "lesson:Zahlen 1–10",
+      "hash": "18a39a053b8b469d94aad56e9fd79d6601e5964e48d9c2c97f45a4688978c5f7"
+    },
+    {
+      "group": "lesson:Zahlen 1–10",
+      "hash": "18a39a053b8b469d94aad56e9fd79d6601e5964e48d9c2c97f45a4688978c5f7"
+    },
+    {
+      "group": "lesson:Zahlen 1–10",
+      "hash": "647004056aa65fcb3cbd24bc5731663132e38de2335b24be316f928744f99553"
+    },
+    {
+      "group": "lesson:Zahlen 1–10",
+      "hash": "d5ad59b6d57ece978e9d4014e53db33e846b4989487a1990dafcdbefa07e8de1"
+    },
+    {
+      "group": "lesson:Zahlen 1–10",
+      "hash": "a6fca1d25c169599d12e96c92adb09dacffe6d4b768bfd950b0914e5dc1b60c3"
+    },
+    {
+      "group": "lesson:Zahlen 1–10",
+      "hash": "9d5c9265318ac8a62798d33ccef4fc1a88474f87babb7b46cd4b76eebc0712e9"
+    },
+    {
+      "group": "lesson:Zahlen 1–10",
+      "hash": "3ae6a74612892d3ee81ee72a6b17bc242b9f93aa6505a5673a7acbbf05575707"
+    },
+    {
+      "group": "lesson:Zahlen 1–10",
+      "hash": "fef773d69d281dea66b45dfd472103f43f49cff2a984265e033cf8521a21da8f"
+    },
+    {
+      "group": "lesson:Zahlen 1–10",
+      "hash": "ab7ab2280e0003b6ff702c4fb7335ec0256ef4d77af8a73721d254f13069068b"
+    },
+    {
+      "group": "lesson:Zahlen 1–10",
+      "hash": "c81fa1af6500522ded9c5b09e468c1249ed8e693586febceaaf2d4cddcc86e3c"
+    },
+    {
+      "group": "lesson:Zahlen 1–10",
+      "hash": "2bb790aad69f760935461efe84aad75a7b1bf93dadabbb024177636922d581c5"
+    },
+    {
+      "group": "lesson:Zahlen 1–10",
+      "hash": "eded19cd2fd22a4ad3391fe4c2aaf9f49835c075232756181c1225ce93086a12"
+    },
+    {
+      "group": "persona:sag einfach nur ja oder nein ist wasser nass",
+      "hash": "56e6353e4fc3f1a51cff6f4bbd42aff51769cca7ae410a65f3f15c093eafc3a8"
+    },
+    {
+      "group": "persona:sag einfach nur ja oder nein ist wasser nass",
+      "hash": "56e6353e4fc3f1a51cff6f4bbd42aff51769cca7ae410a65f3f15c093eafc3a8"
+    },
+    {
+      "group": "persona:kannst du mir eine erinnerung für morgen stellen",
+      "hash": "422cf217e352fd6e8696b54f220723a8ea3eba9ccbc87d08c845bbf8f15e8fec"
+    },
+    {
+      "group": "persona:kannst du mir eine erinnerung für morgen stellen",
+      "hash": "422cf217e352fd6e8696b54f220723a8ea3eba9ccbc87d08c845bbf8f15e8fec"
+    },
+    {
+      "group": "lesson:Zutaten & Getränke",
+      "hash": "19e989ba4de21330e25e096836488aaa92c0428f5a8aeee250248041a96a36b6"
+    },
+    {
+      "group": "lesson:Zutaten & Getränke",
+      "hash": "a7adb2400a205c6a7943d3d1191552e668126f6638c447e113f74ae810c0d7b2"
+    },
+    {
+      "group": "lesson:Zutaten & Getränke",
+      "hash": "c9e5317990b05faf122089a3806376a871a9dc73022b0d2d473fc4ab42ae0c97"
+    },
+    {
+      "group": "lesson:Zutaten & Getränke",
+      "hash": "b9552fd68538e52bbc5512f4e8bfbd911355f2c46a1ae936d699e28de8b261c7"
+    },
+    {
+      "group": "lesson:Zutaten & Getränke",
+      "hash": "9eee9fde90d793aa6a1385cc8d4576c702b0c35fc907ff96efe1003bf00d11ef"
+    },
+    {
+      "group": "lesson:Zutaten & Getränke",
+      "hash": "b2eb33c05f2a1b50ab3ca50e4008319ad53bff8e7d9789a77c0fdb200f16d77b"
+    },
+    {
+      "group": "lesson:Zutaten & Getränke",
+      "hash": "013cc6e5228ef4bd63c086eae7c63a4b1f68dce3c1836e7012959a303fb9db96"
+    },
+    {
+      "group": "persona:wie wird das wetter morgen",
+      "hash": "0202a2e0c0024c6418ea2e3c6c517ee1098e18de98aea541d4a228629d28d0c9"
+    },
+    {
+      "group": "persona:wie wird das wetter morgen",
+      "hash": "0202a2e0c0024c6418ea2e3c6c517ee1098e18de98aea541d4a228629d28d0c9"
+    },
+    {
+      "group": "persona:gib mir ein einfaches rezept für rührei",
+      "hash": "3bd7c0f3b72891f3388c7bc8c94f5905544814915f0350f2366af34b84f460d9"
+    },
+    {
+      "group": "persona:gib mir ein einfaches rezept für rührei",
+      "hash": "3bd7c0f3b72891f3388c7bc8c94f5905544814915f0350f2366af34b84f460d9"
+    },
+    {
+      "group": "persona:wie funktioniert eine ki wie du",
+      "hash": "0d1fdd772f2ff5cf7604ab0fdfbde35c6e25df772c8610146c7ad4cbf73cdec6"
+    },
+    {
+      "group": "persona:wie funktioniert eine ki wie du",
+      "hash": "0d1fdd772f2ff5cf7604ab0fdfbde35c6e25df772c8610146c7ad4cbf73cdec6"
+    },
+    {
+      "group": "lesson:Essen",
+      "hash": "371736a4b1fb101d8d5ac4b80f209f0390a3196156b853df004255f07acdd431"
+    },
+    {
+      "group": "lesson:Essen",
+      "hash": "371736a4b1fb101d8d5ac4b80f209f0390a3196156b853df004255f07acdd431"
+    },
+    {
+      "group": "lesson:Essen",
+      "hash": "371736a4b1fb101d8d5ac4b80f209f0390a3196156b853df004255f07acdd431"
+    },
+    {
+      "group": "lesson:Essen",
+      "hash": "e91db61ddea197429bb078148cc0e7951ff36316900a3e4945c98d64fe4344b3"
+    },
+    {
+      "group": "lesson:Essen",
+      "hash": "e3ac1f916e9f330c3bb6eb1a74363e3af04dc0339462822054414456bd6f7b86"
+    },
+    {
+      "group": "lesson:Essen",
+      "hash": "efe101e616c50a7896dc603bd451ece62be5f209e564f3b4b9f16b74c32acecb"
+    },
+    {
+      "group": "lesson:Essen",
+      "hash": "d87e710a884c25dcf13d7a2830f8a1ecc75aea1f7250c9d8514e92a6ff542fab"
+    },
+    {
+      "group": "lesson:Essen",
+      "hash": "9d8ecbd0fb269d4879f696b0c3f923bd7b30456d9639bebf87482f68e8564e49"
+    },
+    {
+      "group": "lesson:Essen",
+      "hash": "0c83ad70bbcc7887108839b00d388fb92f8ce74d1c42ab5311fef3166d59e5f3"
+    },
+    {
+      "group": "lesson:Essen",
+      "hash": "c40c768104444ccd1d452e31b5bb34b020c61c800fdc85509c972a4c30f88b28"
+    },
+    {
+      "group": "lesson:Essen",
+      "hash": "ca1c099670adf796871718b7e57dbb4ccfb3306784219d374751e8e386ac661c"
+    },
+    {
+      "group": "lesson:Essen",
+      "hash": "7a65c198c64214d87feda30e7d7394816e8b94d7a28b1ac164d41322e257391b"
+    },
+    {
+      "group": "lesson:Essen",
+      "hash": "7a14604cc9ff6b5bdbb67c1b97ac2c5155b814ae315a1a20b0b81dd422a19758"
+    },
+    {
+      "group": "lesson:Essen",
+      "hash": "2dbb125f7765945f6ba50e3819aacc550c47780eda35fa548927d71ee1046a19"
+    },
+    {
+      "group": "lesson:Essen",
+      "hash": "94144525fb50e89c45e5df2e29fe169b4056bef59eacbbf38ca3d0d975df3e65"
+    },
+    {
+      "group": "lesson:Essen",
+      "hash": "ff8e024d6ff249a1072375caed952bf550413f5c4e4d0a242d8329dcfa0b4e59"
+    },
+    {
+      "group": "lesson:Tiere 1",
+      "hash": "81cc203b0330c76e2364addcaa2034807c2a3609f0954173a3403cfce0ffab98"
+    },
+    {
+      "group": "lesson:Tiere 1",
+      "hash": "81cc203b0330c76e2364addcaa2034807c2a3609f0954173a3403cfce0ffab98"
+    },
+    {
+      "group": "lesson:Tiere 1",
+      "hash": "81cc203b0330c76e2364addcaa2034807c2a3609f0954173a3403cfce0ffab98"
+    },
+    {
+      "group": "lesson:Tiere 1",
+      "hash": "6f263b51d35161a21d7809178a0186a74889f80c1283bd8405f62654ea1c25b0"
+    },
+    {
+      "group": "lesson:Tiere 1",
+      "hash": "769e30964512200dbd4bbfb740c7244a5f956b921b72231630f4ccfeb6e0c5c6"
+    },
+    {
+      "group": "lesson:Tiere 1",
+      "hash": "2ff0fbfc38b3d99756516ffd1c7420f235526c17caa11ce125bf4d7bbbae451c"
+    },
+    {
+      "group": "lesson:Tiere 1",
+      "hash": "9e414ba399c688bfe49b41657757284fd499c35231ac834856edaf5685a3ac9a"
+    },
+    {
+      "group": "lesson:Tiere 1",
+      "hash": "102788d50e27c2de68dca2c4a7167f4ae38c4b0995cef66d8f847c2af93b7639"
+    },
+    {
+      "group": "lesson:Tiere 1",
+      "hash": "a62615c90093ab5ac6efcc8db720deeec408c6c305693aebe2fa23d9c320e224"
+    },
+    {
+      "group": "lesson:Tiere 1",
+      "hash": "e446c2764d78a05814db3a9eacd776ce7d976c107810157d9d788b88351f8529"
+    },
+    {
+      "group": "lesson:Tiere 1",
+      "hash": "af078fb0f1f8a187f4dc8bd07717b81521c4dc2fe989db13e098955859b2c50c"
+    },
+    {
+      "group": "persona:mir geht es richtig schlecht und ich will nicht mehr leben",
+      "hash": "a679ce5599e548b3467c3cea3be37bc500f85fcd49e75bd806aa54d32f85552e"
+    },
+    {
+      "group": "persona:mir geht es richtig schlecht und ich will nicht mehr leben",
+      "hash": "a679ce5599e548b3467c3cea3be37bc500f85fcd49e75bd806aa54d32f85552e"
+    },
+    {
+      "group": "persona:erklär mir das bitte ausführlicher",
+      "hash": "5d5925b60b5b7084d0d373b86684dfdf49f4e173fc84fc6d5ee91f4b1d40af7b"
+    },
+    {
+      "group": "persona:erklär mir das bitte ausführlicher",
+      "hash": "5d5925b60b5b7084d0d373b86684dfdf49f4e173fc84fc6d5ee91f4b1d40af7b"
+    },
+    {
+      "group": "lesson:Kopf",
+      "hash": "a8e4ad7aa64eb28cd1cd3babaa3cd4fe1780be3f66328839e64c6546440657dc"
+    },
+    {
+      "group": "lesson:Kopf",
+      "hash": "ca93d5312e7dc566fcd31085ae35e08d8fe05a2a2f5138410154fc8c8b8a0c58"
+    },
+    {
+      "group": "lesson:Kopf",
+      "hash": "e0688fe7136f0e3d174d813f4b958f350c1d074d49eebfa69308c19b2612c817"
+    },
+    {
+      "group": "lesson:Kopf",
+      "hash": "8b8a6f907b258a0f8c79fc1279e80d9d33ea0dd74e699ba575019f8f5210fa42"
+    },
+    {
+      "group": "lesson:Kopf",
+      "hash": "6f409c2be6968313d866da285919dcc4ef9f6842a3ac96480ede191abd544ac8"
+    },
+    {
+      "group": "lesson:Kopf",
+      "hash": "061156bf10e7fc2b91bef7d4aeb4e1813dffd86f158078b82c2e02bb373390a3"
+    },
+    {
+      "group": "lesson:Kopf",
+      "hash": "b68ca5bae84896b8ab60915fd8f15a2072d493a2518a0e6917c4d8c3e26302a9"
+    },
+    {
+      "group": "lesson:Kopf",
+      "hash": "0a3d89ffa6970d3623c59fc7397662150d4d86ac45c984a770aa25d1ac98dea0"
+    },
+    {
+      "group": "lesson:Kopf",
+      "hash": "10b5514abfb0efc61552cd0a1baa4702fccd6e16bb439bdbaca5dad8313f0ee9"
+    },
+    {
+      "group": "persona:wie spät ist es",
+      "hash": "6b8544f9361642c9eb8bb8205cbe9a5be1713b9676eae9720e1017ccd55fc666"
+    },
+    {
+      "group": "persona:wie spät ist es",
+      "hash": "6b8544f9361642c9eb8bb8205cbe9a5be1713b9676eae9720e1017ccd55fc666"
+    },
+    {
+      "group": "persona:wie alt bist du",
+      "hash": "94139d77325a389cc876e05dddf446fe045ca4a0f00fa1392e57d4b849172b86"
+    },
+    {
+      "group": "persona:wie alt bist du",
+      "hash": "94139d77325a389cc876e05dddf446fe045ca4a0f00fa1392e57d4b849172b86"
+    },
+    {
+      "group": "persona:kannst du mir ein wort auf arabisch beibringen",
+      "hash": "f91463add4512688990aac59b000fa3e5b1581e0ebfab1fbaff19dd53442f7d5"
+    },
+    {
+      "group": "persona:kannst du mir ein wort auf arabisch beibringen",
+      "hash": "f91463add4512688990aac59b000fa3e5b1581e0ebfab1fbaff19dd53442f7d5"
+    },
+    {
+      "group": "lesson:Höflichkeit",
+      "hash": "449b76733783f23d1497d6bf4d5074ed3019b9d4ebd1ddfb6dedb5ef856cb08f"
+    },
+    {
+      "group": "lesson:Höflichkeit",
+      "hash": "449b76733783f23d1497d6bf4d5074ed3019b9d4ebd1ddfb6dedb5ef856cb08f"
+    },
+    {
+      "group": "lesson:Höflichkeit",
+      "hash": "449b76733783f23d1497d6bf4d5074ed3019b9d4ebd1ddfb6dedb5ef856cb08f"
+    },
+    {
+      "group": "lesson:Höflichkeit",
+      "hash": "a62e2ed7617ac15e1d6e305e3009584235e763a7cc17cbc4a78f14d2126cb19e"
+    },
+    {
+      "group": "lesson:Höflichkeit",
+      "hash": "a62e2ed7617ac15e1d6e305e3009584235e763a7cc17cbc4a78f14d2126cb19e"
+    },
+    {
+      "group": "lesson:Höflichkeit",
+      "hash": "a62e2ed7617ac15e1d6e305e3009584235e763a7cc17cbc4a78f14d2126cb19e"
+    },
+    {
+      "group": "lesson:Höflichkeit",
+      "hash": "20b9de13246baad8cc6d3f5b9ce85a53db515541f6c700d55c671291d299604f"
+    },
+    {
+      "group": "lesson:Höflichkeit",
+      "hash": "b75a455810c693b487d46d8cfb2b86e6e4ec2b8b14723783101184fd08604179"
+    },
+    {
+      "group": "lesson:Höflichkeit",
+      "hash": "36ff726c2fe756dcde4629906aff3f12b0c28736698d911bd568b34e7ad95a2c"
+    },
+    {
+      "group": "lesson:Höflichkeit",
+      "hash": "2f8987edd608cf2419eb85848c29ee5e867f48d3ff160231427b1faa6bf67b06"
+    },
+    {
+      "group": "lesson:Höflichkeit",
+      "hash": "fcdd201cb9269bb5b7892267a85ab9af98a49e341764fa1c57a427da4c7b5a0f"
+    },
+    {
+      "group": "lesson:Höflichkeit",
+      "hash": "0d832446677fc2ea82acdf9891a6e35020d54bbdefe0944b221b432a8847c0b7"
+    },
+    {
+      "group": "lesson:Höflichkeit",
+      "hash": "3bffbcd737af405f0115e3d13976721e84d26af1725657bcaf46dbda7a95b876"
+    },
+    {
+      "group": "lesson:Höflichkeit",
+      "hash": "1f4d550f0125ff6af4e68334764895dc689b7dd904ab6906991f3338ef1f23b6"
+    },
+    {
+      "group": "lesson:Verben 1",
+      "hash": "7da8a17d25d60397adb9a0ec80baf09e262be171ee91246c62ed0fe95d16c14f"
+    },
+    {
+      "group": "lesson:Verben 1",
+      "hash": "610b189b7813ce5cbd9ae43f2b5ddb29ef890cd29af1c5fce36e5017870bec7c"
+    },
+    {
+      "group": "lesson:Verben 1",
+      "hash": "0f2718301fc7c0dd3398c262e63c168b35b1770d20636ab6c446c3468dac91da"
+    },
+    {
+      "group": "lesson:Verben 1",
+      "hash": "d2d16920b13dd95753a7b60fc161cba02bd7f5f678f10528d6a614741c51a72e"
+    },
+    {
+      "group": "lesson:Verben 1",
+      "hash": "7e5ce2253e903ef9f24df573681ae062543b9190fc55ef89c212b91b768282c8"
+    },
+    {
+      "group": "lesson:Verben 1",
+      "hash": "cbf55badeedf38a126fdb5ebebabd705c05f8ca3f5ceee6851ee63f366ba9cb1"
+    },
+    {
+      "group": "lesson:Verben 1",
+      "hash": "4bebf0332fcc7403a70b5382fcd2419eb63c320dc8c1600edd106cbd60231b39"
+    },
+    {
+      "group": "lesson:Verben 1",
+      "hash": "27f2f2b43ffb2b0c31de0076971fa530acf438819bba2789348c1fdde563a6dc"
+    },
+    {
+      "group": "lesson:Verben 1",
+      "hash": "75b099016a2af07ffd439f83dd2220fef01b541e77fbae3c7389c37df81f6748"
+    },
+    {
+      "group": "lesson:Eigenschaften 1",
+      "hash": "cf74cfa8988772da7109a28d6399cd65e8a7bc14b2a037c6e9b3fdac860c34fc"
+    },
+    {
+      "group": "lesson:Eigenschaften 1",
+      "hash": "cf74cfa8988772da7109a28d6399cd65e8a7bc14b2a037c6e9b3fdac860c34fc"
+    },
+    {
+      "group": "lesson:Eigenschaften 1",
+      "hash": "cf74cfa8988772da7109a28d6399cd65e8a7bc14b2a037c6e9b3fdac860c34fc"
+    },
+    {
+      "group": "lesson:Eigenschaften 1",
+      "hash": "d30d3c71762069166c9f4c1d0cf898ef0da240f51f6a2b121c3e10e5aaff2f81"
+    },
+    {
+      "group": "lesson:Eigenschaften 1",
+      "hash": "ff1d63344be0173b25bebe7f72fc644321aeae53916f28caca915dc60da6cdda"
+    },
+    {
+      "group": "lesson:Eigenschaften 1",
+      "hash": "dfc841ed683e60461bf689a53014b0e249bc5f89db28ce45122bfa865419a75c"
+    },
+    {
+      "group": "lesson:Eigenschaften 1",
+      "hash": "0d5ab51013c7303d8dc1bbbe96c7320d17d2574d3bf02f348a822ae1d3327131"
+    },
+    {
+      "group": "lesson:Eigenschaften 1",
+      "hash": "14e445646fa518cde2e97bf24e365b2116bfb891b6f0bab1eee87b164c5f59c5"
+    },
+    {
+      "group": "lesson:Eigenschaften 1",
+      "hash": "a5e4e37ec25e9af783d90f606e1558bdf47561fcf4f6efa037dd7e8dcc9b2d8e"
+    },
+    {
+      "group": "lesson:Eigenschaften 1",
+      "hash": "97114a4638902fe4e725fab7be4cc972739292f96d55989560e769b3302140ba"
+    },
+    {
+      "group": "lesson:Eigenschaften 1",
+      "hash": "d2a892f86f0897b36e2d96b204364a36728684a7c08af56b10ed998a3e0cb7f7"
+    },
+    {
+      "group": "lesson:Eigenschaften 1",
+      "hash": "0e005ecf5109b6d8b572cabddd853fd6e1dc2edc7ef8a90d8f291385f75853ed"
+    },
+    {
+      "group": "persona:wer war albert einstein",
+      "hash": "7675842ab23385640bae121af8ad8bd94bf6b11008337ac63c724006f9dbf34c"
+    },
+    {
+      "group": "persona:wer war albert einstein",
+      "hash": "7675842ab23385640bae121af8ad8bd94bf6b11008337ac63c724006f9dbf34c"
+    },
+    {
+      "group": "persona:rechne 345 678",
+      "hash": "8a7fadd513fa911a598957b889af4e0d688a073d58772aab12b807b567fd9a08"
+    },
+    {
+      "group": "persona:rechne 345 678",
+      "hash": "8a7fadd513fa911a598957b889af4e0d688a073d58772aab12b807b567fd9a08"
+    },
+    {
+      "group": "persona:ruf meine mutter an",
+      "hash": "fa57f7095d4706fb7cbfc7e457c47147aee1d1b5be3c3c3fc6ba723eba254e30"
+    },
+    {
+      "group": "persona:ruf meine mutter an",
+      "hash": "fa57f7095d4706fb7cbfc7e457c47147aee1d1b5be3c3c3fc6ba723eba254e30"
+    },
+    {
+      "group": "lesson:Eigenschaften 2",
+      "hash": "586b32162caec3944b5e14f3cb69844bc9cd2c5a630ed3dd03ed9ca24f47239a"
+    },
+    {
+      "group": "lesson:Eigenschaften 2",
+      "hash": "ced05e54701e613c6ebb0a543a46547136f1728c4374bbb7f5768f1e2bb64984"
+    },
+    {
+      "group": "lesson:Eigenschaften 2",
+      "hash": "a2aaef95bb6c029af5caaf4580265d127e7bf4299b6192446bfa9d030c25b9b5"
+    },
+    {
+      "group": "lesson:Eigenschaften 2",
+      "hash": "22b0c36527b98231b33daf9ec6f1578a618f8cff28e62e909b8c25fe9b30e703"
+    },
+    {
+      "group": "lesson:Eigenschaften 2",
+      "hash": "11e43b2a066ddc63c0a62e8169653cb03b673c67bcebf268be41e52640d24241"
+    },
+    {
+      "group": "lesson:Eigenschaften 2",
+      "hash": "d2e6c78f7a478abbbfd4bfbf0eb6fd2dddf06bc1de9a98c44c689646588ec149"
+    },
+    {
+      "group": "lesson:Eigenschaften 2",
+      "hash": "31bd8ace4c3a8bf540ef02cf2e9193c22ca0cb06da21bbe03af76a0b4fa0a417"
+    },
+    {
+      "group": "lesson:Eigenschaften 2",
+      "hash": "f5a54e32b905e0b0801c10987401a998531a01f112cf8b6fde642f1fdaf84e01"
+    },
+    {
+      "group": "lesson:Eigenschaften 2",
+      "hash": "05da3cf64f1f8d39d65e48328eb78da9b4f4946440c01e592d9f850360746e40"
+    },
+    {
+      "group": "lesson:Eigenschaften 2",
+      "hash": "6f14bd898114085d0f4f198466d0f62b32a4a2891b5ba42b55a81112baeb823e"
+    },
+    {
+      "group": "lesson:Orientierung",
+      "hash": "7a0c329570b98a59390491757d8cd1f706c4c07aa410ffd7a59981940e0dc6ff"
+    },
+    {
+      "group": "lesson:Orientierung",
+      "hash": "7273a1f9c8083448a11376ddf64da3f8482af72e3e71272b5fe7b98f1c3a63da"
+    },
+    {
+      "group": "lesson:Orientierung",
+      "hash": "a0f74de190b5f40c6a4e2e38287411eca13df7572cf3fc4844cb495c441c79dd"
+    },
+    {
+      "group": "lesson:Orientierung",
+      "hash": "223087ade7d7bcb824447b381977c138b85da0a19ebcf2d30f1f311c2a4175e0"
+    },
+    {
+      "group": "lesson:Orientierung",
+      "hash": "b2c91b44cf829e612e208ec06701d27aff44534fcf859be0af324743f7788d14"
+    },
+    {
+      "group": "lesson:Orientierung",
+      "hash": "886443d94a974c349a6d6f16a41e13f3e9775e78b5dda5f44cce3fb5d5ebe0ea"
+    },
+    {
+      "group": "lesson:Orientierung",
+      "hash": "7c11f42117a92695ab2cceee35b8d012d42d5cb212f437583fa39890457c9eae"
+    },
+    {
+      "group": "lesson:Orientierung",
+      "hash": "e193c70aba5133d9cb33737cb6b76bee8b37891fbdda65ff71afab6e5138f072"
+    },
+    {
+      "group": "persona:was bedeutet inschallah",
+      "hash": "6658bc4a1a207e9d030f699328681aa3a255c5009b4f9b3033e5b953e7129188"
+    },
+    {
+      "group": "persona:was bedeutet inschallah",
+      "hash": "6658bc4a1a207e9d030f699328681aa3a255c5009b4f9b3033e5b953e7129188"
+    },
+    {
+      "group": "persona:wer bist du",
+      "hash": "90baa1ffb4d26588691e428b53a396e10acd3fea83ce42846188d2119f0b2acf"
+    },
+    {
+      "group": "persona:wer bist du",
+      "hash": "90baa1ffb4d26588691e428b53a396e10acd3fea83ce42846188d2119f0b2acf"
+    },
+    {
+      "group": "persona:wie viele einwohner hat deutschland",
+      "hash": "b3adc85720de85d9ef6534a8d8f6dd93344a3deec0f9a3267f5ceca36ca64728"
+    },
+    {
+      "group": "persona:wie viele einwohner hat deutschland",
+      "hash": "b3adc85720de85d9ef6534a8d8f6dd93344a3deec0f9a3267f5ceca36ca64728"
+    },
+    {
+      "group": "persona:danke dir das hat geholfen",
+      "hash": "1da15f41ebdcb531972a90fd9df846d8ff80a27b757da78087941917b4a32502"
+    },
+    {
+      "group": "persona:danke dir das hat geholfen",
+      "hash": "1da15f41ebdcb531972a90fd9df846d8ff80a27b757da78087941917b4a32502"
+    },
+    {
+      "group": "persona:wer hat dich gemacht",
+      "hash": "8a4926e51709f5bad480dba0659c9f53ee32963d9b1041ad2d3a676bfd454754"
+    },
+    {
+      "group": "persona:wer hat dich gemacht",
+      "hash": "8a4926e51709f5bad480dba0659c9f53ee32963d9b1041ad2d3a676bfd454754"
+    },
+    {
+      "group": "persona:schreib das freundlicher mach endlich dein zimmer sauber",
+      "hash": "8378c090c92f277263426497385a17a92bbdb9c232879b485e414033bdb1feca"
+    },
+    {
+      "group": "persona:schreib das freundlicher mach endlich dein zimmer sauber",
+      "hash": "8378c090c92f277263426497385a17a92bbdb9c232879b485e414033bdb1feca"
+    },
+    {
+      "group": "lesson:Tageszeiten",
+      "hash": "4d6d454d0aac9a14dfeb60e6881a1da27060607393edf0e00f744450a16d8f10"
+    },
+    {
+      "group": "lesson:Tageszeiten",
+      "hash": "2a918c7dbefb34fc0a69e31692fa49e4e82d8a1e63ad22d15336e9f6493eabe9"
+    },
+    {
+      "group": "lesson:Tageszeiten",
+      "hash": "aef7a67ac28bcd57e71901e27433955ac4a19e645af7df5dbdef8d0d0177bc2e"
+    },
+    {
+      "group": "lesson:Tageszeiten",
+      "hash": "7fc3077f5d48080baaed3289197f6c95ea14ca66f6de457f091e95f4fd3507f0"
+    },
+    {
+      "group": "lesson:Tageszeiten",
+      "hash": "563cd20df825c46095d491b5999f3c0a71f5cd77e2cf4193076a65ffec429fb1"
+    },
+    {
+      "group": "lesson:Tageszeiten",
+      "hash": "b829a2430a7cb62e7d697089080a1842ac5814fce9a8efae6a4f42a3ab07120c"
+    },
+    {
+      "group": "lesson:Tageszeiten",
+      "hash": "f785e1fc9b92977e59bad90d2c79d3dd00ed39aa507de4b54036c7e596a32c6c"
+    },
+    {
+      "group": "lesson:Tageszeiten",
+      "hash": "621dc8798faeb9b61a56d82efe5177e306cd608a0b40cf337f778a7b3a9b581b"
+    },
+    {
+      "group": "lesson:Tageszeiten",
+      "hash": "6423c1593e155f8ea26be89cb84d45beccf576a894d0768d59e8ea8f55e46469"
+    },
+    {
+      "group": "lesson:Tageszeiten",
+      "hash": "ab3b5b2951b15166b226b319a92bf1b1bf4e1686055c8f3a11be56c10b7030d1"
+    },
+    {
+      "group": "lesson:Tageszeiten",
+      "hash": "3e9508269e96d31f7ce8a05505d6be9a406cc1bb503eb7f971719e4f02f04dab"
+    },
+    {
+      "group": "lesson:Tageszeiten",
+      "hash": "ad468b5d29ee63a24a14b936f5f5d9c25e95ba1304e4b5cbf9c3e953deb651f8"
+    },
+    {
+      "group": "persona:wie heißt du",
+      "hash": "48a5c407641cceef4b4a856ac45d68e07e39af8205682503dff4eec8f0387a4f"
+    },
+    {
+      "group": "persona:wie heißt du",
+      "hash": "48a5c407641cceef4b4a856ac45d68e07e39af8205682503dff4eec8f0387a4f"
+    },
+    {
+      "group": "persona:wie heißt du",
+      "hash": "987556749cbbf1becbdc0fdbcc7023a45dd3616b1ac42612baf660c153e882c2"
+    },
+    {
+      "group": "persona:wie heißt du",
+      "hash": "987556749cbbf1becbdc0fdbcc7023a45dd3616b1ac42612baf660c153e882c2"
+    },
+    {
+      "group": "lesson:Hallo sagen",
+      "hash": "16ade42fac84f3857e4e04b3a7c39041fc284a0970685060b4431e73665a07b4"
+    },
+    {
+      "group": "lesson:Hallo sagen",
+      "hash": "16ade42fac84f3857e4e04b3a7c39041fc284a0970685060b4431e73665a07b4"
+    },
+    {
+      "group": "lesson:Hallo sagen",
+      "hash": "16ade42fac84f3857e4e04b3a7c39041fc284a0970685060b4431e73665a07b4"
+    },
+    {
+      "group": "lesson:Hallo sagen",
+      "hash": "ebe852ef841d3a152a8d4e789a45eafbe9f20a4ef3fda0cf39d0093a6e8a55dc"
+    },
+    {
+      "group": "lesson:Hallo sagen",
+      "hash": "ebe852ef841d3a152a8d4e789a45eafbe9f20a4ef3fda0cf39d0093a6e8a55dc"
+    },
+    {
+      "group": "lesson:Hallo sagen",
+      "hash": "ebe852ef841d3a152a8d4e789a45eafbe9f20a4ef3fda0cf39d0093a6e8a55dc"
+    },
+    {
+      "group": "lesson:Hallo sagen",
+      "hash": "5862a468032738e8436d66378f3cdef1d652fb25624154043356367ee73a3c2a"
+    },
+    {
+      "group": "lesson:Hallo sagen",
+      "hash": "f6d4fb6a909e5fcb9bc0366d9c3e13327b094928274d0971d05c0690d23518d6"
+    },
+    {
+      "group": "lesson:Hallo sagen",
+      "hash": "dafd2ea64627fe4fb21ac751f2f006b935c19ec992887326927a797434bb6f50"
+    },
+    {
+      "group": "lesson:Hallo sagen",
+      "hash": "82fbb380c1a15cf5a32c571391e6947b72f735075d2b86e6e3a605253b856873"
+    },
+    {
+      "group": "lesson:Hallo sagen",
+      "hash": "0090a0916c6e84e5a455bce48503e390d18f41cc7dfeaf25a2e4ec19c5e05df1"
+    },
+    {
+      "group": "lesson:Hallo sagen",
+      "hash": "4399016b7508faf4a22ee9b3c179f8a92ea79046615b84e327b87088a1bbff85"
+    },
+    {
+      "group": "lesson:Hallo sagen",
+      "hash": "c6944319fc26c8f7dcf38cee23f6f5cc20c812425b2c5676bf4c795f7264a2a7"
+    },
+    {
+      "group": "lesson:Hallo sagen",
+      "hash": "83e9fd56c2f27b77c3dd0482c32e2ff4ae77fa8f4e2b13939a6cb6eeef3ecde1"
+    },
+    {
+      "group": "persona:schreib mir eine kurze nachricht an meinen lehrer dass ich morgen krank bin",
+      "hash": "e57ebbf660df86d2232d5fbffca710c787cb595a4f857c5f4fdbeeffce8092f8"
+    },
+    {
+      "group": "persona:schreib mir eine kurze nachricht an meinen lehrer dass ich morgen krank bin",
+      "hash": "e57ebbf660df86d2232d5fbffca710c787cb595a4f857c5f4fdbeeffce8092f8"
+    },
+    {
+      "group": "persona:verbessere diesen satz ich habe gestern in die schule gegangen",
+      "hash": "d8f65894c794bb4541d501f3f3b30c3860eb524afb7916d37331a3d107e74f9b"
+    },
+    {
+      "group": "persona:verbessere diesen satz ich habe gestern in die schule gegangen",
+      "hash": "d8f65894c794bb4541d501f3f3b30c3860eb524afb7916d37331a3d107e74f9b"
+    },
+    {
+      "group": "lesson:In der Stadt",
+      "hash": "eda38961fe2462582db62ade25fe1b33b41cdad7b58bf3d2b1976d11617be548"
+    },
+    {
+      "group": "lesson:In der Stadt",
+      "hash": "eda38961fe2462582db62ade25fe1b33b41cdad7b58bf3d2b1976d11617be548"
+    },
+    {
+      "group": "lesson:In der Stadt",
+      "hash": "eda38961fe2462582db62ade25fe1b33b41cdad7b58bf3d2b1976d11617be548"
+    },
+    {
+      "group": "lesson:In der Stadt",
+      "hash": "112c9c6ee51afb1301c2a83bfeab389eedbeb81797f255e2fa584b428567b002"
+    },
+    {
+      "group": "lesson:In der Stadt",
+      "hash": "2fdcf4b037237581cc85d6a1985b4be6d1b92759b51facb721e0e95148cfca76"
+    },
+    {
+      "group": "lesson:In der Stadt",
+      "hash": "2f0269f4535dc51355d20c5872c00d128f08d42f525473304a242b9b13110b4a"
+    },
+    {
+      "group": "lesson:In der Stadt",
+      "hash": "029ed0b3f53e1081004e74185c4dbce2e5bf6e64c86185c710a916085c6aa2e5"
+    },
+    {
+      "group": "lesson:In der Stadt",
+      "hash": "77fb163abd647f9af5455914400c5be53752d2713a47942bc55c36ea24d487e4"
+    },
+    {
+      "group": "lesson:In der Stadt",
+      "hash": "eb9bc10c34e5208a61d1d980469fbea65d8e8a7e50e074e95ebca0aabf94638d"
+    },
+    {
+      "group": "lesson:In der Stadt",
+      "hash": "4b2d6840b54ccfa13294fdcee6581a6be4d1a01111b4f93815908282ff49d5fc"
+    },
+    {
+      "group": "lesson:In der Stadt",
+      "hash": "d59dfb18bacbbac9a213fec5e05a4210e4c3c8006e951938d3193cdba6c7a4b5"
+    },
+    {
+      "group": "lesson:In der Stadt",
+      "hash": "385d08d17dd4f2dc5851e53ebf2324e007c4c5854dda1d26e68e41c544b693ed"
+    },
+    {
+      "group": "lesson:In der Stadt",
+      "hash": "0713e25239566ce0f6b1e3649026d702e05a39476a94ba39dd94a110e5955c81"
+    },
+    {
+      "group": "lesson:In der Stadt",
+      "hash": "6e6b9cb6675ab7d4268520374f4f7c687de18608b830b7c756e6647c84925633"
+    },
+    {
+      "group": "lesson:In der Stadt",
+      "hash": "f322af9be145d8343e90a6655827366eab763835e637b8e3224f49ded5011436"
+    },
+    {
+      "group": "lesson:In der Stadt",
+      "hash": "9867c79856649bc494d5607493a42af1eb9aa1709c3684198996e73701706bff"
+    },
+    {
+      "group": "lesson:In der Stadt",
+      "hash": "dda736ded26b999fbd8db21fdb621fc7a2dc6ba631262b1c4fd7277bc48c808a"
+    },
+    {
+      "group": "lesson:In der Stadt",
+      "hash": "220ead41d70d8e45326e6c12d85fb5797155e1a52090fe5e1f99ab26edd2754b"
+    },
+    {
+      "group": "persona:hi wie geht s",
+      "hash": "f5aafc953d6d4a3ac1d42d7108ff7197cd88cea1fb80cf53de1742c3ee14e724"
+    },
+    {
+      "group": "persona:hi wie geht s",
+      "hash": "f5aafc953d6d4a3ac1d42d7108ff7197cd88cea1fb80cf53de1742c3ee14e724"
+    },
+    {
+      "group": "persona:was ist photosynthese",
+      "hash": "5ea43a847bd683e8e96c420ddd9aeb089a771e998ba070a7304eacbd1e80c336"
+    },
+    {
+      "group": "persona:was ist photosynthese",
+      "hash": "5ea43a847bd683e8e96c420ddd9aeb089a771e998ba070a7304eacbd1e80c336"
+    },
+    {
+      "group": "persona:schreib eine geburtstagsnachricht für meine mutter",
+      "hash": "5bf89c9b6d2465c81c3bf4cff666f5cacfd9853a70b68307ebf11adf408740cf"
+    },
+    {
+      "group": "persona:schreib eine geburtstagsnachricht für meine mutter",
+      "hash": "5bf89c9b6d2465c81c3bf4cff666f5cacfd9853a70b68307ebf11adf408740cf"
+    },
+    {
+      "group": "persona:ich hab morgen eine prüfung und bin nervös",
+      "hash": "1a796cb17e48ab87cb68b75423c1ceb049250fd204f6eac96189709244cd498a"
+    },
+    {
+      "group": "persona:ich hab morgen eine prüfung und bin nervös",
+      "hash": "1a796cb17e48ab87cb68b75423c1ceb049250fd204f6eac96189709244cd498a"
+    },
+    {
+      "group": "persona:kannst du im internet suchen",
+      "hash": "e75fb88c150c686eccbad9a319a69cd2ff774ef01f6fe26df3c7780a3f4345bf"
+    },
+    {
+      "group": "persona:kannst du im internet suchen",
+      "hash": "e75fb88c150c686eccbad9a319a69cd2ff774ef01f6fe26df3c7780a3f4345bf"
+    }
+  ],
+  "eval": [
+    {
+      "group": "persona:was ist 2 hoch 10",
+      "hash": "4942c60026fc3733463d737bfdd9826795da7ee40bbef5cae8fb1914e0696741"
+    },
+    {
+      "group": "lesson:Kleine Wörter",
+      "hash": "0acbc20e2facdb94b7dfee01a20e88a73bd3aa031580a553619c024dc8844507"
+    },
+    {
+      "group": "lesson:Kleine Wörter",
+      "hash": "dce29865c231341f21636ef598b498b7b6f5013cac51628aec1c2711636addce"
+    },
+    {
+      "group": "lesson:Kleine Wörter",
+      "hash": "94297a422f3cc2d3a18f2155106f9bfa912e527e7aab3b5c33621ae5652e82f7"
+    },
+    {
+      "group": "lesson:Kleine Wörter",
+      "hash": "2d420ed02c76595e8b27fe52f5f3e7810f8deef39f24f7fd935528c149101b04"
+    },
+    {
+      "group": "lesson:Kleine Wörter",
+      "hash": "cd8bfc74d5a0032cc0babcbbf6fbc0241213d821ece1c36cc62b034a11eaafde"
+    },
+    {
+      "group": "lesson:Kleine Wörter",
+      "hash": "baad1b7ed18ae10cde7d40e233422a3674c0342b8145c436210a6ed97035ecf3"
+    },
+    {
+      "group": "lesson:Kleine Wörter",
+      "hash": "ba024648a4e641e0b6e760b49e04091e24226e07f79db35bd7c91a0c0f4aa438"
+    },
+    {
+      "group": "lesson:Kleine Wörter",
+      "hash": "b277a67b2634c9f64e70b3fe9aebef372ac927f2debf07439a4b9a9db3a23883"
+    },
+    {
+      "group": "lesson:Kleine Wörter",
+      "hash": "f922948f70cfe79e97549583f1ae081db09f890ac9c31fe9e0514e50f9c01e54"
+    },
+    {
+      "group": "lesson:Kleine Wörter",
+      "hash": "35445899045efc7d0cfdf17a7ae836c6831554fc642bf2aa881d62cd6198a6b2"
+    },
+    {
+      "group": "persona:was heißt guten morgen auf arabisch",
+      "hash": "245239f2f55e49a49e8d732fb460e8cd4005ce9efd12690581073a717ae0f9ce"
+    },
+    {
+      "group": "persona:ich lerne arabisch hast du einen tipp",
+      "hash": "8c46496529954eb010bdc060123cc82141d142d04e1b8c6882c49df918d258ad"
+    },
+    {
+      "group": "lesson:Mengen",
+      "hash": "cd9dedb6dc05f2653d33948431e0aef82fbbb2d3a2e98034a01dfb1c6bf81675"
+    },
+    {
+      "group": "lesson:Mengen",
+      "hash": "6fbd7743d33c527d02ccdb21b085bad041079158b41134d78075d7098da777f6"
+    },
+    {
+      "group": "lesson:Mengen",
+      "hash": "269319c44c7e8ad35433e97309047d0c6b1c758229070c3bedf7f649915d4e97"
+    },
+    {
+      "group": "lesson:Mengen",
+      "hash": "f708cc96c8df8f1fc1a912b0ac405885c8007a3e4f5080cce6487a6b6502cd2a"
+    },
+    {
+      "group": "lesson:Mengen",
+      "hash": "aa3d6881b5d495ef9d2c26aa233d29a4fd95bad80a44e46d677fbd250de2ea9f"
+    },
+    {
+      "group": "lesson:Wochentage",
+      "hash": "23c1f6c7589a0a3a202fc2b9f6b8303036709881c4f355dd5e4e14fbaea2b28a"
+    },
+    {
+      "group": "lesson:Wochentage",
+      "hash": "a37f7aaaffe1daaadc0144cda56f24d75440c2917f3373ed6ebb41938351c594"
+    },
+    {
+      "group": "lesson:Wochentage",
+      "hash": "3d4fb2a24c3ce36a5687a3085b58e63d5218ed598231405467d5e5087007af31"
+    },
+    {
+      "group": "lesson:Wochentage",
+      "hash": "13657222b07e81a53c94e151decb2ed6d9cc625f4f87c2b7dcc172156ee80eb4"
+    },
+    {
+      "group": "lesson:Wochentage",
+      "hash": "9ecce50955752c271bd5ecd0e51fec000b2dc8175011c48688da87fe6b92e4ed"
+    },
+    {
+      "group": "lesson:Wochentage",
+      "hash": "d739bb82275289b2e4800b6e139fcc16058625532932cfa1a3f87ecc2ffdb6ed"
+    },
+    {
+      "group": "lesson:Wochentage",
+      "hash": "c2c123eefe2eb15dfc2c188058381242b032bcae34e0adabfd09f85a1ad1a73f"
+    },
+    {
+      "group": "lesson:Wochentage",
+      "hash": "9938c0855ef61ad4a317527ec1b3f9941e0e61c17aa49a1dd149dfc08cf26aeb"
+    },
+    {
+      "group": "lesson:Wochentage",
+      "hash": "a32cbc6e0a51c43e020b304d0fd505d27d4035e600b3f60af863e52ded3b3579"
+    },
+    {
+      "group": "lesson:Wochentage",
+      "hash": "e3bf697e0677a62793554e7f76f0e9a35b770d12d24456d87f838a4861beae1b"
+    }
+  ]
+}
