@@ -1431,6 +1431,16 @@ run(`U="gast";loadS()`);
   ok("Fehler: Limit zeigt die Meldung des Servers",E(429,"limit")[0]==="Für heute sind deine 60 Nachrichten aufgebraucht."&&E(429,"limit")[1]==="");
   ok("… abgemeldet bietet „Neu anmelden“",E(401,"auth")[1]==="acc");
   ok("… Guthaben oder Anbieter: nicht erreichbar, ohne Details",/nicht erreichbar/.test(E(502,"credit")[0])&&!/Guthaben/.test(E(502,"credit")[0]));
+  // Aussehen: eigener Raum in Logo-Nacht, Begrüßung, Satz auf der Bühne
+  const css41=html.slice(html.indexOf("<style>"),html.indexOf("</style>"));
+  ok("Raum in Logo-Nacht: Tokens zeigen auf die Nachtfarben, in beiden Designs",/:root:has\(\.kiv\)\{--bg:var\(--night\);--card:var\(--night2\);--ink:var\(--on-night\);[^}]*--g:var\(--mint\);[^}]*color-scheme:dark\}/.test(css41)&&/body:has\(\.kiv\)::after\{[^}]*position:fixed[^}]*var\(--night2\)/.test(css41));
+  ok("… Kopf und Eingabe kleben, Eingabe als ein rundes Feld",/\.kih\{position:sticky;top:env\(safe-area-inset-top,0px\)/.test(css41)&&/\.kic\{position:sticky;bottom:0/.test(css41)&&/\.kir\{[^}]*border-radius:32px/.test(css41));
+  run(`ARV=null`);const m41=run(`kiMsg({role:"assistant",content:"**هَذَا كِتَابٌ.**\\n*hādhā kitābun*\\nDas ist ein Buch.\\n\\nSehr gut! Schreib: هَذَا قَلَمٌ."})`);
+  ok("Antwort: Satz auf der Bühne, die ganze Bühne ist der Knopf zum Anhören",/^<div class="kim a"><button class="kisc" title="Anhören" data-kisay="هَذَا كِتَابٌ\."><span class="kia ar as3" lang="ar">هَذَا كِتَابٌ\.<\/span><span class="kit"><svg[^>]*>.*<\/svg>hādhā kitābun<\/span><span class="kid">Das ist ein Buch\.<\/span><\/button><p class="kiq">Sehr gut! Schreib: <span class="ar" lang="ar">هَذَا قَلَمٌ<\/span>\.<\/p><\/div>$/.test(m41),m41);
+  ok("… beim Mitlesen noch ohne Knopf, ohne Format nur Text",/^<div class="kim a new" id="kilive"><div class="kisc">/.test(run(`kiMsg({role:"assistant",content:"**هَذَا"},{live:true,fresh:true})`))&&run(`kiMsg({role:"assistant",content:"Gern!"})`)==='<div class="kim a"><p class="kiq">Gern!</p></div>');
+  ok("Nachricht der Person: rechts, rein arabisch in Naskh",run(`kiMsg({role:"user",content:"هذا كتاب"})`)==='<div class="kim b"><div class="kiub ar" lang="ar">هذا كتاب</div></div>'&&run(`kiMsg({role:"user",content:"marhaban"},{fresh:true})`)==='<div class="kim b new"><div class="kiub">marhaban</div></div>');
+  ok("Begrüßung: Arabisch groß, Einladung, Inhalt darunter",/^<div class="kihero"><p class="ar nha" lang="ar">مَرْحَبًا<\/p><h2>Schreib mit xbubekir<\/h2><p class="kihp">[^<]+<\/p>X<\/div>$/.test(run(`kiHero("X")`)));
+  ok("Vorschlag als Pille, Arabisch darin in Naskh",run(`kiChip("Was bedeutet قَلَم?")`)==='<button class="kich" data-kic="Was bedeutet قَلَم?">Was bedeutet <span class="ar" lang="ar">قَلَم</span>?</button>'&&/ disabled>/.test(run(`kiChip("x",true)`)));
   ok("Datenschutz nennt Server, OpenRouter und DeepSeek",/KI-Übungspartner \(mufradaat\.AI\)/.test(html)&&/Supabase, Serverstandort EU, Frankfurt/.test(html)&&/OpenRouter \(USA\)/.test(html)&&!/Qwen/.test(html));
   run(`U="gast";UID=null;loadS()`);
 }
