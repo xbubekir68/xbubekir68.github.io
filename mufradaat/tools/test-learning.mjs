@@ -1415,22 +1415,41 @@ run(`U="gast";loadS()`);
   run(`games()`);ok("… Kachel unter „Gespräch“ in den Spielen",/<p class="gh">Gespräch<\/p><button class="gtl kitl" data-go="ki">/.test(run(`app.innerHTML`)));
   run(`U="gast";UID=null;loadS();S.aok="skip";view="ki";ki()`);let g41=run(`app.innerHTML`);
   ok("Gast: Hinweis auf ein Konto statt Gespräch",/id="kiin"/.test(g41)&&!/id="kii"/.test(g41));
-  // Antworten zerlegen
-  const P=t=>run(`JSON.stringify(kiParse(${JSON.stringify(t)}))`);
-  ok("Antwort im Format: Arabisch, Umschrift, Deutsch, Rest",P("**هَذَا كِتَابٌ.**\n*hādhā kitābun*\nDas ist ein Buch.\n\nSehr gut! Und jetzt?")===JSON.stringify({ar:"هَذَا كِتَابٌ.",tr:"hādhā kitābun",de:"Das ist ein Buch.",q:"Sehr gut! Und jetzt?"}),P("**هَذَا كِتَابٌ.**\n*hādhā kitābun*\nDas ist ein Buch.\n\nSehr gut! Und jetzt?"));
-  ok("… ohne Format bleibt alles Text",JSON.parse(P("Gern! كِتَاب heißt Buch.")).ar===""&&JSON.parse(P("Gern! كِتَاب heißt Buch.")).q==="Gern! كِتَاب heißt Buch.");
-  ok("… halbe Antwort beim Mitlesen",JSON.parse(P("**هَذَا")).ar==="هَذَا"&&JSON.parse(P("")).q==="");
+  // Arabisch zuerst: Was gilt als arabische Antwort?
+  ok("Arabische Antwort erkannt, auch mit einem deutschen Wort darin",run(`kiIsAr("هَذَا كِتَابٌ. مَا هَذَا؟")&&kiIsAr("«Buch» هُوَ كِتَابٌ.")`));
+  ok("… eine Erklärung auf Deutsch mit arabischem Beispiel nicht",!run(`kiIsAr("Am Ende steht -un, weil das Wort unbestimmt ist: كِتَابٌ.")`)&&!run(`kiIsAr("Gern!")`)&&!run(`kiIsAr("")`));
   // Was an den Server geht
   run(`globalThis.__p=kiPayload({t:"Was ist das?",g:"Sprache lernen",w:[BY.kitab,BY.qalam]},[{role:"assistant",content:"x"},...Array.from({length:30},(_,i)=>({role:i%2?"assistant":"user",content:"n"+i+"  "}))])`);
   const pl=JSON.parse(run(`JSON.stringify(__p)`));
-  ok("Anfrage: nur Thema und Gespräch, Wörter als [Arabisch, Umschrift, Deutsch]",Object.keys(pl).join()==="topic,messages"&&JSON.stringify(pl.topic)===JSON.stringify({t:"Was ist das?",g:"Sprache lernen",w:[["كِتَاب","kitāb","Buch"],["قَلَم","qalam","Stift"]]}),pl.topic);
+  ok("Anfrage: nur Fassung, Thema und Gespräch, Wörter als [Arabisch, Umschrift, Deutsch]",Object.keys(pl).join()==="v,topic,messages"&&JSON.stringify(pl.topic)===JSON.stringify({t:"Was ist das?",g:"Sprache lernen",w:[["كِتَاب","kitāb","Buch"],["قَلَم","qalam","Stift"]]}),pl.topic);
   ok("… höchstens 20 Nachrichten, die erste von der Person, Text getrimmt",pl.messages.length<=20&&pl.messages[0].role==="user"&&pl.messages.at(-1).content==="n29"&&pl.messages.every(m=>m.content===m.content.trim()),[pl.messages.length,pl.messages[0]]);
   ok("… kein System-Prompt aus der App",!/system/.test(run(`JSON.stringify(__p)`)));
+  ok("… mit v: 2 („Arabisch zuerst“), Thema und Gespräch",pl.v===2);
   // Fehlertexte
   const E=(st,r)=>JSON.parse(run(`JSON.stringify(kiErrText(Object.assign(new Error("Für heute sind deine 60 Nachrichten aufgebraucht."),{status:${st},reason:"${r}"})))`));
   ok("Fehler: Limit zeigt die Meldung des Servers",E(429,"limit")[0]==="Für heute sind deine 60 Nachrichten aufgebraucht."&&E(429,"limit")[1]==="");
   ok("… abgemeldet bietet „Neu anmelden“",E(401,"auth")[1]==="acc");
   ok("… Guthaben oder Anbieter: nicht erreichbar, ohne Details",/nicht erreichbar/.test(E(502,"credit")[0])&&!/Guthaben/.test(E(502,"credit")[0]));
+  // Aussehen: eigener Raum in Logo-Nacht, Begrüßung, Satz auf der Bühne
+  const css41=html.slice(html.indexOf("<style>"),html.indexOf("</style>"));
+  ok("Raum in Logo-Nacht: Tokens zeigen auf die Nachtfarben, in beiden Designs",/:root:has\(\.kiv\)\{--bg:var\(--night\);--card:var\(--night2\);--ink:var\(--on-night\);[^}]*--g:var\(--mint\);[^}]*color-scheme:dark\}/.test(css41)&&/body:has\(\.kiv\)::after\{[^}]*position:fixed[^}]*var\(--night2\)/.test(css41));
+  ok("… Kopf und Eingabe kleben, Eingabe als ein rundes Feld",/\.kih\{position:sticky;top:env\(safe-area-inset-top,0px\)/.test(css41)&&/\.kic\{position:sticky;bottom:0/.test(css41)&&/\.kir\{[^}]*border-radius:32px/.test(css41));
+  run(`ARV=null;globalThis.__m={role:"assistant",content:"هَذَا كِتَابٌ. مَا هَذَا؟"}`);const m41=run(`kiMsg(__m,3)`);
+  ok("Antwort: nur Arabisch, von rechts nach links, ohne Übersetzung und ohne Umschrift",/^<div class="kim a" data-i="3"><div class="kibb"><p class="kiar ar as3" lang="ar" dir="rtl">هَذَا كِتَابٌ\. مَا هَذَا؟<\/p><div class="kifold" data-f="tr"><div><\/div><\/div><div class="kifold" data-f="de"><div><\/div><\/div><\/div><div class="kiac">/.test(m41)&&!/[a-zāḥ]{4,} [a-zāḥ]{4,}<\/p>/.test(m41.split('<div class="kiac">')[0]),m41);
+  ok("… darunter kleine Symbole: Übersetzung, Anhören, Mehr (Umschrift, Kopieren)",/<button class="kibt" data-kiact="de" aria-expanded="false" aria-label="Übersetzung"/.test(m41)&&/data-kiact="say" aria-label="Anhören"/.test(m41)&&/data-kiact="more" aria-haspopup="menu" aria-expanded="false" aria-label="Mehr"/.test(m41)&&/<div class="kimenu" role="menu" hidden><button role="menuitem" data-kiact="tr">Umschrift zeigen<\/button><button role="menuitem" data-kiact="copy">Text kopieren<\/button><\/div>/.test(m41));
+  run(`__m.de="Das ist ein Buch. Was ist das?";__m.deOn=true`);const m41b=run(`kiMsg(__m,3)`);
+  ok("Übersetzung aufgeklappt: abgesetzt unter dem Arabischen, von links nach rechts, Knopf als offen markiert",/<div class="kifold on" data-f="de"><div><p class="kifp kide" lang="de" dir="ltr">Das ist ein Buch\. Was ist das\?<\/p><\/div><\/div>/.test(m41b)&&/<button class="kibt on" data-kiact="de" aria-expanded="true"/.test(m41b)&&/<div class="kifold" data-f="tr"><div><\/div><\/div>/.test(m41b));
+  run(`__m.deOn=false;__m.tr="hādhā kitābun. mā hādhā?";__m.trOn=true`);const m41c=run(`kiMsg(__m,3)`);
+  ok("Umschrift getrennt davon: eigener Klappteil, Menü sagt „verbergen“, Übersetzung bleibt gemerkt und zu",/<div class="kifold on" data-f="tr"><div><p class="kifp kitr" lang="ar-Latn" dir="ltr">hādhā kitābun\. mā hādhā\?<\/p>/.test(m41c)&&/data-kiact="tr">Umschrift verbergen</.test(m41c)&&/<div class="kifold" data-f="de"><div><p class="kifp kide"/.test(m41c));
+  run(`__m.trOn=false;__m.de=null;__m.deOn=true;__m.deBusy=true`);ok("Beim Holen: Punkte im Klappteil",/<div class="kifold on" data-f="de"><div><p class="kifp"><span class="kidots s"/.test(run(`kiMsg(__m,3)`)));
+  ok("Beim Mitlesen: nur der Text, noch ohne Symbole",run(`kiMsg({role:"assistant",content:"هَذَا"},1,{live:true,fresh:true})`)==='<div class="kim a new" id="kilive"><div class="kibb"><p class="kiar ar as3" lang="ar" dir="rtl">هَذَا</p></div></div>');
+  ok("Erklärung auf Deutsch: als Text, ohne Übersetzen-Knopf",/^<div class="kim a" data-i="2"><div class="kibb"><p class="kiq">Die Endung -un zeigt: unbestimmt, zum Beispiel <span class="ar" lang="ar">كِتَابٌ<\/span>\.<\/p><\/div><\/div>$/.test(run(`kiMsg({role:"assistant",content:"Die Endung **-un** zeigt: unbestimmt, zum Beispiel كِتَابٌ."},2)`)));
+  ok("Nachricht der Person: rechts, rein arabisch in Naskh",run(`kiMsg({role:"user",content:"هذا كتاب"},0)`)==='<div class="kim b"><div class="kiub ar" lang="ar">هذا كتاب</div></div>'&&run(`kiMsg({role:"user",content:"marhaban"},0,{fresh:true})`)==='<div class="kim b new"><div class="kiub">marhaban</div></div>');
+  ok("Gemerkte Übersetzung geht nicht mit an den Server",run(`(()=>{const x=kiPayload({t:"a",g:"b",w:[BY.kitab]},[{role:"user",content:"hi"},{role:"assistant",content:"هَذَا",de:"Das",deOn:true,tr:"hādhā"}]);return JSON.stringify(x.messages)})()`)==='[{"role":"user","content":"hi"},{"role":"assistant","content":"هَذَا"}]');
+  ok("Vorschläge im Gespräch: Erklärung auf Deutsch nur auf Wunsch",run(`(KI.msgs=[{role:"user",content:"x"}],kiChips({w:[BY.kitab,BY.qalam]}).includes("Erklär das auf Deutsch."))`)&&run(`(KI.msgs=[],kiChips({w:[BY.kitab,BY.qalam]})[0])`)==="Fang du an.");
+  ok("Klappteile: weicher Übergang, zugeklappt unsichtbar auch für Vorlesehilfen",/\.kifold\{display:grid;grid-template-rows:0fr;transition:grid-template-rows \.26s ease\}\.kifold\.on\{grid-template-rows:1fr\}/.test(css41)&&/\.kifold>div\{min-height:0;overflow:hidden;visibility:hidden/.test(css41));
+  ok("Begrüßung: Arabisch groß, Einladung, Hinweis auf Arabisch zuerst",/^<div class="kihero"><p class="ar nha" lang="ar">مَرْحَبًا<\/p><h2>Schreib mit xbubekir<\/h2><p class="kihp">xbubekir antwortet auf Arabisch\. [^<]+<\/p>X<\/div>$/.test(run(`kiHero("X")`)));
+  ok("Vorschlag als Pille, Arabisch darin in Naskh",run(`kiChip("Was bedeutet قَلَم?")`)==='<button class="kich" data-kic="Was bedeutet قَلَم?">Was bedeutet <span class="ar" lang="ar">قَلَم</span>?</button>'&&/ disabled>/.test(run(`kiChip("x",true)`)));
   ok("Datenschutz nennt Server, OpenRouter und DeepSeek",/KI-Übungspartner \(mufradaat\.AI\)/.test(html)&&/Supabase, Serverstandort EU, Frankfurt/.test(html)&&/OpenRouter \(USA\)/.test(html)&&!/Qwen/.test(html));
   run(`U="gast";UID=null;loadS()`);
 }
