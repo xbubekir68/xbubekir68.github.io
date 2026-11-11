@@ -762,14 +762,19 @@ body:has(.kiv)::after{content:"";position:fixed;inset:0;z-index:-1;pointer-event
 .kim.new{animation:kiin .28s cubic-bezier(.2,.8,.2,1) both}@keyframes kiin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .kiub{max-width:82%;padding:10px 16px;border-radius:20px 20px 6px 20px;background:var(--gl);color:var(--ink);font-size:16px;line-height:1.45;overflow-wrap:anywhere}
 .kiub.ar{font-size:var(--ar2);line-height:1.6}.kiub .ar{font-size:1.4em;line-height:1.5}
-.kisc{display:block;width:100%;margin:0;padding:16px 16px 14px;border:1px solid var(--line);border-radius:20px;background:var(--card);color:var(--ink);font:inherit;text-align:center}
-button.kisc{cursor:pointer}button.kisc:active{border-color:var(--g)}.kisc>span{display:block}.kisc>.kit{display:flex}
-.kisc .kia{color:var(--g);line-height:1.7}
-.kit{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:2px;font-size:14px;line-height:1.4;color:var(--mute)}.kit .i{flex:none;color:var(--g)}
-.kid{margin-top:8px;font-size:16px;font-weight:600;line-height:1.4}
-.kiq{padding:0 4px;font-size:16px;line-height:1.55}.kiq .ar,.kid .ar{font-size:1.4em;line-height:1.5;color:var(--g)}
+.kibb{align-self:flex-start;max-width:92%;padding:10px 16px 12px;border:1px solid var(--line);border-radius:20px 20px 20px 6px;background:var(--card);overflow-wrap:anywhere}
+.kibb .kiar{color:var(--g);line-height:1.8}
+.kiq{font-size:16px;line-height:1.55}.kiq .ar{font-size:1.4em;line-height:1.5;color:var(--g)}
+.kifold{display:grid;grid-template-rows:0fr;transition:grid-template-rows .26s ease}.kifold.on{grid-template-rows:1fr}
+.kifold>div{min-height:0;overflow:hidden;visibility:hidden;transition:visibility 0s .26s}.kifold.on>div{visibility:visible;transition-delay:0s}
+.kifp{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:15px;line-height:1.5;text-align:left}.kitr{color:var(--mute)}
+.kiac{position:relative;display:flex;align-items:center;margin:-6px 0 -6px 2px}
+.kibt{width:44px;height:44px;border:0;border-radius:50%;background:none;color:var(--mute);display:grid;place-items:center}.kibt.on{color:var(--g)}.kibt:active{background:var(--gl)}
+.kibt.busy .i{animation:kipulse 1s ease-in-out infinite}@keyframes kipulse{50%{opacity:.3}}
+.kimenu{position:absolute;left:0;top:calc(100% - 4px);z-index:5;min-width:210px;padding:6px;border:1px solid var(--line);border-radius:16px;background:var(--card);box-shadow:0 10px 30px rgba(0,0,0,.35)}.kimenu[hidden]{display:none}
+.kimenu button{display:block;width:100%;min-height:44px;padding:0 12px;border:0;border-radius:12px;background:none;color:var(--ink);font-size:15px;text-align:left}.kimenu button:active{background:var(--gl)}
 .kimn{padding:0 4px;font-size:13px;color:var(--mute)}
-.kidots{align-self:flex-start;display:inline-flex;gap:5px;padding:14px 16px;border-radius:20px;background:var(--card)}.kidots i{width:7px;height:7px;border-radius:50%;background:var(--g);animation:kidot 1.2s ease-in-out infinite}.kidots i:nth-child(2){animation-delay:.15s}.kidots i:nth-child(3){animation-delay:.3s}
+.kidots{align-self:flex-start;display:inline-flex;gap:5px;padding:14px 16px;border-radius:20px;background:var(--card)}.kidots i{width:7px;height:7px;border-radius:50%;background:var(--g);animation:kidot 1.2s ease-in-out infinite}.kidots i:nth-child(2){animation-delay:.15s}.kidots i:nth-child(3){animation-delay:.3s}.kidots.s{padding:5px 0;background:none}
 @keyframes kidot{0%,60%,100%{opacity:.35;transform:none}30%{opacity:1;transform:translateY(-3px)}}
 .kil .hint{margin-top:0;flex-direction:column;align-items:stretch;gap:2px}.kil .hint .btn{margin-top:10px}
 .kic{position:sticky;bottom:0;z-index:3;margin:0 -24px;padding:28px 16px calc(10px + env(safe-area-inset-bottom,0px));background:linear-gradient(to bottom,transparent,var(--bg) 28px)}
@@ -1130,6 +1135,7 @@ search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',
 chat:'<path d="M5 4h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-7l-5 4v-4H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="M8 9h8M8 13h5"/>',
 info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.4"/>',
 send:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+lang:'<path d="M3 5.5h9M7.5 3.5v2M10.2 5.5c-.8 3.6-3.2 6.300-6.700 7.800M5.300 5.500c.7 2.900 2.600 5.300 5.400 6.700"/><path d="M12.500 20.500l4-9 4 9M14 17.200h5"/>',
 edit:'<path d="M11 5H7a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/><path d="M17.6 3.9a1.8 1.8 0 0 1 2.5 2.5L12.5 14l-3.3.8.8-3.3z"/>'
 };
 const ic=(n,s=22,f=false)=>`<svg class="i" viewBox="0 0 24 24" width="${s}" height="${s}" ${f?'fill="currentColor" stroke="none"':'fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"'} aria-hidden="true">${ICO[n]}</svg>`;
@@ -3477,6 +3483,8 @@ function duell(){
 // Der Weg: App → Server von xbubekir (Supabase-Projekt „xbubekir AI“, Edge Function „mufradaat“, Code in xbubekir/server/mufradaat) → OpenRouter.
 // Der Server prüft das Mufradaat-Konto, zählt die Nachrichten pro Tag und legt Modell, Länge und die Anweisung an die KI fest.
 // Die App schickt nur das Thema (Wörter) und das Gespräch. Gespeichert wird das Gespräch nirgends, es lebt nur, bis die Seite zugeht.
+// Arabisch zuerst: xbubekir antwortet nur auf Arabisch. Die deutsche Übersetzung und die Umschrift einer Antwort holt die App erst,
+// wenn die Person darauf tippt (eigene kleine Anfrage je Antwort, danach gemerkt). Deutsch schreibt die KI nur auf ausdrückliche Bitte.
 // Die Sätze der KI sind nicht gegengelesen: Das steht immer dabei, und das Gespräch zählt nicht zum Lernstand (keine XP).
 // Aussehen: ein eigener Raum in Logo-Nacht (siehe CSS und DESIGN.md), Aufbau wie in xbubekir: Begrüßung in der Mitte, ein rundes Eingabefeld unten.
 const KI_URL="https://ydasoikczdjjdtdarrpx.supabase.co/functions/v1/mufradaat";
@@ -3493,42 +3501,44 @@ function kiTopics(){
 }
 // gewähltes Thema; ohne Wahl die jüngste Etappe der Stufe 2, sonst die Lektion, die gerade dran ist
 function kiTopic(){const ts=kiTopics();return ts.find(t=>t.id===KI.tid)||ts.filter(t=>t.id[0]==="e").pop()||ts.find(t=>t.id==="l:"+currentLesson().k)||ts[0]}
-// Was an den Server geht: Thema mit Wörtern [Arabisch, Umschrift, Deutsch] und die letzten Nachrichten, die erste von der Person
+// Was an den Server geht: Thema mit Wörtern [Arabisch, Umschrift, Deutsch] und die letzten Nachrichten, die erste von der Person.
+// v: 2 = „Arabisch zuerst“ (ohne v antwortet der Server noch wie für die frühere Fassung: Arabisch, Umschrift, Deutsch in drei Zeilen)
 function kiPayload(p,msgs){
   const cut=(s,n)=>String(s).trim().slice(0,n);
   let m=msgs.slice(-KI_MAX).map(x=>({role:x.role,content:cut(x.content,KI_LEN)})).filter(x=>x.content);
   while(m.length&&m[0].role!=="user")m.shift();
-  return{topic:{t:cut(p.t,80),g:cut(p.g,80),w:p.w.slice(0,60).map(w=>[cut(w.ar,80),cut(w.tr,80),cut(w.de,80)])},messages:m};
+  return{v:2,topic:{t:cut(p.t,80),g:cut(p.g,80),w:p.w.slice(0,60).map(w=>[cut(w.ar,80),cut(w.tr,80),cut(w.de,80)])},messages:m};
 }
-// Antwort in ihre Teile zerlegen (so verlangt es der Server): Arabisch / Umschrift / Deutsch / Rückmeldung und Frage.
-// Hält sich die KI nicht daran, bleibt alles als Text in q stehen (ar leer). Geht auch mit halben Antworten beim Mitlesen.
 const KI_AR=/[؀-ۿ]/,KI_LAT=/[A-Za-zÀ-ɏḀ-ỿ]/;
-function kiParse(txt){
-  const L=String(txt||"").replace(/\r/g,"").split("\n").map(s=>s.replace(/^[*_\s]+|[*_\s]+$/g,"")).filter(Boolean);
-  if(!L.length)return{ar:"",tr:"",de:"",q:""};
-  if(!KI_AR.test(L[0])||KI_LAT.test(L[0]))return{ar:"",tr:"",de:"",q:L.join("\n")};
-  const tr=L[1]&&!KI_AR.test(L[1])?L[1]:"",r=L.slice(tr?2:1);
-  return{ar:L[0],tr,de:tr?r[0]||"":"",q:(tr?r.slice(1):r).join("\n")};
-}
-const kiTx=s=>arIn(String(s).replace(/\*+/g,"")).replace(/\n/g,"<br>"); // deutscher Text der KI: ohne Sternchen, Arabisch darin in Naskh
+const kiCount=(t,r)=>(t.match(new RegExp(r.source,"g"))||[]).length,kiPlain=s=>String(s||"").replace(/\*+/g,"").trim(); // ohne Sternchen, falls die KI doch welche setzt
+// Antwort auf Arabisch? Ein deutsches Wort darin darf sein. Nur dann gibt es Übersetzung, Umschrift und Anhören; eine Erklärung auf Deutsch steht als Text da.
+const kiIsAr=t=>{const a=kiCount(t,KI_AR);return a>0&&a>=2*kiCount(t,KI_LAT)};
+const kiTx=s=>arIn(kiPlain(s)).replace(/\n+/g,"<br>"); // deutscher Text der KI, Arabisch darin in Naskh
 const kiCanSay=t=>!!(AUD[t]||AUD[sSay(t)]||ARV!==false); // Aufnahme vorhanden oder das Gerät hat (vielleicht) eine arabische Stimme
 const kiSay=t=>speak([t,sSay(t)].find(x=>AUD[x])||t);
-function kiBody(p,live){
-  if(!p.ar)return p.q?`<p class="kiq">${kiTx(p.q)}</p>`:`<span class="kidots" role="img" aria-label="xbubekir schreibt"><i></i><i></i><i></i></span>`;
-  const say=!live&&kiCanSay(p.ar); // die ganze Bühne ist der Knopf zum Anhören (wie die Sprechblasen der Mini-Dialoge)
-  const inner=`<span class="kia ar as3" lang="ar">${esc(p.ar)}</span>${p.tr||say?`<span class="kit">${say?ic("speaker",16):""}${esc(p.tr)}</span>`:""}${p.de?`<span class="kid">${kiTx(p.de)}</span>`:""}`;
-  return (say?`<button class="kisc" title="Anhören" data-kisay="${esc(p.ar)}">${inner}</button>`:`<div class="kisc">${inner}</div>`)+(p.q?`<p class="kiq">${kiTx(p.q)}</p>`:"");
+// Klappteil unter dem arabischen Text: k = "tr" Umschrift oder "de" Übersetzung, beide von links nach rechts
+const kiFoldIn=(m,k)=>m[k+"Busy"]?`<p class="kifp"><span class="kidots s" role="img" aria-label="Lädt"><i></i><i></i><i></i></span></p>`
+  :m[k]?`<p class="kifp ${k==="de"?"kide":"kitr"}" lang="${k==="de"?"de":"ar-Latn"}" dir="ltr">${esc(m[k]).replace(/\n+/g,"<br>")}</p>`:"";
+const kiFoldH=(m,k)=>`<div class="kifold${m[k+"On"]?" on":""}" data-f="${k}"><div>${kiFoldIn(m,k)}</div></div>`;
+// Kleine Symbole unter einer arabischen Antwort: Übersetzung, Anhören, Mehr (Umschrift, Kopieren)
+const kiActs=m=>`<div class="kiac"><button class="kibt${m.deOn?" on":""}" data-kiact="de" aria-expanded="${!!m.deOn}" aria-label="Übersetzung" title="Übersetzung">${ic("lang",18)}</button>${kiCanSay(kiPlain(m.content))?`<button class="kibt" data-kiact="say" aria-label="Anhören" title="Anhören">${ic("speaker",18)}</button>`:""}<button class="kibt" data-kiact="more" aria-haspopup="menu" aria-expanded="false" aria-label="Mehr" title="Mehr">${ic("more",18)}</button><div class="kimenu" role="menu" hidden><button role="menuitem" data-kiact="tr">${m.trOn?"Umschrift verbergen":"Umschrift zeigen"}</button><button role="menuitem" data-kiact="copy">Text kopieren</button></div></div>`;
+// Inhalt einer Antwort. Beim Mitlesen (live) nur der Text; fertig kommen bei arabischen Antworten Klappteile und Symbole dazu.
+function kiBody(m,live){
+  const t=kiPlain(m.content);
+  if(!t)return `<span class="kidots" role="img" aria-label="xbubekir schreibt"><i></i><i></i><i></i></span>`;
+  const ar=kiIsAr(t);
+  return `<div class="kibb">${ar?`<p class="kiar ar as3" lang="ar" dir="rtl">${esc(t).replace(/\n+/g,"<br>")}</p>`:`<p class="kiq">${kiTx(t)}</p>`}${ar&&!live?kiFoldH(m,"tr")+kiFoldH(m,"de"):""}</div>${ar&&!live?kiActs(m):""}`;
 }
-// o.live: die laufende Antwort; o.fresh: gerade dazugekommen (gleitet herein)
-function kiMsg(m,o={}){
+// i: Platz im Gespräch; o.live: die laufende Antwort; o.fresh: gerade dazugekommen (gleitet herein)
+function kiMsg(m,i,o={}){
   const c=o.fresh?" new":"";
   if(m.role==="user"){const a=KI_AR.test(m.content)&&!KI_LAT.test(m.content);return `<div class="kim b${c}"><div class="kiub${a?" ar":""}"${a?' lang="ar"':""}>${a?esc(m.content):kiTx(m.content)}</div></div>`}
-  return `<div class="kim a${c}"${o.live?' id="kilive"':""}>${kiBody(kiParse(m.content),o.live)}${m.note?`<small class="kimn">${m.note}</small>`:""}</div>`;
+  return `<div class="kim a${c}"${o.live?' id="kilive"':` data-i="${i}"`}>${kiBody(m,o.live)}${m.note?`<small class="kimn">${m.note}</small>`:""}</div>`;
 }
 // Vorschläge zum Antippen
 function kiChips(p){
   const ws=shuffle(p.w.filter(w=>!/[(\/]/.test(w.de))),a=ws[0]||p.w[0],b=ws[1]||a;
-  return KI.msgs.length?["Frag mich ab.",`Was bedeutet ${a.ar}?`,`Gib mir einen Satz mit „${b.de}“.`,"Weiß ich nicht."]
+  return KI.msgs.length?["Frag mich ab.",`Was bedeutet ${a.ar}?`,`Gib mir einen Satz mit „${b.de}“.`,"Erklär das auf Deutsch."]
     :["Fang du an.","Frag mich ab.",`Was heißt „${a.de}“ auf Arabisch?`,`Gib mir einen Satz mit „${b.de}“.`];
 }
 const kiGuest=()=>!UID||U==="gast"||!sb;
@@ -3546,7 +3556,7 @@ function ki(){
   kiChat();
 }
 const kiChip=(c,dis)=>`<button class="kich" data-kic="${esc(c)}"${dis?" disabled":""}>${arIn(c)}</button>`;
-const kiHero=x=>`<div class="kihero"><p class="ar nha" lang="ar">${BY.marhaban.ar}</p><h2>Schreib mit xbubekir</h2><p class="kihp">Übe einfache Sätze zu deinen Lektionen: auf Arabisch, in Umschrift oder auf Deutsch.</p>${x}</div>`;
+const kiHero=x=>`<div class="kihero"><p class="ar nha" lang="ar">${BY.marhaban.ar}</p><h2>Schreib mit xbubekir</h2><p class="kihp">xbubekir antwortet auf Arabisch. Die Übersetzung holst du dir bei Bedarf mit einem Tipp unter der Antwort.</p>${x}</div>`;
 function kiChat(){
   const guest=kiGuest(),ts=kiTopics(),p=kiTopic();KI.tid=p.id;if(!KI.chips)KI.chips=kiChips(p);
   const grp=(l,xs)=>xs.length?`<optgroup label="${l}">${xs.map(t=>`<option value="${t.id}"${t.id===p.id?" selected":""}>${esc(t.lab)}</option>`).join("")}</optgroup>`:"";
@@ -3559,7 +3569,12 @@ function kiChat(){
   <div class="kir"><button class="kik" id="kik" lang="ar" aria-pressed="${KI.kb}" aria-label="Arabische Tastatur">ع</button><input class="kii" id="kii" dir="auto" maxlength="300" autocomplete="off" autocapitalize="off" enterkeyhint="send" placeholder="Nachricht schreiben …" aria-label="Deine Nachricht"><button class="kig" id="kig"></button></div>
   <div id="kikb"></div>
   <p class="kifn">xbubekir ist eine KI und kann sich irren, auch bei Vokalzeichen. <span id="kin"></span><button class="lnk" id="kinf">Mehr dazu</button></p></div>`}</div>`);
-  $("#kil").onclick=e=>{const b=e.target.closest("[data-kisay]");if(b)return kiSay(b.dataset.kisay);
+  $("#kil").onclick=e=>{
+    const a=e.target.closest("[data-kiact]");
+    if(a){const box=a.closest("[data-i]"),i=box?+box.dataset.i:-1,m=KI.msgs[i],k=a.dataset.kiact;if(!m)return;sfx("tap");
+      if(k==="more")return kiMenu(box,a);
+      kiMenu();
+      return k==="say"?kiSay(kiPlain(m.content)):k==="copy"?kiCopy(kiPlain(m.content)):kiFold(i,k)}
     const c=e.target.closest("[data-kic]");if(c){sfx("tap");return kiSend(c.dataset.kic)}
     if(e.target.closest("#kiacc,#kiin")){sfx("tap");logout()}}; // neu anmelden bzw. als Gast zur Anmeldung (wie in den Einstellungen)
   if(guest)return kiLog();
@@ -3583,10 +3598,10 @@ function kiLog(fresh){
   if(kiGuest()){el.innerHTML=kiHero(`<p class="kihn">Für den Übungspartner brauchst du ein kostenloses Konto. Der Server zählt damit, wie viele Nachrichten du am Tag schreibst.</p><button class="btn" id="kiin">Anmelden oder registrieren</button>`);return}
   const n=KI.msgs.length,er=KI.cerr?`<div class="card hint" role="alert"><p>${esc(KI.cerr)}</p>${KI.cact==="acc"?`<button class="btn alt" id="kiacc">Neu anmelden</button>`:""}</div>`:"";
   el.innerHTML=!n&&!KI.busy?kiHero(`<div class="kist" role="group" aria-label="Vorschläge">${(KI.chips||[]).map(c=>kiChip(c)).join("")}</div><p class="kihn">Deine Nachrichten gehen an die KI DeepSeek und werden nicht gespeichert.</p>`)+er
-    :KI.msgs.map((m,i)=>kiMsg(m,{fresh:fresh&&i===n-1})).join("")+(KI.busy?kiMsg({role:"assistant",content:KI.live},{live:true,fresh}):"")+er;
+    :KI.msgs.map((m,i)=>kiMsg(m,i,{fresh:fresh&&i===n-1})).join("")+(KI.busy?kiMsg({role:"assistant",content:KI.live},n,{live:true,fresh}):"")+er;
   kiDown();
 }
-function kiLive(){const el=$("#kilive");if(view!=="ki"||!el)return;el.classList.remove("new");el.innerHTML=kiBody(kiParse(KI.live),true);kiDown(true)}
+function kiLive(){const el=$("#kilive");if(view!=="ki"||!el)return;el.classList.remove("new");el.innerHTML=kiBody({content:KI.live},true);kiDown(true)}
 // ans Ende scrollen; soft: nur, wenn man ohnehin unten ist (wer beim Mitlesen hochscrollt, bleibt dort)
 function kiDown(soft){try{const max=document.documentElement.scrollHeight-innerHeight;if(!soft||max-scrollY<200)scrollTo(0,max)}catch(e){}}
 // Eingabezeile auf Stand bringen, ohne das Feld neu zu bauen (sonst schließt das Handy die Tastatur)
@@ -3634,6 +3649,46 @@ async function kiAsk(p,msgs,onText,signal){
   }
   return txt;
 }
+// Übersetzung ("de") oder Umschrift ("tr") einer einzelnen Antwort vom Server holen
+async function kiHelp(k,text){
+  const{data}=await sb.auth.getSession();
+  if(!data||!data.session)throw Object.assign(new Error("Nicht angemeldet."),{status:401});
+  const res=await fetch(KI_URL,{method:"POST",headers:{"content-type":"application/json",Authorization:"Bearer "+data.session.access_token},body:JSON.stringify({mode:k,text:String(text).slice(0,KI_LEN)})});
+  if(!res.ok){let er={};try{er=(await res.json()).error||{}}catch(e){}throw Object.assign(new Error(er.message||res.statusText||"Fehler"),{status:res.status,reason:er.reason||""})}
+  const t=String((await res.json()).text||"").trim();if(!t)throw new Error("Leere Antwort");
+  return t;
+}
+// Auf- und zuklappen. Geholt wird nur beim ersten Aufklappen dieser Antwort, danach bleibt der Text gemerkt.
+async function kiFold(i,k){
+  const m=KI.msgs[i];if(!m||m.role!=="assistant"||m[k+"Busy"])return;
+  if(m[k+"On"]){m[k+"On"]=false;return kiFoldDraw(m,k)}
+  m[k+"On"]=true;
+  if(!m[k]){m[k+"Busy"]=true;kiFoldDraw(m,k);
+    try{m[k]=await kiHelp(k,kiPlain(m.content))}
+    catch(e){m[k+"On"]=false;console.warn("mufradaat.AI",e);
+      toast(e&&e.status===401?"Du bist nicht mehr angemeldet. Melde dich neu an.":e&&e.status===429?e.message:k==="de"?"Die Übersetzung konnte gerade nicht geladen werden.":"Die Umschrift konnte gerade nicht geladen werden.")}
+    m[k+"Busy"]=false}
+  kiFoldDraw(m,k);
+}
+function kiFoldDraw(m,k){
+  const i=KI.msgs.indexOf(m),box=i<0||view!=="ki"?null:document.querySelector(`#kil [data-i="${i}"]`),f=box&&box.querySelector(`[data-f="${k}"]`);if(!f)return;
+  const h=kiFoldIn(m,k);if(h||!m[k+"On"])f.firstChild.innerHTML=h||f.firstChild.innerHTML; // beim Zuklappen bleibt der Text stehen, bis er weg ist
+  f.classList.toggle("on",!!m[k+"On"]);
+  const b=box.querySelector(`[data-kiact="${k}"]`);
+  if(b&&k==="de"){b.classList.toggle("on",!!m.deOn);b.classList.toggle("busy",!!m.deBusy);b.setAttribute("aria-expanded",!!m.deOn)}
+  if(b&&k==="tr")b.textContent=m.trOn?"Umschrift verbergen":"Umschrift zeigen";
+  setTimeout(()=>kiDown(true),300); // nach dem Aufklappen: die letzte Antwort bleibt über dem Eingabefeld
+}
+// Menü „Mehr“ unter einer Antwort: öffnet unter der Zeile (der arabische Text bleibt frei), schließt bei Tipp daneben, mit Esc und nach einer Wahl. Ohne box: nur schließen.
+function kiMenu(box,btn){
+  const open=document.querySelector("#kil .kimenu:not([hidden])");
+  if(open){open.hidden=true;const b=open.parentNode.querySelector('[data-kiact="more"]');if(b)b.setAttribute("aria-expanded","false");if(!box||box.contains(open))return}
+  const m=box&&box.querySelector(".kimenu");if(!m)return;
+  m.hidden=false;btn.setAttribute("aria-expanded","true");m.querySelector("button").focus();
+  m.onkeydown=e=>{if(e.key==="Escape"){e.stopPropagation();kiMenu();btn.focus()}};
+  setTimeout(()=>document.addEventListener("click",e=>{if(!(e.target.closest&&e.target.closest('.kimenu,[data-kiact="more"]')))kiMenu()},{once:true}),0);
+}
+function kiCopy(t){const no=()=>toast("Kopieren hat nicht geklappt.");try{navigator.clipboard.writeText(t).then(()=>toast("Kopiert"),no)}catch(e){no()}}
 // text: fester Text (Vorschlag), sonst der Inhalt des Eingabefelds
 async function kiSend(text){
   const own=text===undefined;text=String(own?KI.draft:text).replace(/\s+/g," ").trim().slice(0,300);
@@ -3655,7 +3710,7 @@ async function kiSend(text){
   if(view!=="ki")return;
   const t=$("#kii");if(t&&t.value!==KI.draft)t.value=KI.draft;
   kiLog();kiBar();
-  const a=kiParse(out).ar;if(a&&!err&&!KI.stopd&&S.auto!==false&&kiCanSay(a))kiSay(a);
+  const a=kiPlain(out);if(kiIsAr(a)&&!err&&!KI.stopd&&S.auto!==false&&kiCanSay(a))kiSay(a);
 }
 function kiStop(){KI.stopd=true;if(KI.ctl)KI.ctl.abort()}
 function kiReset(){KI.n++;if(KI.busy)kiStop();KI.busy=false;KI.live="";KI.msgs=[];KI.cerr="";KI.cact="";KI.draft="";KI.chips=null;KI.cv++;KI.ctl=null}
@@ -3665,7 +3720,8 @@ function kiInfo(){
   d.innerHTML=`<h2 id="dlgh">Über mufradaat.AI</h2>
     <p class="kidl">Dein Übungspartner heißt <b>xbubekir</b>. Dahinter denkt die KI <b>DeepSeek</b> (V4.1 Flash), erreichbar über den Dienst OpenRouter.</p>
     <p class="kidl"><b>Was übertragen wird:</b> deine Nachrichten in diesem Gespräch und die Wörter des Themas. Sie gehen an den Server von xbubekir und von dort an DeepSeek, nur an Anbieter, die nichts speichern. Gespeichert wird nur, wie viele Nachrichten du heute geschrieben hast.</p>
-    <p class="kidl"><b>Pro Tag:</b> 60 Nachrichten. Morgen geht es wieder bei null los.</p>
+    <p class="kidl"><b>Arabisch zuerst:</b> xbubekir antwortet auf Arabisch. Übersetzung und Umschrift holst du dir unter jeder Antwort selbst. Möchtest du eine Erklärung auf Deutsch, bitte einfach darum.</p>
+    <p class="kidl"><b>Pro Tag:</b> 60 Nachrichten, dazu 150 Übersetzungen oder Umschriften. Morgen geht es wieder bei null los.</p>
     <p class="kidl"><b>Nicht perfekt:</b> Die KI kann sich irren, auch bei Vokalzeichen und Endungen. Verlass dich dabei auf die Lektionen.</p>
     <div class="dlga"><button class="btn" id="kicl">Schließen</button></div>`;
   document.body.appendChild(d);d.addEventListener("close",()=>d.remove());
@@ -3832,7 +3888,7 @@ function legal(){
   sec("Dienstleister",`<b>Supabase</b> (Anmeldung und Datenbank), Serverstandort: ${miss(LEGAL.region)}.<br><b>GitHub Pages</b> liefert diese Seite aus. Beim Aufruf verarbeitet GitHub technisch notwendige Verbindungsdaten wie deine IP-Adresse.<br>Schriften und Programmteile werden von dieser Seite selbst ausgeliefert.`)+
   sec("Aussprache","Die Aussprache kommt meist aus Aufnahmen, die vorab mit einer Sprachsynthese erzeugt wurden. Sie werden mit der App geladen und auf deinem Gerät gespeichert, dabei wird nichts von dir übertragen. Nur wenn eine Aufnahme fehlt, nutzt die App die Sprachausgabe deines Geräts. Manche Browser (z. B. Chrome) greifen dafür auf Online-Dienste des Herstellers zurück, dabei kann das gesprochene Wort übertragen werden.")+
   sec("Mikrofon und Spracherkennung","Beim Nachsprechen nimmst du dich mit dem Mikrofon auf. Die Aufnahme bleibt auf deinem Gerät und wird nicht gespeichert. Ab Etappe 8 kann zusätzlich die Spracherkennung deines Browsers zuhören, aber nur, wenn du vorher zustimmst. Dabei schickt der Browser deine Stimme an den Dienst seines Herstellers (bei Chrome an Google, bei Safari an Apple), der Text daraus kommt zurück und wird nur auf deinem Gerät verglichen. Die App selbst speichert davon nichts.")+
-  sec("KI-Übungspartner (mufradaat.AI)","Der Übungspartner ist eine KI (DeepSeek V4.1 Flash). Es gibt ihn nur mit Konto, und nur wenn du ihn nutzt, wird etwas übertragen: deine Nachrichten im laufenden Gespräch, die Wörter des gewählten Themas und dein Anmelde-Token.<br><b>Weg:</b> Die Daten gehen an den Server von xbubekir (Supabase, Serverstandort EU, Frankfurt). Er prüft mit dem Token bei der Anmeldung von Mufradaat, ob du angemeldet bist, und gibt das Gespräch ohne deine Konto-Daten an den Dienst OpenRouter (USA) weiter. OpenRouter leitet es an einen Anbieter des Modells DeepSeek weiter. Zugelassen sind nur Anbieter, die Anfragen nach Angabe von OpenRouter nicht speichern und nicht zum Training nutzen, und keine mit Sitz in China.<br><b>Gespeichert</b> wird beim Server von xbubekir nur, wie viele Nachrichten dein Konto an welchem Tag geschrieben hat (für das Tageslimit), nicht der Inhalt. Das Gespräch selbst liegt nur in der geöffneten App und ist weg, wenn du sie schließt.<br><b>Grenzen:</b> Die KI kann sich irren. Ihre Antworten sind keine gegengelesenen Lerninhalte.")+
+  sec("KI-Übungspartner (mufradaat.AI)","Der Übungspartner ist eine KI (DeepSeek V4.1 Flash). Es gibt ihn nur mit Konto, und nur wenn du ihn nutzt, wird etwas übertragen: deine Nachrichten im laufenden Gespräch, die Wörter des gewählten Themas und dein Anmelde-Token. Tippst du unter einer Antwort auf Übersetzung oder Umschrift, geht der Text dieser einen Antwort noch einmal denselben Weg.<br><b>Weg:</b> Die Daten gehen an den Server von xbubekir (Supabase, Serverstandort EU, Frankfurt). Er prüft mit dem Token bei der Anmeldung von Mufradaat, ob du angemeldet bist, und gibt das Gespräch ohne deine Konto-Daten an den Dienst OpenRouter (USA) weiter. OpenRouter leitet es an einen Anbieter des Modells DeepSeek weiter. Zugelassen sind nur Anbieter, die Anfragen nach Angabe von OpenRouter nicht speichern und nicht zum Training nutzen, und keine mit Sitz in China.<br><b>Gespeichert</b> wird beim Server von xbubekir nur, wie viele Nachrichten und Übersetzungen dein Konto an welchem Tag abgerufen hat (für das Tageslimit), nicht der Inhalt. Das Gespräch selbst liegt nur in der geöffneten App und ist weg, wenn du sie schließt.<br><b>Grenzen:</b> Die KI kann sich irren. Ihre Antworten sind keine gegengelesenen Lerninhalte.")+
   sec("Cookies und lokaler Speicher","Es gibt keine Werbe- oder Analyse-Cookies und kein Tracking. Der lokale Speicher deines Browsers dient nur der Anmeldung und dem Lernstand und ist dafür technisch notwendig.")+
   sec("Deine Rechte","<b>Auskunft und Export:</b> Einstellungen → „Meine Daten exportieren“.<br><b>Löschung:</b> Einstellungen → „Konto löschen“ entfernt dein Konto und deinen Lernstand dauerhaft.<br>Du kannst außerdem Berichtigung, Einschränkung der Verarbeitung und Widerspruch verlangen und dich bei einer Datenschutz-Aufsichtsbehörde beschweren.")+
   sec("Speicherdauer","Deine Daten bleiben gespeichert, bis du dein Konto löschst.")+
@@ -3930,7 +3986,7 @@ loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v57"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v58"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>
