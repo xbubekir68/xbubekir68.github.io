@@ -75,8 +75,12 @@ const DB=(()=>{
 })();
 
 let chats=[],cur=null,busy=false,stopFn=null,copies=[],sb=null,session=null;
+// Rückkehr aus der „Passwort vergessen“-Mail: Supabase hängt #…type=recovery an (oder #error_description=…, wenn der Link abgelaufen ist).
+// Vor dem Laden von Supabase merken, weil Supabase die Adresse danach aufräumt.
+const H0=new URLSearchParams(location.hash.slice(1));
+let recovery=H0.get("type")==="recovery",linkErr=H0.get("error_description")||"";
 async function auth(){ // Supabase-Anmeldung, erst bei Bedarf geladen
-  if(!sb){const{createClient}=await import("./vendor/supabase.js");sb=createClient(SB_URL,SB_KEY);sb.auth.onAuthStateChange((_e,s)=>{session=s})}
+  if(!sb){const{createClient}=await import("./vendor/supabase.js");sb=createClient(SB_URL,SB_KEY);sb.auth.onAuthStateChange((e,s)=>{session=s;if(e==="PASSWORD_RECOVERY"&&!recovery){recovery=true;render()}})}
   return sb.auth;
 }
 const provOf=c=>c.provider||MODELS[c.model]?.p||"claude";
@@ -663,8 +667,9 @@ function loginHTML(){
 <p>Melde dich mit deinem xbubekir-Konto an. Der ${S.provider==="open"?"OpenRouter":"Gemini"}-Schlüssel liegt sicher auf deinem eigenen Server, du musst ihn nirgends eingeben.</p>
 <label for="suMail">E-Mail</label><input class="f" id="suMail" type="email" autocomplete="username" autocapitalize="off" spellcheck="false">
 <label for="suPw">Passwort</label><input class="f" id="suPw" type="password" autocomplete="current-password">
+<button class="linkbtn forgot" type="button" id="suForgot">Passwort vergessen?</button>
 <button class="btn wide" type="submit" id="suIn">Anmelden</button>
-<p class="status" id="suMsg" role="status"></p>
+<p class="status${linkErr?" bad":""}" id="suMsg" role="status">${linkErr?"Der Link aus der E-Mail funktioniert nicht mehr (abgelaufen oder schon benutzt). Tipp auf „Passwort vergessen?“, dann bekommst du einen neuen.":""}</p>
 <details class="alts"><summary>Andere Wege</summary><div>
 <button class="linkbtn" type="button" id="suNew">Neues Konto erstellen</button>
 <p class="hint">Der Zugang ist nur für dich: Ein neues Konto funktioniert erst, wenn es auf dem Server freigeschaltet ist.</p>
@@ -683,6 +688,37 @@ async function login(neu){
   if(error){msg.textContent=(neu?"Konto konnte nicht angelegt werden: ":"Anmeldung hat nicht geklappt: ")+error.message;msg.classList.add("bad");return}
   if(!data.session){msg.textContent="Fast geschafft: Du bekommst gleich eine E-Mail. Tipp auf den Link darin und melde dich danach hier an.";return}
   session=data.session;render();inp.focus();
+}
+async function forgot(){ // schickt eine Mail mit Link zurück zur App, dort legt man ein neues Passwort fest
+  const mail=$("#suMail").value.trim(),msg=$("#suMsg"),b=$("#suForgot");
+  msg.className="status";
+  if(!/^\S+@\S+\.\S+$/.test(mail)){msg.textContent="Gib oben deine E-Mail ein und tipp dann noch mal auf „Passwort vergessen?“.";msg.classList.add("bad");$("#suMail").focus();return}
+  b.disabled=true;msg.textContent="Schicke dir eine E-Mail …";
+  const{error}=await(await auth()).resetPasswordForEmail(mail,{redirectTo:location.origin+location.pathname});
+  b.disabled=false;
+  if(error){msg.textContent="Das hat nicht geklappt: "+error.message+(error.status===429?" (Zu viele Versuche. Warte ein paar Minuten.)":"");msg.classList.add("bad");return}
+  msg.textContent="Wenn es ein Konto mit dieser E-Mail gibt, bekommst du gleich eine E-Mail. Tipp auf den Link darin, dann kannst du ein neues Passwort festlegen. Schau auch im Spam-Ordner nach.";
+}
+function newPwHTML(){
+  return`<form class="setup" id="npForm" novalidate aria-labelledby="npH"><img src="icons/icon-192.png" alt=""><h2 id="npH">Neues Passwort festlegen</h2>
+<p>Denk dir ein neues Passwort für dein xbubekir-Konto aus, mindestens 8 Zeichen.</p>
+<label for="npPw">Neues Passwort</label><input class="f" id="npPw" type="password" autocomplete="new-password">
+<label for="npPw2">Noch einmal eingeben</label><input class="f" id="npPw2" type="password" autocomplete="new-password">
+<button class="btn wide" type="submit" id="npGo">Passwort speichern</button>
+<p class="status" id="npMsg" role="status"></p></form>`;
+}
+async function newPw(){
+  const pw=$("#npPw").value,msg=$("#npMsg"),b=$("#npGo");
+  msg.className="status";
+  if(pw.length<8){msg.textContent="Das Passwort braucht mindestens 8 Zeichen.";msg.classList.add("bad");return}
+  if(pw!==$("#npPw2").value){msg.textContent="Die beiden Passwörter sind nicht gleich.";msg.classList.add("bad");return}
+  b.disabled=true;msg.textContent="Speichere …";
+  const a=await auth(),{error}=await a.updateUser({password:pw});
+  b.disabled=false;
+  if(error){msg.textContent="Das hat nicht geklappt: "+error.message+(error.status===401||error.status===403?" Fordere unter „Passwort vergessen?“ einen neuen Link an.":"");msg.classList.add("bad");return}
+  recovery=false;session=(await a.getSession()).data.session;
+  history.replaceState(null,"",location.pathname+location.search);
+  render();toast("Dein neues Passwort ist gespeichert.");
 }
 function setupHTML(){
   const gem=S.provider==="gemini";
@@ -724,6 +760,13 @@ function render(){
   document.body.classList.toggle("start",ready&&!has);
   updBrain();renderList();
   $("#topT").textContent=has?cur.title||"Ohne Titel":"";$("#topWm").hidden=has;
+  if(recovery){ // vor allem anderen: neues Passwort nach dem Link aus der Mail
+    document.body.classList.add("nokey");document.body.classList.remove("start");
+    log.innerHTML=newPwHTML();
+    $("#npForm").onsubmit=e=>{e.preventDefault();newPw()};
+    $("#npPw").focus();
+    return;
+  }
   if(!ready){
     log.innerHTML=viaKonto(S.provider)?loginHTML():setupHTML();
     const to=p=>{S.provider=p;S.model=modelFor(p);saveS();cur=null;render()};
@@ -731,6 +774,7 @@ function render(){
     if(viaKonto(S.provider)){
       $("#suForm").onsubmit=e=>{e.preventDefault();login(false)};
       $("#suNew").onclick=()=>login(true);
+      $("#suForgot").onclick=forgot;
       $("#suKeyMode").onclick=()=>{S.gmode="key";if(S.provider==="open")to("gemini");else{saveS();render()}};
       $("#suSwitch").onclick=()=>to("claude");
     }else{
@@ -971,7 +1015,7 @@ dChats.addEventListener("touchend",e=>{const t=e.changedTouches[0];if(tx-t.clien
 
 setBusy(false);keyHint();
 try{const d=localStorage.getItem(DK);if(d)inp.value=d}catch{}
-if(viaKonto(S.provider)||S.gmode==="konto"||location.hash.includes("access_token")){try{session=(await(await auth()).getSession()).data.session}catch{}} // auch Rückkehr aus der Bestätigungs-Mail
+if(viaKonto(S.provider)||S.gmode==="konto"||recovery||linkErr||location.hash.includes("access_token")){try{session=(await(await auth()).getSession()).data.session}catch{}} // auch Rückkehr aus der Bestätigungs-Mail
 try{chats=(await DB.all()).sort((a,b)=>b.updated-a.updated)}catch{chats=[]}
 render();grow();
 if(keyOf(S.provider)&&desk.matches)inp.focus();
