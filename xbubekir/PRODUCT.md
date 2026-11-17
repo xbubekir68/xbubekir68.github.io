@@ -50,6 +50,7 @@ Chats auf dem eigenen Gerät, geringe Kosten und Arabisch sind echte Eigenschaft
 - Chat mit Markdown-Antworten, Denkblöcken und Anhalten der Antwort. Die letzte Antwort lässt sich neu erzeugen, eine abgeschnittene fortsetzen. „Kopieren“ liefert Klartext ohne Markdown-Zeichen.
 - Gehirn wechseln per Tipp auf die Gehirn-Zeile: ein Blatt mit allen Modellen und der Denktiefe, ohne Speichern-Knopf. Im laufenden Chat beginnt dabei ein neuer Chat.
 - Am PC eine Seitenleiste mit Chats nach Datum und Suche, am Handy eine Kopfleiste mit Schublade (auch quer) und die letzten Chats auf dem Startbild.
+- Gezeichnete Bilder: Gemini, Claude und DeepSeek können Vektorbilder (SVG) zeichnen, etwa Logos, Icons, Diagramme oder einfache Illustrationen. Ein ```svg-Block erscheint als Bild auf hellem Zeichenblatt, mit „Als Bild sichern“ (PNG, am iPhone übers Teilen-Menü in Fotos), „SVG“ und dem eingeklappten Code. Das SVG kommt nur als Bild in die Seite, so kann es kein Skript ausführen und nichts nachladen. Fotos erzeugt xbubekir nicht.
 - Fehler stehen in kurzen Worten mit passenden Knöpfen da, die Originalmeldung eingeklappt darunter.
 - Arabisch wird als Arabisch gesetzt: eigene Schrift, größer für die Harakat, rein arabische Absätze von rechts nach links.
 - Der Entwurf im Eingabefeld bleibt gespeichert, falls die App zwischendurch zugeht.

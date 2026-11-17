@@ -115,6 +115,14 @@ body.start #log{flex:none;overflow:visible;padding-top:0;padding-bottom:0}
 .md code{font-family:var(--mono);font-size:.88em;background:var(--code);padding:.1em .35em;border-radius:5px}
 .md pre{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:12px 14px;overflow-x:auto;overflow-wrap:normal}
 .md pre code{background:none;padding:0;font-size:.85em}
+/* Gezeichnete Bilder (SVG): auf hellem Zeichenblatt, damit auch dunkle Linien und durchsichtige Flächen gut sichtbar sind */
+.svgfig{display:grid;gap:4px;margin:12px 0}
+.svgpaper{display:grid;place-items:center;padding:14px;border:1px solid var(--line);border-radius:14px;background:#f7f5fb}
+.svgpaper img{display:block;width:min(100%,460px);height:auto;max-height:62vh;object-fit:contain}
+.svgfig figcaption{display:flex;flex-wrap:wrap;align-items:center;gap:2px;margin-left:-10px}
+.svgcode{flex-basis:100%;margin-left:10px}
+.svgcode summary{display:inline-flex;align-items:center;min-height:34px;cursor:pointer;color:var(--mute);font-size:13px}
+.svgcode pre{max-height:40vh;margin:4px 0 0}
 .md blockquote{border-inline-start:3px solid var(--line2);margin-inline-start:0;padding-inline-start:12px;color:var(--soft)}
 .md a{color:var(--acc2)}
 .md a,.src a,.setup a,.hint a{text-underline-offset:.2em;text-decoration-thickness:1px}
