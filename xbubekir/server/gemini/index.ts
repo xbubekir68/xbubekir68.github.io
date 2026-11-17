@@ -5,7 +5,7 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 const GEMINI = "https://generativelanguage.googleapis.com";
-const ROUTE = /^\/v1beta\/models\/(gemini-3\.8-flash|gemini-3\.5-flash-lite):(streamGenerateContent|generateContent)$/;
+const ROUTE = /^\/v1beta\/models\/(gemini-3\.8-flash|gemini-3\.5-flash-lite|gemini-3\.8-flash-lite-tts):(streamGenerateContent|generateContent)$/;
 const CORS = {
   "Access-Control-Allow-Origin": "https://xbubekir68.github.io",
   "Access-Control-Allow-Headers": "authorization, content-type, x-goog-api-key, x-goog-api-client, apikey, x-client-info",

@@ -52,7 +52,7 @@ Chats auf dem eigenen Gerät, geringe Kosten und Arabisch sind echte Eigenschaft
 - Fehler stehen in kurzen Worten mit passenden Knöpfen da, die Originalmeldung eingeklappt darunter.
 - Arabisch wird als Arabisch gesetzt: eigene Schrift, größer für die Harakat, rein arabische Absätze von rechts nach links.
 - Der Entwurf im Eingabefeld bleibt gespeichert, falls die App zwischendurch zugeht.
-- Sprachmodus (Wellen-Knopf im Eingabefeld): sprechen statt tippen, mit jedem Gehirn. Der Browser erkennt die Sprache (Deutsch, Arabisch oder Englisch), die Antwort wird Satz für Satz vorgelesen, schon während sie hereinkommt, danach hört xbubekir wieder zu. Ein Tipp auf den Kreis unterbricht. Der Kreis lebt: Beim Zuhören folgt er der Lautstärke am Mikrofon (nur der Pegel wird gemessen, solange zugehört wird, nichts wird aufgenommen), beim Vorlesen schwingt er mit jedem Wort. Alles landet als normaler Chat. Ein Chat, der im Sprachmodus beginnt, bekommt kurze, vorlesbare Antworten. Stimme und Tempo stehen in den Einstellungen.
+- Sprachmodus (Wellen-Knopf im Eingabefeld): sprechen statt tippen, mit jedem Gehirn. Der Browser erkennt die Sprache (Deutsch, Arabisch oder Englisch), die Antwort wird Satz für Satz vorgelesen, schon während sie hereinkommt, danach hört xbubekir wieder zu. Ein Tipp auf den Kreis unterbricht. Der Kreis lebt: Beim Zuhören folgt er der Lautstärke am Mikrofon (nur der Pegel wird gemessen, solange zugehört wird, nichts wird aufgenommen), beim Vorlesen schwingt er mit jedem Wort. Alles landet als normaler Chat. Ein Chat, der im Sprachmodus beginnt, bekommt kurze, vorlesbare Antworten. Vorgelesen wird mit einer Gemini-Stimme (Gemini 3.8 Flash-Lite TTS, sechs weibliche Stimmen, Standard „Sulafat“), der nächste Abschnitt wird schon geholt, während der aktuelle läuft. Ohne Zugang oder nach einem Fehler (etwa Limit erreicht) liest die Gerätestimme weiter. Stimme mit „Anhören“-Probe und Tempo stehen in den Einstellungen.
 - „Über dich“, Name und „Wie xbubekir antworten soll“ fließen in den System-Prompt.
 - Denktiefe: Schnell, Normal, Gründlich.
 - Kein Gedächtnis über Chats hinaus. Dauerhaftes gehört in „Über dich“.
@@ -62,7 +62,7 @@ Chats auf dem eigenen Gerät, geringe Kosten und Arabisch sind echte Eigenschaft
 
 - **Der Faden bleibt:** Ein laufender Chat behält Anbieter, Modell und System-Prompt. Ein Wechsel des Anbieters beginnt einen neuen Chat. Einzige Ausnahme: Der Internet-Schalter ändert im laufenden DeepSeek-Chat Werkzeug und Websuche-Satz im System-Prompt.
 - **Datenaussagen je Gehirn:** Einstellungen und Chats liegen immer nur im Browser. Nachrichten gehen aber an den jeweiligen Anbieter (Google oder über OpenRouter an DeepSeek).
-- **Sprachmodus:** Die Spracherkennung läuft über Server des Browser-Herstellers (Safari: Apple, Chrome: Google, Edge: Microsoft). Der Hinweis dazu steht im Sprachmodus selbst.
+- **Sprachmodus:** Die Spracherkennung läuft über Server des Browser-Herstellers (Safari: Apple, Chrome: Google, Edge: Microsoft). Der Hinweis dazu steht im Sprachmodus selbst. Mit einer Gemini-Stimme geht zusätzlich der vorgelesene Text an Google (über den eigenen Server oder mit dem eigenen Schlüssel).
 - **Gratis-Stufe von Gemini:** Der Hinweis, dass Google Nachrichten je nach Wohnort lesen und nutzen darf, bleibt in der Einrichtung mit eigenem Schlüssel erhalten.
 - **DeepSeek über OpenRouter:** keine Datenspeicherung, keine Anbieter mit Sitz in China, keine fp4-Fassungen.
 - **Oberfläche nur auf Deutsch.** xbubekir antwortet in der Sprache, in der die Person schreibt.

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
 <title>xbubekir</title>
 <meta name="description" content="xbubekir – deine persönliche KI.">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://ydasoikczdjjdtdarrpx.supabase.co https://generativelanguage.googleapis.com; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://ydasoikczdjjdtdarrpx.supabase.co https://generativelanguage.googleapis.com; media-src 'self' blob:; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#0a0713">
 <link rel="manifest" href="manifest.webmanifest">
@@ -513,14 +513,14 @@ dialog.snap::backdrop{transition:opacity .24s ease-out}
       <fieldset id="fsVoice">
         <legend>Sprachmodus</legend>
         <label for="sVoice">Stimme</label>
-        <select class="f" id="sVoice"></select>
+        <div class="keyrow"><select class="f" id="sVoice" style="font-family:inherit"></select><button type="button" id="sVoiceTry">Anhören</button></div>
         <label for="sRate">Tempo</label>
         <select class="f" id="sRate">
           <option value="0.9">Ruhig</option>
           <option value="1">Normal</option>
           <option value="1.15">Zügig</option>
         </select>
-        <p class="hint">Die Stimmen kommen von deinem Gerät. Am iPhone findest du bessere unter Einstellungen → Bedienungshilfen → Gesprochene Inhalte → Stimmen.</p>
+        <p class="hint">Gemini-Stimmen kommen von Google: Der vorgelesene Text geht dafür an Google, kostenlos im Rahmen der Gratis-Limits. Ist das Limit erreicht, liest die Gerätestimme weiter.</p>
       </fieldset>
       <p class="hint">Name, „Über dich“, Antwortstil, Modell und Websuche gelten ab dem nächsten neuen Chat. Beim Wechsel des Anbieters beginnt gleich ein neuer Chat. Laufende Chats behalten ihre Einstellungen, damit xbubekir den Faden nicht verliert. Die Denktiefe gilt sofort.</p>
       <details class="danger">
