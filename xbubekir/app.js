@@ -1027,7 +1027,7 @@ $("#bWipeKey").addEventListener("click",()=>{if(busy||!confirm("Alle API-Schlüs
 // laufenden Chat, und das Gerät liest die Antwort vor, Satz für Satz schon während sie hereinkommt. Danach hört xbubekir wieder zu.
 // Unterbrechen geht per Tipp auf den Kreis. Automatisch geht es nicht, weil das Mikrofon sonst die eigene Stimme hören würde.
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition,TTS=window.speechSynthesis;
-const dVoice=$("#dVoice"),vOrb=$("#vOrb"),vYou=$("#vYou"),vAi=$("#vAi"),vState=$("#vState");
+const dVoice=$("#dVoice"),vOrb=$("#vOrb"),vCore=$("#vCore"),vYou=$("#vYou"),vAi=$("#vAi"),vState=$("#vState");
 // turn: zählt Runden, damit eine abgebrochene Runde nichts mehr anfasst; rawDone: so viel der Antwort ist schon in der Vorlese-Schlange
 const V={on:false,live:false,mute:false,done:false,after:"",turn:0,rec:null,q:[],utt:null,speaking:false,rawDone:0,misses:0,heard:false,lock:null,wd:0};
 const VSTATE={listen:["Ich höre zu …","Zuhören anhalten"],think:["xbubekir denkt nach …","xbubekir denkt nach"],speak:["xbubekir spricht. Tippe, um selbst zu sprechen.","Unterbrechen und selbst sprechen"],pause:["Pausiert. Tippe auf den Kreis, um zu sprechen.","Sprechen"],error:["","Nochmal versuchen"]};
@@ -1035,8 +1035,7 @@ const VLANG={de:"de-DE",en:"en-US",ar:"ar-SA"};
 const apple=/iPhone|iPad|iPod/.test(navigator.userAgent)||/Macintosh/.test(navigator.userAgent)&&navigator.maxTouchPoints>1;
 const standalone=()=>matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
 function vSet(s,msg){ // vState ist ein Status-Bereich und wird von Screenreadern selbst angesagt
-  const icon=s==="pause"||s==="error"?"mic":"wave";
-  if(dVoice.dataset.state!==s||vOrb.dataset.icon!==icon){vOrb.innerHTML=`<span class="ring"></span><span class="core">${IC[icon]}</span>`;vOrb.dataset.icon=icon}
+  if(!vCore.firstChild)vCore.innerHTML=IC.mic; // sichtbar nur pausiert, sonst zeigt der lebendige Kreis den Zustand
   dVoice.dataset.state=s;
   vState.textContent=msg||VSTATE[s][0];
   vOrb.setAttribute("aria-label",VSTATE[s][1]);
@@ -1054,7 +1053,7 @@ function vFail(code){
 }
 
 // Zuhören: eine Erkennung pro Frage; was schon verstanden ist, steht gleich da
-function vStopRec(){const r=V.rec;V.rec=null;try{r?.abort()}catch{}}
+function vStopRec(){const r=V.rec;V.rec=null;meterOff();try{r?.abort()}catch{}}
 function vListen(first){
   if(!V.on)return;
   vStopRec();if(!first)vHush(); // beim ersten Mal nicht: Das stille Freischalt-Wort fürs Vorlesen soll durchlaufen
@@ -1062,18 +1061,24 @@ function vListen(first){
   let r;try{r=new SR()}catch{vFail("");return}
   r.lang=S.vlang;r.interimResults=true;r.continuous=false;r.maxAlternatives=1;
   let fin="",tmp="",err="";
-  r.onresult=e=>{fin="";tmp="";for(const x of e.results)if(x.isFinal)fin+=x[0].transcript;else tmp+=x[0].transcript;vYou.textContent=(fin+tmp).trim();vYou.classList.toggle("interim",!fin||!!tmp)};
+  r.onresult=e=>{fin="";tmp="";for(const x of e.results)if(x.isFinal)fin+=x[0].transcript;else tmp+=x[0].transcript;vYou.textContent=(fin+tmp).trim();vYou.classList.toggle("interim",!fin||!!tmp);B.kick=Math.max(B.kick,.7)};
   r.onerror=e=>{err=e.error};
+  r.onspeechstart=r.onsoundstart=()=>{B.speech=1}; // Ersatz für die Lautstärke, falls das Mikrofon nicht messbar ist
+  r.onspeechend=r.onsoundend=()=>{B.speech=0};
   r.onend=()=>{
     if(V.rec!==r)return;
-    V.rec=null;if(!V.on)return;
+    const peak=B.peak;
+    V.rec=null;meterOff();B.speech=0;if(!V.on)return;
     const t=(fin+tmp).trim(); // Safari liefert manchmal kein „fertig“, dann zählt das zuletzt Verstandene
     if(t){V.heard=true;V.misses=0;vYou.classList.remove("interim");vTurn(t);return}
+    // Mit Messung abgebrochen, kein Mikrofon bekommen oder laut gewesen und trotzdem nichts erkannt: Messen und Erkennen
+    // vertragen sich auf diesem Gerät nicht. Dann ohne Messung weiter, der Kreis folgt nur noch den Sprach-Ereignissen.
+    if(r._m&&(err==="audio-capture"||err==="aborted"||peak>.5&&(!err||err==="no-speech"))){B.noMeter=true;vListen();return}
     if(err&&err!=="no-speech"&&err!=="aborted"){vFail(err);return}
     if(++V.misses<3)vListen();else vSet("pause","Ich höre nichts. Tippe auf den Kreis, um zu sprechen.");
   };
   V.rec=r;
-  try{r.start()}catch{V.rec=null;vSet("pause")}
+  try{r.start();r._m=!B.noMeter;meterOn(r)}catch{V.rec=null;vSet("pause")}
 }
 
 // Eine Runde: Frage schicken, Antwort vorlesen, dann wieder zuhören
@@ -1164,6 +1169,7 @@ function vPump(){
   let fin=false;
   const next=()=>{if(fin)return;fin=true;clearTimeout(V.wd);if(V.utt!==ut)return;V.utt=null;V.speaking=false;vPump()};
   ut.onend=ut.onerror=next;V.utt=ut; // festhalten, sonst räumt Chrome sie weg und das Ende kommt nie an
+  ut.onstart=ut.onboundary=()=>{B.kick=Math.max(B.kick,.85)}; // jedes Wort lässt den Kreis aufschwingen
   const chk=()=>{if(TTS.speaking||TTS.pending)V.wd=setTimeout(chk,1500);else next()}; // Safari meldet das Ende manchmal nicht
   V.wd=setTimeout(chk,2500+u.t.length*120/ut.rate);
   TTS.resume();TTS.speak(ut);
@@ -1183,15 +1189,89 @@ function openVoice(){
   if(!keyOf(cur?provOf(cur):S.provider)){openSettings();return}
   Object.assign(V,{on:true,misses:0,heard:false,mute:false,live:false,done:false,after:"",q:[]});V.turn++;
   vYou.textContent="";vAi.textContent="";vLangUI();vHint();
-  vUnlock();vWake();
+  vUnlock();vWake();blobStart();
   dVoice.showModal();
   if(busy){vSet("think");const my=V.turn;idle.push(()=>{if(V.on&&my===V.turn)vListen()})}
   else vListen(true);
 }
 function closeVoice(){
   if(!V.on)return;
-  V.on=false;V.live=false;V.turn++;vStopRec();vHush();
+  V.on=false;V.live=false;V.turn++;vStopRec();vHush();blobStop();
   V.lock?.release().catch(()=>{});V.lock=null;
+}
+
+// ---------- Lebendiger Kreis ----------
+// Ein weicher Klecks aus drei Schichten, der atmet und sich verformt. Beim Zuhören folgt er der Lautstärke am Mikrofon
+// (Web Audio misst nur den Pegel, nichts wird aufgenommen oder verschickt). Beim Vorlesen schwingt er bei jedem Wort auf und
+// pulsiert dazwischen im Sprechrhythmus, denn den Ton der Gerätestimme kann eine Webseite nicht messen.
+const vBlob=$("#vBlob"),bctx=vBlob.getContext("2d");
+// lvl: geglättete Stärke 0–1; kick: kurzer Ausschlag (Wort, Ergebnis), klingt ab; speech: Sprache erkannt (Ersatz ohne Messung)
+const B={raf:0,lvl:0,kick:0,speech:0,peak:0,ac:null,an:null,src:null,stream:null,buf:null,noMeter:false,col:null,last:0};
+async function meterOn(r){
+  if(B.noMeter||!navigator.mediaDevices?.getUserMedia)return;
+  B.peak=0;
+  try{
+    B.ac??=new(window.AudioContext||window.webkitAudioContext)();
+    if(B.ac.state!=="running")await B.ac.resume();
+    const s=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
+    if(V.rec!==r||B.stream){s.getTracks().forEach(t=>t.stop());return} // inzwischen fertig zugehört
+    B.stream=s;B.src=B.ac.createMediaStreamSource(s);B.an=B.ac.createAnalyser();B.an.fftSize=1024;B.buf=new Float32Array(B.an.fftSize);B.src.connect(B.an);
+  }catch{B.noMeter=true}
+}
+// Mikrofon sofort wieder freigeben: Am iPhone klingt die Stimme sonst leise aus der Hörmuschel statt aus dem Lautsprecher
+function meterOff(){try{B.src?.disconnect()}catch{}B.stream?.getTracks().forEach(t=>t.stop());B.stream=B.src=B.an=null}
+function micLevel(){
+  if(!B.an)return null;
+  B.an.getFloatTimeDomainData(B.buf);
+  let s=0;for(const x of B.buf)s+=x*x;
+  const v=Math.min(1,Math.max(0,(10*Math.log10(s/B.buf.length+1e-10)+56)/40)); // etwa −56 dB (Stille) bis −16 dB (laut)
+  if(v>B.peak)B.peak=v;
+  return v;
+}
+const wob=x=>.5+.3*Math.sin(x)+.2*Math.sin(x*2.31+1.3); // weiches, unregelmäßiges Auf und Ab zwischen 0 und 1
+function blobStart(){
+  if(B.raf)return;
+  const cs=getComputedStyle(document.documentElement),g=n=>cs.getPropertyValue(n).trim();
+  B.col={acc:g("--acc")||"#7c3aed",acc2:g("--acc2")||"#a78bfa",deep:"#4c2496"};
+  try{B.ac??=new(window.AudioContext||window.webkitAudioContext)();B.ac.resume()}catch{} // innerhalb des Tipps starten (iPhone)
+  B.lvl=0;B.last=0;B.raf=requestAnimationFrame(blobLoop);
+}
+function blobStop(){cancelAnimationFrame(B.raf);B.raf=0;meterOff();B.ac?.suspend?.().catch(()=>{})}
+function blobLoop(ts){
+  B.raf=requestAnimationFrame(blobLoop);
+  const dt=Math.min(.05,B.last?(ts-B.last)/1000:.016),t=ts/1000,st=dVoice.dataset.state;B.last=ts;
+  let target=0;
+  if(st==="listen"){const m=micLevel();target=m??Math.max(B.speech*(.3+.4*wob(t*5.3)),B.kick*.8)}
+  else if(st==="speak")target=V.speaking?Math.max(B.kick,.25+.35*wob(t*6.4)):.15;
+  else if(st==="think")target=.12+.06*Math.sin(t*2.6);
+  B.kick*=Math.pow(.02,dt); // nach etwa einer Viertelsekunde fast weg
+  B.lvl+=(target-B.lvl)*(1-Math.pow(target>B.lvl?.0005:.03,dt)); // schnell hoch, sanft zurück
+  drawBlob(t,st);
+}
+function drawBlob(t,st){
+  const dpr=Math.min(2,devicePixelRatio||1),W=vBlob.clientWidth,H=vBlob.clientHeight;
+  if(!W)return;
+  if(vBlob.width!==Math.round(W*dpr)){vBlob.width=Math.round(W*dpr);vBlob.height=Math.round(H*dpr)}
+  bctx.setTransform(dpr,0,0,dpr,0,0);bctx.clearRect(0,0,W,H);
+  if(st==="pause"||st==="error")return;
+  const calm=still.matches,L=B.lvl,cx=W/2,cy=H/2,base=54,c=B.col;
+  // [Größe außen, Deckkraft, Tempo]: zwei Schleier und der Kern; die Schleier wachsen mit der Lautstärke stärker
+  for(const[k,alpha,sp]of[[1.42,.13,.8],[1.2,.26,1.25],[1,1,1.7]]){
+    const R=base*(1+L*.38)*(1+(k-1)*(.55+L*.85)),a=calm?0:(.03+L*.1)*(k>1?1.25:1),n=72; // bei voller Lautstärke noch ganz im Bild
+    bctx.beginPath();
+    const pt=i=>{const th=i/n*Math.PI*2,r=R*(1+a*(.5*Math.sin(3*th+t*sp*1.3+k*2)+.3*Math.sin(5*th-t*sp*1.7+k)+.2*Math.sin(2*th+t*sp*.9)));return[cx+r*Math.cos(th),cy+r*Math.sin(th)]};
+    let p0=pt(0),p1=pt(1);bctx.moveTo((p0[0]+p1[0])/2,(p0[1]+p1[1])/2);
+    for(let i=1;i<=n;i++){const p=pt(i),q=pt(i+1);bctx.quadraticCurveTo(p[0],p[1],(p[0]+q[0])/2,(p[1]+q[1])/2)}
+    bctx.closePath();
+    if(k===1){ // Kern: Verlauf mit wanderndem Licht, beim Nachdenken dunkler und langsam kreisend
+      const ang=st==="think"?t*1.6:-.9+.25*Math.sin(t*.7),gx=cx+Math.cos(ang)*R*.45,gy=cy+Math.sin(ang)*R*.45;
+      const gr=bctx.createRadialGradient(gx,gy,R*.08,cx,cy,R*1.05);
+      gr.addColorStop(0,c.acc2);gr.addColorStop(1,st==="think"?c.deep:c.acc);
+      bctx.globalAlpha=1;bctx.fillStyle=gr;
+    }else{bctx.globalAlpha=alpha*(st==="think"?.6:1);bctx.fillStyle=c.acc2}
+    bctx.fill();
+  }
+  bctx.globalAlpha=1;
 }
 function fillVoices(){ // Einstellungen: deutsche Stimmen dieses Geräts
   const sel=$("#sVoice"),vs=TTS?TTS.getVoices().filter(v=>/^de/i.test(v.lang)):[];

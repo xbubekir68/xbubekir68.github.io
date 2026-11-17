@@ -53,7 +53,7 @@ Chats auf dem eigenen Gerät, geringe Kosten und Arabisch sind echte Eigenschaft
 - Fehler stehen in kurzen Worten mit passenden Knöpfen da, die Originalmeldung eingeklappt darunter.
 - Arabisch wird als Arabisch gesetzt: eigene Schrift, größer für die Harakat, rein arabische Absätze von rechts nach links.
 - Der Entwurf im Eingabefeld bleibt gespeichert, falls die App zwischendurch zugeht.
-- Sprachmodus (Wellen-Knopf im Eingabefeld): sprechen statt tippen, mit jedem Gehirn. Der Browser erkennt die Sprache (Deutsch, Arabisch oder Englisch), die Antwort wird Satz für Satz vorgelesen, schon während sie hereinkommt, danach hört xbubekir wieder zu. Ein Tipp auf den Kreis unterbricht. Alles landet als normaler Chat. Ein Chat, der im Sprachmodus beginnt, bekommt kurze, vorlesbare Antworten. Stimme und Tempo stehen in den Einstellungen.
+- Sprachmodus (Wellen-Knopf im Eingabefeld): sprechen statt tippen, mit jedem Gehirn. Der Browser erkennt die Sprache (Deutsch, Arabisch oder Englisch), die Antwort wird Satz für Satz vorgelesen, schon während sie hereinkommt, danach hört xbubekir wieder zu. Ein Tipp auf den Kreis unterbricht. Der Kreis lebt: Beim Zuhören folgt er der Lautstärke am Mikrofon (nur der Pegel wird gemessen, solange zugehört wird, nichts wird aufgenommen), beim Vorlesen schwingt er mit jedem Wort. Alles landet als normaler Chat. Ein Chat, der im Sprachmodus beginnt, bekommt kurze, vorlesbare Antworten. Stimme und Tempo stehen in den Einstellungen.
 - „Über dich“, Name und „Wie xbubekir antworten soll“ fließen in den System-Prompt.
 - Denktiefe: Schnell, Normal, Gründlich.
 - Kein Gedächtnis über Chats hinaus. Dauerhaftes gehört in „Über dich“.
