@@ -308,23 +308,14 @@ label.chk{display:flex;align-items:center;gap:10px;min-height:44px;font-weight:5
 .voice[data-state=error] .vstate{color:var(--bad)}
 .orb{position:relative;display:grid;place-items:center;width:164px;height:164px;padding:0;border:0;border-radius:50%;background:none;color:#fff;-webkit-tap-highlight-color:transparent}
 .orb:focus-visible{outline:2px solid var(--acc2);outline-offset:6px}
-.orb .core{position:relative;z-index:1;display:grid;place-items:center;width:116px;height:116px;border-radius:50%;background:var(--acc);transition:background-color .2s,color .2s,box-shadow .2s}
+/* Der lebendige Kreis ist ein Canvas (app.js, Abschnitt „Lebendiger Kreis“); größer als der Knopf, damit der Schein Platz hat */
+.orb .blob{position:absolute;left:50%;top:50%;width:290px;height:290px;margin:-145px 0 0 -145px;pointer-events:none}
+.vyou,.vstate,.vai{position:relative;z-index:1} /* Text bleibt über dem Schein des Kreises */
+.orb .core{position:relative;z-index:1;display:grid;place-items:center;width:116px;height:116px;border-radius:50%;background:var(--accl);color:var(--acc2);box-shadow:inset 0 0 0 1px var(--glass);opacity:0;transform:scale(.9);transition:opacity .2s,transform .2s}
 .orb .core svg{width:42px;height:42px}
-.orb .ring{position:absolute;inset:0;border:1.5px solid rgba(167,139,250,.5);border-radius:50%;opacity:0}
-.voice[data-state=think] .core{background:#4c2496}
-.voice[data-state=pause] .core,.voice[data-state=error] .core{background:var(--accl);color:var(--acc2);box-shadow:inset 0 0 0 1px var(--glass)}
-.voice[data-state=listen] .ring,.voice[data-state=speak] .ring{opacity:1}
+.voice[data-state=pause] .core,.voice[data-state=error] .core{opacity:1;transform:none} /* nur pausiert: Mikrofon zum Antippen */
 .vhint{margin:0;padding:0 max(24px,env(safe-area-inset-right)) calc(14px + env(safe-area-inset-bottom)) max(24px,env(safe-area-inset-left));text-align:center}
 .vhint:empty{display:none}
-@media (prefers-reduced-motion:no-preference){
-  .voice[data-state=listen] .ring{animation:vring 1.9s cubic-bezier(.2,.7,.3,1) infinite}
-  .voice[data-state=speak] .ring{animation:vring 1.1s cubic-bezier(.2,.7,.3,1) infinite}
-  .voice[data-state=speak] .core{animation:vtalk .5s ease-in-out infinite alternate}
-  .voice[data-state=think] .core{animation:vthink 1.6s ease-in-out infinite}
-}
-@keyframes vring{from{transform:scale(.7);opacity:.9}to{transform:scale(1.1);opacity:0}}
-@keyframes vtalk{to{transform:scale(1.05)}}
-@keyframes vthink{50%{transform:scale(.94);opacity:.75}}
 .pick .sb{margin-top:12px;color:var(--soft)}
 @media (prefers-reduced-motion:no-preference){
   dialog[open]{animation:pop .18s ease-out}
@@ -557,7 +548,7 @@ dialog.snap::backdrop{transition:opacity .24s ease-out}
   </div>
   <div class="vstage">
     <p class="vyou" id="vYou" dir="auto"></p>
-    <button class="orb" id="vOrb" type="button" aria-describedby="vState"></button>
+    <button class="orb" id="vOrb" type="button" aria-describedby="vState"><canvas class="blob" id="vBlob" aria-hidden="true"></canvas><span class="core" id="vCore"></span></button>
     <p class="vstate" id="vState" role="status"></p>
     <p class="vai" id="vAi" dir="auto"></p>
   </div>
