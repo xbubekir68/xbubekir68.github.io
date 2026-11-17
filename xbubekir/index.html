@@ -22,6 +22,8 @@
 --ar:"Geeza Pro","Noto Naskh Arabic","Sakkal Majalla","Segoe UI","Noto Sans Arabic",Tahoma,sans-serif;color-scheme:dark}
 *,*::before,*::after{box-sizing:border-box}
 html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:16px/1.55 var(--sans);-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+html{caret-color:var(--acc2);scrollbar-color:var(--line2) transparent}
+::selection{background:rgba(139,92,246,.42);color:#fff}
 body{display:grid;grid-template-columns:var(--sw) minmax(0,1fr);grid-template-rows:minmax(0,1fr);overflow:hidden;height:100dvh;padding:env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left)}
 button{font:inherit;color:inherit;cursor:pointer}
 input,select,textarea{font:inherit;color:inherit}
@@ -36,11 +38,11 @@ noscript{position:fixed;left:0;right:0;bottom:0;z-index:9;background:var(--card)
 /* Seitenleiste am PC: Neuer Chat, Suche, Chats */
 .side{display:flex;flex-direction:column;min-height:0;padding:18px 12px 10px;background:linear-gradient(180deg,#0d0a19,#0a0714 60%,#0c0818);border-right:1px solid rgba(255,255,255,.06);position:relative;z-index:2}
 .logo{display:flex;align-items:center;gap:12px;padding:2px 8px 18px}
-.tile{display:block;width:40px;height:40px;flex:none;overflow:hidden;border-radius:11px;border:1.5px solid #8b5cf6;background:#170b2c;box-shadow:0 0 16px rgba(139,92,246,.4)}
+.tile{display:block;width:40px;height:40px;flex:none;overflow:hidden;border-radius:11px;border:1px solid rgba(167,139,250,.45);background:#170b2c}
 .tile img{display:block;width:100%;height:100%;object-fit:cover}
 .wmk{display:block;width:116px;height:auto;min-width:0}
-.newb{display:flex;align-items:center;gap:10px;width:100%;height:46px;flex:none;padding:0 14px;border:1px solid rgba(167,139,250,.2);border-radius:14px;background:linear-gradient(180deg,rgba(150,120,230,.2),rgba(88,52,160,.16));color:#fff;font-size:15px;font-weight:600;box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 6px 20px rgba(0,0,0,.3)}
-.newb:hover{border-color:rgba(167,139,250,.42)}
+.newb{display:flex;align-items:center;gap:10px;width:100%;height:46px;flex:none;padding:0 14px;border:1px solid rgba(167,139,250,.2);border-radius:14px;background:rgba(124,58,237,.14);color:#fff;font-size:15px;font-weight:600;transition:background-color .15s,border-color .15s}
+.newb:hover{background:rgba(124,58,237,.22);border-color:rgba(167,139,250,.42)}
 .newb svg{width:20px;height:20px;color:var(--acc2)}
 .find{position:relative;flex:none;margin:10px 0 2px}
 .find svg{position:absolute;left:12px;top:50%;width:16px;height:16px;margin-top:-8px;color:var(--mute);pointer-events:none}
@@ -108,9 +110,10 @@ body.start #log{flex:none;overflow:visible;padding-top:0;padding-bottom:0}
 .md pre code{background:none;padding:0;font-size:.85em}
 .md blockquote{border-inline-start:3px solid var(--line2);margin-inline-start:0;padding-inline-start:12px;color:var(--soft)}
 .md a{color:var(--acc2)}
+.md a,.src a,.setup a,.hint a{text-underline-offset:.2em;text-decoration-thickness:1px}
 .md hr{border:0;border-top:1px solid var(--line);margin:1.2em 0}
 .tbl{overflow-x:auto;scrollbar-width:thin;scrollbar-color:#3b3056 transparent}
-.md table{border-collapse:collapse;font-size:.94em;overflow-wrap:normal}
+.md table{border-collapse:collapse;font-size:.94em;overflow-wrap:normal;font-variant-numeric:tabular-nums}
 .md th,.md td{border:1px solid var(--line);padding:6px 10px;text-align:start;vertical-align:top}
 .md th{background:var(--card)}
 .md .r{text-align:right}.md .c{text-align:center}
@@ -162,18 +165,18 @@ body.start .dock{padding-bottom:0}
 body.nokey .dock{display:none}
 .brain{display:inline-flex;align-items:center;gap:8px;max-width:100%;min-height:32px;margin:0 0 6px 8px;padding:4px 10px 4px 9px;border:1px solid transparent;border-radius:999px;background:none;color:var(--mute);font-size:13px;line-height:1.3;text-align:left}
 .brain:hover{color:var(--ink);background:rgba(255,255,255,.04);border-color:var(--line)}
-.brain .dot{width:7px;height:7px;flex:none;border-radius:50%;background:#8b5cf6;box-shadow:0 0 8px #8b5cf6}
 .brain .bt{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .brain svg{width:15px;height:15px;flex:none}
 .brain .gl{display:inline-flex;color:var(--acc2)}
 .brain .gl svg{width:14px;height:14px}
-.composer{display:flex;align-items:flex-end;gap:12px;min-height:62px;padding:8px 8px 8px 20px;border:1.5px solid rgba(160,140,210,.28);border-radius:31px;background:rgba(28,22,44,.72);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 14px 50px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.04)}
+.composer{display:flex;align-items:flex-end;gap:12px;min-height:62px;padding:8px 8px 8px 22px;border:1.5px solid rgba(160,140,210,.28);border-radius:31px;background:rgba(28,22,44,.72);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 14px 50px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.04)}
 .composer:focus-within{border-color:rgba(167,139,250,.6)}
-.spark{width:22px;height:22px;flex:none;margin-bottom:11px;color:#8b5cf6;filter:drop-shadow(0 0 6px rgba(139,92,246,.6))}
 .composer textarea{flex:1;min-width:0;resize:none;height:45px;max-height:40vh;padding:10px 0;border:0;background:none;color:var(--ink);font:inherit;font-size:17px;line-height:1.45;outline:0}
 .composer textarea::placeholder{color:#8a83a0}
-.send{flex:none;display:grid;place-items:center;width:44px;height:44px;border:0;border-radius:50%;background:radial-gradient(circle at 35% 30%,#9b6bff,#7c3aed 60%,#6d28d9);color:var(--on);box-shadow:0 0 18px rgba(124,58,237,.5);transition:opacity .15s,box-shadow .15s}
-.send:disabled{cursor:default;opacity:.38;box-shadow:none}
+.send{flex:none;display:grid;place-items:center;width:44px;height:44px;border:0;border-radius:50%;background:var(--acc);color:var(--on);transition:background-color .15s,color .15s,transform .12s cubic-bezier(.16,1,.3,1)}
+.send:hover:not(:disabled){background:#8b4cf7}
+.send:active:not(:disabled){transform:scale(.93)}
+.send:disabled{cursor:default;background:rgba(124,58,237,.16);color:var(--mute)}
 .composer .ib{border-radius:50%;color:var(--mute)}
 .composer .ib:hover{color:var(--ink)}
 .pics{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 8px 8px}
@@ -190,8 +193,7 @@ body.nokey .dock{display:none}
 /* Anmelden und Einrichten */
 #log>.setup{max-width:560px}
 .setup{margin-top:6vh;background:rgba(19,14,33,.85);border:1px solid var(--glass);border-radius:22px;padding:22px 20px;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
-.setup img{width:48px;height:48px;border-radius:12px}
-.setup h2{font-size:22px;margin:12px 0 8px;letter-spacing:-.01em}
+.setup h2{font-size:24px;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em;text-wrap:balance}
 .setup ol{padding-left:1.3em;margin:12px 0}
 .setup li+li{margin-top:6px}
 .setup a{color:var(--acc2)}
@@ -327,8 +329,10 @@ label.chk{display:flex;align-items:center;gap:10px;min-height:44px;font-weight:5
   .recent .linkbtn{display:block;min-height:44px;margin:2px auto 0;font-size:14px}
   .msg.a,.bub{font-size:16.5px}
   .brain{margin-left:4px}
-  .composer{min-height:58px;padding:6px 6px 6px 16px;gap:10px;border-radius:29px}
-  .spark{width:20px;height:20px;margin-bottom:12px}
+  .composer{min-height:58px;padding:6px 6px 6px 20px;gap:10px;border-radius:29px}
+  body.start #topWm{visibility:hidden}
+  .recent .open{transition:border-color .15s,background-color .15s}
+  .recent .open:hover,.recent .open:active{border-color:var(--line2);background:rgba(29,21,48,.85)}
   .find input{font-size:16px}
   .fx i:nth-child(1){left:-420px;top:-560px;width:700px;height:700px}
   .fx i:nth-child(2){right:-560px;bottom:-660px;width:900px;height:900px}
@@ -372,7 +376,6 @@ label.chk{display:flex;align-items:center;gap:10px;min-height:44px;font-weight:5
     <button id="bBrain" class="brain" type="button"></button>
     <div id="pics" class="pics" hidden></div>
     <form id="composer" class="composer">
-      <svg class="spark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.5c.7 5.6 3.3 8.6 10.5 10.5-7.2 1.9-9.8 4.9-10.5 10.5C11.3 16.9 8.7 13.9 1.5 12 8.7 10.1 11.3 7.1 12 1.5Z"/></svg>
       <label class="sr" for="inp">Nachricht an xbubekir</label>
       <textarea id="inp" rows="1" placeholder="Stelle deine Frage …" autocomplete="off" enterkeyhint="send" dir="auto"></textarea>
       <input id="fPic" type="file" accept="image/*" multiple hidden>
