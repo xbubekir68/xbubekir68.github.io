@@ -245,9 +245,9 @@ label.chk{display:flex;align-items:center;gap:10px;min-height:44px;font-weight:5
 .danger button{min-height:40px;border:1px solid var(--bad);color:var(--bad);background:none;border-radius:999px;padding:8px 14px}
 /* Einstellungen: Kopf und Speichern bleiben stehen, nur die Mitte rollt */
 #dSet[open]{display:flex;flex-direction:column;overflow:hidden}
-#fSet{display:flex;flex-direction:column;flex:1;min-height:0}
+#fSet{display:flex;flex-direction:column;flex:1 1 auto;min-height:0} /* Basis auto statt 0 %: Safari macht sonst den Dialog ohne feste Höhe (Tablet quer, Mac) 0 px hoch */
 #fSet>.dh{flex:none;margin:0;padding:10px 10px 10px 20px;border-bottom:1px solid var(--line)}
-.dscroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:0 20px 22px}
+.dscroll{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:0 20px 22px}
 .dfoot{flex:none;padding:10px 20px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--card)}
 .dfoot .status{margin:0 0 8px}
 .dfoot .status:empty{display:none}
