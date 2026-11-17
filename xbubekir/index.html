@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
 <title>xbubekir</title>
 <meta name="description" content="xbubekir – deine persönliche KI.">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://huggingface.co https://*.huggingface.co https://*.hf.co https://raw.githubusercontent.com https://ydasoikczdjjdtdarrpx.supabase.co https://generativelanguage.googleapis.com https://api.anthropic.com; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
@@ -22,7 +22,14 @@
 --ar:"Geeza Pro","Noto Naskh Arabic","Sakkal Majalla","Segoe UI","Noto Sans Arabic",Tahoma,sans-serif;color-scheme:dark}
 *,*::before,*::after{box-sizing:border-box}
 html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:16px/1.55 var(--sans);-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
-html{caret-color:var(--acc2);scrollbar-color:var(--line2) transparent}
+html{caret-color:var(--acc2);scrollbar-color:var(--line2) transparent;touch-action:pan-x pan-y} /* am Handy kein Zoomen: weder mit zwei Fingern noch per Doppeltipp */
+/* Ladebild beim Start: steht sofort da, app.js blendet es nach dem ersten Zeichnen aus. Falls das Skript hängt, geht es nach 5 s von selbst. */
+.splash{position:fixed;inset:0;z-index:60;display:grid;place-items:center;background:var(--bg);transition:opacity .28s ease-out,visibility 0s .28s;animation:splashGone 0s 5s forwards}
+.splash img{width:132px;height:auto}
+.splash.out{opacity:0;visibility:hidden}
+@media (prefers-reduced-motion:no-preference){.splash img{animation:splashIn .45s cubic-bezier(.16,1,.3,1) both}}
+@keyframes splashIn{from{opacity:0;transform:scale(.86)}}
+@keyframes splashGone{to{opacity:0;visibility:hidden}}
 ::selection{background:rgba(139,92,246,.42);color:#fff}
 body{display:grid;grid-template-columns:var(--sw) minmax(0,1fr);grid-template-rows:minmax(0,1fr);overflow:hidden;height:100dvh;padding:env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left)}
 button{font:inherit;color:inherit;cursor:pointer}
@@ -390,6 +397,7 @@ label.chk{display:flex;align-items:center;gap:10px;min-height:44px;font-weight:5
 <script type="module" src="app.js"></script>
 </head>
 <body class="nokey">
+<div class="splash" id="splash" aria-hidden="true"><img src="brand/xbu.webp" alt="" width="640" height="376"></div>
 <h1 class="sr">xbubekir</h1>
 <aside class="side" aria-label="Seitenleiste">
   <div class="logo"><span class="tile"><img src="icons/icon-192.png" alt=""></span><img class="wmk" src="brand/wortmarke.webp" alt="xbubekir" width="900" height="259"></div>
