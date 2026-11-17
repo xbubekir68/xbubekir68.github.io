@@ -1098,12 +1098,20 @@ function vListen(first){
   vSet("listen");vYou.textContent="";vYou.classList.add("interim");
   let r;try{r=new SR()}catch{vFail("");return}
   r.lang=S.vlang;r.interimResults=true;r.continuous=false;r.maxAlternatives=1;
-  let fin="",tmp="",err="";
-  r.onresult=e=>{fin="";tmp="";for(const x of e.results)if(x.isFinal)fin+=x[0].transcript;else tmp+=x[0].transcript;vYou.textContent=(fin+tmp).trim();vYou.classList.toggle("interim",!fin||!!tmp);B.kick=Math.max(B.kick,.7)};
+  let fin="",tmp="",err="",quiet=0;
+  // Safari am iPhone beendet die Erkennung oft nicht von selbst: Der Text steht da, aber es geht nicht weiter. Darum gilt
+  // eine Pause von 1,6 Sekunden nach dem letzten Wort als Ende der Frage. Kommt auch dann kein Ende, geht es selbst weiter.
+  const arm=()=>{clearTimeout(quiet);quiet=setTimeout(()=>{
+    if(V.rec!==r||!(fin+tmp).trim())return;
+    try{r.stop()}catch{}
+    quiet=setTimeout(()=>{if(V.rec===r){r.onend();try{r.abort()}catch{}}},1200);
+  },1600)};
+  r.onresult=e=>{fin="";tmp="";for(const x of e.results)if(x.isFinal)fin+=x[0].transcript;else tmp+=x[0].transcript;vYou.textContent=(fin+tmp).trim();vYou.classList.toggle("interim",!fin||!!tmp);B.kick=Math.max(B.kick,.7);arm()};
   r.onerror=e=>{err=e.error};
   r.onspeechstart=r.onsoundstart=()=>{B.speech=1}; // Ersatz für die Lautstärke, falls das Mikrofon nicht messbar ist
   r.onspeechend=r.onsoundend=()=>{B.speech=0};
   r.onend=()=>{
+    clearTimeout(quiet);
     if(V.rec!==r)return;
     const peak=B.peak;
     V.rec=null;meterOff();B.speech=0;if(!V.on)return;
@@ -1245,7 +1253,8 @@ function closeVoice(){
 // pulsiert dazwischen im Sprechrhythmus, denn den Ton der Gerätestimme kann eine Webseite nicht messen.
 const vBlob=$("#vBlob"),bctx=vBlob.getContext("2d");
 // lvl: geglättete Stärke 0–1; kick: kurzer Ausschlag (Wort, Ergebnis), klingt ab; speech: Sprache erkannt (Ersatz ohne Messung)
-const B={raf:0,lvl:0,kick:0,speech:0,peak:0,ac:null,an:null,src:null,stream:null,buf:null,noMeter:false,col:null,last:0};
+// iPhone/iPad: keine eigene Messung, damit das Mikrofon nur einmal offen ist (Spracherkennung) und die Stimme danach laut aus dem Lautsprecher kommt. Dort folgt der Kreis nur den Sprach-Ereignissen.
+const B={raf:0,lvl:0,kick:0,speech:0,peak:0,ac:null,an:null,src:null,stream:null,buf:null,noMeter:apple,col:null,last:0};
 async function meterOn(r){
   if(B.noMeter||!navigator.mediaDevices?.getUserMedia)return;
   B.peak=0;
