@@ -666,7 +666,7 @@ function helloHTML(){ // für genau eine Person: Begrüßung mit Namen, am Handy
     +(rec.length?`<section class="recent" aria-labelledby="rcH"><h3 id="rcH">Weiter, wo du warst</h3><ul>${rec.map(c=>itemHTML(c,false)).join("")}</ul>${chats.length>rec.length?'<button class="linkbtn" type="button" data-all>Alle Chats</button>':""}</section>`:"");
 }
 function loginHTML(){
-  return`<form class="setup" id="suForm" novalidate aria-labelledby="suH"><img src="icons/icon-192.png" alt=""><h2 id="suH">Willkommen bei xbubekir</h2>
+  return`<form class="setup" id="suForm" novalidate aria-labelledby="suH"><h2 id="suH">Willkommen bei xbubekir</h2>
 <p>Melde dich mit deinem xbubekir-Konto an. Der ${S.provider==="open"?"OpenRouter":"Gemini"}-Schlüssel liegt sicher auf deinem eigenen Server, du musst ihn nirgends eingeben.</p>
 <label for="suMail">E-Mail</label><input class="f" id="suMail" type="email" autocomplete="username" autocapitalize="off" spellcheck="false">
 <label for="suPw">Passwort</label><input class="f" id="suPw" type="password" autocomplete="current-password">
@@ -703,7 +703,7 @@ async function forgot(){ // schickt eine Mail mit Link zurück zur App, dort leg
   msg.textContent="Wenn es ein Konto mit dieser E-Mail gibt, bekommst du gleich eine E-Mail. Tipp auf den Link darin, dann kannst du ein neues Passwort festlegen. Schau auch im Spam-Ordner nach.";
 }
 function newPwHTML(){
-  return`<form class="setup" id="npForm" novalidate aria-labelledby="npH"><img src="icons/icon-192.png" alt=""><h2 id="npH">Neues Passwort festlegen</h2>
+  return`<form class="setup" id="npForm" novalidate aria-labelledby="npH"><h2 id="npH">Neues Passwort festlegen</h2>
 <p>Denk dir ein neues Passwort für dein xbubekir-Konto aus, mindestens 8 Zeichen.</p>
 <label for="npPw">Neues Passwort</label><input class="f" id="npPw" type="password" autocomplete="new-password">
 <label for="npPw2">Noch einmal eingeben</label><input class="f" id="npPw2" type="password" autocomplete="new-password">
@@ -737,7 +737,7 @@ function setupHTML(){
   const hint=gem
     ?"Kostenlos, solange du bei Google keine Zahlungsmethode hinterlegst. Dafür begrenzt Google, wie viele Nachrichten du pro Minute und pro Tag schicken kannst. In der Gratis-Stufe darf Google deine Nachrichten lesen und zur Verbesserung seiner Produkte nutzen, außer du wohnst in der EU, der Schweiz oder Großbritannien. Der Schlüssel bleibt nur auf diesem Gerät."
     :"Der Schlüssel bleibt nur auf diesem Gerät und wird nur an api.anthropic.com geschickt. Abgerechnet wird nach Nutzung über dein Anthropic-Konto. Setz dir dort am besten ein monatliches Limit.";
-  return`<form class="setup" id="suForm" novalidate aria-labelledby="suH"><img src="icons/icon-192.png" alt=""><h2 id="suH">Willkommen bei xbubekir</h2>
+  return`<form class="setup" id="suForm" novalidate aria-labelledby="suH"><h2 id="suH">Willkommen bei xbubekir</h2>
 ${steps}
 <label for="suKey">${gem?"Gemini-API-Schlüssel":"Anthropic-API-Schlüssel"}</label>
 <div class="keyrow"><input class="f" id="suKey" type="password" autocomplete="off" spellcheck="false" placeholder="${gem?"Schlüssel einfügen":"sk-ant-…"}"><button class="btn" type="submit" id="suGo">Los geht’s</button></div>
@@ -754,7 +754,7 @@ function updBrain(){
   const nm=m=>MODELS[m]?.name||m,b=cur?.model||S.model,eff=MODELS[b]?.p==="eigen"?"":{medium:"Normal",high:"Gründlich"}[S.effort]||"";
   const web=cur?cur.tools?.length>0:S.web&&!!MODELS[S.model]?.web;
   const t=nm(b)+(eff?` · ${eff}`:"")+(b!==S.model?` · neue Chats: ${nm(S.model)}`:"");
-  bBrain.innerHTML=`<i class="dot"></i><span class="bt">${esc(t)}</span>${web?`<span class="gl" title="Mit Websuche">${IC.globe}</span>`:""}${IC.chev}`;
+  bBrain.innerHTML=`<span class="bt">${esc(t)}</span>${web?`<span class="gl" title="Mit Websuche">${IC.globe}</span>`:""}${IC.chev}`;
   bBrain.setAttribute("aria-label",`Gehirn: ${t}${web?", mit Websuche":""}. Wechseln`);
 }
 function render(){
