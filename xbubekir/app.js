@@ -1245,7 +1245,8 @@ function closeVoice(){
 // pulsiert dazwischen im Sprechrhythmus, denn den Ton der Gerätestimme kann eine Webseite nicht messen.
 const vBlob=$("#vBlob"),bctx=vBlob.getContext("2d");
 // lvl: geglättete Stärke 0–1; kick: kurzer Ausschlag (Wort, Ergebnis), klingt ab; speech: Sprache erkannt (Ersatz ohne Messung)
-const B={raf:0,lvl:0,kick:0,speech:0,peak:0,ac:null,an:null,src:null,stream:null,buf:null,noMeter:false,col:null,last:0};
+// iPhone/iPad: Safari gibt das Mikrofon nur einmal her. Misst die Seite selbst mit, hört die Spracherkennung nichts mehr und es kommt keine Antwort. Dort folgt der Kreis darum nur den Sprach-Ereignissen.
+const B={raf:0,lvl:0,kick:0,speech:0,peak:0,ac:null,an:null,src:null,stream:null,buf:null,noMeter:apple,col:null,last:0};
 async function meterOn(r){
   if(B.noMeter||!navigator.mediaDevices?.getUserMedia)return;
   B.peak=0;
