@@ -154,6 +154,7 @@ const VOICE_PROMPT=`
 ## Sprachmodus
 Die Person spricht mit dir, und deine Antworten werden laut vorgelesen. Das gilt für dieses ganze Gespräch.
 - Antworte wie im Gespräch: kurz, meist ein bis drei Sätze. Ausführlicher nur, wenn die Person darum bittet.
+- Fang mit einem kurzen Satz an, der schon antwortet. Dann hört die Person dich sofort.
 - Keine Tabellen, Listen, Überschriften, Codeblöcke, Links, Emojis und kein Fettdruck. Zählst du etwas auf, dann in ganzen Sätzen.
 - Arabisch schreibst du weiter mit Harakat und sagst danach in Worten, wie man es ausspricht und was es bedeutet.
 - Die Spracherkennung macht manchmal Fehler. Ergibt etwas keinen Sinn, rätst du das Naheliegende oder fragst kurz nach.`;
@@ -882,7 +883,7 @@ $("#bWipeKey").addEventListener("click",()=>{if(busy||!confirm("Alle API-Schlüs
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition,TTS=window.speechSynthesis;
 const dVoice=$("#dVoice"),vOrb=$("#vOrb"),vCore=$("#vCore"),vYou=$("#vYou"),vAi=$("#vAi"),vState=$("#vState");
 // turn: zählt Runden, damit eine abgebrochene Runde nichts mehr anfasst; rawDone: so viel der Antwort ist schon in der Vorlese-Schlange
-const V={on:false,live:false,mute:false,done:false,after:"",turn:0,rec:null,q:[],utt:null,speaking:false,rawDone:0,misses:0,heard:false,lock:null,wd:0};
+const V={on:false,live:false,mute:false,done:false,after:"",turn:0,rec:null,q:[],utt:null,speaking:false,rawDone:0,misses:0,heard:false,lock:null,wd:0,ai:0,aus:null};
 const VSTATE={listen:["Ich höre zu …","Zuhören anhalten"],think:["xbubekir denkt nach …","xbubekir denkt nach"],speak:["xbubekir spricht. Tippe, um selbst zu sprechen.","Unterbrechen und selbst sprechen"],pause:["Pausiert. Tippe auf den Kreis, um zu sprechen.","Sprechen"],error:["","Nochmal versuchen"]};
 const VLANG={de:"de-DE",en:"en-US",ar:"ar-SA"};
 // Gemini-Stimmen (weiblich, aus Googles Katalog): klingen menschlich und erkennen die Sprache selbst (auch Arabisch)
@@ -898,14 +899,27 @@ async function ttsFetch(text,voice,signal){ // ein Abschnitt als WAV-Datei
   if(!res.ok){let m=res.statusText;try{m=(await res.json()).error?.message||m}catch{}throw Object.assign(new Error(m),{status:res.status})}
   const d=(await res.json()).candidates?.[0]?.content?.parts?.find(p=>p.inlineData)?.inlineData;
   if(!d?.data)throw new Error("Die Stimme hat keinen Ton geschickt.");
-  const raw=Uint8Array.from(atob(d.data),c=>c.charCodeAt(0));
-  return /wav/i.test(d.mimeType)?new Blob([raw],{type:"audio/wav"}):wav(raw,+(/rate=(\d+)/.exec(d.mimeType)?.[1])||24000); // 3.8 schickt WAV, ältere Modelle rohes PCM
+  const raw=Uint8Array.from(atob(d.data),c=>c.charCodeAt(0)),asIs=new Blob([raw],{type:"audio/wav"});
+  if(!/wav/i.test(d.mimeType)){const r=+(/rate=(\d+)/.exec(d.mimeType)?.[1])||24000;return wav(trim(raw,r),r)} // ältere Modelle: rohes PCM
+  // 3.8 schickt WAV: bei 16 Bit mono den Ton herauslösen und die Stille kürzen, bei anderem Format unverändert
+  const v=new DataView(raw.buffer);
+  if(raw.length<44||v.getUint16(22,true)!==1||v.getUint16(34,true)!==16)return asIs;
+  const r=v.getUint32(24,true);
+  for(let o=12;o+8<=raw.length;){const n=v.getUint32(o+4,true);if(String.fromCharCode(...raw.subarray(o,o+4))==="data")return wav(trim(raw.subarray(o+8,Math.min(raw.length,o+8+n)),r),r);o+=8+n+(n&1)}
+  return asIs;
 }
 function wav(pcm,rate){ // 16-Bit-PCM mono in eine WAV-Datei packen
   const h=new DataView(new ArrayBuffer(44)),s=(o,t)=>[...t].forEach((c,i)=>h.setUint8(o+i,c.charCodeAt(0)));
   s(0,"RIFF");h.setUint32(4,36+pcm.length,true);s(8,"WAVEfmt ");h.setUint32(16,16,true);h.setUint16(20,1,true);h.setUint16(22,1,true);
   h.setUint32(24,rate,true);h.setUint32(28,rate*2,true);h.setUint16(32,2,true);h.setUint16(34,16,true);s(36,"data");h.setUint32(40,pcm.length,true);
   return new Blob([h,pcm],{type:"audio/wav"});
+}
+function trim(pcm,rate){ // Stille vorn bis auf 0,05 s weg, hinten höchstens 0,2 s: Der Ton beginnt sofort, Abschnitte gehen flüssig ineinander über
+  if(pcm.byteOffset&1)pcm=pcm.slice();
+  const s=new Int16Array(pcm.buffer,pcm.byteOffset,pcm.length>>1),loud=x=>x>250||x<-250; // etwa −42 dB
+  let a=0,b=s.length;while(a<b&&!loud(s[a]))a++;while(b>a&&!loud(s[b-1]))b--;
+  if(a>=b)return pcm; // nur Stille: unverändert lassen
+  return pcm.subarray(Math.max(0,a-(rate*.05|0))*2,Math.min(s.length,b+(rate*.2|0))*2);
 }
 const apple=/iPhone|iPad|iPod/.test(navigator.userAgent)||/Macintosh/.test(navigator.userAgent)&&navigator.maxTouchPoints>1;
 const standalone=()=>matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
@@ -937,13 +951,13 @@ function vListen(first){
   r.lang=S.vlang;r.interimResults=true;r.continuous=false;r.maxAlternatives=1;
   let fin="",tmp="",err="",quiet=0;
   // Safari am iPhone beendet die Erkennung oft nicht von selbst: Der Text steht da, aber es geht nicht weiter. Darum gilt
-  // eine Pause nach dem letzten Wort als Ende der Frage: 0,6 Sekunden, wenn der Browser den Text schon als fertig meldet, sonst 1 Sekunde.
-  // Kommt auch dann kein Ende, geht es nach 0,4 Sekunden mit dem zuletzt Verstandenen selbst weiter.
+  // eine Pause nach dem letzten Wort als Ende der Frage: 0,5 Sekunden, wenn der Browser den Text schon als fertig meldet, sonst 0,8 Sekunden.
+  // Kommt auch dann kein Ende, geht es nach 0,3 Sekunden mit dem zuletzt Verstandenen selbst weiter.
   const arm=()=>{clearTimeout(quiet);quiet=setTimeout(()=>{
     if(V.rec!==r||!(fin+tmp).trim())return;
     try{r.stop()}catch{}
-    quiet=setTimeout(()=>{if(V.rec===r){r.onend();try{r.abort()}catch{}}},400);
-  },fin&&!tmp?600:1000)};
+    quiet=setTimeout(()=>{if(V.rec===r){r.onend();try{r.abort()}catch{}}},300);
+  },fin&&!tmp?500:800)};
   r.onresult=e=>{fin="";tmp="";for(const x of e.results)if(x.isFinal)fin+=x[0].transcript;else tmp+=x[0].transcript;vYou.textContent=(fin+tmp).trim();vYou.classList.toggle("interim",!fin||!!tmp);B.kick=Math.max(B.kick,.7);arm()};
   r.onerror=e=>{err=e.error};
   r.onspeechstart=r.onsoundstart=()=>{B.speech=1}; // Ersatz für die Lautstärke, falls das Mikrofon nicht messbar ist
@@ -968,7 +982,7 @@ function vListen(first){
 // Eine Runde: Frage schicken, Antwort vorlesen, dann wieder zuhören
 async function vTurn(text){
   const my=++V.turn;
-  vSet("think");vAi.textContent="";
+  vSet("think");vAi.textContent="";V.t0=performance.now();V.tText=V.tAudio=0;
   if(busy)await new Promise(r=>idle.push(r)); // eine frühere Antwort läuft noch
   if(my!==V.turn||!V.on)return;
   if(!cur)cur=newChat(true); // neu im Sprachmodus: kurze, vorlesbare Antworten für das ganze Gespräch
@@ -999,11 +1013,12 @@ function vFeedRaw(raw,end){
     const part=rest.slice(0,lim),re=/(?<![\s(]\p{L})[.!?…:;](?=\s)|\n/gu; // „z. B.“ ist kein Satzende
     for(let m;(m=re.exec(part));)cut=m.index+m[0].length;
     for(let i=0;i+1<f.length;i+=2)if(cut>f[i].index&&cut<f[i+1].index+f[i+1][0].length)cut=f[i].index;
+    if(cut<=0&&!V.tText&&vCloud()){const m=/^[^`~]{25,}?[,–—](?=\s)/u.exec(part);if(m)cut=m[0].length} // Gemini-Stimme: der erste Abschnitt darf schon am ersten Komma enden, dann beginnt der Ton früher
   }
   if(cut<=0)return;
   V.rawDone+=cut;
   const t=vText(rest.slice(0,cut));
-  if(t)vQueue(t);
+  if(t){V.tText||=performance.now();vQueue(t)}
 }
 // Vorlesetext: Code nur erwähnen, Links, Emojis und Markdown-Zeichen weg, jede Zeile endet als Satz
 function vText(src){
@@ -1025,14 +1040,18 @@ function vQueue(text){
     if(i<s.length)parts.push([s.slice(i),base]);
     for(let[t,l]of parts){
       t=t.trim();if(!/[\p{L}\p{N}]/u.test(t))continue;
-      while(t.length>220){let k=t.lastIndexOf(", ",200);if(k<60)k=t.lastIndexOf(" ",200);if(k<1)k=200;V.q.push({t:t.slice(0,k+1),l,show:s});t=t.slice(k+1).trim()}
+      for(let L;t.length>(L=one&&!V.utt&&!V.q.length?80:220);){ // Gemini-Stimme: der erste Abschnitt höchstens 80 Zeichen, damit der Ton schnell kommt
+        const k0=L-20;let k=t.lastIndexOf(", ",k0);if(k<k0*.3)k=t.lastIndexOf(" ",k0);if(k<1)k=k0;
+        V.q.push({t:t.slice(0,k+1),l,show:s});t=t.slice(k+1).trim();
+        if(V.q.length===1&&!V.utt)vPump(); // gleich holen, nicht erst nach dem ganzen Satz
+      }
       // noch nicht gesprochene Sätze zusammenlegen: weniger Pausen zwischen den Sätzen, Online-Stimmen laden seltener nach
       const last=V.q.at(-1);
       if(last&&!last.a&&last.l===l&&last.t.length+t.length<200){last.t+=" "+t;if(!last.show.endsWith(s))last.show+=" "+s}
       else V.q.push({t,l,show:s});
     }
   }
-  if(one&&V.utt&&V.q[0])vAudio(V.q[0]); // während vorgelesen wird, den nächsten Abschnitt schon holen
+  if(one&&V.utt){V.q.slice(0,2).forEach(vAudio);vPre()} // während vorgelesen wird: die nächsten beiden Abschnitte holen, den ersten schon ins freie Element laden
   vPump();
 }
 function vVoice(l){
@@ -1059,16 +1078,24 @@ function vPump(){
   let fin=false;
   const next=()=>{if(fin)return;fin=true;clearTimeout(V.wd);if(V.utt!==ut)return;V.utt=null;V.speaking=false;vPump()};
   ut.onend=ut.onerror=next;V.utt=ut; // festhalten, sonst räumt Chrome sie weg und das Ende kommt nie an
-  ut.onstart=ut.onboundary=()=>{B.kick=Math.max(B.kick,.85)}; // jedes Wort lässt den Kreis aufschwingen
+  ut.onstart=ut.onboundary=()=>{B.kick=Math.max(B.kick,.85);vHeard()}; // jedes Wort lässt den Kreis aufschwingen
   // Safari meldet das Ende manchmal nicht: ab ungefähr der Sprechdauer alle 0,25 Sekunden selbst nachsehen
   const chk=()=>{if(TTS.speaking||TTS.pending)V.wd=setTimeout(chk,250);else next()};
   V.wd=setTimeout(chk,1000+u.t.length*55/ut.rate);
   TTS.resume();TTS.speak(ut);
 }
 const vAudio=u=>u.a??=ttsFetch(u.t,S.vvoice.slice(2)).catch(e=>e); // Ton eines Abschnitts, nur einmal geholt; Fehler als Wert
+// Zwei Audio-Elemente im Wechsel: Der nächste Abschnitt liegt schon geladen im freien Element, wenn der aktuelle endet
+const vEls=()=>V.aus??=[new Audio(),new Audio()];
+function vLoad(u,b,el){u.url=URL.createObjectURL(b);u.el=el;el.src=u.url;el.load()}
+function vPre(){ // den nächsten Abschnitt ins freie Element laden, sobald sein Ton da ist
+  const u=V.utt,n=V.q[0];
+  if(!u?.el||!n?.a||n.el)return;
+  n.a.then(b=>{if(b instanceof Blob&&V.utt===u&&V.q[0]===n&&!n.el)vLoad(n,b,vEls()[V.ai^1])});
+}
 async function vSpeakCloud(u){
   V.utt=u;
-  const p=vAudio(u);if(V.q[0])vAudio(V.q[0]); // nächsten Abschnitt schon holen, während dieser läuft
+  const p=vAudio(u);V.q.slice(0,2).forEach(vAudio); // die nächsten beiden Abschnitte schon holen, während dieser lädt und läuft
   const a=await p;
   if(V.utt!==u)return; // inzwischen unterbrochen
   const back=e=>{ // Limit, offline, abgemeldet, Ton blockiert: mit der Gerätestimme weiter
@@ -1076,25 +1103,49 @@ async function vSpeakCloud(u){
     toast("Die Gemini-Stimme ist gerade nicht erreichbar. Ich lese mit der Gerätestimme weiter.");vPump();
   };
   if(!(a instanceof Blob)){back(a);return}
-  const au=V.au,url=URL.createObjectURL(a);let fin=false;
-  const done=()=>{if(fin)return false;fin=true;clearTimeout(V.wd);URL.revokeObjectURL(url);au.ontimeupdate=au.onended=au.onerror=au.onloadedmetadata=null;return V.utt===u};
+  const els=vEls();if(!u.el)vLoad(u,a,els[V.ai^1]);
+  const au=u.el;V.ai=els.indexOf(au);let fin=false;
+  const done=()=>{if(fin)return false;fin=true;clearTimeout(V.wd);URL.revokeObjectURL(u.url);au.ontimeupdate=au.onended=au.onerror=au.onloadedmetadata=au.onplaying=null;return V.utt===u};
   const next=()=>{if(!done())return;V.utt=null;V.speaking=false;vPump()};
+  const arm=()=>{const d=au.duration;clearTimeout(V.wd);V.wd=setTimeout(next,(isFinite(d)?d*1000/au.playbackRate:30000)+1500)}; // falls „Ende“ nie kommt
   au.onended=au.onerror=next;
   au.ontimeupdate=()=>{B.kick=Math.max(B.kick,.6)}; // etwa viermal pro Sekunde: der Kreis schwingt mit
-  au.onloadedmetadata=()=>{clearTimeout(V.wd);V.wd=setTimeout(next,au.duration*1000/au.playbackRate+1500)}; // falls „Ende“ nie kommt
-  au.src=url;au.playbackRate=+S.vrate||1;
+  au.onplaying=vHeard;au.playbackRate=+S.vrate||1;
+  if(au.readyState>=1)arm();else au.onloadedmetadata=arm;
   au.play().catch(e=>{if(done())back(e)});
+  vPre();
 }
-function vHush(){V.q=[];V.utt=null;V.speaking=false;clearTimeout(V.wd);if(TTS.speaking||TTS.pending)TTS.cancel();if(V.au&&!V.au.paused)V.au.pause()}
+function vHush(){
+  if(V.utt?.url)URL.revokeObjectURL(V.utt.url);for(const x of V.q)if(x.url)URL.revokeObjectURL(x.url);
+  V.q=[];V.utt=null;V.speaking=false;clearTimeout(V.wd);if(TTS.speaking||TTS.pending)TTS.cancel();for(const e of V.aus||[])if(!e.paused)e.pause();
+}
 
 // Öffnen und Schließen
 function vUnlock(){
   try{TTS.cancel();const u=new SpeechSynthesisUtterance(" ");u.volume=0;TTS.speak(u)}catch{}
-  V.au??=new Audio();
-  if(vCloud()){const url=URL.createObjectURL(wav(new Uint8Array(4800),24000));V.au.src=url;V.au.play().catch(()=>{}).finally(()=>URL.revokeObjectURL(url))} // 0,1 s Stille
-} // iPhone: Vorlesen nur nach einem Tipp, hier einmal freischalten
+  if(vCloud()){ // beide Audio-Elemente im Tipp einmal mit 0,1 s Stille starten, danach dürfen sie von selbst spielen
+    const url=URL.createObjectURL(wav(new Uint8Array(4800),24000));
+    Promise.allSettled(vEls().map(e=>{e.src=url;return e.play()})).finally(()=>URL.revokeObjectURL(url));
+  }
+}
+// Beim Öffnen: Server wecken und die Vorab-Anfrage des Browsers (CORS) schon erledigen, solange du noch sprichst
+function vWarm(){
+  if(!session)return;
+  const ok=cur&&!gone(cur),p=ok?provOf(cur):S.provider,m=ok?cur.model:S.model,u=[];
+  if(vCloud()&&!(S.gmode!=="konto"&&S.gkey))u.push(`${SB_FN}/v1beta/models/${TTS_MODEL}:generateContent`);
+  if(p==="open")u.push(SB_OR);else if(S.gmode==="konto")u.push(`${SB_FN}/v1beta/models/${m}:streamGenerateContent?alt=sse`);
+  for(const x of u)fetch(x,{method:"OPTIONS",headers:{authorization:"Bearer -"}}).catch(()=>{});
+  if(p==="gemini")sdk("gemini").catch(()=>{}); // Gemini-Bibliothek schon laden
+}
 async function vWake(){try{V.lock=await navigator.wakeLock?.request("screen")||null}catch{}} // Bildschirm bleibt an, solange gesprochen wird
 function vLangUI(){for(const b of document.querySelectorAll("#vLang [data-lang]"))b.setAttribute("aria-pressed",String(b.dataset.lang===S.vlang))}
+// Messung: ab „du hast fertig gesprochen“ bis zum ersten Text und bis zum ersten Ton, im Hinweis unten sichtbar (auch am iPhone)
+function vHeard(){
+  if(!V.t0||V.tAudio)return;
+  V.tAudio=performance.now();const s=x=>((x-V.t0)/1000).toFixed(1).replace(".",",");
+  const m=`Letzte Runde: Antwort nach ${V.tText?s(V.tText):"?"} s, Stimme nach ${s(V.tAudio)} s.`;
+  console.info("Sprachmodus:",m);vHint();$("#vHint").textContent+=" "+m;
+}
 function vHint(){
   const ua=navigator.userAgent,via=apple?"von Apple":/Edg\//.test(ua)?"von Microsoft":/Chrome\//.test(ua)?"von Google":"des Browser-Herstellers";
   $("#vHint").textContent=`Was du sagst, erkennt dein Browser über Server ${via}.`;
@@ -1104,7 +1155,7 @@ function openVoice(){
   if(!keyOf(cur?provOf(cur):S.provider)){openSettings();return}
   Object.assign(V,{on:true,noCloud:false,misses:0,heard:false,mute:false,live:false,done:false,after:"",q:[]});V.turn++;
   vYou.textContent="";vAi.textContent="";vLangUI();vHint();
-  vUnlock();vWake();blobStart();
+  vUnlock();vWake();blobStart();vWarm();
   dVoice.showModal();
   if(busy){vSet("think");const my=V.turn;idle.push(()=>{if(V.on&&my===V.turn)vListen()})}
   else vListen(true);
@@ -1198,11 +1249,11 @@ function fillVoices(){ // Einstellungen: Gemini-Stimmen, dazu die deutschen Stim
 // Probe der gewählten Stimme in den Einstellungen (noch ungespeichert)
 $("#sVoiceTry").addEventListener("click",async e=>{
   const b=e.currentTarget,v=$("#sVoice").value,rate=+$("#sRate").value||1,txt="Hey, ich bin xbubekir. So klinge ich, wenn ich dir vorlese.";
-  V.au??=new Audio();V.au.pause();TTS?.cancel();
+  const au=vEls()[0];au.pause();TTS?.cancel();
   if(!v.startsWith("g:")){if(!TTS)return;const u=new SpeechSynthesisUtterance(txt),d=TTS.getVoices().find(x=>x.voiceURI===v)||vVoice("de");u.lang="de-DE";if(d)u.voice=d;u.rate=rate;TTS.speak(u);return}
   if(!ttsOk()){toast("Für die Gemini-Stimme brauchst du die Anmeldung oder einen Gemini-Schlüssel.");return}
   b.disabled=true;b.textContent="Lädt …";
-  try{const url=URL.createObjectURL(await ttsFetch(txt,v.slice(2)));V.au.src=url;V.au.playbackRate=rate;V.au.onended=()=>URL.revokeObjectURL(url);await V.au.play()}
+  try{const url=URL.createObjectURL(await ttsFetch(txt,v.slice(2)));au.src=url;au.playbackRate=rate;au.onended=()=>URL.revokeObjectURL(url);await au.play()}
   catch(err){console.warn("Gemini-Stimme:",err);toast("Die Gemini-Stimme ist gerade nicht erreichbar"+(err?.status===429?" (Limit erreicht).":"."))}
   finally{b.disabled=false;b.textContent="Anhören"}
 });

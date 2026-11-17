@@ -4,10 +4,10 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { stripTypeScriptTypes } from "node:module";
 
-let handler, sent;
+let handler, sent, checks = 0;
 globalThis.Deno = { env: { get: (k) => "x-" + k }, serve: (f) => { handler = f; } };
 globalThis.__createClient = () => ({
-  auth: { getUser: async (jwt) => jwt === "ok" ? { data: { user: { id: "u1" } } } : { data: {}, error: new Error("nein") } },
+  auth: { getUser: async (jwt) => (checks++, jwt === "ok" || jwt.startsWith("h.") ? { data: { user: { id: "u1" } } } : { data: {}, error: new Error("nein") }) },
   from: () => ({ select: () => ({ eq: () => ({ maybeSingle: async () => ({ data: { user_id: "u1" } }) }) }) }),
 });
 globalThis.fetch = async (_url, init) => { sent = JSON.parse(init.body); return new Response("data: [DONE]\n\n", { status: 200 }); };
@@ -49,4 +49,13 @@ assert.deepEqual(sent.tools?.map((t) => t.type), ["openrouter:web_search"], "Web
 assert.equal(sent.tools[0].parameters.max_uses, 3, "höchstens 3 Suchen pro Antwort");
 await ask(FLASH, [{ role: "user", content: "a" }], "ok", { web: "ja", tools: [{ type: "openrouter:image_generation" }] });
 assert.equal(sent.tools, undefined, "nur web: true schaltet sie ein, eigene Werkzeuge der App gehen nicht durch");
+// Geprüfte Anmeldungen merkt sich der Server bis zu 5 Minuten, aber nie über das Ablaufdatum des Tokens hinaus
+const tok = (s) => "h." + Buffer.from(JSON.stringify({ exp: Math.floor(Date.now() / 1000) + s })).toString("base64url") + ".sig";
+const twice = async (jwt) => { checks = 0; await ask(FLASH, [{ role: "user", content: "a" }], jwt); await ask(FLASH, [{ role: "user", content: "b" }], jwt); return checks; };
+assert.equal(await twice(tok(3600)), 1, "zweite Anfrage mit demselben Token ohne neue Prüfung");
+assert.equal(await twice(tok(-10)), 2, "abgelaufenes Token wird nicht gemerkt");
+assert.equal(await twice("ok"), 2, "Token ohne Ablaufdatum wird nicht gemerkt");
+assert.equal(await twice("falsch"), 2, "Abgelehntes wird nicht gemerkt");
+const pre = await handler(new Request("https://x/functions/v1/openrouter", { method: "OPTIONS" }));
+assert.equal(pre.headers.get("access-control-max-age"), "7200", "Browser darf die Vorabfrage zwischenspeichern");
 console.log("openrouter: alle Prüfungen bestanden");

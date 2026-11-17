@@ -27,9 +27,27 @@ const CORS = {
   "Access-Control-Allow-Origin": "https://xbubekir68.github.io",
   "Access-Control-Allow-Headers": "authorization, content-type, apikey, x-client-info",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Max-Age": "7200", // Browser fragt nicht vor jeder Anfrage neu nach (Chrome höchstens 2 h, Safari 10 min)
   "Vary": "Origin",
 };
 const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+
+// Geprüfte Anmeldungen kurz merken: Ein Token gilt bis zu 5 Minuten (nie über sein Ablaufdatum hinaus) ohne neue Prüfung.
+// Spart pro Anfrage zwei Abfragen (Anmeldung, Freischaltung); im Sprachmodus kommt pro Satz eine Anfrage.
+// Wird ein Konto gesperrt oder abgemeldet, wirkt das deshalb erst nach höchstens 5 Minuten.
+const okUntil = new Map<string, number>();
+async function denied(jwt: string): Promise<0 | 401 | 403> {
+  if ((okUntil.get(jwt) ?? 0) > Date.now()) return 0;
+  const { data: who, error } = await admin.auth.getUser(jwt);
+  if (error || !who.user) return 401;
+  const { data: ok } = await admin.from("allowed_users").select("user_id").eq("user_id", who.user.id).maybeSingle();
+  if (!ok) return 403;
+  let exp = 0;
+  try { exp = JSON.parse(atob(jwt.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"))).exp * 1000; } catch { /* ohne Ablaufdatum nicht merken */ }
+  if (okUntil.size > 200) okUntil.clear();
+  if (exp > Date.now()) okUntil.set(jwt, Math.min(Date.now() + 300_000, exp));
+  return 0;
+}
 
 // Fehler im Format von OpenRouter ({error:{code,message}}), damit die App alle Fehler gleich behandelt
 const fail = (code: number, message: string) =>
@@ -42,10 +60,9 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return fail(405, "Nur POST.");
 
   const jwt = (req.headers.get("authorization") ?? "").replace(/^Bearer\s+/i, "");
-  const { data: who, error } = await admin.auth.getUser(jwt);
-  if (error || !who.user) return fail(401, "Nicht angemeldet. Bitte in xbubekir neu anmelden.");
-  const { data: ok } = await admin.from("allowed_users").select("user_id").eq("user_id", who.user.id).maybeSingle();
-  if (!ok) return fail(403, "Dieses Konto ist für xbubekir nicht freigeschaltet.");
+  const no = await denied(jwt);
+  if (no === 401) return fail(401, "Nicht angemeldet. Bitte in xbubekir neu anmelden.");
+  if (no === 403) return fail(403, "Dieses Konto ist für xbubekir nicht freigeschaltet.");
 
   const key = Deno.env.get("OPENROUTER_API_KEY");
   if (!key) return fail(500, "Auf dem Server fehlt noch der OpenRouter-Schlüssel (Secret OPENROUTER_API_KEY).");
