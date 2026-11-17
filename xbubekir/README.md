@@ -4,7 +4,7 @@ Persönliche KI als Web-App: https://xbubekir68.github.io/xbubekir/
 
 - Denkt standardmäßig mit **Gemini von Google, kostenlos** (Gemini 3.8 Flash oder 3.5 Flash-Lite). Dafür braucht es einen eigenen Gemini-API-Schlüssel von https://aistudio.google.com/apikey. Google begrenzt die Gratis-Nutzung pro Minute und pro Tag.
 - Wahlweise kostenpflichtig mit **Claude von Anthropic** (Opus 5.5, Sonnet 5.5, Haiku 5.5), dann auch mit Websuche und Quellen. Schlüssel von platform.claude.com.
-- **DeepSeek (Open Source)** über OpenRouter (DeepSeek V4.1 Flash oder V4 Pro), nur über das eigene Konto. Kostet pro Nachricht meist unter 0,1 Cent aus dem OpenRouter-Guthaben.
+- **DeepSeek (Open Source)** über OpenRouter (DeepSeek V4.1 Flash oder V4 Pro), nur über das eigene Konto. Kostet pro Nachricht meist unter 0,1 Cent aus dem OpenRouter-Guthaben. Websuche (abschaltbar in den Einstellungen) über OpenRouters Werkzeug `openrouter:web_search` mit Parallel, etwa 0,5 Cent pro Suche, höchstens 3 pro Antwort.
 - **Eigene xbubekir-KI** im Browser (WebLLM, nachtrainiertes Qwen3-1.7B, siehe `training/`): kostenlos und offline, aber klein.
 - **Bilder anhängen** (Knopf im Eingabefeld, Einfügen oder aufs Fenster ziehen, höchstens 4 pro Nachricht): bei Gemini, Claude und DeepSeek V4.1 Flash. Die App verkleinert jedes Bild auf höchstens 1280 px und kodiert es als JPEG neu (ohne Aufnahmeort und andere Fotodaten). DeepSeek V4 Pro und die eigene xbubekir-KI können keine Bilder sehen.
 - Einstellungen und Chats bleiben im Browser auf dem eigenen Gerät (Einstellungen in localStorage, Chats in IndexedDB). Eigene Schlüssel gehen nur an den jeweiligen Anbieter.

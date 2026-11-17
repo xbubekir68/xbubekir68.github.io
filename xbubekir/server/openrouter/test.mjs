@@ -18,10 +18,10 @@ await import("data:text/javascript;base64," + Buffer.from(stripTypeScriptTypes(s
 
 const FLASH = "deepseek/deepseek-v4.1-flash", PRO = "deepseek/deepseek-v4-pro";
 const pic = { type: "image_url", image_url: { url: "data:image/jpeg;base64,/9j/4AAQ" } }, txt = (t) => ({ type: "text", text: t });
-const ask = async (model, messages, jwt = "ok") => {
+const ask = async (model, messages, jwt = "ok", extra = {}) => {
   sent = null;
   const res = await handler(new Request("https://x/functions/v1/openrouter", {
-    method: "POST", headers: { authorization: "Bearer " + jwt }, body: JSON.stringify({ model, effort: "low", messages }),
+    method: "POST", headers: { authorization: "Bearer " + jwt }, body: JSON.stringify({ model, effort: "low", messages, ...extra }),
   }));
   return res.status;
 };
@@ -42,4 +42,11 @@ assert.equal(await ask(FLASH, [{ role: "user", content: Array(12).fill(pic) }]),
 assert.equal(await ask(FLASH, [{ role: "user", content: Array(13).fill(pic) }]), 413, "13 Bilder sind zu viel");
 assert.equal(await ask(FLASH, [{ role: "user", content: [txt("x".repeat(400_001)), pic] }]), 413, "Textgrenze gilt auch neben Bildern");
 assert.equal(await ask(FLASH, [{ role: "user", content: "x".repeat(400_001) }]), 413, "Textgrenze wie bisher");
+await ask(FLASH, [{ role: "user", content: "Hallo" }]);
+assert.equal(sent.tools, undefined, "ohne Wunsch keine Websuche");
+assert.equal(await ask(FLASH, [{ role: "user", content: "Wetter?" }], "ok", { web: true }), 200, "mit Websuche");
+assert.deepEqual(sent.tools?.map((t) => t.type), ["openrouter:web_search"], "Websuche als OpenRouter-Werkzeug");
+assert.equal(sent.tools[0].parameters.max_uses, 3, "höchstens 3 Suchen pro Antwort");
+await ask(FLASH, [{ role: "user", content: "a" }], "ok", { web: "ja", tools: [{ type: "openrouter:image_generation" }] });
+assert.equal(sent.tools, undefined, "nur web: true schaltet sie ein, eigene Werkzeuge der App gehen nicht durch");
 console.log("openrouter: alle Prüfungen bestanden");

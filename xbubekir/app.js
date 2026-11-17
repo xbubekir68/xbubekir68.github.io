@@ -2,7 +2,7 @@
 // DeepSeek (Open Source, über den eigenen Server und OpenRouter) oder mit der eigenen xbubekir-KI, die komplett auf dem Gerät
 // läuft (WebLLM); Chats bleiben auf diesem Gerät.
 
-// p: Anbieter; web: Websuch-Werkzeug (nur Claude); fb: serverseitiger Ersatz bei Ablehnung durch Sicherheitsfilter; img: kann Bilder sehen
+// p: Anbieter; web: Websuch-Werkzeug (Claude; bei DeepSeek nur ein Merker, das Werkzeug setzt der Server); fb: serverseitiger Ersatz bei Ablehnung durch Sicherheitsfilter; img: kann Bilder sehen
 const MODELS={
   "gemini-3.8-flash":{p:"gemini",name:"Gemini 3.8 Flash",hint:"am klügsten",img:true},
   "gemini-3.5-flash-lite":{p:"gemini",name:"Gemini 3.5 Flash-Lite",hint:"am schnellsten, mehr Nachrichten pro Tag",img:true},
@@ -10,8 +10,8 @@ const MODELS={
   "claude-sonnet-5-5":{p:"claude",name:"Claude Sonnet 5.5",hint:"schneller, günstiger",price:"2 $ / 10 $",web:"web_search_20260209",fb:true,img:true},
   "claude-haiku-5-5":{p:"claude",name:"Claude Haiku 5.5",hint:"am günstigsten",price:"0,10 $ / 0,50 $",web:null,fb:false,img:true},
   "xbubekir-qwen3-1.7b":{p:"eigen",name:"xbubekir-KI",hint:"Qwen3 1,7B, nachtrainiert"},
-  "deepseek/deepseek-v4.1-flash":{p:"open",name:"DeepSeek V4.1 Flash",hint:"schnell und sehr günstig",img:true},
-  "deepseek/deepseek-v4-pro":{p:"open",name:"DeepSeek V4 Pro",hint:"gründlicher, etwa 3× teurer"},
+  "deepseek/deepseek-v4.1-flash":{p:"open",name:"DeepSeek V4.1 Flash",hint:"schnell und sehr günstig",img:true,web:"openrouter:web_search"},
+  "deepseek/deepseek-v4-pro":{p:"open",name:"DeepSeek V4 Pro",hint:"gründlicher, etwa 3× teurer",web:"openrouter:web_search"},
 };
 const PROV={gemini:{name:"Gemini",by:"Google",def:"gemini-3.8-flash"},claude:{name:"Claude",by:"Anthropic",def:"claude-opus-5-5"},eigen:{name:"xbubekir-KI",by:"xbubekir",def:"xbubekir-qwen3-1.7b"},
   open:{name:"DeepSeek",by:"DeepSeek (Open Source, über OpenRouter)",def:"deepseek/deepseek-v4.1-flash"}};
@@ -398,13 +398,14 @@ async function askLocal(c,um,live){
 async function askOpen(c,um,live){
   const{data}=await(await auth()).getSession();
   if(!data.session)throw Object.assign(new Error("Nicht angemeldet."),{status:401});
-  const ctl=new AbortController();let think="",txt="",fin="";
+  const ctl=new AbortController(),cites=new Map();let think="",txt="",fin="";
   stopFn=()=>ctl.abort();
-  const blocks=()=>[...(think.trim()?[{type:"thinking",thinking:think}]:[]),...(txt?[{type:"text",text:txt}]:[])];
+  // Quellen der Websuche kommen als „url_citation“ und hängen am Text wie bei Claude
+  const blocks=()=>[...(think.trim()?[{type:"thinking",thinking:think}]:[]),...(txt?[{type:"text",text:txt,...(cites.size?{citations:[...cites.values()]}:{})}]:[])];
   const plain=m=>typeof m.content==="string"?m.content:m.content.filter(b=>b.type==="text").map(b=>b.text).join("");
   try{
     const res=await fetch(SB_OR,{method:"POST",signal:ctl.signal,headers:{"content-type":"application/json",Authorization:"Bearer "+data.session.access_token},
-      body:JSON.stringify({model:c.model,effort:eff(),messages:[{role:"system",content:c.system},...c.msgs.filter(m=>!m.skip).map(m=>({role:m.role,content:m.imgs?.length?[...(m.content?[{type:"text",text:m.content}]:[]),...m.imgs.map(u=>({type:"image_url",image_url:{url:u}}))]:plain(m)}))]})});
+      body:JSON.stringify({model:c.model,effort:eff(),web:c.tools.length>0,messages:[{role:"system",content:c.system},...c.msgs.filter(m=>!m.skip).map(m=>({role:m.role,content:m.imgs?.length?[...(m.content?[{type:"text",text:m.content}]:[]),...m.imgs.map(u=>({type:"image_url",image_url:{url:u}}))]:plain(m)}))]})});
     if(!res.ok){let msg=res.statusText;try{msg=(await res.json()).error?.message||msg}catch{}throw Object.assign(new Error(msg),{status:res.status})}
     const rd=res.body.pipeThrough(new TextDecoderStream()).getReader();let buf="";
     for(;;){ // Server-Sent Events: „data: {…}“-Zeilen, Kommentare („: OPENROUTER PROCESSING“) halten nur die Verbindung offen
@@ -418,6 +419,7 @@ async function askOpen(c,um,live){
         if(j.error)throw Object.assign(new Error(j.error.message||"Fehler beim Anbieter"),{status:+j.error.code||502});
         const ch=j.choices?.[0];if(!ch)continue;
         think+=ch.delta?.reasoning||"";txt+=ch.delta?.content||"";
+        for(const a of ch.delta?.annotations||ch.message?.annotations||[]){const u=a?.url_citation;if(a?.type==="url_citation"&&u?.url&&!cites.has(u.url))cites.set(u.url,{url:u.url,title:u.title||""})}
         if(ch.finish_reason)fin=ch.finish_reason;
         paint(live,blocks());
       }
@@ -1000,7 +1002,7 @@ function costHint(){
   const M=MODELS[$("#sModel").value],w=$("#sWeb");
   w.disabled=!M.web;w.checked=!!M.web&&webWant; // ohne Websuche beim Modell auch kein Haken
   $("#costHint").textContent=M.p==="open"
-    ?`${M.name}: Open-Source-KI von DeepSeek, über deinen eigenen Server bei OpenRouter. Eine normale Nachricht kostet meist weniger als 0,1 Cent${M.hint.includes("teurer")?" (dieses Modell etwa das Dreifache)":""}, bezahlt aus deinem OpenRouter-Guthaben. Es werden nur Anbieter genutzt, die nichts speichern und nicht in China sitzen. Eine Websuche gibt es hier nicht.`
+    ?`${M.name}: Open-Source-KI von DeepSeek, über deinen eigenen Server bei OpenRouter. Eine normale Nachricht kostet meist weniger als 0,1 Cent${M.hint.includes("teurer")?" (dieses Modell etwa das Dreifache)":""}, bezahlt aus deinem OpenRouter-Guthaben. Es werden nur Anbieter genutzt, die nichts speichern und nicht in China sitzen. Mit Websuche kostet jede Suche etwa einen halben Cent extra (höchstens 3 pro Antwort).`
     :M.p==="eigen"
     ?"Kostenlos und ohne Konto: Die eigene xbubekir-KI läuft komplett auf diesem Gerät, nichts wird an einen Server geschickt. Beim ersten Start etwa 1 GB Download. Sie ist kleiner als Gemini und irrt sich öfter, eine Websuche gibt es nicht."
     :M.p==="gemini"

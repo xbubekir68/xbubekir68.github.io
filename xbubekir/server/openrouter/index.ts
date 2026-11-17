@@ -18,6 +18,9 @@ const PROVIDER = {
   ignore: ["baidu", "streamlake", "alibaba", "siliconflow"],
   quantizations: ["fp8", "fp16", "bf16", "fp32", "unknown"],
 };
+// Websuche (OpenRouter-Werkzeug): die App sagt nur ja oder nein, Suchmaschine und Grenzen legt der Server fest.
+// Parallel „basic“: etwa 0,5 Cent pro Suche, höchstens 3 Suchen pro Antwort.
+const WEB = { type: "openrouter:web_search", parameters: { engine: "parallel", max_results: 5, max_uses: 3, max_total_results: 15 } };
 const MAX_TOKENS = 12000, MAX_CHARS = 400_000; // begrenzt die Kosten pro Nachricht (Antwort inkl. Nachdenken, Verlauf)
 const MAX_PICS = 12, MAX_RAW = 6_000_000; // Bilder im ganzen Verlauf und Größe der Anfrage (die App verkleinert Bilder auf rund 0,3 MB)
 const CORS = {
@@ -49,9 +52,9 @@ Deno.serve(async (req) => {
 
   const raw = await req.text();
   if (raw.length > MAX_RAW) return fail(413, "Der Chat ist zu lang. Fang am besten einen neuen an.");
-  let body: { model?: string; effort?: string; messages?: { role?: string; content?: unknown }[] };
+  let body: { model?: string; effort?: string; web?: unknown; messages?: { role?: string; content?: unknown }[] };
   try { body = JSON.parse(raw); } catch { return fail(400, "Ungültige Anfrage."); }
-  const { model, effort, messages } = body ?? {};
+  const { model, effort, web, messages } = body ?? {};
   if (!model || !MODELS.has(model)) return fail(400, "Dieses Modell ist nicht erlaubt.");
   // Inhalt ist Text oder, nur bei Nachrichten der Person, eine Liste aus Text und Bildern
   let chars = 0, pics = 0;
@@ -81,6 +84,7 @@ Deno.serve(async (req) => {
     body: JSON.stringify({
       model, messages, stream: true, max_tokens: MAX_TOKENS, provider: PROVIDER,
       reasoning: { effort: EFFORT.has(effort ?? "") ? effort : "low" },
+      ...(web === true ? { tools: [WEB] } : {}),
     }),
   });
   // Ein abgelehnter Schlüssel ist ein Serverproblem, kein Anmeldeproblem der App
