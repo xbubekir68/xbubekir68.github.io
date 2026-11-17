@@ -872,12 +872,12 @@ async function settle(){ // läuft gerade eine Antwort, wird sie vor dem Wechsel
 }
 async function openChat(c){
   if(!c)return;
-  if(c===cur){dChats.open&&dChats.close();return}
+  if(c===cur){shut(dChats);return}
   if(!await settle())return;
-  cur=c;dChats.open&&dChats.close();log.scrollTop=0;render();toBottom();updDown();
+  cur=c;shut(dChats);log.scrollTop=0;render();toBottom();updDown();
   if(desk.matches)inp.focus();
 }
-async function startNew(){if(!await settle())return;cur=null;dChats.open&&dChats.close();render();inp.focus()}
+async function startNew(){if(!await settle())return;cur=null;shut(dChats);render();inp.focus()}
 async function delChat(id){
   const c=chats.find(x=>x.id===id);if(!c)return;
   if(busy&&c===cur){toast("Halte zuerst die Antwort an.");return}
@@ -933,7 +933,7 @@ function renderBrain(){
 function openBrain(){renderBrain();dBrain.showModal()}
 function pickBrain(id){ // wählt ohne Speichern-Knopf; der laufende Chat behält sein Gehirn, das neue denkt in einem neuen Chat
   const M=MODELS[id];if(!M)return;
-  dBrain.close();
+  shut(dBrain);
   S.provider=M.p;S.model=S.models[M.p]=id;saveS();
   if(busy){updBrain();return}
   if(cur?.msgs.length&&cur.model!==id)cur=null;
@@ -1220,11 +1220,11 @@ document.addEventListener("visibilitychange",()=>{ // App verlassen: anhalten st
 });
 
 // ---------- Bedienung ----------
-document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>{const d=b.closest("dialog");if(d===dSet&&!leaveSet())return;d.close()}));
-for(const d of[dChats,dBrain])d.addEventListener("click",e=>{if(e.target===d)d.close()}); // Klick neben das Fenster schließt (Einstellungen nicht, sonst geht Getipptes verloren)
+document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>{const d=b.closest("dialog");if(d===dSet&&!leaveSet())return;shut(d)}));
+for(const d of[dChats,dBrain])d.addEventListener("click",e=>{if(e.target===d)shut(d)}); // Klick neben das Fenster schließt (Einstellungen nicht, sonst geht Getipptes verloren)
 dSet.addEventListener("cancel",e=>{if(!leaveSet())e.preventDefault()});
 dChats.addEventListener("close",()=>{if($("#qChats").value){$("#qChats").value="";renderList()}});
-for(const id of["#bSet","#bSet2"])$(id).addEventListener("click",()=>{dChats.open&&dChats.close();openSettings()});
+for(const id of["#bSet","#bSet2"])$(id).addEventListener("click",()=>{shut(dChats);openSettings()});
 for(const id of["#bNew","#bNew2","#bNewTop"])$(id).addEventListener("click",startNew);
 for(const id of["#qSide","#qChats"])$(id).addEventListener("input",renderList);
 for(const id of["#sideList","#chList"])$(id).addEventListener("click",e=>{
@@ -1235,7 +1235,7 @@ $("#bMenu").addEventListener("click",openList);
 bBrain.addEventListener("click",openBrain);
 $("#brList").addEventListener("click",e=>{const b=e.target.closest("[data-model]");if(b)pickBrain(b.dataset.model)});
 $("#brEff").addEventListener("click",e=>{const b=e.target.closest("[data-eff]");if(!b)return;S.effort=b.dataset.eff;saveS();renderBrain();updBrain()});
-$("#brMore").addEventListener("click",()=>{dBrain.close();openSettings()});
+$("#brMore").addEventListener("click",()=>{shut(dBrain);openSettings()});
 log.addEventListener("click",e=>{
   const t=e.target.closest("[data-copy],[data-again],[data-more],[data-act],[data-id],[data-all]");if(!t)return;
   if(t.dataset.copy!==undefined)copyMsg(t);
@@ -1262,11 +1262,77 @@ addEventListener("drop",e=>{if(!e.dataTransfer?.files.length)return;e.preventDef
 const keyHint=()=>inp.setAttribute("enterkeyhint",desk.matches?"send":"enter"); // am Handy macht Enter eine neue Zeile, also zeigt die Tastatur keinen Senden-Knopf
 desk.addEventListener("change",keyHint);
 narrow.addEventListener("change",()=>{if(!narrow.matches&&dChats.open)dChats.close()});
-// Am Handy: vom linken Rand nach rechts wischen öffnet die Chats, in der Schublade nach links wischen schließt sie
-let tx=0,ty=0,edge=false;
-document.addEventListener("touchstart",e=>{const t=e.touches[0];tx=t.clientX;ty=t.clientY;edge=narrow.matches&&tx<24&&!document.querySelector("dialog[open]")},{passive:true});
-document.addEventListener("touchmove",e=>{if(!edge)return;const t=e.touches[0];if(t.clientX-tx>50&&Math.abs(t.clientY-ty)<40){edge=false;openList()}},{passive:true});
-dChats.addEventListener("touchend",e=>{const t=e.changedTouches[0];if(tx-t.clientX>70&&Math.abs(t.clientY-ty)<50)dChats.close()},{passive:true});
+
+// ---------- Wischen am Handy ----------
+// Die Chat-Schublade (links) und das Gehirn-Blatt (unten) folgen dem Finger und rasten beim Loslassen ein: Entscheidend sind Weg
+// und Tempo, ein schneller kurzer Wisch reicht. Vom linken Rand nach rechts öffnet die Chats, nach links schließt sie, das Blatt
+// zieht man nach unten weg. Auch Schließen per Knopf, Tipp daneben oder Auswahl läuft als Bewegung statt schlagartig.
+const still=matchMedia("(prefers-reduced-motion:reduce)");
+const dimCss=document.head.appendChild(document.createElement("style")); // ::backdrop erbt keine Variablen, deshalb eine eigene Regel
+const dim=p=>{dimCss.textContent=p==null?"":`dialog.drag::backdrop{opacity:${p.toFixed(3)}}`};
+const axisOf=d=>d===dChats?"x":"y";
+const sizeOf=d=>axisOf(d)==="x"?d.offsetWidth:d.offsetHeight;
+function place(d,off){d._off=off;d.style.transform=axisOf(d)==="x"?`translateX(${off}px)`:`translateY(${off}px)`}
+function glide(d,open,v){ // v: Tempo beim Loslassen in px/ms (0 = per Knopf)
+  const size=sizeOf(d),to=open?0:axisOf(d)==="x"?-size:size,from=d._off||0;
+  const ms=still.matches?0:v?Math.max(140,Math.min(300,Math.abs(to-from)/Math.max(Math.abs(v),.8))):240;
+  d.classList.add("drag","dragged");
+  if(!d.style.transform){dim(1);place(d,0);d.offsetWidth} // Start aus der Ruhe: erst festhalten, dann losbewegen
+  d.classList.add("snap");d.style.transition=ms?`transform ${ms}ms cubic-bezier(.2,.8,.3,1)`:"none";
+  place(d,to);dim(open?1:0);
+  let fin=false;
+  const done=()=>{if(fin)return;fin=true;d.removeEventListener("transitionend",onEnd);if(!open)d.close();d.classList.remove("drag","snap");d.style.transition=d.style.transform="";d._off=0;dim(null)};
+  const onEnd=e=>{if(e.target===d&&e.propertyName==="transform")done()};
+  d.addEventListener("transitionend",onEnd);setTimeout(done,ms+80);
+}
+function shut(d){ // überall statt d.close() für Schublade und Blatt
+  if(!d.open||d.classList.contains("snap"))return;
+  if(still.matches||!narrow.matches||(d!==dChats&&d!==dBrain)){d.close();return}
+  glide(d,false,0);
+}
+for(const d of[dChats,dBrain]){
+  d.addEventListener("close",()=>d.classList.remove("dragged")); // beim nächsten Öffnen wieder mit Einblende-Bewegung
+  d.addEventListener("cancel",e=>{e.preventDefault();shut(d)}); // Esc
+}
+let tg=null; // laufende Geste: {d,mode,x,y,live,size,hist}
+document.addEventListener("touchstart",e=>{
+  tg=null;
+  if(e.touches.length>1||!narrow.matches)return;
+  const t=e.touches[0],open=document.querySelector("dialog[open]");
+  const g={x:t.clientX,y:t.clientY,live:false,hist:[]};
+  if(!open&&g.x<24&&!document.body.classList.contains("nokey"))tg={...g,d:dChats,mode:"open"};
+  else if(open===dChats&&!dChats.classList.contains("snap"))tg={...g,d:dChats,mode:"shut"};
+  else if(open===dBrain&&!dBrain.classList.contains("snap")&&dBrain.scrollTop<=0)tg={...g,d:dBrain,mode:"shut"};
+},{passive:true});
+document.addEventListener("touchmove",e=>{
+  if(!tg)return;
+  if(e.touches.length>1){if(tg.live)glide(tg.d,tg.mode==="shut",0);tg=null;return}
+  const t=e.touches[0],dx=t.clientX-tg.x,dy=t.clientY-tg.y,ax=axisOf(tg.d);
+  if(!tg.live){
+    const main=ax==="x"?dx:dy,cross=ax==="x"?dy:dx;
+    if(Math.abs(main)<8&&Math.abs(cross)<8)return;
+    const dir=tg.mode==="open"?dx>0:ax==="x"?dx<0:dy>0;
+    if(!dir||Math.abs(main)<Math.abs(cross)*1.2){tg=null;return} // eher gescrollt als gewischt: dem Browser überlassen
+    tg.live=true;
+    if(tg.mode==="open"){renderList();dChats.showModal()}
+    tg.d.classList.add("drag","dragged");tg.size=sizeOf(tg.d);tg.x=t.clientX;tg.y=t.clientY;
+  }
+  e.preventDefault();
+  let off;
+  if(ax==="x")off=Math.min(0,Math.max(-tg.size,tg.mode==="open"?t.clientX-tg.size:t.clientX-tg.x)); // beim Öffnen hängt die Kante am Finger
+  else{const m=t.clientY-tg.y;off=m<0?m/4:Math.min(tg.size,m)} // nach oben nur ein wenig nachgeben
+  place(tg.d,off);dim(1-Math.min(1,Math.abs(off)/tg.size));
+  tg.hist.push([e.timeStamp,ax==="x"?t.clientX:t.clientY]);if(tg.hist.length>6)tg.hist.shift();
+},{passive:false});
+function endSwipe(e){
+  const g=tg;tg=null;if(!g?.live)return;
+  const h=g.hist,last=h.at(-1)||[0,0],first=h.find(p=>last[0]-p[0]<=120)||last;
+  const v=e.timeStamp-last[0]>120||last[0]<=first[0]?0:(last[1]-first[1])/(last[0]-first[0]); // erst festgehalten, dann losgelassen: kein Schwung
+  const off=g.d._off||0,open=axisOf(g.d)==="x"?(v>.3?true:v<-.3?false:off>-g.size/2):(v>.35?false:v<-.35?true:off<Math.min(g.size*.3,140));
+  glide(g.d,open,v);
+}
+document.addEventListener("touchend",endSwipe,{passive:true});
+document.addEventListener("touchcancel",endSwipe,{passive:true});
 // Kein Zoomen am Handy. Safari am iPhone übergeht user-scalable=no, deshalb die Zwei-Finger-Geste hier selbst abfangen.
 for(const g of["gesturestart","gesturechange"])document.addEventListener(g,e=>e.preventDefault());
 document.addEventListener("touchmove",e=>{if(e.touches.length>1)e.preventDefault()},{passive:false});
