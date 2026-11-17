@@ -47,6 +47,7 @@ const IC={
   globe:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.4 2.6 3.6 5.6 3.6 9s-1.2 6.4-3.6 9c-2.4-2.6-3.6-5.6-3.6-9S9.6 5.6 12 3Z"/></svg>',
   wave:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 10v4M8 6.5v11M12 3.5v17M16 7.5v9M20 10v4"/></svg>',
   mic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11.5" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3"/></svg>',
+  dl:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 19.5h14"/></svg>',
 };
 
 const $=s=>document.querySelector(s);
@@ -182,6 +183,7 @@ function systemPrompt(p,web,voice){
 - Fragt dich jemand, wer du bist: Du bist xbubekir. Technisch läufst du auf ${PROV[p].name}, einem KI-Modell von ${PROV[p].by}. Das sagst du offen, wenn danach gefragt wird.
 - ${web?"Du kannst im Internet suchen. Tu das, wenn eine Frage aktuelle oder nachprüfbare Informationen braucht.":"Du kannst nicht im Internet suchen. Bei aktuellen Dingen (Nachrichten, Wetter, Preise, Ergebnisse) sagst du das ehrlich, statt zu raten."}
 - Deine Antworten werden als Markdown angezeigt: Listen, **fett**, Tabellen und Codeblöcke funktionieren.
+- Du kannst Bilder zeichnen, und zwar als Vektorgrafik: Möchte die Person ein Bild, Logo, Icon, Diagramm, Schaubild, eine Flagge oder Ähnliches, antwortest du mit einem Codeblock der Sprache svg. Er wird im Chat als Bild angezeigt und lässt sich speichern. Schreib ein vollständiges <svg> mit viewBox, ohne Skripte, ohne eingebundene Bilder oder Webadressen und ohne Webschriften (nur font-family wie sans-serif oder serif). Gestalte es sauber und farbig, eher klar als überladen, und schreib in einem Satz dazu, was du gezeichnet hast. Fotos oder fotorealistische Bilder kannst du nicht erzeugen, das sagst du ehrlich und bietest eine gezeichnete Fassung an.
 
 Dieses Gespräch hat am ${d} begonnen.`;
   if(voice)s+=VOICE_PROMPT;
@@ -558,6 +560,37 @@ const AR_RUN=new RegExp(`[${AR}]+(?:[ \\u00A0\\u200C]+[${AR}]+)*`,"g"),AR_ANY=ne
 const ar=h=>h.replace(AR_RUN,'<span lang="ar">$&</span>');
 const rtl=t=>AR_ANY.test(t)&&!LATIN.test(t.replace(/\]\([^)]*\)|https?:\/\/\S+/g,""))?' dir="rtl"':"";
 
+// Gezeichnete Bilder (SVG aus einem ```svg-Block): Sie kommen als <img> mit data:-Adresse in die Seite, nie als Markup. So kann
+// ein SVG kein Skript ausführen und nichts nachladen, und die CSP (img-src data:) erlaubt es ohne Ausnahme.
+const SVG_PRE="data:image/svg+xml;charset=utf-8,";
+function svgSrc(code){ // nur ein vollständiges <svg> wird ein Bild, sonst bleibt es Code
+  let s=code.trim().replace(/^<\?xml[^>]*>\s*/i,"").replace(/^<!DOCTYPE[^>]*>\s*/i,"");
+  if(!/^<svg[\s>]/i.test(s)||!/<\/svg>$/i.test(s)||s.length>300000)return null;
+  if(!/^<svg\b[^>]*\sxmlns\s*=/i.test(s))s=s.replace(/^<svg/i,'<svg xmlns="http://www.w3.org/2000/svg"'); // ohne xmlns zeigt <img> nichts
+  if(/xlink:/i.test(s)&&!/xmlns:xlink\s*=/i.test(s))s=s.replace(/^<svg/i,'<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
+  return s;
+}
+const svgFig=(s,code)=>`<figure class="svgfig"><div class="svgpaper"><img src="${SVG_PRE}${encodeURIComponent(s)}" alt="Von xbubekir gezeichnetes Bild"></div><figcaption><button class="mini" type="button" data-svg="png">${IC.dl}<span>Als Bild sichern</span></button><button class="mini" type="button" data-svg="svg">${IC.dl}<span>SVG</span></button><details class="svgcode"><summary>Code</summary><pre><code>${esc(code)}</code></pre></details></figcaption></figure>`;
+async function saveSvg(fig,kind){ // als PNG (2048 px an der langen Seite) oder als SVG; am Handy übers Teilen-Menü, sonst als Download
+  const src=decodeURIComponent(fig.querySelector("img").getAttribute("src").slice(SVG_PRE.length)),name="xbubekir-bild."+kind;
+  let blob;
+  try{
+    if(kind==="svg")blob=new Blob([src],{type:"image/svg+xml"});
+    else{
+      const vb=/viewBox\s*=\s*["']\s*[-\d.]+[\s,]+[-\d.]+[\s,]+([\d.]+)[\s,]+([\d.]+)/i.exec(src),w0=+vb?.[1]||512,h0=+vb?.[2]||512,k=2048/Math.max(w0,h0);
+      const W=Math.round(w0*k),H=Math.round(h0*k),img=new Image();
+      img.src=SVG_PRE+encodeURIComponent(src.replace(/<svg\b([^>]*)>/i,(_,a)=>`<svg${a.replace(/\s(width|height)\s*=\s*("[^"]*"|'[^']*')/gi,"")} width="${W}" height="${H}">`)); // feste Größe, sonst zeichnet Safari es winzig
+      await img.decode();
+      const cv=document.createElement("canvas");cv.width=W;cv.height=H;cv.getContext("2d").drawImage(img,0,0,W,H);
+      blob=await new Promise(r=>cv.toBlob(r,"image/png"));
+    }
+  }catch{}
+  if(!blob){toast("Das Bild ließ sich nicht umwandeln. Versuch es als SVG.");return}
+  const file=new File([blob],name,{type:blob.type});
+  if(narrow.matches&&navigator.canShare?.({files:[file]})){try{await navigator.share({files:[file]});return}catch(e){if(e.name==="AbortError")return}} // iPhone: „Bild sichern“ legt es in Fotos
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+}
+
 // Kleiner Markdown-Leser: erst alles escapen, dann nur bekannte Auszeichnungen erzeugen
 function inline(s){
   const keep=[],put=h=>`\u0000${keep.push(h)-1}\u0000`;
@@ -581,7 +614,12 @@ function md(src){
     if(m=RX.fence.exec(l)){ // Codeblock (beim Streamen auch ohne schließende Zeile)
       const end=new RegExp("^\\s*"+m[1][0]+"{"+m[1].length+",}\\s*$"),buf=[];
       for(i++;i<L.length&&!end.test(L[i]);i++)buf.push(L[i]);
-      i++;out.push(`<pre><code>${esc(buf.join("\n"))}</code></pre>`);continue;
+      const closed=i<L.length,code=buf.join("\n"),lang=m[2].toLowerCase();i++;
+      if(lang==="svg"||["xml","html",""].includes(lang)&&/^\s*(<\?xml[^>]*>\s*)?<svg[\s>]/i.test(code)){ // gezeichnetes Bild
+        if(!closed){out.push('<p class="tool wait">xbubekir zeichnet …</p>');continue}
+        const s=svgSrc(code);if(s){out.push(svgFig(s,code));continue}
+      }
+      out.push(`<pre><code>${esc(code)}</code></pre>`);continue;
     }
     if(m=RX.head.exec(l)){const n=Math.min(m[1].length+1,6);out.push(`<h${n}${rtl(m[2])}>${inline(m[2])}</h${n}>`);i++;continue} // Seite: h1, Chat ab h2
     if(RX.hr.test(l)){out.push("<hr>");i++;continue}
@@ -1125,7 +1163,8 @@ function vFeedRaw(raw,end){
 function vText(src){
   const keep=[];let code=false;
   for(const l of src.replace(/\r\n?/g,"\n").split("\n")){
-    if(RX.fence.test(l)){if(!code)keep.push("Den Code siehst du im Chat.");code=!code;continue}
+    const f=RX.fence.exec(l);
+    if(f){if(!code)keep.push(/svg/i.test(f[2])?"Das Bild siehst du im Chat.":"Den Code siehst du im Chat.");code=!code;continue}
     if(!code)keep.push(l);
   }
   return plain(keep.join("\n")).replace(/\s*\(https?:\/\/[^)\s]+\)/g,"").replace(/https?:\/\/\S+/g,"").replace(/\p{Extended_Pictographic}️?|[•#`~|*]/gu,"")
@@ -1317,8 +1356,9 @@ $("#brList").addEventListener("click",e=>{const b=e.target.closest("[data-model]
 $("#brEff").addEventListener("click",e=>{const b=e.target.closest("[data-eff]");if(!b)return;S.effort=b.dataset.eff;saveS();renderBrain();updBrain()});
 $("#brMore").addEventListener("click",()=>{shut(dBrain);openSettings()});
 log.addEventListener("click",e=>{
-  const t=e.target.closest("[data-copy],[data-again],[data-more],[data-act],[data-id],[data-all]");if(!t)return;
-  if(t.dataset.copy!==undefined)copyMsg(t);
+  const t=e.target.closest("[data-copy],[data-again],[data-more],[data-act],[data-id],[data-all],[data-svg]");if(!t)return;
+  if(t.dataset.svg)saveSvg(t.closest("figure"),t.dataset.svg);
+  else if(t.dataset.copy!==undefined)copyMsg(t);
   else if(t.hasAttribute("data-again"))regen();
   else if(t.hasAttribute("data-more"))send("Mach bitte weiter.");
   else if(t.dataset.act)errAct(t.dataset.act);
