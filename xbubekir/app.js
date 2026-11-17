@@ -45,6 +45,8 @@ const IC={
   ok:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
   chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>',
   globe:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.4 2.6 3.6 5.6 3.6 9s-1.2 6.4-3.6 9c-2.4-2.6-3.6-5.6-3.6-9S9.6 5.6 12 3Z"/></svg>',
+  wave:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 10v4M8 6.5v11M12 3.5v17M16 7.5v9M20 10v4"/></svg>',
+  mic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11.5" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3"/></svg>',
 };
 
 const $=s=>document.querySelector(s);
@@ -55,9 +57,12 @@ const narrow=matchMedia("(max-width:899px),(max-height:540px) and (pointer:coars
 // ---------- Einstellungen (klein, daher localStorage) ----------
 const SK="xb.settings",DK="xb.draft";
 // models: zuletzt gewähltes Modell je Anbieter, damit ein Wechsel hin und zurück nicht still beim Standard landet
-const S={provider:"gemini",gmode:"konto",gkey:"",ckey:"",name:"",about:"",style:"",model:PROV.gemini.def,effort:"low",web:true,models:{}};
+// vlang: Sprache, die der Sprachmodus erkennt; vvoice: gewählte deutsche Stimme (leer = automatisch); vrate: Sprechtempo
+const S={provider:"gemini",gmode:"konto",gkey:"",ckey:"",name:"",about:"",style:"",model:PROV.gemini.def,effort:"low",web:true,models:{},vlang:"de-DE",vvoice:"",vrate:1};
 try{Object.assign(S,JSON.parse(localStorage.getItem(SK)||"{}"))}catch{}
 if(!PROV[S.provider])S.provider="gemini";
+if(!["de-DE","ar-SA","en-US"].includes(S.vlang))S.vlang="de-DE";
+if(![.9,1,1.15].includes(+S.vrate))S.vrate=1;
 if(MODELS[S.model]?.p!==S.provider)S.model=PROV[S.provider].def;
 if(!S.models||typeof S.models!=="object")S.models={};
 const modelFor=p=>MODELS[S.models[p]]?.p===p?S.models[p]:PROV[p].def;
@@ -151,9 +156,20 @@ xbubekir: Schade, dass du gerade unzufrieden bist. Sag mir, was nicht gepasst ha
 Person: Erzähl mir einen Witz.
 xbubekir: Warum können Geister so schlecht lügen? Weil man durch sie hindurchsieht.`;
 
-function systemPrompt(p,web){
+// Für Chats, die im Sprachmodus beginnen: Die Antwort wird vorgelesen, also kurz und ohne Formatierung
+const VOICE_PROMPT=`
+
+## Sprachmodus
+Die Person spricht mit dir, und deine Antworten werden laut vorgelesen. Das gilt für dieses ganze Gespräch.
+- Antworte wie im Gespräch: kurz, meist ein bis drei Sätze. Ausführlicher nur, wenn die Person darum bittet.
+- Keine Tabellen, Listen, Überschriften, Codeblöcke, Links, Emojis und kein Fettdruck. Zählst du etwas auf, dann in ganzen Sätzen.
+- Arabisch schreibst du weiter mit Harakat und sagst danach in Worten, wie man es ausspricht und was es bedeutet.
+- Die Spracherkennung macht manchmal Fehler. Ergibt etwas keinen Sinn, rätst du das Naheliegende oder fragst kurz nach.`;
+
+function systemPrompt(p,web,voice){
   if(p==="eigen"){ // kurz halten wie im Training, das kleine Modell hat wenig Kontext
     let s=LOCAL.system;
+    if(voice)s+=" Deine Antworten werden vorgelesen: antworte kurz, in ganzen Sätzen, ohne Listen und Formatierung.";
     if(S.name.trim())s+=` Die Person heißt ${S.name.trim()}.`;
     if(S.about.trim())s+=`\n\nÜber die Person: ${S.about.trim()}`;
     if(S.style.trim())s+=`\n\nSo möchte die Person, dass du antwortest: ${S.style.trim()}`;
@@ -168,6 +184,7 @@ function systemPrompt(p,web){
 - Deine Antworten werden als Markdown angezeigt: Listen, **fett**, Tabellen und Codeblöcke funktionieren.
 
 Dieses Gespräch hat am ${d} begonnen.`;
+  if(voice)s+=VOICE_PROMPT;
   if(S.name.trim())s+=`\n\nDie Person heißt ${S.name.trim()}.`;
   if(S.about.trim())s+=`\n\nDas hat dir die Person über sich erzählt:\n${S.about.trim()}`;
   if(S.style.trim())s+=`\n\nSo möchte die Person, dass du antwortest:\n${S.style.trim()}`;
@@ -176,11 +193,11 @@ Dieses Gespräch hat am ${d} begonnen.`;
 
 // Anbieter, Modell, System-Prompt und Werkzeuge werden beim Anlegen festgehalten: Sie müssen für alle Runden eines Chats
 // gleich bleiben, sonst verwirft die API die gespeicherten Denkblöcke früherer Antworten (und der Prompt-Cache greift nicht).
-function newChat(){
+function newChat(voice){
   const p=S.provider,model=MODELS[S.model]?.p===p?S.model:PROV[p].def,M=MODELS[model],web=S.web&&!!M.web;
   const tz=Intl.DateTimeFormat().resolvedOptions().timeZone;
-  return{id:crypto.randomUUID?.()||Date.now()+"-"+Math.random().toString(36).slice(2),title:"",created:Date.now(),updated:Date.now(),provider:p,model,
-    system:systemPrompt(p,web),tools:web?[{type:M.web,name:"web_search",max_uses:5,user_location:{type:"approximate",...(tz?{timezone:tz}:{})}}]:[],msgs:[]};
+  return{id:crypto.randomUUID?.()||Date.now()+"-"+Math.random().toString(36).slice(2),title:"",created:Date.now(),updated:Date.now(),provider:p,model,...(voice&&{voice:true}),
+    system:systemPrompt(p,web,voice),tools:web?[{type:M.web,name:"web_search",max_uses:5,user_location:{type:"approximate",...(tz?{timezone:tz}:{})}}]:[],msgs:[]};
 }
 
 // text: fester Text (z. B. „Weiter“), sonst der Inhalt des Eingabefelds
@@ -641,9 +658,10 @@ function viewBlocks(blocks,live){
   return h;
 }
 
+const msgBlocks=(p,m)=>p==="gemini"?geminiBlocks(m.content):p==="eigen"?[{type:"text",text:m.content}]:m.content; // Antwort im Einheitsformat
 function chatHTML(c){
   let h="";const M=c.msgs,p=provOf(c);copies=[];
-  const toBlocks=m=>p==="gemini"?geminiBlocks(m.content):p==="eigen"?[{type:"text",text:m.content}]:m.content;
+  const toBlocks=m=>msgBlocks(p,m);
   for(let i=0;i<M.length;){
     const m=M[i];
     if(m.role==="user"){h+=`<div class="msg u">${m.imgs?.length?`<div class="ups">${m.imgs.map((u,j)=>`<img src="${esc(u)}" alt="Dein Bild${m.imgs.length>1?" "+(j+1):""}">`).join("")}</div>`:""}${m.content?`<div class="bub" dir="auto">${ar(esc(m.content))}</div>`:""}</div>`;if(m.note)h+=`<p class="note">${NOTES[m.note]}</p>`;i++;continue}
@@ -793,6 +811,7 @@ function render(){
 
 let raf=0,pending=null;
 function paint(el,blocks){ // beim Streamen höchstens einmal pro Bild neu zeichnen
+  if(V.live&&el.id==="live")voiceFeed(blocks); // Sprachmodus: fertige Sätze schon vorlesen, während der Rest noch kommt
   pending=blocks;
   if(raf)return;
   raf=requestAnimationFrame(()=>{raf=0;if(!el.isConnected)return;const stick=nearBottom();el.innerHTML=viewBlocks(pending,true);if(stick)toBottom();updDown()});
@@ -924,7 +943,7 @@ function pickBrain(id){ // wählt ohne Speichern-Knopf; der laufende Chat behäl
 
 // ---------- Einstellungen ----------
 let webWant=true,snap=""; // webWant: Wunsch für die Websuche, auch wenn das gerade gewählte Modell keine kann
-const setState=()=>["sName","sAbout","sStyle","sProv","sGMode","sModel","sEffort","sGKey","sCKey"].map(id=>$("#"+id).value).join("\u0001")+webWant;
+const setState=()=>["sName","sAbout","sStyle","sProv","sGMode","sModel","sEffort","sGKey","sCKey","sVoice","sRate"].map(id=>$("#"+id).value).join("\u0001")+webWant;
 const leaveSet=()=>setState()===snap||confirm("Änderungen verwerfen?");
 function fillModels(){ // Modellauswahl passend zum gewählten Anbieter
   const p=$("#sProv").value,sel=$("#sModel"),was=sel.value||S.model; // beim ersten Öffnen ist die Auswahl noch leer
@@ -955,6 +974,7 @@ function openSettings(){
   $("#sName").value=S.name;$("#sAbout").value=S.about;$("#sStyle").value=S.style;webWant=S.web;
   $("#sProv").value=S.provider;$("#sGMode").value=S.gmode;$("#sModel").value=S.model;fillModels();
   $("#sEffort").value=S.effort;
+  fillVoices();$("#sRate").value=String(S.vrate);
   $("#setMsg").textContent="";$("#setMsg").className="status";
   snap=setState();
   dSet.showModal();
@@ -981,7 +1001,7 @@ $("#fSet").addEventListener("submit",async e=>{
   e.preventDefault();
   S.name=$("#sName").value;S.about=$("#sAbout").value;S.style=$("#sStyle").value;
   if($("#sProv").value!==S.provider&&!busy)cur=null; // anderer Anbieter: gleich mit einem neuen Chat weitermachen
-  S.provider=$("#sProv").value;S.gmode=$("#sGMode").value;S.model=S.models[S.provider]=$("#sModel").value;S.effort=$("#sEffort").value;S.web=webWant;saveS();
+  S.provider=$("#sProv").value;S.gmode=$("#sGMode").value;S.model=S.models[S.provider]=$("#sModel").value;S.effort=$("#sEffort").value;S.web=webWant;S.vvoice=$("#sVoice").value;S.vrate=+$("#sRate").value;saveS();
   for(const[p,id]of[["gemini","sGKey"],["claude","sCKey"]]){
     const key=$("#"+id).value.trim();
     if(key===(p==="gemini"?S.gkey:S.ckey))continue;
@@ -1001,6 +1021,203 @@ $("#bLogout").addEventListener("click",async()=>{if(busy)return;await(await auth
 document.querySelectorAll(".eye").forEach(b=>b.addEventListener("click",()=>{const k=$("#"+b.dataset.for),show=k.type==="password";k.type=show?"text":"password";b.textContent=show?"Verbergen":"Zeigen";b.setAttribute("aria-pressed",String(show))}));
 $("#bWipeChats").addEventListener("click",()=>{if(busy||!confirm("Wirklich alle Chats auf diesem Gerät löschen?"))return;chats=[];cur=null;DB.clear();dSet.close();render()});
 $("#bWipeKey").addEventListener("click",()=>{if(busy||!confirm("Alle API-Schlüssel von diesem Gerät entfernen?"))return;S.gkey="";S.ckey="";saveS();dSet.close();render()});
+
+// ---------- Sprachmodus ----------
+// Sprechen statt tippen: Der Browser erkennt die Sprache (Web Speech API), die Frage geht wie getippt durch send() und run() in den
+// laufenden Chat, und das Gerät liest die Antwort vor, Satz für Satz schon während sie hereinkommt. Danach hört xbubekir wieder zu.
+// Unterbrechen geht per Tipp auf den Kreis. Automatisch geht es nicht, weil das Mikrofon sonst die eigene Stimme hören würde.
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition,TTS=window.speechSynthesis;
+const dVoice=$("#dVoice"),vOrb=$("#vOrb"),vYou=$("#vYou"),vAi=$("#vAi"),vState=$("#vState");
+// turn: zählt Runden, damit eine abgebrochene Runde nichts mehr anfasst; rawDone: so viel der Antwort ist schon in der Vorlese-Schlange
+const V={on:false,live:false,mute:false,done:false,after:"",turn:0,rec:null,q:[],utt:null,speaking:false,rawDone:0,misses:0,heard:false,lock:null,wd:0};
+const VSTATE={listen:["Ich höre zu …","Zuhören anhalten"],think:["xbubekir denkt nach …","xbubekir denkt nach"],speak:["xbubekir spricht. Tippe, um selbst zu sprechen.","Unterbrechen und selbst sprechen"],pause:["Pausiert. Tippe auf den Kreis, um zu sprechen.","Sprechen"],error:["","Nochmal versuchen"]};
+const VLANG={de:"de-DE",en:"en-US",ar:"ar-SA"};
+const apple=/iPhone|iPad|iPod/.test(navigator.userAgent)||/Macintosh/.test(navigator.userAgent)&&navigator.maxTouchPoints>1;
+const standalone=()=>matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+function vSet(s,msg){ // vState ist ein Status-Bereich und wird von Screenreadern selbst angesagt
+  const icon=s==="pause"||s==="error"?"mic":"wave";
+  if(dVoice.dataset.state!==s||vOrb.dataset.icon!==icon){vOrb.innerHTML=`<span class="ring"></span><span class="core">${IC[icon]}</span>`;vOrb.dataset.icon=icon}
+  dVoice.dataset.state=s;
+  vState.textContent=msg||VSTATE[s][0];
+  vOrb.setAttribute("aria-label",VSTATE[s][1]);
+}
+function vFail(code){
+  const m={
+    "not-allowed":apple?"xbubekir darf das Mikrofon nicht nutzen. Erlaube es in den iPhone-Einstellungen unter Safari → Mikrofon und tippe dann auf den Kreis.":"xbubekir darf das Mikrofon nicht nutzen. Erlaube es in den Browser-Einstellungen und tippe dann auf den Kreis.",
+    "service-not-allowed":apple&&standalone()?"In der App auf dem Home-Bildschirm lässt das iPhone die Spracherkennung nicht zu. Öffne xbubekir in Safari.":apple?"Die Spracherkennung ist aus. Prüf in den iPhone-Einstellungen, ob Siri eingeschaltet ist und unter Allgemein → Tastatur die Diktierfunktion.":"Die Spracherkennung ist in diesem Browser nicht erlaubt.",
+    "audio-capture":"Kein Mikrofon gefunden.",
+    network:"Keine Verbindung zur Spracherkennung. Tippe auf den Kreis, um es nochmal zu versuchen.",
+    "language-not-supported":"Diese Sprache erkennt dein Browser nicht. Wähl oben eine andere.",
+  }[code]||"Die Spracherkennung hat nicht geklappt. Tippe auf den Kreis, um es nochmal zu versuchen.";
+  if(code==="not-allowed"&&V.heard){vSet("pause");return} // hat schon geklappt: Das iPhone will nur wieder einen Tipp, bevor es zuhört
+  vSet("error",m);
+}
+
+// Zuhören: eine Erkennung pro Frage; was schon verstanden ist, steht gleich da
+function vStopRec(){const r=V.rec;V.rec=null;try{r?.abort()}catch{}}
+function vListen(first){
+  if(!V.on)return;
+  vStopRec();if(!first)vHush(); // beim ersten Mal nicht: Das stille Freischalt-Wort fürs Vorlesen soll durchlaufen
+  vSet("listen");vYou.textContent="";vYou.classList.add("interim");
+  let r;try{r=new SR()}catch{vFail("");return}
+  r.lang=S.vlang;r.interimResults=true;r.continuous=false;r.maxAlternatives=1;
+  let fin="",tmp="",err="";
+  r.onresult=e=>{fin="";tmp="";for(const x of e.results)if(x.isFinal)fin+=x[0].transcript;else tmp+=x[0].transcript;vYou.textContent=(fin+tmp).trim();vYou.classList.toggle("interim",!fin||!!tmp)};
+  r.onerror=e=>{err=e.error};
+  r.onend=()=>{
+    if(V.rec!==r)return;
+    V.rec=null;if(!V.on)return;
+    const t=(fin+tmp).trim(); // Safari liefert manchmal kein „fertig“, dann zählt das zuletzt Verstandene
+    if(t){V.heard=true;V.misses=0;vYou.classList.remove("interim");vTurn(t);return}
+    if(err&&err!=="no-speech"&&err!=="aborted"){vFail(err);return}
+    if(++V.misses<3)vListen();else vSet("pause","Ich höre nichts. Tippe auf den Kreis, um zu sprechen.");
+  };
+  V.rec=r;
+  try{r.start()}catch{V.rec=null;vSet("pause")}
+}
+
+// Eine Runde: Frage schicken, Antwort vorlesen, dann wieder zuhören
+async function vTurn(text){
+  const my=++V.turn;
+  vSet("think");vAi.textContent="";
+  if(busy)await new Promise(r=>idle.push(r)); // eine frühere Antwort läuft noch
+  if(my!==V.turn||!V.on)return;
+  if(!cur)cur=newChat(true); // neu im Sprachmodus: kurze, vorlesbare Antworten für das ganze Gespräch
+  const c=cur,n=c.msgs.length;
+  V.mute=false;V.done=false;V.after="";V.rawDone=0;V.q=[];V.live=true;
+  try{await send(text)}finally{if(my===V.turn)V.live=false}
+  if(my!==V.turn||!V.on)return;
+  const last=c.msgs.at(-1);
+  if(c.msgs.length>=n+2&&last.role==="assistant"&&!last.skip)vFeedRaw(vAnswer(c),true);
+  else{vQueue(c.msgs[n]?.note==="refusal"?NOTES.refusal:"Das hat nicht geklappt. Was los war, steht im Chat.");V.after="pause"}
+  V.done=true;vPump();
+}
+function vAnswer(c){ // Text der letzten Antwort samt Fortsetzungen, ohne Gedankengang
+  const p=provOf(c),out=[];
+  for(let i=c.msgs.length-1;i>=0&&c.msgs[i].role==="assistant";i--)if(!c.msgs[i].skip)out.unshift(msgBlocks(p,c.msgs[i]).filter(b=>b.type==="text").map(b=>b.text||"").join(""));
+  return out.join("");
+}
+
+// Vorlesen beim Streamen: Nur bis zum letzten fertigen Satz, nie mitten in einen Codeblock
+function voiceFeed(blocks){if(V.on&&!V.mute)vFeedRaw(blocks.filter(b=>b.type==="text").map(b=>b.text||"").join(""),false)}
+function vFeedRaw(raw,end){
+  if(raw.length<=V.rawDone)return;
+  const rest=raw.slice(V.rawDone),f=[...rest.matchAll(/^[ \t]*(`{3,}|~{3,})/gm)];
+  let lim=rest.length,cut=-1;
+  if(f.length%2&&!end)lim=f.at(-1).index; // offener Codeblock: warten, bis er zu ist
+  if(end)cut=lim;
+  else{
+    const part=rest.slice(0,lim),re=/(?<![\s(]\p{L})[.!?…:;](?=\s)|\n/gu; // „z. B.“ ist kein Satzende
+    for(let m;(m=re.exec(part));)cut=m.index+m[0].length;
+    for(let i=0;i+1<f.length;i+=2)if(cut>f[i].index&&cut<f[i+1].index+f[i+1][0].length)cut=f[i].index;
+  }
+  if(cut<=0)return;
+  V.rawDone+=cut;
+  const t=vText(rest.slice(0,cut));
+  if(t)vQueue(t);
+}
+// Vorlesetext: Code nur erwähnen, Links, Emojis und Markdown-Zeichen weg, jede Zeile endet als Satz
+function vText(src){
+  const keep=[];let code=false;
+  for(const l of src.replace(/\r\n?/g,"\n").split("\n")){
+    if(RX.fence.test(l)){if(!code)keep.push("Den Code siehst du im Chat.");code=!code;continue}
+    if(!code)keep.push(l);
+  }
+  return plain(keep.join("\n")).replace(/\s*\(https?:\/\/[^)\s]+\)/g,"").replace(/https?:\/\/\S+/g,"").replace(/\p{Extended_Pictographic}️?|[•#`~|*]/gu,"")
+    .split("\n").map(l=>l.replace(/[ \t]{2,}/g," ").trim()).filter(Boolean).map(l=>/[.!?…:;,]$/.test(l)?l:l+".").join(" ");
+}
+// Sätze in die Schlange; arabische Stellen mit arabischer Stimme, sehr lange Sätze geteilt (Chrome bricht sonst ab)
+function vQueue(text){
+  const base=S.vlang==="en-US"?"en":"de";
+  for(const s of text.split(/(?<=(?<![\s(]\p{L})[.!?…])\s+/u)){ // wie oben: „z. B.“ bleibt zusammen
+    const parts=[];let i=0;
+    for(const m of s.matchAll(AR_RUN)){if(m.index>i)parts.push([s.slice(i,m.index),base]);parts.push([m[0],"ar"]);i=m.index+m[0].length}
+    if(i<s.length)parts.push([s.slice(i),base]);
+    for(let[t,l]of parts){
+      t=t.trim();if(!/[\p{L}\p{N}]/u.test(t))continue;
+      while(t.length>220){let k=t.lastIndexOf(", ",200);if(k<60)k=t.lastIndexOf(" ",200);if(k<1)k=200;V.q.push({t:t.slice(0,k+1),l,show:s});t=t.slice(k+1).trim()}
+      V.q.push({t,l,show:s});
+    }
+  }
+  vPump();
+}
+function vVoice(l){
+  const vs=TTS.getVoices().filter(v=>v.lang.replace("_","-").toLowerCase().startsWith(l));
+  if(l==="de"&&S.vvoice){const v=vs.find(v=>v.voiceURI===S.vvoice);if(v)return v}
+  return vs.find(v=>/premium|enhanced|erweitert|neural|natural/i.test(v.name))||vs.find(v=>v.localService&&v.default)||vs.find(v=>v.localService)||vs[0]||null;
+}
+function vPump(){
+  if(!V.on||V.speaking)return;
+  const u=V.q.shift();
+  if(!u){
+    if(V.done){ // Antwort ganz vorgelesen: kurz warten, damit das Mikrofon nicht das Ende der Stimme hört
+      V.done=false;const a=V.after,my=V.turn;V.after="";
+      setTimeout(()=>{if(V.on&&my===V.turn&&!V.speaking&&!V.rec&&!V.q.length){if(a==="pause")vSet("pause");else vListen()}},350);
+    }else if(V.live&&dVoice.dataset.state==="speak")vSet("think");
+    return;
+  }
+  V.speaking=true;
+  if(dVoice.dataset.state!=="speak")vSet("speak");
+  vAi.innerHTML=ar(esc(u.show));
+  const ut=new SpeechSynthesisUtterance(u.t),v=vVoice(u.l);
+  ut.lang=v?.lang||VLANG[u.l];if(v)ut.voice=v;ut.rate=+S.vrate||1;
+  let fin=false;
+  const next=()=>{if(fin)return;fin=true;clearTimeout(V.wd);if(V.utt!==ut)return;V.utt=null;V.speaking=false;vPump()};
+  ut.onend=ut.onerror=next;V.utt=ut; // festhalten, sonst räumt Chrome sie weg und das Ende kommt nie an
+  const chk=()=>{if(TTS.speaking||TTS.pending)V.wd=setTimeout(chk,1500);else next()}; // Safari meldet das Ende manchmal nicht
+  V.wd=setTimeout(chk,2500+u.t.length*120/ut.rate);
+  TTS.resume();TTS.speak(ut);
+}
+function vHush(){V.q=[];V.utt=null;V.speaking=false;clearTimeout(V.wd);if(TTS.speaking||TTS.pending)TTS.cancel()}
+
+// Öffnen und Schließen
+function vUnlock(){try{TTS.cancel();const u=new SpeechSynthesisUtterance(" ");u.volume=0;TTS.speak(u)}catch{}} // iPhone: Vorlesen nur nach einem Tipp, hier einmal freischalten
+async function vWake(){try{V.lock=await navigator.wakeLock?.request("screen")||null}catch{}} // Bildschirm bleibt an, solange gesprochen wird
+function vLangUI(){for(const b of document.querySelectorAll("#vLang [data-lang]"))b.setAttribute("aria-pressed",String(b.dataset.lang===S.vlang))}
+function vHint(){
+  const ua=navigator.userAgent,via=apple?"von Apple":/Edg\//.test(ua)?"von Microsoft":/Chrome\//.test(ua)?"von Google":"des Browser-Herstellers";
+  $("#vHint").textContent=`Was du sagst, erkennt dein Browser über Server ${via}.`+(provOf(cur||{provider:S.provider})==="eigen"?" Auch mit der eigenen KI geht deine Sprache dafür ins Internet.":"");
+}
+function openVoice(){
+  if(!SR||!TTS){toast("Dein Browser kann keine Sprache erkennen. Nimm Safari, Chrome oder Edge.");return}
+  if(!keyOf(cur?provOf(cur):S.provider)){openSettings();return}
+  Object.assign(V,{on:true,misses:0,heard:false,mute:false,live:false,done:false,after:"",q:[]});V.turn++;
+  vYou.textContent="";vAi.textContent="";vLangUI();vHint();
+  vUnlock();vWake();
+  dVoice.showModal();
+  if(busy){vSet("think");const my=V.turn;idle.push(()=>{if(V.on&&my===V.turn)vListen()})}
+  else vListen(true);
+}
+function closeVoice(){
+  if(!V.on)return;
+  V.on=false;V.live=false;V.turn++;vStopRec();vHush();
+  V.lock?.release().catch(()=>{});V.lock=null;
+}
+function fillVoices(){ // Einstellungen: deutsche Stimmen dieses Geräts
+  const sel=$("#sVoice"),vs=TTS?TTS.getVoices().filter(v=>/^de/i.test(v.lang)):[];
+  sel.innerHTML='<option value="">Automatisch</option>'+vs.map(v=>`<option value="${esc(v.voiceURI)}">${esc(v.name)}${v.localService?"":" (übers Internet)"}</option>`).join("");
+  sel.value=vs.some(v=>v.voiceURI===S.vvoice)?S.vvoice:"";
+}
+$("#bVoice").hidden=$("#fsVoice").hidden=!SR||!TTS;
+if(TTS){TTS.getVoices();TTS.addEventListener?.("voiceschanged",()=>{if(!dSet.open)return;const clean=setState()===snap;fillVoices();if(clean)snap=setState()})} // Stimmen laden oft erst später
+$("#bVoice").addEventListener("click",openVoice);
+$("#vClose").addEventListener("click",()=>dVoice.close());
+dVoice.addEventListener("close",()=>{closeVoice();if(desk.matches)inp.focus()});
+vOrb.addEventListener("click",()=>{
+  const s=dVoice.dataset.state;
+  if(s==="listen"){vStopRec();V.misses=0;vSet("pause")}
+  else if(s==="speak"){V.turn++;V.mute=true;V.done=false;vListen()} // Antwort läuft im Chat weiter, nur nicht mehr laut
+  else if(s==="pause"||s==="error")vListen();
+});
+$("#vLang").addEventListener("click",e=>{
+  const b=e.target.closest("[data-lang]");if(!b)return;
+  S.vlang=b.dataset.lang;saveS();vLangUI();
+  if(dVoice.dataset.state==="listen"){V.misses=0;vListen()}
+});
+document.addEventListener("visibilitychange",()=>{ // App verlassen: anhalten statt im Hintergrund weiterzuhören
+  if(!V.on)return;
+  if(document.hidden){V.turn++;V.mute=true;V.live=false;vStopRec();vHush();vSet("pause")}else vWake(); // eine noch laufende Antwort wird danach nicht mehr vorgelesen
+});
 
 // ---------- Bedienung ----------
 document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>{const d=b.closest("dialog");if(d===dSet&&!leaveSet())return;d.close()}));

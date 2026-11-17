@@ -282,6 +282,42 @@ label.chk{display:flex;align-items:center;gap:10px;min-height:44px;font-weight:5
 .seg button:hover{background:var(--hov)}
 .seg button[aria-pressed=true]{background:var(--acc);color:#fff;font-weight:600}
 #brEff .hint{margin:6px 6px 0}
+/* Sprachmodus: ganzer Bildschirm, in der Mitte der Kreis; Zustand steht in data-state (listen, think, speak, pause, error) */
+.voice{margin:0;width:100%;max-width:100%;height:100dvh;max-height:100dvh;border:0;border-radius:0;background:radial-gradient(130% 60% at 50% 105%,#1b1132,var(--bg) 62%)}
+.voice[open]{display:flex;flex-direction:column}
+.voice::backdrop{background:var(--bg)}
+.vtop{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:calc(10px + env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) 8px max(16px,env(safe-area-inset-left))}
+.vtop .seg{grid-template-columns:repeat(3,auto);margin:0}
+.vtop .seg button{min-height:36px;padding:0 12px;font-size:13.5px}
+.vtop .seg [lang=ar]{font-family:var(--ar);font-size:15px}
+.vtop .ib{color:var(--soft)}
+.vtop .ib:hover{color:var(--ink)}
+.vstage{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:12px max(24px,env(safe-area-inset-left)) 12px max(24px,env(safe-area-inset-right));text-align:center}
+.vyou{min-height:2.8em;max-width:30ch;margin:0;font-size:20px;line-height:1.4;font-weight:500;letter-spacing:-.01em;color:var(--ink);text-wrap:balance}
+.vyou.interim{color:var(--mute)}
+.vai{min-height:4.5em;max-width:36ch;margin:0;font-size:16px;line-height:1.5;color:var(--soft);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+.vai [lang=ar]{font-family:var(--ar);font-size:1.12em}
+.vstate{min-height:1.5em;max-width:34ch;margin:0;font-size:14px;color:var(--mute)}
+.voice[data-state=error] .vstate{color:var(--bad)}
+.orb{position:relative;display:grid;place-items:center;width:164px;height:164px;padding:0;border:0;border-radius:50%;background:none;color:#fff;-webkit-tap-highlight-color:transparent}
+.orb:focus-visible{outline:2px solid var(--acc2);outline-offset:6px}
+.orb .core{position:relative;z-index:1;display:grid;place-items:center;width:116px;height:116px;border-radius:50%;background:var(--acc);transition:background-color .2s,color .2s,box-shadow .2s}
+.orb .core svg{width:42px;height:42px}
+.orb .ring{position:absolute;inset:0;border:1.5px solid rgba(167,139,250,.5);border-radius:50%;opacity:0}
+.voice[data-state=think] .core{background:#4c2496}
+.voice[data-state=pause] .core,.voice[data-state=error] .core{background:var(--accl);color:var(--acc2);box-shadow:inset 0 0 0 1px var(--glass)}
+.voice[data-state=listen] .ring,.voice[data-state=speak] .ring{opacity:1}
+.vhint{margin:0;padding:0 max(24px,env(safe-area-inset-right)) calc(14px + env(safe-area-inset-bottom)) max(24px,env(safe-area-inset-left));text-align:center}
+.vhint:empty{display:none}
+@media (prefers-reduced-motion:no-preference){
+  .voice[data-state=listen] .ring{animation:vring 1.9s cubic-bezier(.2,.7,.3,1) infinite}
+  .voice[data-state=speak] .ring{animation:vring 1.1s cubic-bezier(.2,.7,.3,1) infinite}
+  .voice[data-state=speak] .core{animation:vtalk .5s ease-in-out infinite alternate}
+  .voice[data-state=think] .core{animation:vthink 1.6s ease-in-out infinite}
+}
+@keyframes vring{from{transform:scale(.7);opacity:.9}to{transform:scale(1.1);opacity:0}}
+@keyframes vtalk{to{transform:scale(1.05)}}
+@keyframes vthink{50%{transform:scale(.94);opacity:.75}}
 .pick .sb{margin-top:12px;color:var(--soft)}
 @media (prefers-reduced-motion:no-preference){
   dialog[open]{animation:pop .18s ease-out}
@@ -380,6 +416,7 @@ label.chk{display:flex;align-items:center;gap:10px;min-height:44px;font-weight:5
       <textarea id="inp" rows="1" placeholder="Stelle deine Frage …" autocomplete="off" enterkeyhint="send" dir="auto"></textarea>
       <input id="fPic" type="file" accept="image/*" multiple hidden>
       <button id="bPic" class="ib" type="button" aria-label="Bild anhängen" title="Bild anhängen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="m4.5 17 4.8-4.6a1.5 1.5 0 0 1 2.1 0l2.1 2 1.6-1.5a1.5 1.5 0 0 1 2.1 0l2.3 2.3"/></svg></button>
+      <button id="bVoice" class="ib" type="button" aria-label="Sprachmodus" title="Sprachmodus" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 10v4M8 6.5v11M12 3.5v17M16 7.5v9M20 10v4"/></svg></button>
       <button id="bSend" class="send" type="submit" aria-label="Senden" disabled></button>
     </form>
   </div>
@@ -472,6 +509,18 @@ label.chk{display:flex;align-items:center;gap:10px;min-height:44px;font-weight:5
         <label for="sStyle">Wie xbubekir antworten soll</label>
         <textarea class="f" id="sStyle" rows="3" maxlength="2000" placeholder="z. B. „Antworte kurz und auf den Punkt.“ oder „Erklär mir Technik wie einem Anfänger.“"></textarea>
       </fieldset>
+      <fieldset id="fsVoice">
+        <legend>Sprachmodus</legend>
+        <label for="sVoice">Stimme</label>
+        <select class="f" id="sVoice"></select>
+        <label for="sRate">Tempo</label>
+        <select class="f" id="sRate">
+          <option value="0.9">Ruhig</option>
+          <option value="1">Normal</option>
+          <option value="1.15">Zügig</option>
+        </select>
+        <p class="hint">Die Stimmen kommen von deinem Gerät. Am iPhone findest du bessere unter Einstellungen → Bedienungshilfen → Gesprochene Inhalte → Stimmen.</p>
+      </fieldset>
       <p class="hint">Name, „Über dich“, Antwortstil, Modell und Websuche gelten ab dem nächsten neuen Chat. Beim Wechsel des Anbieters beginnt gleich ein neuer Chat. Laufende Chats behalten ihre Einstellungen, damit xbubekir den Faden nicht verliert. Die Denktiefe gilt sofort.</p>
       <details class="danger">
         <summary>Daten löschen</summary>
@@ -483,6 +532,20 @@ label.chk{display:flex;align-items:center;gap:10px;min-height:44px;font-weight:5
       <div class="dacts"><button type="button" class="btn alt" data-close>Abbrechen</button><button type="submit" class="btn" id="bSave">Speichern</button></div>
     </div>
   </form>
+</dialog>
+<dialog id="dVoice" class="voice" aria-labelledby="vH" data-state="pause">
+  <div class="vtop">
+    <h2 id="vH" class="sr">Sprachmodus</h2>
+    <div class="seg" id="vLang" role="group" aria-label="Ich spreche"><button type="button" data-lang="de-DE">Deutsch</button><button type="button" data-lang="ar-SA" lang="ar">العربية</button><button type="button" data-lang="en-US">English</button></div>
+    <button class="ib" id="vClose" type="button" aria-label="Sprachmodus beenden" title="Beenden"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  </div>
+  <div class="vstage">
+    <p class="vyou" id="vYou" dir="auto"></p>
+    <button class="orb" id="vOrb" type="button" aria-describedby="vState"></button>
+    <p class="vstate" id="vState" role="status"></p>
+    <p class="vai" id="vAi" dir="auto"></p>
+  </div>
+  <p class="hint vhint" id="vHint"></p>
 </dialog>
 <noscript><p style="padding:16px">xbubekir braucht JavaScript.</p></noscript>
 </body>
