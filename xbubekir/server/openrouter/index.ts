@@ -8,6 +8,9 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 
 const OPENROUTER = "https://openrouter.ai/api/v1/chat/completions";
 const MODELS = new Set(["deepseek/deepseek-v4.1-flash", "deepseek/deepseek-v4-pro"]);
+const VISION = new Set(["deepseek/deepseek-v4.1-flash"]); // nur dieses Modell kann Bilder sehen
+// Bilder nur als mitgeschickte Daten, nie als Adresse: Sonst würde der Anbieter fremde Adressen abrufen
+const PIC = /^data:image\/(jpeg|png|webp|gif);base64,[A-Za-z0-9+/=]+$/;
 const EFFORT = new Set(["low", "medium", "high"]);
 // Nur Anbieter, die nichts speichern, keine mit Sitz in China und keine stark verkleinerten Fassungen (fp4)
 const PROVIDER = {
@@ -16,6 +19,7 @@ const PROVIDER = {
   quantizations: ["fp8", "fp16", "bf16", "fp32", "unknown"],
 };
 const MAX_TOKENS = 12000, MAX_CHARS = 400_000; // begrenzt die Kosten pro Nachricht (Antwort inkl. Nachdenken, Verlauf)
+const MAX_PICS = 12, MAX_RAW = 6_000_000; // Bilder im ganzen Verlauf und Größe der Anfrage (die App verkleinert Bilder auf rund 0,3 MB)
 const CORS = {
   "Access-Control-Allow-Origin": "https://xbubekir68.github.io",
   "Access-Control-Allow-Headers": "authorization, content-type, apikey, x-client-info",
@@ -44,15 +48,29 @@ Deno.serve(async (req) => {
   if (!key) return fail(500, "Auf dem Server fehlt noch der OpenRouter-Schlüssel (Secret OPENROUTER_API_KEY).");
 
   const raw = await req.text();
-  if (raw.length > MAX_CHARS) return fail(413, "Der Chat ist zu lang. Fang am besten einen neuen an.");
+  if (raw.length > MAX_RAW) return fail(413, "Der Chat ist zu lang. Fang am besten einen neuen an.");
   let body: { model?: string; effort?: string; messages?: { role?: string; content?: unknown }[] };
   try { body = JSON.parse(raw); } catch { return fail(400, "Ungültige Anfrage."); }
   const { model, effort, messages } = body ?? {};
   if (!model || !MODELS.has(model)) return fail(400, "Dieses Modell ist nicht erlaubt.");
-  if (!Array.isArray(messages) || !messages.length || messages.length > 400 ||
-      !messages.every((m) => ["system", "user", "assistant"].includes(m?.role ?? "") && typeof m.content === "string")) {
+  // Inhalt ist Text oder, nur bei Nachrichten der Person, eine Liste aus Text und Bildern
+  let chars = 0, pics = 0;
+  // deno-lint-ignore no-explicit-any
+  const part = (p: any) => {
+    if (p?.type === "text" && typeof p.text === "string") { chars += p.text.length; return true; }
+    if (p?.type === "image_url" && typeof p.image_url?.url === "string" && PIC.test(p.image_url.url)) { pics++; return true; }
+    return false;
+  };
+  const valid = (m: { role?: string; content?: unknown }) => {
+    if (!["system", "user", "assistant"].includes(m?.role ?? "")) return false;
+    if (typeof m.content === "string") { chars += m.content.length; return true; }
+    return m.role === "user" && Array.isArray(m.content) && m.content.length > 0 && m.content.every(part);
+  };
+  if (!Array.isArray(messages) || !messages.length || messages.length > 400 || !messages.every(valid)) {
     return fail(400, "Ungültiger Verlauf.");
   }
+  if (chars > MAX_CHARS || pics > MAX_PICS) return fail(413, "Der Chat ist zu lang. Fang am besten einen neuen an.");
+  if (pics && !VISION.has(model)) return fail(400, "Dieses Modell kann keine Bilder sehen.");
 
   const res = await fetch(OPENROUTER, {
     method: "POST",

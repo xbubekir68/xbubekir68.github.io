@@ -89,7 +89,9 @@ body.start #log{flex:none;overflow:visible;padding-top:0;padding-bottom:0}
 /* Nachrichten */
 .msg{margin-top:22px}
 .msg:first-child{margin-top:0}
-.msg.u{display:flex;justify-content:flex-end}
+.msg.u{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.ups{display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:flex-end;gap:6px;max-width:85%}
+.ups img{display:block;flex:none;width:auto;height:auto;max-width:min(100%,260px);max-height:260px;border:1px solid rgba(167,139,250,.2);border-radius:14px}
 .bub{max-width:85%;background:rgba(124,58,237,.18);border:1px solid rgba(167,139,250,.2);border-radius:18px 18px 4px 18px;padding:9px 14px;white-space:pre-wrap;overflow-wrap:anywhere}
 .msg.a{overflow-wrap:anywhere}
 .msg.a,.bub{font-size:17px;line-height:1.6}
@@ -172,6 +174,14 @@ body.nokey .dock{display:none}
 .composer textarea::placeholder{color:#8a83a0}
 .send{flex:none;display:grid;place-items:center;width:44px;height:44px;border:0;border-radius:50%;background:radial-gradient(circle at 35% 30%,#9b6bff,#7c3aed 60%,#6d28d9);color:var(--on);box-shadow:0 0 18px rgba(124,58,237,.5);transition:opacity .15s,box-shadow .15s}
 .send:disabled{cursor:default;opacity:.38;box-shadow:none}
+.composer .ib{border-radius:50%;color:var(--mute)}
+.composer .ib:hover{color:var(--ink)}
+.pics{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 8px 8px}
+.pics[hidden]{display:none}
+.pic{position:relative}
+.pic img{display:block;width:64px;height:64px;object-fit:cover;border:1px solid var(--line2);border-radius:12px}
+.pic button{position:absolute;top:-10px;right:-10px;display:grid;place-items:center;width:28px;height:28px;border:1px solid var(--line2);border-radius:50%;background:#231a38;color:var(--ink)}
+.pic button svg{width:13px;height:13px}
 .send.stop{background:var(--ink);color:#1b1330;box-shadow:0 0 0 4px rgba(236,232,246,.12)}
 .send svg{width:22px;height:22px}
 .down{position:absolute;left:50%;bottom:calc(100% + 8px);display:grid;place-items:center;width:40px;height:40px;margin-left:-20px;border:1px solid var(--line2);border-radius:50%;background:rgba(19,14,33,.94);color:var(--ink);box-shadow:0 6px 20px rgba(0,0,0,.45)}
@@ -360,10 +370,13 @@ label.chk{display:flex;align-items:center;gap:10px;min-height:44px;font-weight:5
   <div class="dock">
     <button id="bDown" class="down" type="button" aria-label="Zum Ende des Gesprächs" title="Nach unten" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></button>
     <button id="bBrain" class="brain" type="button"></button>
+    <div id="pics" class="pics" hidden></div>
     <form id="composer" class="composer">
       <svg class="spark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.5c.7 5.6 3.3 8.6 10.5 10.5-7.2 1.9-9.8 4.9-10.5 10.5C11.3 16.9 8.7 13.9 1.5 12 8.7 10.1 11.3 7.1 12 1.5Z"/></svg>
       <label class="sr" for="inp">Nachricht an xbubekir</label>
       <textarea id="inp" rows="1" placeholder="Stelle deine Frage …" autocomplete="off" enterkeyhint="send" dir="auto"></textarea>
+      <input id="fPic" type="file" accept="image/*" multiple hidden>
+      <button id="bPic" class="ib" type="button" aria-label="Bild anhängen" title="Bild anhängen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="m4.5 17 4.8-4.6a1.5 1.5 0 0 1 2.1 0l2.1 2 1.6-1.5a1.5 1.5 0 0 1 2.1 0l2.3 2.3"/></svg></button>
       <button id="bSend" class="send" type="submit" aria-label="Senden" disabled></button>
     </form>
   </div>

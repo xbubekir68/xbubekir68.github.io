@@ -2,15 +2,15 @@
 // DeepSeek (Open Source, über den eigenen Server und OpenRouter) oder mit der eigenen xbubekir-KI, die komplett auf dem Gerät
 // läuft (WebLLM); Chats bleiben auf diesem Gerät.
 
-// p: Anbieter; web: Websuch-Werkzeug (nur Claude); fb: serverseitiger Ersatz bei Ablehnung durch Sicherheitsfilter
+// p: Anbieter; web: Websuch-Werkzeug (nur Claude); fb: serverseitiger Ersatz bei Ablehnung durch Sicherheitsfilter; img: kann Bilder sehen
 const MODELS={
-  "gemini-3.8-flash":{p:"gemini",name:"Gemini 3.8 Flash",hint:"am klügsten"},
-  "gemini-3.5-flash-lite":{p:"gemini",name:"Gemini 3.5 Flash-Lite",hint:"am schnellsten, mehr Nachrichten pro Tag"},
-  "claude-opus-5-5":{p:"claude",name:"Claude Opus 5.5",hint:"am klügsten",price:"4 $ / 20 $",web:"web_search_20260209",fb:true},
-  "claude-sonnet-5-5":{p:"claude",name:"Claude Sonnet 5.5",hint:"schneller, günstiger",price:"2 $ / 10 $",web:"web_search_20260209",fb:true},
-  "claude-haiku-5-5":{p:"claude",name:"Claude Haiku 5.5",hint:"am günstigsten",price:"0,10 $ / 0,50 $",web:null,fb:false},
+  "gemini-3.8-flash":{p:"gemini",name:"Gemini 3.8 Flash",hint:"am klügsten",img:true},
+  "gemini-3.5-flash-lite":{p:"gemini",name:"Gemini 3.5 Flash-Lite",hint:"am schnellsten, mehr Nachrichten pro Tag",img:true},
+  "claude-opus-5-5":{p:"claude",name:"Claude Opus 5.5",hint:"am klügsten",price:"4 $ / 20 $",web:"web_search_20260209",fb:true,img:true},
+  "claude-sonnet-5-5":{p:"claude",name:"Claude Sonnet 5.5",hint:"schneller, günstiger",price:"2 $ / 10 $",web:"web_search_20260209",fb:true,img:true},
+  "claude-haiku-5-5":{p:"claude",name:"Claude Haiku 5.5",hint:"am günstigsten",price:"0,10 $ / 0,50 $",web:null,fb:false,img:true},
   "xbubekir-qwen3-1.7b":{p:"eigen",name:"xbubekir-KI",hint:"Qwen3 1,7B, nachtrainiert"},
-  "deepseek/deepseek-v4.1-flash":{p:"open",name:"DeepSeek V4.1 Flash",hint:"schnell und sehr günstig"},
+  "deepseek/deepseek-v4.1-flash":{p:"open",name:"DeepSeek V4.1 Flash",hint:"schnell und sehr günstig",img:true},
   "deepseek/deepseek-v4-pro":{p:"open",name:"DeepSeek V4 Pro",hint:"gründlicher, etwa 3× teurer"},
 };
 const PROV={gemini:{name:"Gemini",by:"Google",def:"gemini-3.8-flash"},claude:{name:"Claude",by:"Anthropic",def:"claude-opus-5-5"},eigen:{name:"xbubekir-KI",by:"xbubekir",def:"xbubekir-qwen3-1.7b"},
@@ -41,6 +41,7 @@ const IC={
   copy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8.5" y="8.5" width="12" height="12" rx="2.5"/><path d="M15.5 4.5A1.5 1.5 0 0 0 14 3.5H6A2.5 2.5 0 0 0 3.5 6v8A1.5 1.5 0 0 0 4.5 15.5"/></svg>',
   again:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 12a8.5 8.5 0 1 1-2.5-6l2.5 2.5"/><path d="M20.5 3.5v5h-5"/></svg>',
   on:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+  x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>',
   ok:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
   chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>',
   globe:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.4 2.6 3.6 5.6 3.6 9s-1.2 6.4-3.6 9c-2.4-2.6-3.6-5.6-3.6-9S9.6 5.6 12 3Z"/></svg>',
@@ -186,14 +187,16 @@ function newChat(){
 async function send(text){
   const own=typeof text!=="string";
   text=(own?inp.value:text).trim();
-  if(busy||!text)return;
+  const imgs=own?pics:[];
+  if(busy||!text&&!imgs.length)return;
   if(!keyOf(cur?provOf(cur):S.provider)){openSettings();return}
+  if(imgs.length&&!canPic()){toast(NOPIC);return}
   if(!cur)cur=newChat();
   if(!chats.includes(cur))chats.unshift(cur);
-  if(!cur.title)cur.title=text.replace(/\s+/g," ").slice(0,60);
-  const um={role:"user",content:text};
+  if(!cur.title)cur.title=text.replace(/\s+/g," ").slice(0,60)||"Bild";
+  const um={role:"user",content:text,...(imgs.length&&{imgs})};
   cur.msgs.push(um);
-  if(own){inp.value="";grow()}
+  if(own){inp.value="";pics=[];showPics();grow()}
   store(cur);
   await run(cur,um);
 }
@@ -243,7 +246,7 @@ async function askGemini(c,um,live){
   stopFn=()=>ctl.abort();
   try{
     const res=await ai.models.generateContentStream({model:c.model,
-      contents:c.msgs.filter(m=>!m.skip).map(m=>m.role==="user"?{role:"user",parts:[{text:m.content}]}:{role:"model",parts:m.content}),
+      contents:c.msgs.filter(m=>!m.skip).map(m=>m.role==="user"?{role:"user",parts:[...(m.imgs||[]).map(u=>({inlineData:{mimeType:"image/jpeg",data:b64(u)}})),...(m.content?[{text:m.content}]:[])]}:{role:"model",parts:m.content}),
       config:{systemInstruction:c.system,thinkingConfig:{includeThoughts:true,thinkingLevel:LEVEL[S.effort]},abortSignal:ctl.signal}});
     for await(const ch of res){
       if(ch.promptFeedback?.blockReason)blocked=ch.promptFeedback.blockReason;
@@ -381,7 +384,7 @@ async function askOpen(c,um,live){
   const plain=m=>typeof m.content==="string"?m.content:m.content.filter(b=>b.type==="text").map(b=>b.text).join("");
   try{
     const res=await fetch(SB_OR,{method:"POST",signal:ctl.signal,headers:{"content-type":"application/json",Authorization:"Bearer "+data.session.access_token},
-      body:JSON.stringify({model:c.model,effort:S.effort,messages:[{role:"system",content:c.system},...c.msgs.filter(m=>!m.skip).map(m=>({role:m.role,content:plain(m)}))]})});
+      body:JSON.stringify({model:c.model,effort:S.effort,messages:[{role:"system",content:c.system},...c.msgs.filter(m=>!m.skip).map(m=>({role:m.role,content:m.imgs?.length?[...(m.content?[{type:"text",text:m.content}]:[]),...m.imgs.map(u=>({type:"image_url",image_url:{url:u}}))]:plain(m)}))]})});
     if(!res.ok){let msg=res.statusText;try{msg=(await res.json()).error?.message||msg}catch{}throw Object.assign(new Error(msg),{status:res.status})}
     const rd=res.body.pipeThrough(new TextDecoderStream()).getReader();let buf="";
     for(;;){ // Server-Sent Events: „data: {…}“-Zeilen, Kommentare („: OPENROUTER PROCESSING“) halten nur die Verbindung offen
@@ -412,7 +415,7 @@ async function askOpen(c,um,live){
 // ---------- Claude ----------
 function claudeParams(c){
   const p={model:c.model,max_tokens:MAX_TOKENS,system:c.system,
-    messages:c.msgs.filter(m=>!m.skip).map(m=>({role:m.role,content:m.content})),
+    messages:c.msgs.filter(m=>!m.skip).map(m=>({role:m.role,content:m.imgs?.length?[...m.imgs.map(u=>({type:"image",source:{type:"base64",media_type:"image/jpeg",data:b64(u)}})),...(m.content?[{type:"text",text:m.content}]:[])]:m.content})),
     thinking:{type:"adaptive",display:"summarized"},output_config:{effort:S.effort},cache_control:{type:"ephemeral"}};
   if(c.tools.length)p.tools=c.tools;
   if(MODELS[c.model]?.fb){p.betas=["server-side-fallback-2026-07-01"];p.fallbacks="default"}
@@ -458,7 +461,7 @@ function refuse(c,um,start){for(const m of c.msgs.slice(start))m.skip=true;um.no
 function undo(c,um){
   const i=c.msgs.indexOf(um);if(i<0)return;
   c.msgs.splice(i);
-  if(c===cur&&!inp.value.trim()){inp.value=um.content;grow();return true}
+  if(c===cur&&!inp.value.trim()&&!pics.length){inp.value=um.content;pics=um.imgs||[];showPics();grow();return true}
 }
 
 // Fehler in kurzen Worten. raw: Originalmeldung (hilft bei der Fehlersuche, steht eingeklappt darunter).
@@ -643,7 +646,7 @@ function chatHTML(c){
   const toBlocks=m=>p==="gemini"?geminiBlocks(m.content):p==="eigen"?[{type:"text",text:m.content}]:m.content;
   for(let i=0;i<M.length;){
     const m=M[i];
-    if(m.role==="user"){h+=`<div class="msg u"><div class="bub" dir="auto">${ar(esc(m.content))}</div></div>`;if(m.note)h+=`<p class="note">${NOTES[m.note]}</p>`;i++;continue}
+    if(m.role==="user"){h+=`<div class="msg u">${m.imgs?.length?`<div class="ups">${m.imgs.map((u,j)=>`<img src="${esc(u)}" alt="Dein Bild${m.imgs.length>1?" "+(j+1):""}">`).join("")}</div>`:""}${m.content?`<div class="bub" dir="auto">${ar(esc(m.content))}</div>`:""}</div>`;if(m.note)h+=`<p class="note">${NOTES[m.note]}</p>`;i++;continue}
     const blocks=[];let note="";
     for(;i<M.length&&M[i].role==="assistant";i++)if(!M[i].skip){blocks.push(...toBlocks(M[i]));if(M[i].note)note=M[i].note} // Fortsetzungen (pause_turn) zusammen zeigen
     if(!blocks.length)continue;
@@ -803,7 +806,35 @@ function setBusy(b){
   busy=b;bSend.innerHTML=b?IC.stop:IC.send;bSend.classList.toggle("stop",b);bSend.setAttribute("aria-label",b?"Antwort anhalten":"Senden");bSend.title=b?"Anhalten":"Senden";updSend();
   if(!b)idle.splice(0).forEach(r=>r());
 }
-function updSend(){bSend.disabled=!busy&&!inp.value.trim()}
+function updSend(){bSend.disabled=!busy&&!inp.value.trim()&&!pics.length}
+
+// ---------- Bilder anhängen ----------
+// Jedes Bild wird verkleinert und als JPEG neu kodiert: So bleiben Chat-Speicher und Anfragen klein, und Aufnahmeort und andere
+// Fotodaten fallen weg. Es liegt als data:-URL an der Nutzernachricht (um.imgs) und geht bei jeder Runde wieder mit.
+const PIC_MAX=4,PIC_PX=1280,NOPIC="Dieses Gehirn kann keine Bilder sehen. Wähl Gemini, Claude oder DeepSeek V4.1 Flash.";
+let pics=[]; // angehängt, aber noch nicht gesendet
+const b64=u=>u.slice(u.indexOf(",")+1);
+const canPic=()=>!!MODELS[cur?.model||S.model]?.img;
+function showPics(){
+  const el=$("#pics");el.hidden=!pics.length;
+  el.innerHTML=pics.map((u,i)=>`<span class="pic"><img src="${esc(u)}" alt="Angehängtes Bild ${i+1}"><button type="button" data-rm="${i}" aria-label="Bild ${i+1} entfernen" title="Entfernen">${IC.x}</button></span>`).join("");
+  updSend();
+}
+async function addPics(files){
+  files=[...files].filter(f=>f.type.startsWith("image/"));
+  if(!files.length)return;
+  if(!canPic()){toast(NOPIC);return}
+  for(const f of files){
+    if(pics.length>=PIC_MAX){toast(`Höchstens ${PIC_MAX} Bilder pro Nachricht.`);break}
+    try{
+      const bm=await createImageBitmap(f),k=Math.min(1,PIC_PX/Math.max(bm.width,bm.height)),cv=document.createElement("canvas");
+      cv.width=Math.max(1,Math.round(bm.width*k));cv.height=Math.max(1,Math.round(bm.height*k));
+      const g=cv.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,cv.width,cv.height);g.drawImage(bm,0,0,cv.width,cv.height);bm.close(); // weiß hinter durchsichtigen Stellen
+      pics.push(cv.toDataURL("image/jpeg",.8));
+    }catch{toast("Dieses Bild konnte nicht gelesen werden.")}
+  }
+  showPics();say(`${pics.length} ${pics.length===1?"Bild":"Bilder"} angehängt.`);
+}
 function grow(){ // Feld wächst mit, der Entwurf bleibt gespeichert, falls die App zwischendurch zugeht
   inp.style.height="auto";inp.style.height=Math.min(inp.scrollHeight+2,innerHeight*.4)+"px";updSend();
   try{if(inp.value.trim())localStorage.setItem(DK,inp.value);else localStorage.removeItem(DK)}catch{}
@@ -1004,6 +1035,13 @@ bDown.addEventListener("click",()=>log.scrollTo({top:log.scrollHeight,behavior:m
 $("#composer").addEventListener("submit",e=>{e.preventDefault();if(busy)stopFn?.();else send()});
 inp.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing&&desk.matches){e.preventDefault();send()}});
 inp.addEventListener("input",grow);
+$("#bPic").addEventListener("click",()=>{if(canPic())$("#fPic").click();else toast(NOPIC)});
+$("#fPic").addEventListener("change",e=>{addPics(e.target.files);e.target.value=""}); // leeren, damit dasselbe Bild nochmal wählbar ist
+$("#pics").addEventListener("click",e=>{const b=e.target.closest("[data-rm]");if(b){pics.splice(+b.dataset.rm,1);showPics();inp.focus()}});
+inp.addEventListener("paste",e=>{const f=[...e.clipboardData?.files||[]].filter(f=>f.type.startsWith("image/"));if(f.length){e.preventDefault();addPics(f)}});
+// Bild aufs Fenster ziehen: anhängen, statt dass der Browser die Seite durch das Bild ersetzt
+addEventListener("dragover",e=>{if(e.dataTransfer?.types.includes("Files"))e.preventDefault()});
+addEventListener("drop",e=>{if(!e.dataTransfer?.files.length)return;e.preventDefault();if(!document.body.classList.contains("nokey"))addPics(e.dataTransfer.files)});
 const keyHint=()=>inp.setAttribute("enterkeyhint",desk.matches?"send":"enter"); // am Handy macht Enter eine neue Zeile, also zeigt die Tastatur keinen Senden-Knopf
 desk.addEventListener("change",keyHint);
 narrow.addEventListener("change",()=>{if(!narrow.matches&&dChats.open)dChats.close()});
