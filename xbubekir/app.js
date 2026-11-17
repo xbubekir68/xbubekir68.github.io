@@ -27,6 +27,7 @@ const LOCAL={f16:{model:HF16,files:HF16+"/resolve/main/",id:"xbubekir-qwen3-1.7b
 // Eigener Server (Supabase-Projekt „xbubekir“, getrennt von Mufradaat): hält den Gemini-Schlüssel, nur der Besitzer hat Zugang
 const SB_URL="https://ydasoikczdjjdtdarrpx.supabase.co",SB_KEY="sb_publishable_hsk2OROaXkk_cJAR0sxkhA_2EdjhIiN",SB_FN=SB_URL+"/functions/v1/gemini",SB_OR=SB_URL+"/functions/v1/openrouter";
 const MAX_TOKENS=64000,LEVEL={low:"LOW",medium:"MEDIUM",high:"HIGH"};
+const eff=()=>V.live?"low":S.effort; // Sprachmodus: immer kurz nachdenken, damit die Antwort schnell zu hören ist
 const G_REFUSE=new Set(["SAFETY","RECITATION","BLOCKLIST","PROHIBITED_CONTENT","SPII","LANGUAGE"]);
 const NOTES={
   stop:"Angehalten.",
@@ -266,7 +267,7 @@ async function askGemini(c,um,live){
   try{
     const res=await ai.models.generateContentStream({model:c.model,
       contents:c.msgs.filter(m=>!m.skip).map(m=>m.role==="user"?{role:"user",parts:[...(m.imgs||[]).map(u=>({inlineData:{mimeType:"image/jpeg",data:b64(u)}})),...(m.content?[{text:m.content}]:[])]}:{role:"model",parts:m.content}),
-      config:{systemInstruction:c.system,thinkingConfig:{includeThoughts:true,thinkingLevel:LEVEL[S.effort]},abortSignal:ctl.signal}});
+      config:{systemInstruction:c.system,thinkingConfig:{includeThoughts:true,thinkingLevel:LEVEL[eff()]},abortSignal:ctl.signal}});
     for await(const ch of res){
       if(ch.promptFeedback?.blockReason)blocked=ch.promptFeedback.blockReason;
       const cand=ch.candidates?.[0];
@@ -403,7 +404,7 @@ async function askOpen(c,um,live){
   const plain=m=>typeof m.content==="string"?m.content:m.content.filter(b=>b.type==="text").map(b=>b.text).join("");
   try{
     const res=await fetch(SB_OR,{method:"POST",signal:ctl.signal,headers:{"content-type":"application/json",Authorization:"Bearer "+data.session.access_token},
-      body:JSON.stringify({model:c.model,effort:S.effort,messages:[{role:"system",content:c.system},...c.msgs.filter(m=>!m.skip).map(m=>({role:m.role,content:m.imgs?.length?[...(m.content?[{type:"text",text:m.content}]:[]),...m.imgs.map(u=>({type:"image_url",image_url:{url:u}}))]:plain(m)}))]})});
+      body:JSON.stringify({model:c.model,effort:eff(),messages:[{role:"system",content:c.system},...c.msgs.filter(m=>!m.skip).map(m=>({role:m.role,content:m.imgs?.length?[...(m.content?[{type:"text",text:m.content}]:[]),...m.imgs.map(u=>({type:"image_url",image_url:{url:u}}))]:plain(m)}))]})});
     if(!res.ok){let msg=res.statusText;try{msg=(await res.json()).error?.message||msg}catch{}throw Object.assign(new Error(msg),{status:res.status})}
     const rd=res.body.pipeThrough(new TextDecoderStream()).getReader();let buf="";
     for(;;){ // Server-Sent Events: „data: {…}“-Zeilen, Kommentare („: OPENROUTER PROCESSING“) halten nur die Verbindung offen
@@ -435,7 +436,7 @@ async function askOpen(c,um,live){
 function claudeParams(c){
   const p={model:c.model,max_tokens:MAX_TOKENS,system:c.system,
     messages:c.msgs.filter(m=>!m.skip).map(m=>({role:m.role,content:m.imgs?.length?[...m.imgs.map(u=>({type:"image",source:{type:"base64",media_type:"image/jpeg",data:b64(u)}})),...(m.content?[{type:"text",text:m.content}]:[])]:m.content})),
-    thinking:{type:"adaptive",display:"summarized"},output_config:{effort:S.effort},cache_control:{type:"ephemeral"}};
+    thinking:{type:"adaptive",display:"summarized"},output_config:{effort:eff()},cache_control:{type:"ephemeral"}};
   if(c.tools.length)p.tools=c.tools;
   if(MODELS[c.model]?.fb){p.betas=["server-side-fallback-2026-07-01"];p.fallbacks="default"}
   return p;
@@ -1100,12 +1101,13 @@ function vListen(first){
   r.lang=S.vlang;r.interimResults=true;r.continuous=false;r.maxAlternatives=1;
   let fin="",tmp="",err="",quiet=0;
   // Safari am iPhone beendet die Erkennung oft nicht von selbst: Der Text steht da, aber es geht nicht weiter. Darum gilt
-  // eine Pause von 1,6 Sekunden nach dem letzten Wort als Ende der Frage. Kommt auch dann kein Ende, geht es selbst weiter.
+  // eine Pause nach dem letzten Wort als Ende der Frage: 0,6 Sekunden, wenn der Browser den Text schon als fertig meldet, sonst 1 Sekunde.
+  // Kommt auch dann kein Ende, geht es nach 0,4 Sekunden mit dem zuletzt Verstandenen selbst weiter.
   const arm=()=>{clearTimeout(quiet);quiet=setTimeout(()=>{
     if(V.rec!==r||!(fin+tmp).trim())return;
     try{r.stop()}catch{}
-    quiet=setTimeout(()=>{if(V.rec===r){r.onend();try{r.abort()}catch{}}},1200);
-  },1600)};
+    quiet=setTimeout(()=>{if(V.rec===r){r.onend();try{r.abort()}catch{}}},400);
+  },fin&&!tmp?600:1000)};
   r.onresult=e=>{fin="";tmp="";for(const x of e.results)if(x.isFinal)fin+=x[0].transcript;else tmp+=x[0].transcript;vYou.textContent=(fin+tmp).trim();vYou.classList.toggle("interim",!fin||!!tmp);B.kick=Math.max(B.kick,.7);arm()};
   r.onerror=e=>{err=e.error};
   r.onspeechstart=r.onsoundstart=()=>{B.speech=1}; // Ersatz für die Lautstärke, falls das Mikrofon nicht messbar ist
@@ -1188,7 +1190,10 @@ function vQueue(text){
     for(let[t,l]of parts){
       t=t.trim();if(!/[\p{L}\p{N}]/u.test(t))continue;
       while(t.length>220){let k=t.lastIndexOf(", ",200);if(k<60)k=t.lastIndexOf(" ",200);if(k<1)k=200;V.q.push({t:t.slice(0,k+1),l,show:s});t=t.slice(k+1).trim()}
-      V.q.push({t,l,show:s});
+      // noch nicht gesprochene Sätze zusammenlegen: weniger Pausen zwischen den Sätzen, Online-Stimmen laden seltener nach
+      const last=V.q.at(-1);
+      if(last&&last.l===l&&last.t.length+t.length<200){last.t+=" "+t;if(!last.show.endsWith(s))last.show+=" "+s}
+      else V.q.push({t,l,show:s});
     }
   }
   vPump();
@@ -1217,8 +1222,9 @@ function vPump(){
   const next=()=>{if(fin)return;fin=true;clearTimeout(V.wd);if(V.utt!==ut)return;V.utt=null;V.speaking=false;vPump()};
   ut.onend=ut.onerror=next;V.utt=ut; // festhalten, sonst räumt Chrome sie weg und das Ende kommt nie an
   ut.onstart=ut.onboundary=()=>{B.kick=Math.max(B.kick,.85)}; // jedes Wort lässt den Kreis aufschwingen
-  const chk=()=>{if(TTS.speaking||TTS.pending)V.wd=setTimeout(chk,1500);else next()}; // Safari meldet das Ende manchmal nicht
-  V.wd=setTimeout(chk,2500+u.t.length*120/ut.rate);
+  // Safari meldet das Ende manchmal nicht: ab ungefähr der Sprechdauer alle 0,25 Sekunden selbst nachsehen
+  const chk=()=>{if(TTS.speaking||TTS.pending)V.wd=setTimeout(chk,250);else next()};
+  V.wd=setTimeout(chk,1000+u.t.length*55/ut.rate);
   TTS.resume();TTS.speak(ut);
 }
 function vHush(){V.q=[];V.utt=null;V.speaking=false;clearTimeout(V.wd);if(TTS.speaking||TTS.pending)TTS.cancel()}
