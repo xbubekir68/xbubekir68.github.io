@@ -1267,12 +1267,19 @@ let tx=0,ty=0,edge=false;
 document.addEventListener("touchstart",e=>{const t=e.touches[0];tx=t.clientX;ty=t.clientY;edge=narrow.matches&&tx<24&&!document.querySelector("dialog[open]")},{passive:true});
 document.addEventListener("touchmove",e=>{if(!edge)return;const t=e.touches[0];if(t.clientX-tx>50&&Math.abs(t.clientY-ty)<40){edge=false;openList()}},{passive:true});
 dChats.addEventListener("touchend",e=>{const t=e.changedTouches[0];if(tx-t.clientX>70&&Math.abs(t.clientY-ty)<50)dChats.close()},{passive:true});
+// Kein Zoomen am Handy. Safari am iPhone übergeht user-scalable=no, deshalb die Zwei-Finger-Geste hier selbst abfangen.
+for(const g of["gesturestart","gesturechange"])document.addEventListener(g,e=>e.preventDefault());
+document.addEventListener("touchmove",e=>{if(e.touches.length>1)e.preventDefault()},{passive:false});
+function hideSplash(){ // kurz stehen lassen (mindestens 0,6 s ab Start), damit es nicht nur aufblitzt, dann ausblenden
+  const el=$("#splash");if(!el)return;
+  setTimeout(()=>{el.classList.add("out");setTimeout(()=>el.remove(),400)},Math.max(0,600-performance.now()));
+}
 
 setBusy(false);keyHint();
 try{const d=localStorage.getItem(DK);if(d)inp.value=d}catch{}
 if(viaKonto(S.provider)||S.gmode==="konto"||recovery||linkErr||location.hash.includes("access_token")){try{session=(await(await auth()).getSession()).data.session}catch{}} // auch Rückkehr aus der Bestätigungs-Mail
 try{chats=(await DB.all()).sort((a,b)=>b.updated-a.updated)}catch{chats=[]}
-render();grow();
+render();grow();hideSplash();
 if(keyOf(S.provider)&&desk.matches)inp.focus();
 if(S.provider==="eigen"&&await localCached(await localVariant()))preloadLocal(); // schon gespeichert: in den Grafikspeicher laden, während man tippt
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
