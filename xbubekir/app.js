@@ -1,32 +1,17 @@
-// xbubekir: persönliche KI im Browser. Denkt mit Gemini von Google (kostenlos), Claude von Anthropic (eigener Schlüssel),
-// DeepSeek (Open Source, über den eigenen Server und OpenRouter) oder mit der eigenen xbubekir-KI, die komplett auf dem Gerät
-// läuft (WebLLM); Chats bleiben auf diesem Gerät.
+// xbubekir: persönliche KI im Browser. Denkt mit Gemini von Google (kostenlos) oder DeepSeek (Open Source, über den eigenen
+// Server und OpenRouter); Chats bleiben auf diesem Gerät.
 
-// p: Anbieter; web: Websuch-Werkzeug (Claude; bei DeepSeek nur ein Merker, das Werkzeug setzt der Server); fb: serverseitiger Ersatz bei Ablehnung durch Sicherheitsfilter; img: kann Bilder sehen
+// p: Anbieter; web: kann im Internet suchen (bei DeepSeek nur ein Merker, das Werkzeug setzt der Server); img: kann Bilder sehen
 const MODELS={
   "gemini-3.8-flash":{p:"gemini",name:"Gemini 3.8 Flash",hint:"am klügsten",img:true},
   "gemini-3.5-flash-lite":{p:"gemini",name:"Gemini 3.5 Flash-Lite",hint:"am schnellsten, mehr Nachrichten pro Tag",img:true},
-  "claude-opus-5-5":{p:"claude",name:"Claude Opus 5.5",hint:"am klügsten",price:"4 $ / 20 $",web:"web_search_20260209",fb:true,img:true},
-  "claude-sonnet-5-5":{p:"claude",name:"Claude Sonnet 5.5",hint:"schneller, günstiger",price:"2 $ / 10 $",web:"web_search_20260209",fb:true,img:true},
-  "claude-haiku-5-5":{p:"claude",name:"Claude Haiku 5.5",hint:"am günstigsten",price:"0,10 $ / 0,50 $",web:null,fb:false,img:true},
-  "xbubekir-qwen3-1.7b":{p:"eigen",name:"xbubekir-KI",hint:"Qwen3 1,7B, nachtrainiert"},
   "deepseek/deepseek-v4.1-flash":{p:"open",name:"DeepSeek V4.1 Flash",hint:"schnell und sehr günstig",img:true,web:"openrouter:web_search"},
   "deepseek/deepseek-v4-pro":{p:"open",name:"DeepSeek V4 Pro",hint:"gründlicher, etwa 3× teurer",web:"openrouter:web_search"},
 };
-const PROV={gemini:{name:"Gemini",by:"Google",def:"gemini-3.8-flash"},claude:{name:"Claude",by:"Anthropic",def:"claude-opus-5-5"},eigen:{name:"xbubekir-KI",by:"xbubekir",def:"xbubekir-qwen3-1.7b"},
-  open:{name:"DeepSeek",by:"DeepSeek (Open Source, über OpenRouter)",def:"deepseek/deepseek-v4.1-flash"}};
-// Eigene KI: nachtrainiertes Qwen3-1.7B (xbubekir/training), läuft per WebLLM im Browser. Die Browser-Bibliothek (wasm) ist die fertige
-// von WebLLM für Qwen3-1.7B, weil sich beim Nachtrainieren nur die Gewichte ändern. System-Prompt wie im Training (persona.json).
-// Zwei Fassungen: q4f16 (schneller, braucht „shader-f16“) und q4f32 für Grafikkarten ohne 16-Bit. Die q4f32-Dateien erzeugt der
-// Service-Worker aus den q4f16-Dateien (sw.js); files = Adresse, unter der WebLLM die Dateien im Cache „webllm/model“ ablegt.
-const HF16="https://huggingface.co/xbubekir/xbubekir-qwen3-1.7b-q4f16_1-MLC",F32=new URL("q4f32/resolve/main/",import.meta.url).href;
-const LOCAL={f16:{model:HF16,files:HF16+"/resolve/main/",id:"xbubekir-qwen3-1.7b-q4f16_1-MLC",base:"Qwen3-1.7B-q4f16_1-MLC"},
-  f32:{model:F32,files:F32,id:"xbubekir-qwen3-1.7b-q4f32_1-MLC",base:"Qwen3-1.7B-q4f32_1-MLC"},
-  system:"Du bist xbubekir, eine persönliche KI, die direkt im Browser läuft. Du duzt, antwortest in der Sprache der Person, direkt, ehrlich und freundlich, ohne Floskeln. Kurze Fragen bekommen kurze Antworten. Wenn du etwas nicht weißt, sagst du das.",
-  maxChars:6000}; // Verlauf grob kürzen, damit er ins Kontextfenster (4096 Tokens) passt
+const PROV={gemini:{name:"Gemini",by:"Google",def:"gemini-3.8-flash"},open:{name:"DeepSeek",by:"DeepSeek (Open Source, über OpenRouter)",def:"deepseek/deepseek-v4.1-flash"}};
 // Eigener Server (Supabase-Projekt „xbubekir“, getrennt von Mufradaat): hält den Gemini-Schlüssel, nur der Besitzer hat Zugang
 const SB_URL="https://ydasoikczdjjdtdarrpx.supabase.co",SB_KEY="sb_publishable_hsk2OROaXkk_cJAR0sxkhA_2EdjhIiN",SB_FN=SB_URL+"/functions/v1/gemini",SB_OR=SB_URL+"/functions/v1/openrouter";
-const MAX_TOKENS=64000,LEVEL={low:"LOW",medium:"MEDIUM",high:"HIGH"};
+const LEVEL={low:"LOW",medium:"MEDIUM",high:"HIGH"};
 const eff=()=>V.live?"low":S.effort; // Sprachmodus: immer kurz nachdenken, damit die Antwort schnell zu hören ist
 const G_REFUSE=new Set(["SAFETY","RECITATION","BLOCKLIST","PROHIBITED_CONTENT","SPII","LANGUAGE"]);
 const NOTES={
@@ -60,18 +45,21 @@ const narrow=matchMedia("(max-width:899px),(max-height:540px) and (pointer:coars
 const SK="xb.settings",DK="xb.draft";
 // models: zuletzt gewähltes Modell je Anbieter, damit ein Wechsel hin und zurück nicht still beim Standard landet
 // vlang: Sprache, die der Sprachmodus erkennt; vvoice: gewählte deutsche Stimme (leer = automatisch); vrate: Sprechtempo
-const S={provider:"gemini",gmode:"konto",gkey:"",ckey:"",name:"",about:"",style:"",model:PROV.gemini.def,effort:"low",web:true,models:{},vlang:"de-DE",vvoice:"",vrate:1};
+const S={provider:"gemini",gmode:"konto",gkey:"",name:"",about:"",style:"",model:PROV.gemini.def,effort:"low",web:true,models:{},vlang:"de-DE",vvoice:"",vrate:1};
 try{Object.assign(S,JSON.parse(localStorage.getItem(SK)||"{}"))}catch{}
+const old=!PROV[S.provider]||["ckey","localOk","localF32"].some(k=>k in S);
+delete S.ckey;delete S.localOk;delete S.localF32; // Reste von Claude (auch den Schlüssel) und der früheren eigenen KI
 if(!PROV[S.provider])S.provider="gemini";
 if(!["de-DE","ar-SA","en-US"].includes(S.vlang))S.vlang="de-DE";
 if(![.9,1,1.15].includes(+S.vrate))S.vrate=1;
 if(MODELS[S.model]?.p!==S.provider)S.model=PROV[S.provider].def;
 if(!S.models||typeof S.models!=="object")S.models={};
+if(old)saveS(); // aufgeräumte Einstellungen gleich speichern, damit z. B. ein alter Anthropic-Schlüssel nicht im Browser liegen bleibt
 const modelFor=p=>MODELS[S.models[p]]?.p===p?S.models[p]:PROV[p].def;
 function saveS(){try{localStorage.setItem(SK,JSON.stringify(S))}catch{}}
 // Gemini entweder über das eigene Konto (Server hält den Schlüssel) oder mit eigenem Schlüssel im Browser; DeepSeek nur über das Konto
 const viaKonto=p=>p==="open"||p==="gemini"&&S.gmode==="konto";
-const keyOf=p=>p==="eigen"?"lokal":viaKonto(p)?(session?"konto":""):p==="gemini"?S.gkey:S.ckey;
+const keyOf=p=>viaKonto(p)?(session?"konto":""):p==="gemini"?S.gkey:"";
 
 // ---------- Chats (können groß werden, daher IndexedDB; ohne IndexedDB nur im Speicher) ----------
 const DB=(()=>{
@@ -91,11 +79,13 @@ async function auth(){ // Supabase-Anmeldung, erst bei Bedarf geladen
   if(!sb){const{createClient}=await import("./vendor/supabase.js");sb=createClient(SB_URL,SB_KEY);sb.auth.onAuthStateChange((e,s)=>{session=s;if(e==="PASSWORD_RECOVERY"&&!recovery){recovery=true;render()}})}
   return sb.auth;
 }
-const provOf=c=>c.provider||MODELS[c.model]?.p||"claude";
+const provOf=c=>c.provider||MODELS[c.model]?.p||"claude"; // ganz alte Chats ohne Anbieter stammen von Claude
+// Alte Chats mit Claude oder der früheren eigenen KI lassen sich noch lesen, eine neue Nachricht beginnt aber einen neuen Chat
+const gone=c=>!PROV[provOf(c)];
 
 // ---------- SDKs (offizielle Bibliotheken, lokal gebündelt, erst bei Bedarf geladen) ----------
 const SDK={};
-async function sdk(p){return SDK[p]||(SDK[p]=p==="gemini"?await import("./vendor/genai.js"):(await import("./vendor/anthropic.js")).default)}
+async function sdk(p){return SDK[p]||(SDK[p]=await import("./vendor/genai.js"))}
 const clients={};
 async function client(p){ // Schlüssel des Nutzers, nur auf seinem Gerät
   if(p==="gemini"&&S.gmode==="konto"){ // Anfragen gehen an den eigenen Server, der den Schlüssel ergänzt
@@ -106,12 +96,11 @@ async function client(p){ // Schlüssel des Nutzers, nur auf seinem Gerät
   const key=keyOf(p),c=clients[p];
   if(c&&c.key===key)return c.api;
   const lib=await sdk(p);
-  const api=p==="gemini"?new lib.GoogleGenAI({apiKey:key}):new lib({apiKey:key,dangerouslyAllowBrowser:true});
+  const api=new lib.GoogleGenAI({apiKey:key});
   clients[p]={key,api};return api;
 }
 
-// Persönlichkeit für die klugen Modelle (Gemini, Claude, DeepSeek), abgeleitet aus den Beispielgesprächen in training/persona.json.
-// Die Browser-KI bekommt nur den kurzen LOCAL.system (kleines Kontextfenster, die Persönlichkeit ist dort nachtrainiert).
+// Persönlichkeit für Gemini und DeepSeek, abgeleitet aus früheren Beispielgesprächen (training/persona.json, in der Git-Geschichte).
 const PERSONA=`Du bist xbubekir, eine persönliche KI. Du arbeitest für genau eine Person und begleitest sie bei allem, was ansteht: Fragen beantworten, Schule und Lernen, Texte schreiben, Dinge erklären, planen, nachdenken und Arabisch lernen (sie lernt mit der App Mufradaat).
 
 ## Dein Ton
@@ -168,21 +157,16 @@ Die Person spricht mit dir, und deine Antworten werden laut vorgelesen. Das gilt
 - Arabisch schreibst du weiter mit Harakat und sagst danach in Worten, wie man es ausspricht und was es bedeutet.
 - Die Spracherkennung macht manchmal Fehler. Ergibt etwas keinen Sinn, rätst du das Naheliegende oder fragst kurz nach.`;
 
+// Websuche-Satz im System-Prompt; der Internet-Schalter tauscht ihn im laufenden DeepSeek-Chat aus (setWeb)
+const WEB_YES="Du kannst im Internet suchen. Tu das, wenn eine Frage aktuelle oder nachprüfbare Informationen braucht.",
+  WEB_NO="Du kannst nicht im Internet suchen. Bei aktuellen Dingen (Nachrichten, Wetter, Preise, Ergebnisse) sagst du das ehrlich, statt zu raten.";
 function systemPrompt(p,web,voice){
-  if(p==="eigen"){ // kurz halten wie im Training, das kleine Modell hat wenig Kontext
-    let s=LOCAL.system;
-    if(voice)s+=" Deine Antworten werden vorgelesen: antworte kurz, in ganzen Sätzen, ohne Listen und Formatierung.";
-    if(S.name.trim())s+=` Die Person heißt ${S.name.trim()}.`;
-    if(S.about.trim())s+=`\n\nÜber die Person: ${S.about.trim()}`;
-    if(S.style.trim())s+=`\n\nSo möchte die Person, dass du antwortest: ${S.style.trim()}`;
-    return s;
-  }
   const d=new Date().toLocaleDateString("de-DE",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
   let s=PERSONA+`
 
 ## Technik
 - Fragt dich jemand, wer du bist: Du bist xbubekir. Technisch läufst du auf ${PROV[p].name}, einem KI-Modell von ${PROV[p].by}. Das sagst du offen, wenn danach gefragt wird.
-- ${web?"Du kannst im Internet suchen. Tu das, wenn eine Frage aktuelle oder nachprüfbare Informationen braucht.":"Du kannst nicht im Internet suchen. Bei aktuellen Dingen (Nachrichten, Wetter, Preise, Ergebnisse) sagst du das ehrlich, statt zu raten."}
+- ${web?WEB_YES:WEB_NO}
 - Deine Antworten werden als Markdown angezeigt: Listen, **fett**, Tabellen und Codeblöcke funktionieren.
 - Du kannst Bilder zeichnen, und zwar als Vektorgrafik: Möchte die Person ein Bild, Logo, Icon, Diagramm, Schaubild, eine Flagge oder Ähnliches, antwortest du mit einem Codeblock der Sprache svg. Er wird im Chat als Bild angezeigt und lässt sich speichern. Schreib ein vollständiges <svg> mit viewBox, ohne Skripte, ohne eingebundene Bilder oder Webadressen und ohne Webschriften (nur font-family wie sans-serif oder serif). Gestalte es sauber und farbig, eher klar als überladen, und schreib in einem Satz dazu, was du gezeichnet hast. Fotos oder fotorealistische Bilder kannst du nicht erzeugen, das sagst du ehrlich und bietest eine gezeichnete Fassung an.
 
@@ -198,9 +182,8 @@ Dieses Gespräch hat am ${d} begonnen.`;
 // gleich bleiben, sonst verwirft die API die gespeicherten Denkblöcke früherer Antworten (und der Prompt-Cache greift nicht).
 function newChat(voice){
   const p=S.provider,model=MODELS[S.model]?.p===p?S.model:PROV[p].def,M=MODELS[model],web=S.web&&!!M.web;
-  const tz=Intl.DateTimeFormat().resolvedOptions().timeZone;
   return{id:crypto.randomUUID?.()||Date.now()+"-"+Math.random().toString(36).slice(2),title:"",created:Date.now(),updated:Date.now(),provider:p,model,...(voice&&{voice:true}),
-    system:systemPrompt(p,web,voice),tools:web?[{type:M.web,name:"web_search",max_uses:5,user_location:{type:"approximate",...(tz?{timezone:tz}:{})}}]:[],msgs:[]};
+    system:systemPrompt(p,web,voice),tools:web?[{type:M.web}]:[],msgs:[]};
 }
 
 // text: fester Text (z. B. „Weiter“), sonst der Inhalt des Eingabefelds
@@ -209,6 +192,7 @@ async function send(text){
   text=(own?inp.value:text).trim();
   const imgs=own?pics:[];
   if(busy||!text&&!imgs.length)return;
+  if(cur&&gone(cur))cur=null;
   if(!keyOf(cur?provOf(cur):S.provider)){openSettings();return}
   if(imgs.length&&!canPic()){toast(NOPIC);return}
   if(!cur)cur=newChat();
@@ -222,7 +206,7 @@ async function send(text){
 }
 // Letzte Antwort neu erzeugen: gleiche Frage, gleiches Gehirn
 async function regen(){
-  if(busy||!cur)return;
+  if(busy||!cur||gone(cur))return;
   const i=cur.msgs.findLastIndex(m=>m.role==="user"&&!m.skip);
   if(i<0)return;
   cur.msgs.splice(i+1);store(cur);
@@ -237,7 +221,7 @@ async function run(c,um,again){
   toBottom();say("xbubekir denkt nach …");
   const live=$("#live"),p=provOf(c);
   let err=null,back=false;
-  try{await({gemini:askGemini,claude:askClaude,eigen:askLocal,open:askOpen}[p])(c,um,live)}
+  try{await({gemini:askGemini,open:askOpen}[p])(c,um,live)}
   catch(e){err=e;if(again){const i=c.msgs.indexOf(um);if(i>=0)c.msgs.splice(i+1)}else back=undo(c,um)}
   stopFn=null;
   const mine=c===cur;
@@ -288,111 +272,6 @@ async function askGemini(c,um,live){
   c.msgs.push({role:"assistant",content:JSON.parse(JSON.stringify(parts)),...(fin==="MAX_TOKENS"?{note:"cut"}:{})});
 }
 
-// ---------- Eigene KI im Browser (WebLLM) ----------
-let engineP=null,loadEl=null;
-const lstat=$("#lstat");
-const clean=t=>t.replace(/<think>[\s\S]*?(<\/think>|$)/g,"").trim(); // falls das Modell doch „nachdenkt“, nicht anzeigen
-const NOGPU="Dieses Gerät oder dieser Browser kann die eigene xbubekir-KI nicht ausführen (WebGPU fehlt). Nimm ein aktuelles Chrome, Edge oder Safari, oder wähl in den Einstellungen Gemini.";
-const GPUERR="Die Grafikkarte konnte die xbubekir-KI nicht vorbereiten. Oft hilft es, Chrome oder Edge und den Grafiktreiber zu aktualisieren. Bis dahin kannst du in den Einstellungen Gemini wählen.";
-const gpuErr=e=>/ShaderModule|shader-f16/i.test(e?.message)||e?.name==="ShaderF16SupportError";
-const localErr=(e,what)=>e?.local?e.message:gpuErr(e)?GPUERR+` (Meldung: „${e.message}“)`:`Die xbubekir-KI konnte nicht ${what}. Meldung: „${e?.message||e}“`;
-const persistStore=()=>navigator.storage?.persist?.().catch(()=>{}); // Browser bitten, das Modell auch bei Platzmangel zu behalten
-// WebLLM lädt in drei Schritten, jeder zählt seinen eigenen Fortschritt: Download, aus dem Gerätespeicher laden, Grafikkarte vorbereiten
-function loadText(r){
-  const t=r.text||"",pc=Math.round((r.progress||0)*100),m=t.match(/^Fetching param cache\[\d+\/\d+\]: (\d+)MB fetched/);
-  if(m){
-    const mb=+m[1],all=r.progress>0?Math.round(mb/r.progress):0,s=r.timeElapsed||0;
-    const left=s>=3&&mb&&all?Math.ceil((all-mb)*s/mb/60):0;
-    return[r.progress,`Schritt 1/3: Download ${mb}${all?` von ${all}`:""} MB (${pc} %)${left?` · noch etwa ${left} Min.`:""}<br><small>Nur beim ersten Mal. Bereits geladene Teile bleiben gespeichert.</small>`];
-  }
-  if(t.startsWith("Loading model from cache"))return[r.progress,`Schritt 2/3: Aus dem Gerätespeicher laden … ${pc} %`];
-  if(t.startsWith("Loading GPU shader"))return[r.progress,`Schritt 3/3: Grafikkarte vorbereiten … ${pc} %`];
-  return[null,"xbubekir-KI wird vorbereitet …"];
-}
-function showLoad(r){
-  const[p,html]=loadText(r),bar=$("#lstatP");
-  lstat.hidden=false;lstat.classList.remove("bad");$("#lstatT").innerHTML=html;bar.hidden=false;
-  if(p==null)bar.removeAttribute("value");else bar.value=p;
-  if(loadEl?.isConnected)loadEl.innerHTML='<p class="tool wait">Wartet, bis die xbubekir-KI geladen ist (Stand oben) …</p>';
-}
-// Welche Fassung passt zur Grafikkarte? null = keine nutzbare Grafikkarte (WebGPU)
-async function localVariant(){
-  if(!navigator.gpu)return null;
-  let a=null;try{a=await navigator.gpu.requestAdapter({powerPreference:"high-performance"})}catch{}
-  return!a?null:S.localF32||!a.features?.has("shader-f16")?"f32":"f16";
-}
-// Die q4f32-Dateien kommen vom Service-Worker; er muss diese Seite steuern und schon die Fassung mit q4f32 sein (Antwort auf „sw-ok“)
-async function swReady(){
-  const sw=navigator.serviceWorker;
-  for(let i=0;sw&&i<3;i++){
-    if(sw.controller&&(await fetch(F32+"sw-ok",{cache:"no-store"}).catch(()=>null))?.ok)return;
-    (await sw.getRegistration().catch(()=>null))?.update().catch(()=>{});
-    await new Promise(r=>{sw.addEventListener("controllerchange",r,{once:true});setTimeout(r,5000)});
-  }
-  throw Object.assign(new Error("Die xbubekir-KI wurde gerade aktualisiert. Lade die Seite bitte einmal neu."),{local:true});
-}
-async function loadEngine(v){
-  const L=LOCAL[v];
-  showLoad({});
-  if(v==="f32")await swReady();
-  const w=await import("./vendor/webllm.js");
-  const base=w.prebuiltAppConfig.model_list.find(m=>m.model_id===L.base);
-  const eng=await w.CreateMLCEngine(L.id,{appConfig:{...w.prebuiltAppConfig,model_list:[{...base,model:L.model,model_id:L.id,...(v==="f16"&&{required_features:["shader-f16"]})}]},initProgressCallback:showLoad});
-  if(v==="f32")caches.open("webllm/model").then(async c=>{for(const q of await c.keys())if(q.url.startsWith(LOCAL.f16.files))await c.delete(q)}).catch(()=>{}); // q4f16 läuft hier nicht: ca. 1 GB frei machen
-  return eng;
-}
-function localEngine(){
-  if(!navigator.gpu)throw Object.assign(new Error(NOGPU),{local:true});
-  if(!engineP){
-    engineP=(async()=>{
-      const v=await localVariant();
-      if(!v)throw Object.assign(new Error(NOGPU),{local:true});
-      if(!S.localOk&&!confirm("Die eigene xbubekir-KI lädt beim ersten Start knapp 1 GB herunter, am besten im WLAN. Danach bleibt sie auf diesem Gerät gespeichert. Wird der Download unterbrochen, geht es beim nächsten Mal dort weiter. Jetzt laden?"))
-        throw Object.assign(new Error("Download abgebrochen."),{cancel:true});
-      S.localOk=true;saveS();persistStore();
-      try{return await loadEngine(v)}
-      catch(e){ // Grafikkarte meldet 16-Bit, scheitert aber daran: ab jetzt die q4f32-Fassung (nutzt die schon geladenen Dateien)
-        if(v!=="f16"||!gpuErr(e))throw e;
-        S.localF32=true;saveS();
-        return await loadEngine("f32");
-      }
-    })();
-    engineP.then(()=>{lstat.hidden=true;persistStore()},()=>{engineP=null;lstat.hidden=true}); // nach einem Fehler beim nächsten Mal neu versuchen
-  }
-  return engineP;
-}
-// Vorladen im Hintergrund (nach der Auswahl in den Einstellungen oder beim Start); Fehler zeigt die Statuszeile
-async function preloadLocal(){
-  try{await localEngine()}
-  catch(e){if(e?.cancel)return;lstat.hidden=false;lstat.classList.add("bad");$("#lstatT").textContent=localErr(e,"geladen werden");$("#lstatP").hidden=true}
-}
-// Liegt die Fassung v schon vollständig auf dem Gerät? Dann darf sie ohne Rückfrage vorladen. Für q4f32 reichen auch die q4f16-Dateien,
-// der Service-Worker wandelt sie ohne Netz um.
-async function localCached(v){
-  try{
-    if(!v||!await caches.has("webllm/model"))return false;
-    const c=await caches.open("webllm/model"),have=new Set((await c.keys()).map(q=>q.url));
-    const full=async f=>{const r=await c.match(f+"tensor-cache.json");return!!r&&(await r.json()).records.every(s=>have.has(f+s.dataPath))};
-    return await full(LOCAL[v].files)||v==="f32"&&await full(LOCAL.f16.files);
-  }catch{return false}
-}
-async function askLocal(c,um,live){
-  loadEl=live;
-  const eng=await localEngine();
-  loadEl=null;
-  live.innerHTML='<p class="tool wait">xbubekir denkt nach …</p>';
-  const hist=[];let n=0; // jüngste Nachrichten zuerst, bis das Kontextfenster ungefähr voll ist
-  for(const m of c.msgs.filter(m=>!m.skip).reverse()){n+=m.content.length;if(n>LOCAL.maxChars&&hist.length)break;hist.unshift({role:m.role,content:m.content})}
-  if(hist[0]?.role==="assistant")hist.shift();
-  let txt="",stopped=false;
-  stopFn=()=>{stopped=true;eng.interruptGenerate()};
-  const chunks=await eng.chat.completions.create({messages:[{role:"system",content:c.system},...hist],stream:true,temperature:0.7,max_tokens:1024,extra_body:{enable_thinking:false}});
-  for await(const ch of chunks){txt+=ch.choices[0]?.delta?.content||"";paint(live,[{type:"text",text:clean(txt)}])}
-  txt=clean(txt);
-  if(!txt){if(stopped){undo(c,um);return}throw new Error("Die xbubekir-KI hat keine Antwort geschrieben.")}
-  c.msgs.push({role:"assistant",content:txt,...(stopped?{note:"stop"}:{})});
-}
-
 // ---------- DeepSeek (Open Source) über den eigenen Server → OpenRouter ----------
 // Der Server (server/openrouter) prüft das Konto, ergänzt den Schlüssel und legt Modelle, Länge und erlaubte Anbieter fest.
 async function askOpen(c,um,live){
@@ -400,7 +279,7 @@ async function askOpen(c,um,live){
   if(!data.session)throw Object.assign(new Error("Nicht angemeldet."),{status:401});
   const ctl=new AbortController(),cites=new Map();let think="",txt="",fin="";
   stopFn=()=>ctl.abort();
-  // Quellen der Websuche kommen als „url_citation“ und hängen am Text wie bei Claude
+  // Quellen der Websuche kommen als „url_citation“ und hängen als citations am Text (Anzeige in viewBlocks)
   const blocks=()=>[...(think.trim()?[{type:"thinking",thinking:think}]:[]),...(txt?[{type:"text",text:txt,...(cites.size?{citations:[...cites.values()]}:{})}]:[])];
   const plain=m=>typeof m.content==="string"?m.content:m.content.filter(b=>b.type==="text").map(b=>b.text).join("");
   try{
@@ -434,49 +313,6 @@ async function askOpen(c,um,live){
   c.msgs.push({role:"assistant",content:blocks(),...(fin==="length"?{note:"cut"}:{})});
 }
 
-// ---------- Claude ----------
-function claudeParams(c){
-  const p={model:c.model,max_tokens:MAX_TOKENS,system:c.system,
-    messages:c.msgs.filter(m=>!m.skip).map(m=>({role:m.role,content:m.imgs?.length?[...m.imgs.map(u=>({type:"image",source:{type:"base64",media_type:"image/jpeg",data:b64(u)}})),...(m.content?[{type:"text",text:m.content}]:[])]:m.content})),
-    thinking:{type:"adaptive",display:"summarized"},output_config:{effort:eff()},cache_control:{type:"ephemeral"}};
-  if(c.tools.length)p.tools=c.tools;
-  if(MODELS[c.model]?.fb){p.betas=["server-side-fallback-2026-07-01"];p.fallbacks="default"}
-  return p;
-}
-
-// Antwortinhalt so speichern, wie die API ihn zurückbekommen soll. Ist mitten in der Antwort ein Ersatzmodell eingesprungen,
-// fallen vor der Übergabestelle Denkblöcke und unvollständige Werkzeugaufrufe weg (Text und abgeschlossene Suchen bleiben).
-function replay(content){
-  const fb=content.findLastIndex(b=>b.type==="fallback");
-  const done=new Set(content.filter(b=>b.tool_use_id).map(b=>b.tool_use_id));
-  const out=content.filter((b,i)=>i>=fb||b.type==="text"||(b.type==="server_tool_use"&&done.has(b.id))||(b.tool_use_id&&b.type!=="tool_use"));
-  return JSON.parse(JSON.stringify(out));
-}
-
-async function askClaude(c,um,live){
-  const api=await client("claude"),A=SDK.claude,start=c.msgs.indexOf(um);
-  let prev=[],rounds=0,stream=null;
-  try{
-    for(;;){
-      stream=api.beta.messages.stream(claudeParams(c));
-      stopFn=()=>stream.abort();
-      for await(const _ of stream)paint(live,prev.concat(stream.currentMessage?.content||[]));
-      const msg=await stream.finalMessage();
-      if(msg.stop_reason==="refusal"){refuse(c,um,start);break} // auch das Ersatzmodell hat abgelehnt
-      const content=replay(msg.content);
-      c.msgs.push({role:"assistant",content,...(msg.stop_reason==="max_tokens"?{note:"cut"}:{})});
-      if(msg.stop_reason==="pause_turn"&&++rounds<5){prev=prev.concat(content);continue} // lange Websuche: einfach weiterlaufen lassen
-      break;
-    }
-  }catch(e){
-    if(!(e instanceof A.APIUserAbortError))throw e;
-    // Stopp gedrückt: bisherigen Text behalten (ohne Denkblöcke, die wären unvollständig)
-    const part=(stream.currentMessage?.content||[]).filter(b=>b.type==="text"&&b.text).map(b=>({type:"text",text:b.text}));
-    if(part.length)c.msgs.push({role:"assistant",content:part,note:"stop"});
-    else if(c.msgs.at(-1)===um)undo(c,um);
-  }
-}
-
 // Abgelehnte Runde: Teilantwort verwerfen und die Frage aus dem weiteren Verlauf nehmen (nur das Ende des Verlaufs)
 function refuse(c,um,start){for(const m of c.msgs.slice(start))m.skip=true;um.note="refusal"}
 // Fehlgeschlagene Runde ganz entfernen (nur das Ende des Verlaufs) und die Nachricht zurück ins Eingabefeld legen
@@ -490,7 +326,6 @@ function undo(c,um){
 // act: passender Knopf (limit: Flash-Lite, key: Schlüssel prüfen, acct: neu anmelden, brain: Gehirn wählen, new: neuer Chat)
 function errInfo(e,p){
   const s=e?.status,st=s?`${s}: `:"";
-  if(p==="eigen")return{t:localErr(e,"antworten")};
   if(p==="open"){
     if(e instanceof TypeError&&!s)return{t:"Keine Verbindung zu deinem Server. Bist du online?"};
     const t=s===401||s===403?"Dein xbubekir-Konto hat gerade keinen Zugang. Melde dich neu an."
@@ -501,31 +336,18 @@ function errInfo(e,p){
       :"Unerwarteter Fehler.";
     return{t,raw:st+(e?.message||String(e)),act:s===401||s===403?"acct":s===413?"new":""};
   }
-  if(p==="gemini"){
-    let msg=e?.message||String(e);
-    try{msg=JSON.parse(msg.slice(msg.indexOf("{"))).error.message||msg}catch{}
-    if(e instanceof TypeError&&!s)return{t:"Keine Verbindung zu Google. Bist du online?"};
-    const konto=S.gmode==="konto";
-    const t=s===429?"Das Gratis-Kontingent von Gemini ist gerade aufgebraucht. Meist reicht eine Minute Pause. Ist das Tageslimit erreicht, geht es nach Mitternacht kalifornischer Zeit weiter, in Deutschland also morgens um 8 oder 9 Uhr."
-      :s===401||s===403?(konto?"Dein xbubekir-Konto hat gerade keinen Zugang. Melde dich neu an.":"Google hat deinen Gemini-Schlüssel abgelehnt.")
-      :s===404?"Das Modell wurde nicht gefunden. Wähl ein anderes Gehirn, dann geht es in einem neuen Chat weiter."
-      :s===400?"Google hat die Anfrage abgelehnt."
-      :s>=500?"Gemini ist gerade überlastet. Versuch es gleich nochmal."
-      :"Unerwarteter Fehler.";
-    return{t,raw:st+msg,act:s===429?"limit":s===401||s===403?(konto?"acct":"key"):s===404?"brain":""};
-  }
-  const A=SDK.claude,raw=st+(e?.error?.error?.message||e?.message||String(e));
-  if(!A)return{t:"Unerwarteter Fehler.",raw};
-  if(e instanceof A.AuthenticationError)return{t:"Anthropic hat deinen Schlüssel abgelehnt.",raw,act:"key"};
-  if(s===402||/credit balance/i.test(raw))return{t:"Dein Anthropic-Guthaben ist aufgebraucht. Lade auf platform.claude.com auf oder wähl ein anderes Gehirn.",raw,act:"brain"};
-  if(e instanceof A.PermissionDeniedError)return{t:"Dein Schlüssel darf dieses Modell nicht nutzen.",raw,act:"brain"};
-  if(e instanceof A.NotFoundError)return{t:"Das Modell wurde nicht gefunden. Wähl ein anderes Gehirn, dann geht es in einem neuen Chat weiter.",raw,act:"brain"};
-  if(e instanceof A.RateLimitError)return{t:"Gerade zu viele Anfragen. Warte einen Moment und schick die Nachricht nochmal.",raw};
-  if(e instanceof A.BadRequestError)return{t:"Anthropic hat die Anfrage abgelehnt.",raw};
-  if(e instanceof A.InternalServerError)return{t:"Claude ist gerade überlastet oder hatte einen Fehler. Versuch es gleich nochmal.",raw};
-  if(e instanceof A.APIConnectionError)return{t:"Keine Verbindung zu Anthropic. Bist du online?"};
-  if(e instanceof A.APIError)return{t:"Anthropic hat einen Fehler gemeldet.",raw};
-  return{t:"Unerwarteter Fehler.",raw};
+  // Gemini
+  let msg=e?.message||String(e);
+  try{msg=JSON.parse(msg.slice(msg.indexOf("{"))).error.message||msg}catch{}
+  if(e instanceof TypeError&&!s)return{t:"Keine Verbindung zu Google. Bist du online?"};
+  const konto=S.gmode==="konto";
+  const t=s===429?"Das Gratis-Kontingent von Gemini ist gerade aufgebraucht. Meist reicht eine Minute Pause. Ist das Tageslimit erreicht, geht es nach Mitternacht kalifornischer Zeit weiter, in Deutschland also morgens um 8 oder 9 Uhr."
+    :s===401||s===403?(konto?"Dein xbubekir-Konto hat gerade keinen Zugang. Melde dich neu an.":"Google hat deinen Gemini-Schlüssel abgelehnt.")
+    :s===404?"Das Modell wurde nicht gefunden. Wähl ein anderes Gehirn, dann geht es in einem neuen Chat weiter."
+    :s===400?"Google hat die Anfrage abgelehnt."
+    :s>=500?"Gemini ist gerade überlastet. Versuch es gleich nochmal."
+    :"Unerwarteter Fehler.";
+  return{t,raw:st+msg,act:s===429?"limit":s===401||s===403?(konto?"acct":"key"):s===404?"brain":""};
 }
 // back: Nachricht liegt wieder im Eingabefeld (Knopf „Nochmal senden“); again: Frage steht noch im Chat (Knopf „Nochmal versuchen“)
 function showError(e,p,back,again){
@@ -689,9 +511,6 @@ function viewBlocks(blocks,live){
   blocks.forEach((b,i)=>{
     if(b.type==="text"){txt+=b.text||"";for(const c of b.citations||[])if(safeUrl(c.url)&&!cites.has(c.url))cites.set(c.url,c.title||host(c.url))}
     else if(b.type==="thinking"){flush();if(live&&i===blocks.length-1)h+='<p class="tool wait">xbubekir denkt nach …</p>';else if(b.thinking?.trim())h+=`<details class="think"><summary>Gedankengang</summary><div class="md">${md(b.thinking)}</div></details>`}
-    else if(b.type==="server_tool_use"&&b.name==="web_search"){flush();let q="";try{q=b.input?.query||""}catch{}const now=live&&i===blocks.length-1;h+=`<p class="tool${now?" wait":""}">${IC.search}<span>${now?"Sucht im Netz":"Im Netz gesucht"}${q?`: „${esc(q)}“`:now?" …":""}</span></p>`}
-    else if(b.type==="web_search_tool_result"&&b.content&&!Array.isArray(b.content)){flush();h+='<p class="tool">Die Suche hat nicht geklappt.</p>'}
-    else if(b.type==="fallback"){flush();h+='<p class="note">Für diese Antwort ist ein anderes Claude-Modell eingesprungen.</p>'}
   });
   flush();
   if(live&&!h)h='<p class="tool wait">xbubekir denkt nach …</p>';
@@ -699,7 +518,8 @@ function viewBlocks(blocks,live){
   return h;
 }
 
-const msgBlocks=(p,m)=>p==="gemini"?geminiBlocks(m.content):p==="eigen"?[{type:"text",text:m.content}]:m.content; // Antwort im Einheitsformat
+// Antwort im Einheitsformat; Text statt Liste: alte Chats der früheren eigenen KI
+const msgBlocks=(p,m)=>typeof m.content==="string"?[{type:"text",text:m.content}]:p==="gemini"?geminiBlocks(m.content):m.content;
 function chatHTML(c){
   let h="";const M=c.msgs,p=provOf(c);copies=[];
   const toBlocks=m=>msgBlocks(p,m);
@@ -709,16 +529,16 @@ function chatHTML(c){
     const blocks=[];let note="";
     for(;i<M.length&&M[i].role==="assistant";i++)if(!M[i].skip){blocks.push(...toBlocks(M[i]));if(M[i].note)note=M[i].note} // Fortsetzungen (pause_turn) zusammen zeigen
     if(!blocks.length)continue;
-    const n=copies.push(blocks.filter(b=>b.type==="text").map(b=>b.text).join("").trim())-1,last=i===M.length&&!busy; // nur die letzte Antwort lässt sich neu erzeugen
+    const n=copies.push(blocks.filter(b=>b.type==="text").map(b=>b.text).join("").trim())-1,last=i===M.length&&!busy&&!gone(c); // nur die letzte Antwort lässt sich neu erzeugen
     h+=`<div class="msg a">${viewBlocks(blocks,false)}${note?`<p class="note">${NOTES[note]}</p>`:""}<div class="acts-a"><button class="mini" type="button" data-copy="${n}">${IC.copy}<span>Kopieren</span></button>${last?`<button class="mini" type="button" data-again>${IC.again}<span>Nochmal</span></button>`:""}${last&&note==="cut"?`<button class="mini" type="button" data-more>${IC.on}<span>Weiter</span></button>`:""}</div></div>`;
   }
   const end=M.at(-1); // Frage ohne Antwort (Neu-Erzeugen ist schiefgegangen): Antwort nochmal anfordern
-  if(end?.role==="user"&&!end.skip&&!busy)h+=`<div class="acts-a end"><button class="mini" type="button" data-again>${IC.again}<span>Antwort anfordern</span></button></div>`;
+  if(end?.role==="user"&&!end.skip&&!busy&&!gone(c))h+=`<div class="acts-a end"><button class="mini" type="button" data-again>${IC.again}<span>Antwort anfordern</span></button></div>`;
   return h;
 }
 
 const itemHTML=(c,del)=>{const t=esc(c.title||"Ohne Titel"),on=del&&c===cur;
-  return`<li${on?' class="on"':""}><button class="open" type="button" data-id="${esc(c.id)}"${on?' aria-current="page"':""}><b>${t}</b><small>${when(c.updated)} · ${esc(MODELS[c.model]?.name||c.model)}</small></button>${del?`<button class="ib del" type="button" data-del="${esc(c.id)}" aria-label="Chat „${t}“ löschen" title="Löschen">${IC.del}</button>`:""}</li>`};
+  return`<li${on?' class="on"':""}><button class="open" type="button" data-id="${esc(c.id)}"${on?' aria-current="page"':""}><b>${t}</b><small>${when(c.updated)} · ${esc(MODELS[c.model]?.name||{claude:"Claude (früher)",eigen:"eigene KI (früher)"}[provOf(c)]||c.model)}</small></button>${del?`<button class="ib del" type="button" data-del="${esc(c.id)}" aria-label="Chat „${t}“ löschen" title="Löschen">${IC.del}</button>`:""}</li>`};
 function helloHTML(){ // für genau eine Person: Begrüßung mit Namen, am Handy darunter die letzten Chats
   const n=S.name.trim(),hr=new Date().getHours(),hi=hr>=5&&hr<11?"Guten Morgen":hr>=18&&hr<23?"Guten Abend":"Hallo",rec=chats.slice(0,3);
   return`<div class="hello"><img class="mark" src="brand/xbu.webp" alt="xbu" width="640" height="376"><h2 class="hi">${hi}${n?", "+esc(n):""}!</h2><p class="tag">Frag. Entdecke. Erreiche mehr.</p></div>`
@@ -736,8 +556,6 @@ function loginHTML(){
 <button class="linkbtn" type="button" id="suNew">Neues Konto erstellen</button>
 <p class="hint">Der Zugang ist nur für dich: Ein neues Konto funktioniert erst, wenn es auf dem Server freigeschaltet ist.</p>
 <button class="linkbtn" type="button" id="suKeyMode">${S.provider==="open"?"Gemini mit eigenem Schlüssel nutzen":"Eigenen Gemini-Schlüssel eingeben"}</button>
-<button class="linkbtn" type="button" id="suLocal">Eigene xbubekir-KI im Browser, ganz ohne Konto</button>
-<button class="linkbtn" type="button" id="suSwitch">Claude von Anthropic nutzen (kostenpflichtig)</button>
 </div></details></form>`;
 }
 async function login(neu){
@@ -782,36 +600,26 @@ async function newPw(){
   history.replaceState(null,"",location.pathname+location.search);
   render();toast("Dein neues Passwort ist gespeichert.");
 }
-function setupHTML(){
-  const gem=S.provider==="gemini";
-  const steps=gem
-    ?`<p>xbubekir ist deine persönliche KI. Das Denken übernimmt Gemini von Google, kostenlos. Dafür brauchst du einmalig einen eigenen API-Schlüssel:</p>
+function setupHTML(){ // nur Gemini mit eigenem Schlüssel; alles andere läuft über das Konto
+  return`<form class="setup" id="suForm" novalidate aria-labelledby="suH"><h2 id="suH">Willkommen bei xbubekir</h2>
+<p>xbubekir ist deine persönliche KI. Das Denken übernimmt Gemini von Google, kostenlos. Dafür brauchst du einmalig einen eigenen API-Schlüssel:</p>
 <ol><li>${link("https://aistudio.google.com/apikey","aistudio.google.com/apikey")} öffnen und mit deinem Google-Konto anmelden.</li>
 <li>„API-Schlüssel erstellen“ („Create API key“) antippen.</li>
-<li>Den Schlüssel kopieren und hier einfügen.</li></ol>`
-    :`<p>xbubekir ist deine persönliche KI. Das Denken übernimmt Claude von Anthropic. Dafür brauchst du einmalig einen eigenen API-Schlüssel:</p>
-<ol><li>Auf ${link("https://platform.claude.com/","platform.claude.com")} anmelden und unter „Billing“ etwas Guthaben aufladen.</li>
-<li>Unter „API Keys“ einen neuen Schlüssel erstellen.</li>
-<li>Den Schlüssel (beginnt mit <code>sk-ant-</code>) hier einfügen.</li></ol>`;
-  const hint=gem
-    ?"Kostenlos, solange du bei Google keine Zahlungsmethode hinterlegst. Dafür begrenzt Google, wie viele Nachrichten du pro Minute und pro Tag schicken kannst. In der Gratis-Stufe darf Google deine Nachrichten lesen und zur Verbesserung seiner Produkte nutzen, außer du wohnst in der EU, der Schweiz oder Großbritannien. Der Schlüssel bleibt nur auf diesem Gerät."
-    :"Der Schlüssel bleibt nur auf diesem Gerät und wird nur an api.anthropic.com geschickt. Abgerechnet wird nach Nutzung über dein Anthropic-Konto. Setz dir dort am besten ein monatliches Limit.";
-  return`<form class="setup" id="suForm" novalidate aria-labelledby="suH"><h2 id="suH">Willkommen bei xbubekir</h2>
-${steps}
-<label for="suKey">${gem?"Gemini-API-Schlüssel":"Anthropic-API-Schlüssel"}</label>
-<div class="keyrow"><input class="f" id="suKey" type="password" autocomplete="off" spellcheck="false" placeholder="${gem?"Schlüssel einfügen":"sk-ant-…"}"><button class="btn" type="submit" id="suGo">Los geht’s</button></div>
-<p class="hint">${hint}</p>
+<li>Den Schlüssel kopieren und hier einfügen.</li></ol>
+<label for="suKey">Gemini-API-Schlüssel</label>
+<div class="keyrow"><input class="f" id="suKey" type="password" autocomplete="off" spellcheck="false" placeholder="Schlüssel einfügen"><button class="btn" type="submit" id="suGo">Los geht’s</button></div>
+<p class="hint">Kostenlos, solange du bei Google keine Zahlungsmethode hinterlegst. Dafür begrenzt Google, wie viele Nachrichten du pro Minute und pro Tag schicken kannst. In der Gratis-Stufe darf Google deine Nachrichten lesen und zur Verbesserung seiner Produkte nutzen, außer du wohnst in der EU, der Schweiz oder Großbritannien. Der Schlüssel bleibt nur auf diesem Gerät.</p>
 <p class="status" id="suMsg" role="status"></p>
 <details class="alts"><summary>Andere Wege</summary><div>
-<button class="linkbtn" type="button" id="suSwitch">${gem?"Lieber Claude von Anthropic nutzen (kostenpflichtig)":"Lieber Gemini von Google nutzen (kostenlos)"}</button>
-<button class="linkbtn" type="button" id="suLocal">Eigene xbubekir-KI im Browser, ganz ohne Schlüssel</button>
+<button class="linkbtn" type="button" id="suSwitch">Lieber mit dem xbubekir-Konto anmelden</button>
 </div></details></form>`;
 }
 
 // Gehirn-Zeile an der Eingabe: ein laufender Chat behält sein Gehirn; Denktiefe und Websuche stehen mit dabei
 function updBrain(){
-  const nm=m=>MODELS[m]?.name||m,b=cur?.model||S.model,eff=MODELS[b]?.p==="eigen"?"":{medium:"Normal",high:"Gründlich"}[S.effort]||"";
-  const web=cur?cur.tools?.length>0:S.web&&!!MODELS[S.model]?.web;
+  const c=cur&&!gone(cur)?cur:null; // alter Claude-Chat: die nächste Nachricht geht ans gewählte Gehirn
+  const nm=m=>MODELS[m]?.name||m,b=c?.model||S.model,eff={medium:"Normal",high:"Gründlich"}[S.effort]||"";
+  const web=c?c.tools?.length>0:S.web&&!!MODELS[S.model]?.web;
   const t=nm(b)+(eff?` · ${eff}`:"")+(b!==S.model?` · neue Chats: ${nm(S.model)}`:"");
   bBrain.innerHTML=`<span class="bt">${esc(t)}</span>${web?`<span class="gl" title="Mit Websuche">${IC.globe}</span>`:""}${IC.chev}`;
   bBrain.setAttribute("aria-label",`Gehirn: ${t}${web?", mit Websuche":""}. Wechseln`);
@@ -832,16 +640,14 @@ function render(){
   if(!ready){
     log.innerHTML=viaKonto(S.provider)?loginHTML():setupHTML();
     const to=p=>{S.provider=p;S.model=modelFor(p);saveS();cur=null;render()};
-    $("#suLocal").onclick=()=>{to("eigen");preloadLocal()};
     if(viaKonto(S.provider)){
       $("#suForm").onsubmit=e=>{e.preventDefault();login(false)};
       $("#suNew").onclick=()=>login(true);
       $("#suForgot").onclick=forgot;
       $("#suKeyMode").onclick=()=>{S.gmode="key";if(S.provider==="open")to("gemini");else{saveS();render()}};
-      $("#suSwitch").onclick=()=>to("claude");
     }else{
-      $("#suForm").onsubmit=e=>{e.preventDefault();checkKey(S.provider,$("#suKey").value,$("#suMsg"),$("#suGo")).then(ok=>{if(ok){saveS();render();inp.focus()}})};
-      $("#suSwitch").onclick=()=>{S.gmode="konto";to(S.provider==="gemini"?"claude":"gemini")};
+      $("#suForm").onsubmit=e=>{e.preventDefault();checkKey($("#suKey").value,$("#suMsg"),$("#suGo")).then(ok=>{if(ok){saveS();render();inp.focus()}})};
+      $("#suSwitch").onclick=()=>{S.gmode="konto";saveS();render()};
     }
     return;
   }
@@ -871,7 +677,7 @@ function updSend(){bSend.disabled=!busy&&!inp.value.trim()&&!pics.length}
 // ---------- Bilder anhängen ----------
 // Jedes Bild wird verkleinert und als JPEG neu kodiert: So bleiben Chat-Speicher und Anfragen klein, und Aufnahmeort und andere
 // Fotodaten fallen weg. Es liegt als data:-URL an der Nutzernachricht (um.imgs) und geht bei jeder Runde wieder mit.
-const PIC_MAX=4,PIC_PX=1280,NOPIC="Dieses Gehirn kann keine Bilder sehen. Wähl Gemini, Claude oder DeepSeek V4.1 Flash.";
+const PIC_MAX=4,PIC_PX=1280,NOPIC="Dieses Gehirn kann keine Bilder sehen. Wähl Gemini oder DeepSeek V4.1 Flash.";
 let pics=[]; // angehängt, aber noch nicht gesendet
 const b64=u=>u.slice(u.indexOf(",")+1);
 const canPic=()=>!!MODELS[cur?.model||S.model]?.img;
@@ -955,21 +761,35 @@ function copyMsg(b){ // als Klartext (ohne Markdown-Zeichen) und als formatierte
 }
 
 // ---------- Gehirn wählen (Tipp auf die Gehirn-Zeile) ----------
-const PTAG={gemini:["Google Gemini","kostenlos"],claude:["Anthropic Claude","kostenpflichtig"],open:["DeepSeek","Open Source, Cent-Beträge"],eigen:["Eigene xbubekir-KI","auf diesem Gerät, kostenlos"]};
+const PTAG={gemini:["Google Gemini","kostenlos"],open:["DeepSeek","Open Source, Cent-Beträge"]};
 function renderBrain(){
-  const nm=m=>MODELS[m]?.name||m,now=cur?.model||S.model,run=!!cur?.msgs.length;
+  const nm=m=>MODELS[m]?.name||m,run=!!cur?.msgs.length&&!gone(cur),now=run?cur.model:S.model;
   $("#brNote").hidden=!run;
   $("#brNote").textContent=busy?"Gerade läuft eine Antwort. Ein anderes Gehirn gilt ab dem nächsten neuen Chat.":`Dieser Chat bleibt bei ${nm(now)}. Ein anderes Gehirn beginnt einen neuen Chat.`;
   let h="";
-  for(const p of["gemini","claude","open","eigen"]){
-    const nogpu=p==="eigen"&&!navigator.gpu,need=nogpu?"geht auf diesem Gerät nicht":keyOf(p)?"":viaKonto(p)?"Anmeldung nötig":"Schlüssel nötig";
+  for(const p of Object.keys(PROV)){
+    const need=keyOf(p)?"":viaKonto(p)?"Anmeldung nötig":"Schlüssel nötig";
     h+=`<section class="bp"><h3>${PTAG[p][0]}<span>${PTAG[p][1]}</span>${need?`<em>${need}</em>`:""}</h3>`;
-    for(const[id,M]of Object.entries(MODELS))if(M.p===p)h+=`<button class="bm" type="button" data-model="${id}"${id===now?' aria-current="true"':""}${nogpu?" disabled":""}><span class="mx"><b>${M.name}</b><small>${M.hint}${id===S.model&&id!==now?" · für neue Chats gewählt":""}</small></span><span class="ck">${IC.ok}</span></button>`;
+    for(const[id,M]of Object.entries(MODELS))if(M.p===p)h+=`<button class="bm" type="button" data-model="${id}"${id===now?' aria-current="true"':""}><span class="mx"><b>${M.name}</b><small>${M.hint}${id===S.model&&id!==now?" · für neue Chats gewählt":""}</small></span><span class="ck">${IC.ok}</span></button>`;
     h+="</section>";
   }
   $("#brList").innerHTML=h;
-  $("#brEff").hidden=MODELS[now]?.p==="eigen"; // die Browser-KI denkt nicht in Stufen
   for(const b of document.querySelectorAll("#brEff [data-eff]"))b.setAttribute("aria-pressed",String(b.dataset.eff===S.effort));
+  // Internet: nur Modelle mit Websuche; im laufenden Chat zählt, was dieser Chat gerade darf
+  const can=!!MODELS[now]?.web,on=can&&(run?cur.tools.length>0:S.web);
+  for(const b of document.querySelectorAll("#brWeb [data-web]")){b.disabled=!can;b.setAttribute("aria-pressed",String(can&&(b.dataset.web==="1")===on))}
+  $("#brWebHint").textContent=can?"Gilt sofort, auch im laufenden Chat. Jede Suche kostet etwa einen halben Cent, höchstens 3 pro Antwort.":`${nm(now)} kann hier nicht im Internet suchen. Wähl DeepSeek, wenn du Websuche brauchst.`;
+}
+// Internet ein/aus: gilt für neue Chats und gleich auch für den laufenden DeepSeek-Chat (Werkzeug und Satz im System-Prompt).
+// Gemini-Chats bleiben unberührt: Dort muss alles wie beim Anlegen bleiben (Denk-Signaturen), und eine Websuche gibt es dort nicht.
+function setWeb(on){
+  S.web=on;saveS();
+  if(cur&&provOf(cur)==="open"){
+    cur.tools=on?[{type:MODELS[cur.model].web}]:[];
+    cur.system=on?cur.system.replace(WEB_NO,WEB_YES):cur.system.replace(WEB_YES,WEB_NO);
+    if(cur.msgs.length&&!busy)store(cur); // läuft gerade eine Antwort, speichert run() am Ende
+  }
+  renderBrain();updBrain();
 }
 function openBrain(){renderBrain();dBrain.showModal()}
 function pickBrain(id){ // wählt ohne Speichern-Knopf; der laufende Chat behält sein Gehirn, das neue denkt in einem neuen Chat
@@ -979,21 +799,20 @@ function pickBrain(id){ // wählt ohne Speichern-Knopf; der laufende Chat behäl
   if(busy){updBrain();return}
   if(cur?.msgs.length&&cur.model!==id)cur=null;
   render();
-  if(keyOf(M.p)){if(desk.matches)inp.focus();if(M.p==="eigen")preloadLocal()}
+  if(keyOf(M.p)&&desk.matches)inp.focus();
 }
 
 // ---------- Einstellungen ----------
 let webWant=true,snap=""; // webWant: Wunsch für die Websuche, auch wenn das gerade gewählte Modell keine kann
-const setState=()=>["sName","sAbout","sStyle","sProv","sGMode","sModel","sEffort","sGKey","sCKey","sVoice","sRate"].map(id=>$("#"+id).value).join("\u0001")+webWant;
+const setState=()=>["sName","sAbout","sStyle","sProv","sGMode","sModel","sEffort","sGKey","sVoice","sRate"].map(id=>$("#"+id).value).join("\u0001")+webWant;
 const leaveSet=()=>setState()===snap||confirm("Änderungen verwerfen?");
 function fillModels(){ // Modellauswahl passend zum gewählten Anbieter
   const p=$("#sProv").value,sel=$("#sModel"),was=sel.value||S.model; // beim ersten Öffnen ist die Auswahl noch leer
-  sel.innerHTML=Object.entries(MODELS).filter(([,M])=>M.p===p).map(([id,M])=>`<option value="${id}">${M.name.replace(/^(Claude|Gemini) /,"")} – ${M.hint}</option>`).join("");
+  sel.innerHTML=Object.entries(MODELS).filter(([,M])=>M.p===p).map(([id,M])=>`<option value="${id}">${M.name.replace(/^Gemini /,"")} – ${M.hint}</option>`).join("");
   sel.value=MODELS[was]?.p===p?was:modelFor(p);
-  $("#kGemini").hidden=p!=="gemini";$("#kClaude").hidden=p!=="claude";$("#kEigen").hidden=p!=="eigen";$("#kOpen").hidden=p!=="open";
-  $("#mRow").hidden=$("#eRow").hidden=p==="eigen"; // nur ein Modell, und Denkstufen gibt es dort nicht
+  $("#kGemini").hidden=p!=="gemini";$("#kOpen").hidden=p!=="open";
   const konto=$("#sGMode").value==="konto";
-  $("#kKonto").hidden=!(p==="open"||p==="gemini"&&konto);$("#kGKey").hidden=konto;$("#kKey").hidden=!(p==="claude"||p==="gemini"&&!konto);
+  $("#kKonto").hidden=!(p==="open"||p==="gemini"&&konto);$("#kGKey").hidden=konto;$("#kKey").hidden=!(p==="gemini"&&!konto);
   $("#kontoInfo").textContent=session?`Angemeldet als ${session.user.email}.`:"Nicht angemeldet. Nach dem Speichern erscheint die Anmeldung.";
   $("#bLogout").hidden=!session;
   costHint();
@@ -1003,14 +822,10 @@ function costHint(){
   w.disabled=!M.web;w.checked=!!M.web&&webWant; // ohne Websuche beim Modell auch kein Haken
   $("#costHint").textContent=M.p==="open"
     ?`${M.name}: Open-Source-KI von DeepSeek, über deinen eigenen Server bei OpenRouter. Eine normale Nachricht kostet meist weniger als 0,1 Cent${M.hint.includes("teurer")?" (dieses Modell etwa das Dreifache)":""}, bezahlt aus deinem OpenRouter-Guthaben. Es werden nur Anbieter genutzt, die nichts speichern und nicht in China sitzen. Mit Websuche kostet jede Suche etwa einen halben Cent extra (höchstens 3 pro Antwort).`
-    :M.p==="eigen"
-    ?"Kostenlos und ohne Konto: Die eigene xbubekir-KI läuft komplett auf diesem Gerät, nichts wird an einen Server geschickt. Beim ersten Start etwa 1 GB Download. Sie ist kleiner als Gemini und irrt sich öfter, eine Websuche gibt es nicht."
-    :M.p==="gemini"
-    ?"Kostenlos. Google begrenzt dafür die Nachrichten pro Minute und pro Tag; die genauen Grenzen zeigt AI Studio. Das Tageslimit setzt sich um Mitternacht kalifornischer Zeit zurück. Flash-Lite erlaubt mehr Nachrichten. Eine Websuche gibt es mit Gemini hier nicht."
-    :`${M.name} kostet ${M.price} pro Million Tokens, also Wortteile (Eingabe / Ausgabe). Eine normale Nachricht kostet damit meist ein paar Cent oder weniger, jede Websuche etwa einen Cent extra.${M.web?"":" Mit diesem Modell gibt es keine Websuche."}`;
+    :"Kostenlos. Google begrenzt dafür die Nachrichten pro Minute und pro Tag; die genauen Grenzen zeigt AI Studio. Das Tageslimit setzt sich um Mitternacht kalifornischer Zeit zurück. Flash-Lite erlaubt mehr Nachrichten. Eine Websuche gibt es mit Gemini hier nicht.";
 }
 function openSettings(){
-  for(const[id,v]of[["sGKey",S.gkey],["sCKey",S.ckey]]){const k=$("#"+id);k.value=v;k.type="password"}
+  const k=$("#sGKey");k.value=S.gkey;k.type="password";
   document.querySelectorAll(".eye").forEach(b=>{b.textContent="Zeigen";b.setAttribute("aria-pressed","false")});
   $("#sName").value=S.name;$("#sAbout").value=S.about;$("#sStyle").value=S.style;webWant=S.web;
   $("#sProv").value=S.provider;$("#sGMode").value=S.gmode;$("#sModel").value=S.model;fillModels();
@@ -1020,20 +835,18 @@ function openSettings(){
   snap=setState();
   dSet.showModal();
 }
-async function checkKey(p,key,msgEl,btn){ // Schlüssel einmal kostenlos prüfen (Modellabfrage), bevor er gespeichert wird
+async function checkKey(key,msgEl,btn){ // Gemini-Schlüssel einmal kostenlos prüfen (Modellabfrage), bevor er gespeichert wird
   key=key.trim();
   msgEl.className="status";
   if(!key){msgEl.textContent="Bitte füg deinen Schlüssel ein.";msgEl.classList.add("bad");return false}
   btn.disabled=true;msgEl.textContent="Prüfe den Schlüssel …";
-  const keep=()=>{if(p==="gemini")S.gkey=key;else S.ckey=key;saveS()};
+  const keep=()=>{S.gkey=key;saveS()};
   try{
-    const lib=await sdk(p);
-    if(p==="gemini")await new lib.GoogleGenAI({apiKey:key}).models.get({model:PROV.gemini.def});
-    else await new lib({apiKey:key,dangerouslyAllowBrowser:true}).models.retrieve(PROV.claude.def);
+    const lib=await sdk("gemini");
+    await new lib.GoogleGenAI({apiKey:key}).models.get({model:PROV.gemini.def});
     keep();msgEl.textContent="Schlüssel funktioniert.";return true;
   }catch(e){
-    const bad=p==="gemini"?[400,401,403].includes(e?.status):e instanceof SDK.claude?.AuthenticationError||e instanceof SDK.claude?.PermissionDeniedError;
-    if(bad){msgEl.textContent=p==="gemini"?"Google hat den Schlüssel abgelehnt. Prüf, ob du ihn vollständig kopiert hast.":errInfo(e,p).t;msgEl.classList.add("bad");return false}
+    if([400,401,403].includes(e?.status)){msgEl.textContent="Google hat den Schlüssel abgelehnt. Prüf, ob du ihn vollständig kopiert hast.";msgEl.classList.add("bad");return false}
     keep();msgEl.textContent="Konnte den Schlüssel gerade nicht prüfen, er ist trotzdem gespeichert.";return true;
   }finally{btn.disabled=false}
 }
@@ -1043,16 +856,14 @@ $("#fSet").addEventListener("submit",async e=>{
   S.name=$("#sName").value;S.about=$("#sAbout").value;S.style=$("#sStyle").value;
   if($("#sProv").value!==S.provider&&!busy)cur=null; // anderer Anbieter: gleich mit einem neuen Chat weitermachen
   S.provider=$("#sProv").value;S.gmode=$("#sGMode").value;S.model=S.models[S.provider]=$("#sModel").value;S.effort=$("#sEffort").value;S.web=webWant;S.vvoice=$("#sVoice").value;S.vrate=+$("#sRate").value;saveS();
-  for(const[p,id]of[["gemini","sGKey"],["claude","sCKey"]]){
-    const key=$("#"+id).value.trim();
-    if(key===(p==="gemini"?S.gkey:S.ckey))continue;
-    if(!key){if(p==="gemini")S.gkey="";else S.ckey="";saveS();continue}
-    if(!await checkKey(p,key,$("#setMsg"),$("#bSave")))return;
+  const key=$("#sGKey").value.trim();
+  if(key!==S.gkey){
+    if(!key){S.gkey="";saveS()}
+    else if(!await checkKey(key,$("#setMsg"),$("#bSave")))return;
   }
   dSet.close();
   if(busy)updBrain();else render();
-  if(cur?.msgs.length&&cur.model!==S.model)toast(`Gespeichert. Dieser Chat bleibt bei ${MODELS[cur.model]?.name||cur.model}, neue Chats nutzen ${MODELS[S.model].name}.`);
-  if(S.provider==="eigen")preloadLocal(); // gleich im Hintergrund laden, dann ist sie beim Tippen schon bereit
+  if(cur?.msgs.length&&!gone(cur)&&cur.model!==S.model)toast(`Gespeichert. Dieser Chat bleibt bei ${MODELS[cur.model]?.name||cur.model}, neue Chats nutzen ${MODELS[S.model].name}.`);
 });
 $("#sProv").addEventListener("change",fillModels);
 $("#sGMode").addEventListener("change",fillModels);
@@ -1061,7 +872,7 @@ $("#sWeb").addEventListener("change",e=>{webWant=e.target.checked});
 $("#bLogout").addEventListener("click",async()=>{if(busy)return;await(await auth()).signOut();session=null;dSet.close();render()});
 document.querySelectorAll(".eye").forEach(b=>b.addEventListener("click",()=>{const k=$("#"+b.dataset.for),show=k.type==="password";k.type=show?"text":"password";b.textContent=show?"Verbergen":"Zeigen";b.setAttribute("aria-pressed",String(show))}));
 $("#bWipeChats").addEventListener("click",()=>{if(busy||!confirm("Wirklich alle Chats auf diesem Gerät löschen?"))return;chats=[];cur=null;DB.clear();dSet.close();render()});
-$("#bWipeKey").addEventListener("click",()=>{if(busy||!confirm("Alle API-Schlüssel von diesem Gerät entfernen?"))return;S.gkey="";S.ckey="";saveS();dSet.close();render()});
+$("#bWipeKey").addEventListener("click",()=>{if(busy||!confirm("Alle API-Schlüssel von diesem Gerät entfernen?"))return;S.gkey="";saveS();dSet.close();render()});
 
 // ---------- Sprachmodus ----------
 // Sprechen statt tippen: Der Browser erkennt die Sprache (Web Speech API), die Frage geht wie getippt durch send() und run() in den
@@ -1237,7 +1048,7 @@ async function vWake(){try{V.lock=await navigator.wakeLock?.request("screen")||n
 function vLangUI(){for(const b of document.querySelectorAll("#vLang [data-lang]"))b.setAttribute("aria-pressed",String(b.dataset.lang===S.vlang))}
 function vHint(){
   const ua=navigator.userAgent,via=apple?"von Apple":/Edg\//.test(ua)?"von Microsoft":/Chrome\//.test(ua)?"von Google":"des Browser-Herstellers";
-  $("#vHint").textContent=`Was du sagst, erkennt dein Browser über Server ${via}.`+(provOf(cur||{provider:S.provider})==="eigen"?" Auch mit der eigenen KI geht deine Sprache dafür ins Internet.":"");
+  $("#vHint").textContent=`Was du sagst, erkennt dein Browser über Server ${via}.`;
 }
 function openVoice(){
   if(!SR||!TTS){toast("Dein Browser kann keine Sprache erkennen. Nimm Safari, Chrome oder Edge.");return}
@@ -1371,6 +1182,7 @@ $("#bMenu").addEventListener("click",openList);
 bBrain.addEventListener("click",openBrain);
 $("#brList").addEventListener("click",e=>{const b=e.target.closest("[data-model]");if(b)pickBrain(b.dataset.model)});
 $("#brEff").addEventListener("click",e=>{const b=e.target.closest("[data-eff]");if(!b)return;S.effort=b.dataset.eff;saveS();renderBrain();updBrain()});
+$("#brWeb").addEventListener("click",e=>{const b=e.target.closest("[data-web]");if(b&&!b.disabled)setWeb(b.dataset.web==="1")});
 $("#brMore").addEventListener("click",()=>{shut(dBrain);openSettings()});
 log.addEventListener("click",e=>{
   const t=e.target.closest("[data-copy],[data-again],[data-more],[data-act],[data-id],[data-all],[data-svg]");if(!t)return;
@@ -1484,5 +1296,4 @@ if(viaKonto(S.provider)||S.gmode==="konto"||recovery||linkErr||location.hash.inc
 try{chats=(await DB.all()).sort((a,b)=>b.updated-a.updated)}catch{chats=[]}
 render();grow();hideSplash();
 if(keyOf(S.provider)&&desk.matches)inp.focus();
-if(S.provider==="eigen"&&await localCached(await localVariant()))preloadLocal(); // schon gespeichert: in den Grafikspeicher laden, während man tippt
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
