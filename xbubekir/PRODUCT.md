@@ -53,6 +53,7 @@ Chats auf dem eigenen Gerät, geringe Kosten und Arabisch sind echte Eigenschaft
 - Fehler stehen in kurzen Worten mit passenden Knöpfen da, die Originalmeldung eingeklappt darunter.
 - Arabisch wird als Arabisch gesetzt: eigene Schrift, größer für die Harakat, rein arabische Absätze von rechts nach links.
 - Der Entwurf im Eingabefeld bleibt gespeichert, falls die App zwischendurch zugeht.
+- Sprachmodus (Wellen-Knopf im Eingabefeld): sprechen statt tippen, mit jedem Gehirn. Der Browser erkennt die Sprache (Deutsch, Arabisch oder Englisch), die Antwort wird Satz für Satz vorgelesen, schon während sie hereinkommt, danach hört xbubekir wieder zu. Ein Tipp auf den Kreis unterbricht. Alles landet als normaler Chat. Ein Chat, der im Sprachmodus beginnt, bekommt kurze, vorlesbare Antworten. Stimme und Tempo stehen in den Einstellungen.
 - „Über dich“, Name und „Wie xbubekir antworten soll“ fließen in den System-Prompt.
 - Denktiefe: Schnell, Normal, Gründlich.
 - Kein Gedächtnis über Chats hinaus. Dauerhaftes gehört in „Über dich“.
@@ -62,6 +63,7 @@ Chats auf dem eigenen Gerät, geringe Kosten und Arabisch sind echte Eigenschaft
 
 - **Der Faden bleibt:** Ein laufender Chat behält Anbieter, Modell, System-Prompt und Werkzeuge. Ein Wechsel des Anbieters beginnt einen neuen Chat.
 - **Datenaussagen je Gehirn:** Einstellungen und Chats liegen immer nur im Browser. Nachrichten gehen aber bei Gemini, Claude und DeepSeek an den jeweiligen Anbieter. „Verlässt dein Gerät nicht“ gilt nur für die eigene KI.
+- **Sprachmodus:** Die Spracherkennung läuft über Server des Browser-Herstellers (Safari: Apple, Chrome: Google, Edge: Microsoft). Mit dem Sprachmodus gilt „verlässt dein Gerät nicht“ deshalb auch für die eigene KI nicht mehr. Der Hinweis dazu steht im Sprachmodus selbst.
 - **Gratis-Stufe von Gemini:** Der Hinweis, dass Google Nachrichten je nach Wohnort lesen und nutzen darf, bleibt in der Einrichtung mit eigenem Schlüssel erhalten.
 - **DeepSeek über OpenRouter:** keine Datenspeicherung, keine Anbieter mit Sitz in China, keine fp4-Fassungen.
 - **Oberfläche nur auf Deutsch.** xbubekir antwortet in der Sprache, in der die Person schreibt.
@@ -70,7 +72,7 @@ Chats auf dem eigenen Gerät, geringe Kosten und Arabisch sind echte Eigenschaft
 
 ### Begriffe
 
-Gehirn (Modellwahl), Anbieter, Denktiefe, Schlüssel, Konto, eigene xbubekir-KI, Über dich.
+Gehirn (Modellwahl), Anbieter, Denktiefe, Schlüssel, Konto, eigene xbubekir-KI, Über dich, Sprachmodus.
 
 ### Noch offen
 
