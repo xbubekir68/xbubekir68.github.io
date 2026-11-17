@@ -937,13 +937,13 @@ function vListen(first){
   r.lang=S.vlang;r.interimResults=true;r.continuous=false;r.maxAlternatives=1;
   let fin="",tmp="",err="",quiet=0;
   // Safari am iPhone beendet die Erkennung oft nicht von selbst: Der Text steht da, aber es geht nicht weiter. Darum gilt
-  // eine Pause nach dem letzten Wort als Ende der Frage: 0,6 Sekunden, wenn der Browser den Text schon als fertig meldet, sonst 1 Sekunde.
-  // Kommt auch dann kein Ende, geht es nach 0,4 Sekunden mit dem zuletzt Verstandenen selbst weiter.
+  // eine Pause nach dem letzten Wort als Ende der Frage: 0,5 Sekunden, wenn der Browser den Text schon als fertig meldet, sonst 0,8 Sekunden.
+  // Kommt auch dann kein Ende, geht es nach 0,3 Sekunden mit dem zuletzt Verstandenen selbst weiter.
   const arm=()=>{clearTimeout(quiet);quiet=setTimeout(()=>{
     if(V.rec!==r||!(fin+tmp).trim())return;
     try{r.stop()}catch{}
-    quiet=setTimeout(()=>{if(V.rec===r){r.onend();try{r.abort()}catch{}}},400);
-  },fin&&!tmp?600:1000)};
+    quiet=setTimeout(()=>{if(V.rec===r){r.onend();try{r.abort()}catch{}}},300);
+  },fin&&!tmp?500:800)};
   r.onresult=e=>{fin="";tmp="";for(const x of e.results)if(x.isFinal)fin+=x[0].transcript;else tmp+=x[0].transcript;vYou.textContent=(fin+tmp).trim();vYou.classList.toggle("interim",!fin||!!tmp);B.kick=Math.max(B.kick,.7);arm()};
   r.onerror=e=>{err=e.error};
   r.onspeechstart=r.onsoundstart=()=>{B.speech=1}; // Ersatz für die Lautstärke, falls das Mikrofon nicht messbar ist
@@ -968,7 +968,7 @@ function vListen(first){
 // Eine Runde: Frage schicken, Antwort vorlesen, dann wieder zuhören
 async function vTurn(text){
   const my=++V.turn;
-  vSet("think");vAi.textContent="";
+  vSet("think");vAi.textContent="";V.t0=performance.now();V.tText=V.tAudio=0;
   if(busy)await new Promise(r=>idle.push(r)); // eine frühere Antwort läuft noch
   if(my!==V.turn||!V.on)return;
   if(!cur)cur=newChat(true); // neu im Sprachmodus: kurze, vorlesbare Antworten für das ganze Gespräch
@@ -1003,7 +1003,7 @@ function vFeedRaw(raw,end){
   if(cut<=0)return;
   V.rawDone+=cut;
   const t=vText(rest.slice(0,cut));
-  if(t)vQueue(t);
+  if(t){V.tText||=performance.now();vQueue(t)}
 }
 // Vorlesetext: Code nur erwähnen, Links, Emojis und Markdown-Zeichen weg, jede Zeile endet als Satz
 function vText(src){
@@ -1025,7 +1025,11 @@ function vQueue(text){
     if(i<s.length)parts.push([s.slice(i),base]);
     for(let[t,l]of parts){
       t=t.trim();if(!/[\p{L}\p{N}]/u.test(t))continue;
-      while(t.length>220){let k=t.lastIndexOf(", ",200);if(k<60)k=t.lastIndexOf(" ",200);if(k<1)k=200;V.q.push({t:t.slice(0,k+1),l,show:s});t=t.slice(k+1).trim()}
+      for(let L;t.length>(L=one&&!V.utt&&!V.q.length?80:220);){ // Gemini-Stimme: der erste Abschnitt höchstens 80 Zeichen, damit der Ton schnell kommt
+        const k0=L-20;let k=t.lastIndexOf(", ",k0);if(k<k0*.3)k=t.lastIndexOf(" ",k0);if(k<1)k=k0;
+        V.q.push({t:t.slice(0,k+1),l,show:s});t=t.slice(k+1).trim();
+        if(V.q.length===1&&!V.utt)vPump(); // gleich holen, nicht erst nach dem ganzen Satz
+      }
       // noch nicht gesprochene Sätze zusammenlegen: weniger Pausen zwischen den Sätzen, Online-Stimmen laden seltener nach
       const last=V.q.at(-1);
       if(last&&!last.a&&last.l===l&&last.t.length+t.length<200){last.t+=" "+t;if(!last.show.endsWith(s))last.show+=" "+s}
@@ -1059,7 +1063,7 @@ function vPump(){
   let fin=false;
   const next=()=>{if(fin)return;fin=true;clearTimeout(V.wd);if(V.utt!==ut)return;V.utt=null;V.speaking=false;vPump()};
   ut.onend=ut.onerror=next;V.utt=ut; // festhalten, sonst räumt Chrome sie weg und das Ende kommt nie an
-  ut.onstart=ut.onboundary=()=>{B.kick=Math.max(B.kick,.85)}; // jedes Wort lässt den Kreis aufschwingen
+  ut.onstart=ut.onboundary=()=>{B.kick=Math.max(B.kick,.85);vHeard()}; // jedes Wort lässt den Kreis aufschwingen
   // Safari meldet das Ende manchmal nicht: ab ungefähr der Sprechdauer alle 0,25 Sekunden selbst nachsehen
   const chk=()=>{if(TTS.speaking||TTS.pending)V.wd=setTimeout(chk,250);else next()};
   V.wd=setTimeout(chk,1000+u.t.length*55/ut.rate);
@@ -1082,7 +1086,7 @@ async function vSpeakCloud(u){
   au.onended=au.onerror=next;
   au.ontimeupdate=()=>{B.kick=Math.max(B.kick,.6)}; // etwa viermal pro Sekunde: der Kreis schwingt mit
   au.onloadedmetadata=()=>{clearTimeout(V.wd);V.wd=setTimeout(next,au.duration*1000/au.playbackRate+1500)}; // falls „Ende“ nie kommt
-  au.src=url;au.playbackRate=+S.vrate||1;
+  au.onplaying=vHeard;au.src=url;au.playbackRate=+S.vrate||1;
   au.play().catch(e=>{if(done())back(e)});
 }
 function vHush(){V.q=[];V.utt=null;V.speaking=false;clearTimeout(V.wd);if(TTS.speaking||TTS.pending)TTS.cancel();if(V.au&&!V.au.paused)V.au.pause()}
@@ -1095,6 +1099,13 @@ function vUnlock(){
 } // iPhone: Vorlesen nur nach einem Tipp, hier einmal freischalten
 async function vWake(){try{V.lock=await navigator.wakeLock?.request("screen")||null}catch{}} // Bildschirm bleibt an, solange gesprochen wird
 function vLangUI(){for(const b of document.querySelectorAll("#vLang [data-lang]"))b.setAttribute("aria-pressed",String(b.dataset.lang===S.vlang))}
+// Messung: ab „du hast fertig gesprochen“ bis zum ersten Text und bis zum ersten Ton, im Hinweis unten sichtbar (auch am iPhone)
+function vHeard(){
+  if(!V.t0||V.tAudio)return;
+  V.tAudio=performance.now();const s=x=>((x-V.t0)/1000).toFixed(1).replace(".",",");
+  const m=`Letzte Runde: Antwort nach ${V.tText?s(V.tText):"?"} s, Stimme nach ${s(V.tAudio)} s.`;
+  console.info("Sprachmodus:",m);vHint();$("#vHint").textContent+=" "+m;
+}
 function vHint(){
   const ua=navigator.userAgent,via=apple?"von Apple":/Edg\//.test(ua)?"von Microsoft":/Chrome\//.test(ua)?"von Google":"des Browser-Herstellers";
   $("#vHint").textContent=`Was du sagst, erkennt dein Browser über Server ${via}.`;
