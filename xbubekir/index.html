@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
 <title>xbubekir</title>
 <meta name="description" content="xbubekir – deine persönliche KI.">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://huggingface.co https://*.huggingface.co https://*.hf.co https://raw.githubusercontent.com https://ydasoikczdjjdtdarrpx.supabase.co https://generativelanguage.googleapis.com https://api.anthropic.com; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://ydasoikczdjjdtdarrpx.supabase.co https://generativelanguage.googleapis.com; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#0a0713">
 <link rel="manifest" href="manifest.webmanifest">
@@ -162,18 +162,6 @@ body.start #log{flex:none;overflow:visible;padding-top:0;padding-bottom:0}
 .err details{margin-top:8px;font-size:13px;color:var(--bad)}
 .err summary{display:inline-flex;align-items:center;min-height:32px;cursor:pointer}
 .err details code{display:block;margin-top:2px;font-family:var(--mono);font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere}
-.lstat{padding:10px var(--pad) 12px;border-bottom:1px solid var(--line);font-size:14px;color:var(--mute);background:rgba(10,7,19,.75)}
-.lstat>*{max-width:var(--col);margin:0 auto}
-.lstat p{margin-bottom:6px}
-.lstat small{font-size:13px}
-.lstat progress{display:block;width:100%;height:6px;border:0;border-radius:3px;background:var(--line);-webkit-appearance:none;appearance:none;overflow:hidden}
-.lstat progress::-webkit-progress-bar{background:var(--line);border-radius:3px}
-.lstat progress::-webkit-progress-value{background:var(--acc2);border-radius:3px}
-.lstat progress::-moz-progress-bar{background:var(--acc2);border-radius:3px}
-.lstat progress:indeterminate{background:linear-gradient(90deg,var(--line) 30%,var(--acc2) 50%,var(--line) 70%) 0 0/300% 100%;animation:load 1.4s linear infinite}
-.lstat progress:indeterminate::-webkit-progress-bar{background:transparent}
-@keyframes load{to{background-position:-150% 0}}
-.lstat.bad{color:var(--bad)}
 /* Eingabe mit Gehirn-Zeile */
 .dock{flex:none;width:calc(100% - 2*var(--pad));max-width:var(--col);margin:0 auto;padding-bottom:calc(20px + env(safe-area-inset-bottom))}
 body.start .dock{padding-bottom:0}
@@ -296,7 +284,9 @@ label.chk{display:flex;align-items:center;gap:10px;min-height:44px;font-weight:5
 .seg button{min-height:40px;border:0;border-radius:10px;background:none;color:var(--soft);font-size:14px}
 .seg button:hover{background:var(--hov)}
 .seg button[aria-pressed=true]{background:var(--acc);color:#fff;font-weight:600}
-#brEff .hint{margin:6px 6px 0}
+#brEff .hint,#brWeb .hint{margin:6px 6px 0}
+#brWeb .seg{grid-template-columns:repeat(2,1fr)}
+.seg button:disabled{opacity:.45;cursor:default;background:none}
 /* Sprachmodus: ganzer Bildschirm, in der Mitte der Kreis; Zustand steht in data-state (listen, think, speak, pause, error) */
 .voice{margin:0;width:100%;max-width:100%;height:100dvh;max-height:100dvh;border:0;border-radius:0;background:radial-gradient(130% 60% at 50% 105%,#1b1132,var(--bg) 62%)}
 .voice[open]{display:flex;flex-direction:column}
@@ -339,7 +329,7 @@ dialog.snap::backdrop{transition:opacity .24s ease-out}
 @keyframes pop{from{opacity:0;transform:translateY(8px) scale(.985)}}
 @keyframes slide{from{transform:translateX(-100%)}}
 @keyframes rise{from{transform:translateY(100%)}}
-@media (prefers-reduced-motion:reduce){.wait,.lstat progress:indeterminate{animation:none}.fx{transition:none}}
+@media (prefers-reduced-motion:reduce){.wait{animation:none}.fx{transition:none}}
 @media (pointer:coarse){
   .mini{min-height:44px}
   .brain{min-height:40px}
@@ -420,7 +410,6 @@ dialog.snap::backdrop{transition:opacity .24s ease-out}
     <div class="ttl"><img class="wm" id="topWm" src="brand/wortmarke.webp" alt="xbubekir" width="900" height="259"><span id="topT"></span></div>
     <button class="ib" id="bNewTop" type="button" aria-label="Neuer Chat" title="Neuer Chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4H6.5A2.5 2.5 0 0 0 4 6.5v11A2.5 2.5 0 0 0 6.5 20h11a2.5 2.5 0 0 0 2.5-2.5V12"/><path d="M17.6 3.6a2 2 0 0 1 2.8 2.8L13 13.8l-3.6.8.8-3.6Z"/></svg></button>
   </header>
-  <div id="lstat" class="lstat" role="status" hidden><p id="lstatT"></p><progress id="lstatP" max="1"></progress></div>
   <main id="log" aria-label="Gespräch"></main>
   <div class="dock">
     <button id="bDown" class="down" type="button" aria-label="Zum Ende des Gesprächs" title="Nach unten" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></button>
@@ -459,6 +448,11 @@ dialog.snap::backdrop{transition:opacity .24s ease-out}
       <div class="seg" role="group" aria-labelledby="brEffH"><button type="button" data-eff="low">Schnell</button><button type="button" data-eff="medium">Normal</button><button type="button" data-eff="high">Gründlich</button></div>
       <p class="hint">Gilt sofort, auch im laufenden Chat.</p>
     </div>
+    <div id="brWeb">
+      <h3 class="bh" id="brWebH">Internet</h3>
+      <div class="seg" role="group" aria-labelledby="brWebH"><button type="button" data-web="1">Suchen erlaubt</button><button type="button" data-web="0">Aus</button></div>
+      <p class="hint" id="brWebHint"></p>
+    </div>
     <button class="sb" id="brMore" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg><span>Schlüssel, Konto und mehr</span></button>
   </div>
 </dialog>
@@ -472,11 +466,8 @@ dialog.snap::backdrop{transition:opacity .24s ease-out}
         <label for="sProv">Wer denkt für xbubekir?</label>
         <select class="f" id="sProv">
           <option value="gemini">Google Gemini – kostenlos</option>
-          <option value="claude">Anthropic Claude – kostenpflichtig</option>
           <option value="open">DeepSeek (Open Source) – über dein Konto, Cent-Beträge</option>
-          <option value="eigen">Eigene xbubekir-KI – im Browser, kostenlos</option>
         </select>
-        <p class="hint" id="kEigen" hidden>Kein Schlüssel und kein Konto nötig. Läuft komplett auf diesem Gerät.</p>
         <p class="hint" id="kOpen" hidden>Läuft über dein xbubekir-Konto: Der OpenRouter-Schlüssel liegt nur auf deinem Server.</p>
         <div id="mRow">
           <label for="sModel">Modell</label>
@@ -508,12 +499,7 @@ dialog.snap::backdrop{transition:opacity .24s ease-out}
           <p class="hint" id="kontoInfo"></p>
           <button type="button" class="linkbtn hint" id="bLogout">Abmelden</button>
         </div>
-        <div id="kClaude" hidden>
-          <label for="sCKey">Anthropic-API-Schlüssel</label>
-          <div class="keyrow"><input class="f" id="sCKey" type="password" autocomplete="off" spellcheck="false" placeholder="sk-ant-…"><button type="button" class="eye" data-for="sCKey" aria-pressed="false">Zeigen</button></div>
-          <p class="hint">Erstellen auf <a href="https://platform.claude.com/" target="_blank" rel="noopener noreferrer">platform.claude.com</a>, dafür ist Guthaben nötig.</p>
-        </div>
-        <p class="hint" id="kKey">Schlüssel bleiben nur auf diesem Gerät und gehen nur an den jeweiligen Anbieter.</p>
+        <p class="hint" id="kKey">Der Schlüssel bleibt nur auf diesem Gerät und geht nur an Google.</p>
       </fieldset>
       <fieldset>
         <legend>Über dich</legend>
