@@ -45,7 +45,7 @@ Chats auf dem eigenen Gerät, geringe Kosten und Arabisch sind echte Eigenschaft
 
 ### Funktionen
 
-- Chat mit Markdown-Antworten, Denkblöcken und Anhalten der Antwort. Die letzte Antwort lässt sich neu erzeugen, eine abgeschnittene fortsetzen. „Kopieren“ liefert Klartext ohne Markdown-Zeichen.
+- Chat mit Markdown-Antworten, Denkblöcken und Anhalten der Antwort. Die Antwort erscheint Zeichen für Zeichen getippt statt in Brocken (mindestens 120 Zeichen pro Sekunde, bei Rückstand schneller, damit sie nie weit hinter dem Netz liegt). „Anhalten“ zeigt den Rest sofort. Im Sprachmodus und bei „weniger Bewegung“ erscheint sie ohne Animation. Die letzte Antwort lässt sich neu erzeugen, eine abgeschnittene fortsetzen. „Kopieren“ liefert Klartext ohne Markdown-Zeichen.
 - Gehirn wechseln per Tipp auf die Gehirn-Zeile: ein Blatt mit allen Modellen, der Denktiefe und dem Internet-Schalter, ohne Speichern-Knopf. Ein anderes Modell beginnt im laufenden Chat einen neuen Chat; Denktiefe und Internet gelten sofort, auch im laufenden Chat.
 - Am PC eine Seitenleiste mit Chats nach Datum und Suche, am Handy eine Kopfleiste mit Schublade (auch quer) und die letzten Chats auf dem Startbild.
 - Gezeichnete Bilder: Gemini und DeepSeek können Vektorbilder (SVG) zeichnen, etwa Logos, Icons, Diagramme oder einfache Illustrationen. Ein ```svg-Block erscheint als Bild auf hellem Zeichenblatt, mit „Als Bild sichern“ (PNG, am iPhone übers Teilen-Menü in Fotos), „SVG“ und dem eingeklappten Code. Das SVG kommt nur als Bild in die Seite, so kann es kein Skript ausführen und nichts nachladen. Fotos erzeugt xbubekir nicht.
@@ -57,6 +57,7 @@ Chats auf dem eigenen Gerät, geringe Kosten und Arabisch sind echte Eigenschaft
 - Denktiefe: Schnell, Normal, Gründlich.
 - Kein Gedächtnis über Chats hinaus. Dauerhaftes gehört in „Über dich“.
 - Als App installierbar. Die Oberfläche lädt auch offline.
+- Update-Hinweis: Ist eine neue Version da, erscheint oben „Update verfügbar“ mit „Neu starten“. Die App fragt beim Zurückkehren und alle 30 Minuten danach. Eine laufende Antwort wird vor dem Neustart angehalten, ihr Text bleibt im Chat.
 
 ### Feste Regeln
 
@@ -67,6 +68,7 @@ Chats auf dem eigenen Gerät, geringe Kosten und Arabisch sind echte Eigenschaft
 - **DeepSeek über OpenRouter:** keine Datenspeicherung, keine Anbieter mit Sitz in China, keine fp4-Fassungen.
 - **Oberfläche nur auf Deutsch.** xbubekir antwortet in der Sprache, in der die Person schreibt.
 - **Statische Seite ohne Build-Schritt für die App:** Oberfläche in `index.html`, Logik in `app.js`, SDKs gebündelt in `vendor/`.
+- **Jede neue Version zählt `V` in `sw.js` hoch.** Nur eine geänderte `sw.js` erkennt der Browser als Update, sonst kommt kein Update-Hinweis.
 - **Strenge CSP als Meta-Tag in `index.html`:** Diese Datei geht unverändert live, Ausnahmen nur für die Entwicklung sind deshalb nicht möglich.
 
 ### Begriffe

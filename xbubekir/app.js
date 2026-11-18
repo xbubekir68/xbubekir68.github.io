@@ -225,6 +225,7 @@ async function run(c,um,again){
   let err=null,back=false;
   try{await({gemini:askGemini,open:askOpen}[p])(c,um,live)}
   catch(e){err=e;if(again){const i=c.msgs.indexOf(um);if(i>=0)c.msgs.splice(i+1)}else back=undo(c,um)}
+  if(err)typeEnd();else{stopFn=typeEnd;await typed()} // erst zu Ende tippen, dann den fertigen Chat zeichnen
   stopFn=null;
   const mine=c===cur;
   if(c.msgs.length)store(c);else forget(c);
@@ -658,13 +659,38 @@ function render(){
   updSend();updDown();
 }
 
-let raf=0,pending=null;
-function paint(el,blocks){ // beim Streamen höchstens einmal pro Bild neu zeichnen
-  if(V.live&&el.id==="live")voiceFeed(blocks); // Sprachmodus: fertige Sätze schon vorlesen, während der Rest noch kommt
-  pending=blocks;
-  if(raf)return;
-  raf=requestAnimationFrame(()=>{raf=0;if(!el.isConnected)return;const stick=nearBottom();el.innerHTML=viewBlocks(pending,true);if(stick)toBottom();updDown()});
+// Tipp-Effekt: Der Antworttext erscheint Zeichen für Zeichen statt in Brocken, wie das Netz ihn liefert. Mindestens 120 Zeichen/s,
+// bei Rückstand schneller (Rückstand ÷ 0,4 s), damit es nie weit hinterherhinkt. Sprachmodus und „weniger Bewegung“: sofort ganz.
+let raf=0,pending=null;const tw={el:null,n:0,t:0,wait:[]};
+const textLen=bs=>bs.reduce((n,b)=>n+(b.type==="text"?b.text.length:0),0);
+function upTo(bs,n){ // nur die ersten n Zeichen des Antworttexts
+  return bs.flatMap(b=>{
+    if(b.type!=="text")return[b];if(n<=0)return[];
+    let t=b.text.slice(0,n);n-=b.text.length;
+    if(/[\uD800-\uDBFF]$/.test(t))t=t.slice(0,-1); // kein halbes Emoji
+    const k=t.lastIndexOf("**");if(k>=0&&(t.match(/\*\*/g)||[]).length%2)t=t.slice(0,k)+t.slice(k+2); // offenes ** nicht zeigen, fett wird es beim Schließen
+    return[{...b,text:t}];
+  });
 }
+function paint(el,blocks){
+  if(V.live&&el.id==="live")voiceFeed(blocks); // Sprachmodus: fertige Sätze schon vorlesen, während der Rest noch kommt
+  if(tw.el!==el){tw.el=el;tw.n=0;tw.t=0}
+  pending=blocks;
+  if(!raf)raf=requestAnimationFrame(tick);
+}
+function tick(now){
+  raf=0;const el=tw.el;if(!el?.isConnected){typeEnd();return}
+  const all=textLen(pending),dt=tw.t?Math.min(100,now-tw.t):16;tw.t=now;
+  tw.n=V.live||still.matches?all:Math.min(all,tw.n+dt/1000*Math.max(120,(all-tw.n)*2.5));
+  const stick=nearBottom();el.innerHTML=viewBlocks(upTo(pending,Math.floor(tw.n)),true);if(stick)toBottom();updDown();
+  if(tw.n<all)raf=requestAnimationFrame(tick);else typeEnd();
+}
+function typeEnd(){ // Rest sofort zeigen (Stopp, Fehler) und alle Wartenden freigeben
+  if(raf){cancelAnimationFrame(raf);raf=0}
+  if(pending&&tw.el?.isConnected&&tw.n<textLen(pending)){tw.n=textLen(pending);tw.el.innerHTML=viewBlocks(pending,true);if(nearBottom())toBottom()}
+  tw.t=0;const w=tw.wait;tw.wait=[];w.forEach(r=>r());
+}
+const typed=()=>new Promise(r=>{if(raf)tw.wait.push(r);else r()}); // fertig, wenn alles Empfangene getippt ist
 const nearBottom=()=>log.scrollHeight-log.scrollTop-log.clientHeight<90;
 function toBottom(){log.scrollTop=log.scrollHeight}
 function updDown(){bDown.hidden=document.body.classList.contains("start")||nearBottom()}
@@ -717,7 +743,7 @@ function forget(c){chats=chats.filter(x=>x!==c);DB.del(c.id)}
 async function settle(){ // läuft gerade eine Antwort, wird sie vor dem Wechsel angehalten (der Teiltext bleibt im Chat)
   if(!busy)return true;
   if(!stopFn){toast("Die xbubekir-KI lädt noch. Einen Moment.");return false}
-  stopFn();await new Promise(r=>idle.push(r));return true;
+  typeEnd();stopFn();await new Promise(r=>idle.push(r));return true;
 }
 async function openChat(c){
   if(!c)return;
@@ -1310,7 +1336,7 @@ let atEnd=true; // stand das Gespräch unten, bleibt es unten, wenn die Tastatur
 log.addEventListener("scroll",()=>{atEnd=nearBottom();updDown()},{passive:true});
 addEventListener("resize",()=>{if(atEnd)toBottom();updDown()});
 bDown.addEventListener("click",()=>log.scrollTo({top:log.scrollHeight,behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"}));
-$("#composer").addEventListener("submit",e=>{e.preventDefault();if(busy)stopFn?.();else send()});
+$("#composer").addEventListener("submit",e=>{e.preventDefault();if(busy){typeEnd();stopFn?.()}else send()});
 inp.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing&&desk.matches){e.preventDefault();send()}});
 inp.addEventListener("input",grow);
 $("#bPic").addEventListener("click",()=>{if(canPic())$("#fPic").click();else toast(NOPIC)});
@@ -1408,4 +1434,15 @@ if(viaKonto(S.provider)||S.gmode==="konto"||recovery||linkErr||location.hash.inc
 try{chats=(await DB.all()).sort((a,b)=>b.updated-a.updated)}catch{chats=[]}
 render();grow();hideSplash();
 if(keyOf(S.provider)&&desk.matches)inp.focus();
-if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+// Update-Hinweis: Jede neue Version ändert sw.js. Übernimmt der neue Worker, läuft hier noch der alte Code, also „Neu starten“ anbieten.
+// Eine offene App lädt nie von selbst neu, deshalb beim Zurückkehren und alle 30 Minuten nach Updates fragen.
+if("serviceWorker" in navigator){
+  const SW=navigator.serviceWorker;let had=!!SW.controller; // beim allerersten Besuch ist der neue Worker kein Update
+  SW.addEventListener("controllerchange",()=>{if(had)$("#upd").hidden=false;had=true});
+  SW.register("sw.js").then(reg=>{
+    const check=()=>reg.update().catch(()=>{});
+    document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")check()});
+    setInterval(check,30*60e3);
+  }).catch(()=>{});
+  $("#bUpd").addEventListener("click",async()=>{if(await settle())location.reload()}); // eine laufende Antwort erst anhalten, ihr Text bleibt im Chat
+}
