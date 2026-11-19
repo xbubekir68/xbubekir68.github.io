@@ -254,6 +254,16 @@ label.chk{display:flex;align-items:center;gap:10px;min-height:44px;font-weight:5
 .dfoot .status{margin:0 0 8px}
 .dfoot .status:empty{display:none}
 .dfoot .dacts{margin-top:0}
+/* Einstellungen → Gedächtnis */
+#memList h4{margin:16px 0 2px;font-size:13px;font-weight:600;color:var(--mute)}
+#memList ul{list-style:none;margin:0;padding:0}
+#memList li{display:flex;flex-wrap:wrap;align-items:center;gap:0 14px;padding:8px 0 2px;border-bottom:1px solid var(--line)}
+#memList li p{flex:1 1 100%;margin:0;font-size:15px;overflow-wrap:anywhere}
+#memList small{flex:1 1 auto;color:var(--mute);font-size:12.5px}
+#memList li span{display:flex;gap:16px;font-size:13.5px}
+#memList .linkbtn,.memacts .linkbtn{min-height:40px}
+.memacts{display:flex;flex-wrap:wrap;gap:0 20px;margin-top:6px;font-size:14px}
+#bMemWipe{color:var(--bad)}
 /* Chats als Schublade am Handy */
 .sheet{margin:0 auto 0 0;width:min(340px,88vw);height:100dvh;max-height:none;border-radius:0 18px 18px 0;border-left:0}
 .sheet[open]{display:flex;flex-direction:column}
@@ -512,6 +522,17 @@ dialog.snap::backdrop{transition:opacity .24s ease-out}
         <textarea class="f" id="sAbout" rows="4" maxlength="4000" placeholder="z. B. wo du wohnst, was du machst, wofür du dich interessierst, woran du gerade arbeitest"></textarea>
         <label for="sStyle">Wie xbubekir antworten soll</label>
         <textarea class="f" id="sStyle" rows="3" maxlength="2000" placeholder="z. B. „Antworte kurz und auf den Punkt.“ oder „Erklär mir Technik wie einem Anfänger.“"></textarea>
+      </fieldset>
+      <fieldset id="fsMem">
+        <legend>Gedächtnis</legend>
+        <label class="chk"><input type="checkbox" id="sMem"> xbubekir darf sich Dinge über mich merken</label>
+        <p class="hint">xbubekir merkt sich aus deinen Nachrichten, was dauerhaft nützlich ist: wer du bist, was du lernst, wie du Antworten magst und woran du arbeitest. Neue Chats nutzen das, mit jedem Gehirn. Dafür geht jede Nachricht zusätzlich an xbu (über deinen Server bei OpenRouter, ohne Datenspeicherung), das kostet etwa 0,02 Cent. Die Erinnerungen liegen auf deinem Server. Passwörter und Zugangsdaten merkt es sich nie, Gesundheit, Glauben oder Politik nur, wenn du ausdrücklich darum bittest.</p>
+        <p class="hint" id="memNeed">Geht nur mit deinem xbubekir-Konto.</p>
+        <div id="memBox" hidden>
+          <div id="memList"></div>
+          <div class="memacts"><button type="button" class="linkbtn" id="bMemAdd">Selbst etwas eintragen</button><button type="button" class="linkbtn" id="bMemWipe">Alles vergessen</button></div>
+          <p class="hint">Eintragen, Ändern und Löschen wirkt sofort, auch in laufenden Chats.</p>
+        </div>
       </fieldset>
       <fieldset id="fsVoice">
         <legend>Sprachmodus</legend>
