@@ -1,6 +1,17 @@
 // xbubekir: persönliche KI im Browser. Denkt mit Gemini von Google (kostenlos) oder DeepSeek (Open Source, über den eigenen
 // Server und OpenRouter); Chats liegen auf dem Gerät und, mit Konto, auf dem eigenen Server für die anderen Geräte.
 
+// Bricht der Start ab (etwa kurz nach einem Update, wenn der Server schon das neue app.js, aber noch das alte index.html liefert),
+// lädt die Seite sich nach einer kurzen Pause neu, höchstens zweimal pro Sitzung (sessionStorage), danach ein Hinweis statt einer Schleife.
+let booted=false;
+function bootFail(){
+  if(booted)return;
+  let n=0;try{n=+sessionStorage.getItem("xb.boot")||0;sessionStorage.setItem("xb.boot",n+1)}catch{n=2}
+  if(n<2){setTimeout(()=>location.reload(),1500*(n+1));return}
+  const t=document.getElementById("toast");if(t){t.textContent="xbubekir konnte nicht richtig starten. Lade die Seite in ein paar Minuten neu.";t.hidden=false}
+}
+addEventListener("error",bootFail);addEventListener("unhandledrejection",bootFail);
+
 // p: Anbieter; base: echtes Modell hinter einem eigenen Namen (die KI nennt es auf Nachfrage); web: kann im Internet suchen (bei DeepSeek nur ein Merker, das Werkzeug setzt der Server); img: kann Bilder sehen
 const MODELS={
   "gemini-3.8-flash":{p:"gemini",name:"Gemini 3.8 Flash",hint:"am klügsten",img:true},
@@ -1641,6 +1652,7 @@ if(memOn())memLoad().catch(()=>{});
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState!=="visible")return;sync();if(memOn())memLoad().catch(()=>{})});
 addEventListener("online",sync);
 render();grow();hideSplash();
+booted=true;try{sessionStorage.removeItem("xb.boot")}catch{} // Start geschafft: spätere Fehler lösen kein Neuladen mehr aus
 if(keyOf(S.provider)&&desk.matches)inp.focus();
 // Update-Hinweis: Jede neue Version ändert sw.js. Übernimmt der neue Worker, läuft hier noch der alte Code, also „Neu starten“ anbieten.
 // Eine offene App lädt nie von selbst neu, deshalb beim Zurückkehren und alle 30 Minuten nach Updates fragen.
