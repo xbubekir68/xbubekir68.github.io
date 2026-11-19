@@ -34,7 +34,7 @@ function device() {
   const env = {
     Date: D, tick: (ms) => { T.t += ms; }, localStorage: { getItem: (k) => store[k] ?? null, setItem: (k, v) => { store[k] = v; } },
     navigator: { onLine: true }, setTimeout: () => 0, clearTimeout: () => {}, console,
-    DB: { put() {}, del() {} }, auth: async () => ({ from: table }),
+    DB: { put() {}, del() {} }, db: async () => ({ from: table }), auth: async () => ({}),
   };
   const make = new Function(...Object.keys(env), `
     let chats=[],cur=null,busy=false,recovery=false,session={user:{id:"u1"}},renders=0;

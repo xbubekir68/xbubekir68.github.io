@@ -57,14 +57,15 @@ Chats in eigener Hand, geringe Kosten und Arabisch sind echte Eigenschaften, wur
 - Sprachmodus (Wellen-Knopf im Eingabefeld): sprechen statt tippen, mit jedem Gehirn. Der Browser erkennt die Sprache (Deutsch, Arabisch oder Englisch), die Antwort wird Satz für Satz vorgelesen, schon während sie hereinkommt, danach hört xbubekir wieder zu. Ein Tipp auf den Kreis unterbricht. Der Kreis lebt: Beim Zuhören folgt er der Lautstärke am Mikrofon (nur der Pegel wird gemessen, solange zugehört wird, nichts wird aufgenommen), beim Vorlesen schwingt er mit jedem Wort. Alles landet als normaler Chat. Ein Chat, der im Sprachmodus beginnt, bekommt kurze, vorlesbare Antworten. Vorgelesen wird mit einer Gemini-Stimme (Gemini 3.8 Flash-Lite TTS, sechs weibliche Stimmen, Standard „Sulafat“), der nächste Abschnitt wird schon geholt, während der aktuelle läuft. Ohne Zugang oder nach einem Fehler (etwa Limit erreicht) liest die Gerätestimme weiter. Der erste Ton startet schon am ersten Komma, Stille am Anfang und Ende der Abschnitte wird gekürzt, und zwei Player wechseln sich ab, damit kaum Pausen entstehen. Unten im Sprachmodus steht nach jeder Runde, wie lange Antwort und Stimme gebraucht haben. Stimme mit „Anhören“-Probe und Tempo stehen in den Einstellungen.
 - „Über dich“, Name und „Wie xbubekir antworten soll“ fließen in den System-Prompt.
 - Denktiefe: Schnell, Normal, Gründlich.
-- Kein Gedächtnis über Chats hinaus. Dauerhaftes gehört in „Über dich“.
+- Gedächtnis (Einstellungen → Gedächtnis, aus, bis die Person es ausdrücklich einschaltet, nur mit Konto): Nach jeder Antwort prüft xbu (DeepSeek V4.1 Flash über den eigenen Server, egal welches Gehirn den Chat führt) die Nachricht der Person und legt kurze Erinnerungen an, ändert veraltete statt Doppelte anzulegen oder löscht sie, wenn die Person es sagt. Arten: Über dich (person), Wie du Antworten magst (vorliebe), Projekt mit Namen (projekt), Sonstiges (info). Jede Erinnerung hat Quelle (Chat), Zeit und „gesagt“, „vermutet“ oder „von dir eingetragen“. Ein neuer Chat bekommt beim ersten Satz alles über die Person und die Vorlieben, dazu Passendes aus Sonstiges und höchstens ein Projekt, damit sich Projekte nicht vermischen. Die Erinnerungen stehen als markierte Daten in der Anweisung an die KI, nicht als Befehle. Eine Rückmeldung („Gemerkt: …“) zeigt jede Änderung. In den Einstellungen lässt sich alles ansehen, ändern, löschen, selbst eintragen und auf einmal vergessen. Löschen ist echtes Löschen, auch in laufenden Chats. Passwörter und Zugangsdaten kommen nie hinein, Gesundheit, Glauben, Politik und ähnlich Sensibles nur auf ausdrückliche Bitte. Ohne Gedächtnis bleibt „Über dich“ der Ort für Dauerhaftes.
+- Kurzzeitgedächtnis ist der laufende Chat: Er geht vollständig an das Gehirn, bis der Server ihn als zu lang ablehnt.
 - Als App installierbar. Die Oberfläche lädt auch offline.
 - Update-Hinweis: Ist eine neue Version da, erscheint oben „Update verfügbar“ mit „Neu starten“. Die App fragt beim Zurückkehren und alle 30 Minuten danach. Eine laufende Antwort wird vor dem Neustart angehalten, ihr Text bleibt im Chat.
 
 ### Feste Regeln
 
 - **Der Faden bleibt:** Ein laufender Chat behält Anbieter, Modell und System-Prompt. Ein Wechsel des Anbieters beginnt einen neuen Chat. Einzige Ausnahme: Der Internet-Schalter ändert im laufenden DeepSeek-Chat Werkzeug und Websuche-Satz im System-Prompt.
-- **Datenaussagen je Gehirn:** Einstellungen liegen nur im Browser. Chats liegen im Browser und, mit Konto, auf dem eigenen Supabase-Server, damit sie auf allen Geräten da sind. Nachrichten gehen aber an den jeweiligen Anbieter (Google oder über OpenRouter an DeepSeek).
+- **Datenaussagen je Gehirn:** Einstellungen liegen nur im Browser. Chats liegen im Browser und, mit Konto, auf dem eigenen Supabase-Server, damit sie auf allen Geräten da sind. Nachrichten gehen aber an den jeweiligen Anbieter (Google oder über OpenRouter an DeepSeek). Mit Gedächtnis liegen die Erinnerungen auf dem eigenen Server, und jede Nachricht geht zusätzlich an xbu über OpenRouter.
 - **Sprachmodus:** Die Spracherkennung läuft über Server des Browser-Herstellers (Safari: Apple, Chrome: Google, Edge: Microsoft). Der Hinweis dazu steht im Sprachmodus selbst. Mit einer Gemini-Stimme geht zusätzlich der vorgelesene Text an Google (über den eigenen Server oder mit dem eigenen Schlüssel).
 - **Gratis-Stufe von Gemini:** Der Hinweis, dass Google Nachrichten je nach Wohnort lesen und nutzen darf, bleibt in der Einrichtung mit eigenem Schlüssel erhalten.
 - **DeepSeek über OpenRouter:** keine Datenspeicherung, keine Anbieter mit Sitz in China, keine fp4-Fassungen.
@@ -75,9 +76,11 @@ Chats in eigener Hand, geringe Kosten und Arabisch sind echte Eigenschaften, wur
 
 ### Begriffe
 
-Gehirn (Modellwahl), Anbieter, Denktiefe, Internet, Schlüssel, Konto, Über dich, Sprachmodus.
+Gehirn (Modellwahl), Anbieter, Denktiefe, Internet, Schlüssel, Konto, Über dich, Sprachmodus, Gedächtnis, Erinnerung.
 
 ### Noch offen
+
+- Gedächtnis, nächste Schritte bei Bedarf: Auswahl über Embeddings (pgvector) statt Wortanfängen, sobald es viele hundert Erinnerungen werden (Grenze jetzt 300); Zusammenhänge zwischen Zielen, Projekten und Lernstand.
 
 - Die Anleitung zum eigenen API-Schlüssel richtet sich an jede Person, obwohl die App nur für eine gedacht ist. Ob sie bleibt, ist nicht entschieden.
 - Wie weitere Apps xbu nutzen, folgt dem Beispiel Mufradaat: Für mufradaat.AI gibt es im Projekt „xbubekir AI“ die eigene Edge Function `mufradaat` (DeepSeek V4.1 Flash über OpenRouter, derselbe Schlüssel). Sie prüft Konten von Mufradaat bei dessen eigener Anmeldung, legt die Anweisung an die KI selbst fest und zählt Nachrichten pro Konto und Tag (`public.mufradaat_ai_usage`).
