@@ -22,7 +22,7 @@ Erfolg ist nicht als Kennzahl festgelegt.
 
 **Eine KI, viele Gehirne.** xbubekir bleibt dieselbe Persönlichkeit in derselben Oberfläche, egal ob Gemini oder DeepSeek denkt. Das Modell ist eine Einstellung, nicht das Produkt.
 
-Chats auf dem eigenen Gerät, geringe Kosten und Arabisch sind echte Eigenschaften, wurden aber ausdrücklich nicht als Unterschied gewählt. Sie stützen die Positionierung und ersetzen sie nicht.
+Chats in eigener Hand, geringe Kosten und Arabisch sind echte Eigenschaften, wurden aber ausdrücklich nicht als Unterschied gewählt. Sie stützen die Positionierung und ersetzen sie nicht.
 
 **Powered by xbu.** Nach diesem System laufen alle eigenen Projekte: Eine App bekommt KI-Funktionen, und die übernimmt xbu. Erstes Beispiel ist mufradaat.AI, im Logo „powered by xbu“.
 
@@ -41,10 +41,11 @@ Chats auf dem eigenen Gerät, geringe Kosten und Arabisch sind echte Eigenschaft
 | Gehirn | Zugang | Kosten | Besonderheit |
 | --- | --- | --- | --- |
 | Gemini (3.8 Flash, 3.5 Flash-Lite) | Konto oder eigener Schlüssel | kostenlos, mit Limits | Standard |
-| DeepSeek (V4.1 Flash, V4 Pro) | nur Konto, über OpenRouter | meist unter 0,1 Cent pro Nachricht | Server legt Modelle, Länge und erlaubte Anbieter fest; Websuche mit Quellen (etwa 0,5 Cent pro Suche, höchstens 3 pro Antwort) |
+| DeepSeek, in der Oberfläche „xbu“ (V4.1 Flash) und „xbu.plus“ (V4 Pro) | nur Konto, über OpenRouter | meist unter 0,1 Cent pro Nachricht | Server legt Modelle, Länge und erlaubte Anbieter fest; Websuche mit Quellen (etwa 0,5 Cent pro Suche, höchstens 3 pro Antwort) |
 
 ### Funktionen
 
+- xbu vorne, DeepSeek im Hintergrund: Die Oberfläche zeigt den Anbieter als „xbu“, DeepSeek V4.1 Flash als „xbu“ und DeepSeek V4 Pro als „xbu.plus“ (Modellauswahl, Gehirn-Zeile, Chatliste, Einstellungen, Fehlermeldungen). DeepSeek steht nur noch in der Modellinfo der Einstellungen. Die Einstellungen sagen dazu: „xbu basiert auf DeepSeek V4.1 Flash, xbu.plus auf DeepSeek V4 Pro. Beide Modelle stehen unter der MIT-Lizenz. Der Zugriff erfolgt über OpenRouter.“ Technische Modell-IDs, Preise und Chats bleiben gleich.
 - Chat mit Markdown-Antworten, Denkblöcken und Anhalten der Antwort. Die Antwort erscheint Zeichen für Zeichen getippt statt in Brocken (mindestens 120 Zeichen pro Sekunde, bei Rückstand schneller, damit sie nie weit hinter dem Netz liegt). „Anhalten“ zeigt den Rest sofort. Im Sprachmodus und bei „weniger Bewegung“ erscheint sie ohne Animation. Die letzte Antwort lässt sich neu erzeugen, eine abgeschnittene fortsetzen. „Kopieren“ liefert Klartext ohne Markdown-Zeichen.
 - Gehirn wechseln per Tipp auf die Gehirn-Zeile: ein Blatt mit allen Modellen, der Denktiefe und dem Internet-Schalter, ohne Speichern-Knopf. Ein anderes Modell beginnt im laufenden Chat einen neuen Chat; Denktiefe und Internet gelten sofort, auch im laufenden Chat.
 - Am PC eine Seitenleiste mit Chats nach Datum und Suche, am Handy eine Kopfleiste mit Schublade (auch quer) und die letzten Chats auf dem Startbild.
@@ -52,6 +53,7 @@ Chats auf dem eigenen Gerät, geringe Kosten und Arabisch sind echte Eigenschaft
 - Fehler stehen in kurzen Worten mit passenden Knöpfen da, die Originalmeldung eingeklappt darunter.
 - Arabisch wird als Arabisch gesetzt: eigene Schrift, größer für die Harakat, rein arabische Absätze von rechts nach links.
 - Der Entwurf im Eingabefeld bleibt gespeichert, falls die App zwischendurch zugeht.
+- Chats auf allen Geräten: Mit Konto liegen die Chats zusätzlich auf dem eigenen Server (Tabelle `public.chats`, nur das eigene Konto und nur freigeschaltete Konten kommen heran). Die App lädt jede Änderung kurz danach hoch und holt beim Start, beim Zurückkehren und wenn das Netz wieder da ist, was andere Geräte geändert haben. Wurde derselbe Chat auf zwei Geräten geändert, gilt die neuere Fassung. Offline läuft alles weiter und gleicht sich später ab. „Alle Chats löschen“ löscht mit Konto auch auf den anderen Geräten. Ohne Konto (nur eigener Gemini-Schlüssel) bleiben die Chats auf dem Gerät.
 - Sprachmodus (Wellen-Knopf im Eingabefeld): sprechen statt tippen, mit jedem Gehirn. Der Browser erkennt die Sprache (Deutsch, Arabisch oder Englisch), die Antwort wird Satz für Satz vorgelesen, schon während sie hereinkommt, danach hört xbubekir wieder zu. Ein Tipp auf den Kreis unterbricht. Der Kreis lebt: Beim Zuhören folgt er der Lautstärke am Mikrofon (nur der Pegel wird gemessen, solange zugehört wird, nichts wird aufgenommen), beim Vorlesen schwingt er mit jedem Wort. Alles landet als normaler Chat. Ein Chat, der im Sprachmodus beginnt, bekommt kurze, vorlesbare Antworten. Vorgelesen wird mit einer Gemini-Stimme (Gemini 3.8 Flash-Lite TTS, sechs weibliche Stimmen, Standard „Sulafat“), der nächste Abschnitt wird schon geholt, während der aktuelle läuft. Ohne Zugang oder nach einem Fehler (etwa Limit erreicht) liest die Gerätestimme weiter. Der erste Ton startet schon am ersten Komma, Stille am Anfang und Ende der Abschnitte wird gekürzt, und zwei Player wechseln sich ab, damit kaum Pausen entstehen. Unten im Sprachmodus steht nach jeder Runde, wie lange Antwort und Stimme gebraucht haben. Stimme mit „Anhören“-Probe und Tempo stehen in den Einstellungen.
 - „Über dich“, Name und „Wie xbubekir antworten soll“ fließen in den System-Prompt.
 - Denktiefe: Schnell, Normal, Gründlich.
@@ -62,7 +64,7 @@ Chats auf dem eigenen Gerät, geringe Kosten und Arabisch sind echte Eigenschaft
 ### Feste Regeln
 
 - **Der Faden bleibt:** Ein laufender Chat behält Anbieter, Modell und System-Prompt. Ein Wechsel des Anbieters beginnt einen neuen Chat. Einzige Ausnahme: Der Internet-Schalter ändert im laufenden DeepSeek-Chat Werkzeug und Websuche-Satz im System-Prompt.
-- **Datenaussagen je Gehirn:** Einstellungen und Chats liegen immer nur im Browser. Nachrichten gehen aber an den jeweiligen Anbieter (Google oder über OpenRouter an DeepSeek).
+- **Datenaussagen je Gehirn:** Einstellungen liegen nur im Browser. Chats liegen im Browser und, mit Konto, auf dem eigenen Supabase-Server, damit sie auf allen Geräten da sind. Nachrichten gehen aber an den jeweiligen Anbieter (Google oder über OpenRouter an DeepSeek).
 - **Sprachmodus:** Die Spracherkennung läuft über Server des Browser-Herstellers (Safari: Apple, Chrome: Google, Edge: Microsoft). Der Hinweis dazu steht im Sprachmodus selbst. Mit einer Gemini-Stimme geht zusätzlich der vorgelesene Text an Google (über den eigenen Server oder mit dem eigenen Schlüssel).
 - **Gratis-Stufe von Gemini:** Der Hinweis, dass Google Nachrichten je nach Wohnort lesen und nutzen darf, bleibt in der Einrichtung mit eigenem Schlüssel erhalten.
 - **DeepSeek über OpenRouter:** keine Datenspeicherung, keine Anbieter mit Sitz in China, keine fp4-Fassungen.
@@ -85,7 +87,7 @@ Gehirn (Modellwahl), Anbieter, Denktiefe, Internet, Schlüssel, Konto, Über dic
 - **Name:** `xbubekir`, immer klein geschrieben.
 - **Auftritt:** Logo `xbu`, Schriftzug `xbubekir.ai`, Spruch „Frag. Entdecke. Erreiche mehr.“ Die Oberfläche ist nur dunkel, in Lila.
 - **Stimme:** Duzt, locker, herzlich und ehrlich, „wie ein guter Freund, der sich auskennt“. Beginnt direkt mit der Antwort, ohne Floskeln, belehrt nicht. Kurze Frage, kurze Antwort.
-- **Identität:** xbubekir spricht als Ich und nennt das Modell dahinter nur auf Nachfrage, dann aber offen. Die Oberfläche zeigt das aktive Gehirn immer als stille Zeile an der Eingabe.
+- **Identität:** xbubekir spricht als Ich und nennt das Modell dahinter nur auf Nachfrage, dann aber offen, bei xbu und xbu.plus mit dem echten DeepSeek-Modell. Die Oberfläche zeigt das aktive Gehirn immer als stille Zeile an der Eingabe.
 - **Grenzen:** Sagt, wenn etwas unbekannt oder unsicher ist, und erfindet keine Fakten, Zahlen, Zitate oder Quellen.
 - **Arabisch:** Immer mit Harakat, dazu Umschrift und deutsche Bedeutung.
 - **Assets:** App-Icons in `icons/`.

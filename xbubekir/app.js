@@ -1,14 +1,14 @@
 // xbubekir: persönliche KI im Browser. Denkt mit Gemini von Google (kostenlos) oder DeepSeek (Open Source, über den eigenen
-// Server und OpenRouter); Chats bleiben auf diesem Gerät.
+// Server und OpenRouter); Chats liegen auf dem Gerät und, mit Konto, auf dem eigenen Server für die anderen Geräte.
 
-// p: Anbieter; web: kann im Internet suchen (bei DeepSeek nur ein Merker, das Werkzeug setzt der Server); img: kann Bilder sehen
+// p: Anbieter; base: echtes Modell hinter einem eigenen Namen (die KI nennt es auf Nachfrage); web: kann im Internet suchen (bei DeepSeek nur ein Merker, das Werkzeug setzt der Server); img: kann Bilder sehen
 const MODELS={
   "gemini-3.8-flash":{p:"gemini",name:"Gemini 3.8 Flash",hint:"am klügsten",img:true},
   "gemini-3.5-flash-lite":{p:"gemini",name:"Gemini 3.5 Flash-Lite",hint:"am schnellsten, mehr Nachrichten pro Tag",img:true},
-  "deepseek/deepseek-v4.1-flash":{p:"open",name:"DeepSeek V4.1 Flash",hint:"schnell und sehr günstig",img:true,web:"openrouter:web_search"},
-  "deepseek/deepseek-v4-pro":{p:"open",name:"DeepSeek V4 Pro",hint:"gründlicher, etwa 3× teurer",web:"openrouter:web_search"},
+  "deepseek/deepseek-v4.1-flash":{p:"open",name:"xbu",base:"DeepSeek V4.1 Flash",hint:"schnell und sehr günstig",img:true,web:"openrouter:web_search"},
+  "deepseek/deepseek-v4-pro":{p:"open",name:"xbu.plus",base:"DeepSeek V4 Pro",hint:"gründlicher, etwa 3× teurer",web:"openrouter:web_search"},
 };
-const PROV={gemini:{name:"Gemini",by:"Google",def:"gemini-3.8-flash"},open:{name:"DeepSeek",by:"DeepSeek (Open Source, über OpenRouter)",def:"deepseek/deepseek-v4.1-flash"}};
+const PROV={gemini:{name:"Gemini",by:"Google",def:"gemini-3.8-flash"},open:{name:"xbu",by:"DeepSeek (Open Source, über OpenRouter)",def:"deepseek/deepseek-v4.1-flash"}};
 // Eigener Server (Supabase-Projekt „xbubekir“, getrennt von Mufradaat): hält den Gemini-Schlüssel, nur der Besitzer hat Zugang
 const SB_URL="https://ydasoikczdjjdtdarrpx.supabase.co",SB_KEY="sb_publishable_hsk2OROaXkk_cJAR0sxkhA_2EdjhIiN",SB_FN=SB_URL+"/functions/v1/gemini",SB_OR=SB_URL+"/functions/v1/openrouter";
 const LEVEL={low:"LOW",medium:"MEDIUM",high:"HIGH"};
@@ -77,7 +77,7 @@ let chats=[],cur=null,busy=false,stopFn=null,copies=[],sb=null,session=null;
 const H0=new URLSearchParams(location.hash.slice(1));
 let recovery=H0.get("type")==="recovery",linkErr=H0.get("error_description")||"";
 async function auth(){ // Supabase-Anmeldung, erst bei Bedarf geladen
-  if(!sb){const{createClient}=await import("./vendor/supabase.js");sb=createClient(SB_URL,SB_KEY);sb.auth.onAuthStateChange((e,s)=>{session=s;if(e==="PASSWORD_RECOVERY"&&!recovery){recovery=true;render()}})}
+  if(!sb){const{createClient}=await import("./vendor/supabase.js");sb=createClient(SB_URL,SB_KEY);sb.auth.onAuthStateChange((e,s)=>{session=s;if(s&&e==="SIGNED_IN")setTimeout(sync);if(e==="PASSWORD_RECOVERY"&&!recovery){recovery=true;render()}})}
   return sb.auth;
 }
 const provOf=c=>c.provider||MODELS[c.model]?.p||"claude"; // ganz alte Chats ohne Anbieter stammen von Claude
@@ -162,12 +162,12 @@ Die Person spricht mit dir, und deine Antworten werden laut vorgelesen. Das gilt
 // Websuche-Satz im System-Prompt; der Internet-Schalter tauscht ihn im laufenden DeepSeek-Chat aus (setWeb)
 const WEB_YES="Du kannst im Internet suchen. Tu das, wenn eine Frage aktuelle oder nachprüfbare Informationen braucht.",
   WEB_NO="Du kannst nicht im Internet suchen. Bei aktuellen Dingen (Nachrichten, Wetter, Preise, Ergebnisse) sagst du das ehrlich, statt zu raten.";
-function systemPrompt(p,web,voice){
+function systemPrompt(p,model,web,voice){
   const d=new Date().toLocaleDateString("de-DE",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
   let s=PERSONA+`
 
 ## Technik
-- Fragt dich jemand, wer du bist: Du bist xbubekir. Technisch läufst du auf ${PROV[p].name}, einem KI-Modell von ${PROV[p].by}. Das sagst du offen, wenn danach gefragt wird.
+- Fragt dich jemand, wer du bist: Du bist xbubekir. Technisch läufst du auf ${MODELS[model].base||PROV[p].name}, einem KI-Modell von ${PROV[p].by}${MODELS[model].base?`; in dieser App heißt dieses Gehirn „${MODELS[model].name}“`:""}. Das sagst du offen, wenn danach gefragt wird.
 - ${web?WEB_YES:WEB_NO}
 - Deine Antworten werden als Markdown angezeigt: Listen, **fett**, Tabellen und Codeblöcke funktionieren.
 - Du kannst Bilder zeichnen, und zwar als Vektorgrafik: Möchte die Person ein Bild, Logo, Icon, Diagramm, Schaubild, eine Flagge oder Ähnliches, antwortest du mit einem Codeblock der Sprache svg. Er wird im Chat als Bild angezeigt und lässt sich speichern. Schreib ein vollständiges <svg> mit viewBox, ohne Skripte, ohne eingebundene Bilder oder Webadressen und ohne Webschriften (nur font-family wie sans-serif oder serif). Gestalte es sauber und farbig, eher klar als überladen, und schreib in einem Satz dazu, was du gezeichnet hast. Fotos oder fotorealistische Bilder kannst du nicht erzeugen, das sagst du ehrlich und bietest eine gezeichnete Fassung an.
@@ -185,7 +185,7 @@ Dieses Gespräch hat am ${d} begonnen.`;
 function newChat(voice){
   const p=S.provider,model=MODELS[S.model]?.p===p?S.model:PROV[p].def,M=MODELS[model],web=S.web&&!!M.web;
   return{id:crypto.randomUUID?.()||Date.now()+"-"+Math.random().toString(36).slice(2),title:"",created:Date.now(),updated:Date.now(),provider:p,model,...(voice&&{voice:true}),
-    system:systemPrompt(p,web,voice),tools:web?[{type:M.web}]:[],msgs:[]};
+    system:systemPrompt(p,model,web,voice),tools:web?[{type:M.web}]:[],msgs:[]};
 }
 
 // text: fester Text (z. B. „Weiter“), sonst der Inhalt des Eingabefelds
@@ -312,7 +312,7 @@ async function askOpen(c,um,live){
     else undo(c,um);
     return;
   }
-  if(!txt.trim())throw new Error("DeepSeek hat keine Antwort geschickt"+(fin?` (${fin})`:"")+".");
+  if(!txt.trim())throw new Error("xbu hat keine Antwort geschickt"+(fin?` (${fin})`:"")+".");
   c.msgs.push({role:"assistant",content:blocks(),...(fin==="length"?{note:"cut"}:{})});
 }
 
@@ -335,7 +335,7 @@ function errInfo(e,p){
       :s===402?"Das OpenRouter-Guthaben ist aufgebraucht oder das Ausgabenlimit des Schlüssels erreicht. Lade auf openrouter.ai auf."
       :s===429?"Gerade zu viele Anfragen. Warte einen Moment und versuch es nochmal."
       :s===413?"Der Chat ist zu lang. Mach am besten in einem neuen Chat weiter."
-      :s>=500?"Der Server oder DeepSeek hatte gerade ein Problem. Versuch es gleich nochmal."
+      :s>=500?"Der Server oder xbu hatte gerade ein Problem. Versuch es gleich nochmal."
       :"Unerwarteter Fehler.";
     return{t,raw:st+(e?.message||String(e)),act:s===401||s===403?"acct":s===413?"new":""};
   }
@@ -705,7 +705,7 @@ function updSend(){bSend.disabled=!busy&&!inp.value.trim()&&!pics.length}
 // ---------- Bilder anhängen ----------
 // Jedes Bild wird verkleinert und als JPEG neu kodiert: So bleiben Chat-Speicher und Anfragen klein, und Aufnahmeort und andere
 // Fotodaten fallen weg. Es liegt als data:-URL an der Nutzernachricht (um.imgs) und geht bei jeder Runde wieder mit.
-const PIC_MAX=4,PIC_PX=1280,NOPIC="Dieses Gehirn kann keine Bilder sehen. Wähl Gemini oder DeepSeek V4.1 Flash.";
+const PIC_MAX=4,PIC_PX=1280,NOPIC="Dieses Gehirn kann keine Bilder sehen. Wähl Gemini oder xbu.";
 let pics=[]; // angehängt, aber noch nicht gesendet
 const b64=u=>u.slice(u.indexOf(",")+1);
 const canPic=()=>!!MODELS[cur?.model||S.model]?.img;
@@ -738,8 +738,62 @@ function toast(t){const el=$("#toast");el.textContent=t;el.hidden=false;clearTim
 function say(t){const el=$("#say");el.textContent="";setTimeout(()=>{el.textContent=t},60)} // für Screenreader, das Gespräch selbst wird nicht vorgelesen
 
 // ---------- Chats verwalten ----------
-function store(c){c.updated=Date.now();chats.sort((a,b)=>b.updated-a.updated);DB.put(c)}
-function forget(c){chats=chats.filter(x=>x!==c);DB.del(c.id)}
+function store(c){c.updated=Date.now();chats.sort((a,b)=>b.updated-a.updated);DB.put(c);mark(c.id,c.updated)}
+function forget(c){chats=chats.filter(x=>x!==c);DB.del(c.id);mark(c.id,Date.now())}
+
+// ---------- Abgleich zwischen Geräten (nur mit Konto; Tabelle public.chats, siehe server/chats.sql) ----------
+// Jedes Gerät merkt sich, was es noch hochladen muss (dirty: Chat-ID → Änderungszeit, bei gelöschten die Löschzeit) und ab welcher
+// Serverzeit es neu abholt (pull). Bei Konflikten gewinnt die neuere Fassung eines Chats; der Server lässt nie eine ältere über eine neuere.
+const YK="xb.sync",Y={init:false,pull:"",dirty:{},wipe:0};
+try{Object.assign(Y,JSON.parse(localStorage.getItem(YK)||"{}"))}catch{}
+const saveY=()=>{try{localStorage.setItem(YK,JSON.stringify(Y))}catch{}};
+let syncReady=false,syncing=null,syncMore=false,pushT=0;
+function mark(id,t){Y.dirty[id]=t;saveY();clearTimeout(pushT);pushT=setTimeout(sync,1500)}
+function sync(){ // eine Runde zur Zeit; wer währenddessen ruft, bekommt direkt danach noch eine
+  if(!session||!syncReady||!navigator.onLine)return;
+  if(syncing){syncMore=true;return}
+  syncing=syncRun().catch(e=>console.warn("xbubekir: Abgleich nicht möglich",e)).finally(()=>{syncing=null;if(syncMore){syncMore=false;sync()}});
+}
+async function syncRun(){
+  const db=await auth(),t=()=>db.from("chats"),uid=session.user.id;
+  if(!Y.init){for(const c of chats)Y.dirty[c.id]=Math.max(Y.dirty[c.id]||0,c.updated);Y.init=true;saveY()} // erster Abgleich: alle Chats dieses Geräts hoch
+  if(Y.wipe){ // „Alle Chats löschen“: alles, was älter ist, auf dem Server als gelöscht markieren
+    const{error}=await t().update({deleted:true,data:null,updated:Y.wipe}).eq("user_id",uid).lt("updated",Y.wipe);
+    if(error)throw error;Y.wipe=0;saveY();
+  }
+  // Abholen: 30 s Puffer vor dem letzten Stand, falls ein Schreibvorgang mit früherer Serverzeit erst später fertig wurde (doppelt ist harmlos)
+  let hit=false,n=0;
+  for(;;){
+    const from=Y.pull,q=t().select("id,updated,deleted,data,synced_at").eq("user_id",uid);
+    const{data:rows,error}=await(from?q.gte("synced_at",new Date(Date.parse(from)-30e3).toISOString()):q).order("synced_at").limit(500);
+    if(error)throw error;
+    for(const r of rows){const k=take(r);if(k){n++;if(k==="cur")hit=true}}
+    if(rows.length)Y.pull=rows.at(-1).synced_at;saveY();
+    if(rows.length<500||Y.pull===from)break;
+  }
+  if(n){chats.sort((a,b)=>b.updated-a.updated);if(busy||recovery||cur&&!hit)renderList();else render()}
+  // Hochladen, je 10 Chats pro Anfrage (Bilder machen Chats groß)
+  const ids=Object.keys(Y.dirty);
+  for(let i=0;i<ids.length;i+=10){
+    const rows=ids.slice(i,i+10).map(id=>{const c=chats.find(x=>x.id===id);return c?{user_id:uid,id,updated:c.updated,deleted:false,data:c}:{user_id:uid,id,updated:Y.dirty[id],deleted:true,data:null}});
+    const{error}=await t().upsert(rows,{onConflict:"user_id,id"});
+    if(error)throw error;
+    for(const r of rows)if(Y.dirty[r.id]<=r.updated)delete Y.dirty[r.id]; // inzwischen wieder geändert: bleibt für die nächste Runde
+    saveY();
+  }
+}
+function take(r){ // eine Zeile vom Server übernehmen; Rückgabe: false = nichts geändert, "cur" = der offene Chat hat sich geändert
+  const c=chats.find(x=>x.id===r.id),mine=c?c.updated:Y.dirty[r.id]??-1;
+  if(mine>=r.updated||!c&&r.deleted)return false; // hier gleich oder neuer, das Neuere geht beim Hochladen zum Server
+  if(!r.deleted&&(r.data?.id!==r.id||!Array.isArray(r.data.msgs)))return false;
+  if(busy&&c===cur)return false; // laufende Antwort nicht stören; danach ist sie hier die neuere Fassung
+  delete Y.dirty[r.id];
+  const was=c&&c===cur;
+  if(r.deleted){chats=chats.filter(x=>x!==c);DB.del(r.id);if(was)cur=null}
+  else if(c){for(const k of Object.keys(c))delete c[k];Object.assign(c,r.data);DB.put(c)} // gleiches Objekt behalten, überall hängt cur daran
+  else{chats.push(r.data);DB.put(r.data)}
+  return was?"cur":true;
+}
 async function settle(){ // läuft gerade eine Antwort, wird sie vor dem Wechsel angehalten (der Teiltext bleibt im Chat)
   if(!busy)return true;
   if(!stopFn){toast("Die xbubekir-KI lädt noch. Einen Moment.");return false}
@@ -789,7 +843,7 @@ function copyMsg(b){ // als Klartext (ohne Markdown-Zeichen) und als formatierte
 }
 
 // ---------- Gehirn wählen (Tipp auf die Gehirn-Zeile) ----------
-const PTAG={gemini:["Google Gemini","kostenlos"],open:["DeepSeek","Open Source, Cent-Beträge"]};
+const PTAG={gemini:["Google Gemini","kostenlos"],open:["xbu","Open Source, Cent-Beträge"]};
 function renderBrain(){
   const nm=m=>MODELS[m]?.name||m,run=!!cur?.msgs.length&&!gone(cur),now=run?cur.model:S.model;
   $("#brNote").hidden=!run;
@@ -806,7 +860,7 @@ function renderBrain(){
   // Internet: nur Modelle mit Websuche; im laufenden Chat zählt, was dieser Chat gerade darf
   const can=!!MODELS[now]?.web,on=can&&(run?cur.tools.length>0:S.web);
   for(const b of document.querySelectorAll("#brWeb [data-web]")){b.disabled=!can;b.setAttribute("aria-pressed",String(can&&(b.dataset.web==="1")===on))}
-  $("#brWebHint").textContent=can?"Gilt sofort, auch im laufenden Chat. Jede Suche kostet etwa einen halben Cent, höchstens 3 pro Antwort.":`${nm(now)} kann hier nicht im Internet suchen. Wähl DeepSeek, wenn du Websuche brauchst.`;
+  $("#brWebHint").textContent=can?"Gilt sofort, auch im laufenden Chat. Jede Suche kostet etwa einen halben Cent, höchstens 3 pro Antwort.":`${nm(now)} kann hier nicht im Internet suchen. Wähl xbu oder xbu.plus, wenn du Websuche brauchst.`;
 }
 // Internet ein/aus: gilt für neue Chats und gleich auch für den laufenden DeepSeek-Chat (Werkzeug und Satz im System-Prompt).
 // Gemini-Chats bleiben unberührt: Dort muss alles wie beim Anlegen bleiben (Denk-Signaturen), und eine Websuche gibt es dort nicht.
@@ -841,7 +895,7 @@ function fillModels(){ // Modellauswahl passend zum gewählten Anbieter
   $("#kGemini").hidden=p!=="gemini";$("#kOpen").hidden=p!=="open";
   const konto=$("#sGMode").value==="konto";
   $("#kKonto").hidden=!(p==="open"||p==="gemini"&&konto);$("#kGKey").hidden=konto;$("#kKey").hidden=!(p==="gemini"&&!konto);
-  $("#kontoInfo").textContent=session?`Angemeldet als ${session.user.email}.`:"Nicht angemeldet. Nach dem Speichern erscheint die Anmeldung.";
+  $("#kontoInfo").textContent=session?`Angemeldet als ${session.user.email}. Deine Chats sind auf allen Geräten mit diesem Konto.`:"Nicht angemeldet. Nach dem Speichern erscheint die Anmeldung.";
   $("#bLogout").hidden=!session;
   costHint();
 }
@@ -849,7 +903,7 @@ function costHint(){
   const M=MODELS[$("#sModel").value],w=$("#sWeb");
   w.disabled=!M.web;w.checked=!!M.web&&webWant; // ohne Websuche beim Modell auch kein Haken
   $("#costHint").textContent=M.p==="open"
-    ?`${M.name}: Open-Source-KI von DeepSeek, über deinen eigenen Server bei OpenRouter. Eine normale Nachricht kostet meist weniger als 0,1 Cent${M.hint.includes("teurer")?" (dieses Modell etwa das Dreifache)":""}, bezahlt aus deinem OpenRouter-Guthaben. Es werden nur Anbieter genutzt, die nichts speichern und nicht in China sitzen. Mit Websuche kostet jede Suche etwa einen halben Cent extra (höchstens 3 pro Antwort).`
+    ?`xbu basiert auf DeepSeek V4.1 Flash, xbu.plus auf DeepSeek V4 Pro. Beide Modelle stehen unter der MIT-Lizenz. Der Zugriff erfolgt über OpenRouter. Eine normale Nachricht kostet meist weniger als 0,1 Cent${M.hint.includes("teurer")?" (mit xbu.plus etwa das Dreifache)":""}, bezahlt aus deinem OpenRouter-Guthaben. Es werden nur Anbieter genutzt, die nichts speichern und nicht in China sitzen. Mit Websuche kostet jede Suche etwa einen halben Cent extra (höchstens 3 pro Antwort).`
     :"Kostenlos. Google begrenzt dafür die Nachrichten pro Minute und pro Tag; die genauen Grenzen zeigt AI Studio. Das Tageslimit setzt sich um Mitternacht kalifornischer Zeit zurück. Flash-Lite erlaubt mehr Nachrichten. Eine Websuche gibt es mit Gemini hier nicht.";
 }
 function openSettings(){
@@ -899,7 +953,12 @@ $("#sModel").addEventListener("change",costHint);
 $("#sWeb").addEventListener("change",e=>{webWant=e.target.checked});
 $("#bLogout").addEventListener("click",async()=>{if(busy)return;await(await auth()).signOut();session=null;dSet.close();render()});
 document.querySelectorAll(".eye").forEach(b=>b.addEventListener("click",()=>{const k=$("#"+b.dataset.for),show=k.type==="password";k.type=show?"text":"password";b.textContent=show?"Verbergen":"Zeigen";b.setAttribute("aria-pressed",String(show))}));
-$("#bWipeChats").addEventListener("click",()=>{if(busy||!confirm("Wirklich alle Chats auf diesem Gerät löschen?"))return;chats=[];cur=null;DB.clear();dSet.close();render()});
+$("#bWipeChats").addEventListener("click",()=>{
+  if(busy||!confirm(session?"Wirklich alle Chats löschen, auch auf deinen anderen Geräten?":"Wirklich alle Chats auf diesem Gerät löschen?"))return;
+  // mit Konto: auch auf dem Server löschen; ohne Konto nur hier, die Chats vom Server kommen bei der nächsten Anmeldung wieder
+  if(session)Y.wipe=Date.now();else Y.pull="";
+  Y.dirty={};saveY();chats=[];cur=null;DB.clear();dSet.close();render();sync();
+});
 $("#bWipeKey").addEventListener("click",()=>{if(busy||!confirm("Alle API-Schlüssel von diesem Gerät entfernen?"))return;S.gkey="";saveS();dSet.close();render()});
 
 // ---------- Sprachmodus ----------
@@ -1432,6 +1491,9 @@ setBusy(false);keyHint();
 try{const d=localStorage.getItem(DK);if(d)inp.value=d}catch{}
 if(viaKonto(S.provider)||S.gmode==="konto"||recovery||linkErr||location.hash.includes("access_token")){try{session=(await(await auth()).getSession()).data.session}catch{}} // auch Rückkehr aus der Bestätigungs-Mail
 try{chats=(await DB.all()).sort((a,b)=>b.updated-a.updated)}catch{chats=[]}
+syncReady=true;sync(); // Chats von den anderen Geräten holen, auch beim Zurückkehren in die App und wenn das Netz wieder da ist
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")sync()});
+addEventListener("online",sync);
 render();grow();hideSplash();
 if(keyOf(S.provider)&&desk.matches)inp.focus();
 // Update-Hinweis: Jede neue Version ändert sw.js. Übernimmt der neue Worker, läuft hier noch der alte Code, also „Neu starten“ anbieten.
