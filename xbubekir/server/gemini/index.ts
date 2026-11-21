@@ -38,6 +38,27 @@ const fail = (code: number, message: string) =>
     status: code, headers: { ...CORS, "content-type": "application/json" },
   });
 
+// Sprachmodus (Gemini Live): Die App spricht per WebSocket direkt mit Google und bekommt dafür einen Kurzzeit-Schlüssel statt des echten.
+// Er öffnet genau eine Sitzung, nur innerhalb von 60 s, nur mit dem Live-Modell (fieldMask "model": alles andere bestimmt die App) und gilt 30 Minuten.
+const LIVE_MODEL = "models/gemini-3.8-live";
+async function liveToken(key: string) {
+  const now = Date.now();
+  const res = await fetch(GEMINI + "/v1beta/auth_tokens", {
+    method: "POST",
+    headers: { "content-type": "application/json", "x-goog-api-key": key },
+    body: JSON.stringify({
+      uses: 1,
+      expireTime: new Date(now + 30 * 60_000).toISOString(),
+      newSessionExpireTime: new Date(now + 60_000).toISOString(),
+      bidiGenerateContentSetup: { model: LIVE_MODEL },
+      fieldMask: "model",
+    }),
+  });
+  const j = await res.json().catch(() => ({}));
+  if (!res.ok || !j.name) return fail(res.ok ? 502 : res.status, j.error?.message ?? "Google hat keinen Schlüssel für den Sprachmodus geschickt.");
+  return new Response(JSON.stringify({ token: j.name, model: LIVE_MODEL }), { headers: { ...CORS, "content-type": "application/json" } });
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: CORS });
   if (req.method !== "POST") return fail(405, "Nur POST.");
@@ -52,6 +73,7 @@ Deno.serve(async (req) => {
 
   const url = new URL(req.url);
   const path = url.pathname.replace(/^(\/functions\/v1)?\/gemini/, "");
+  if (path === "/live-token") return liveToken(key);
   if (!ROUTE.test(path)) return fail(404, "Diese Anfrage ist nicht erlaubt.");
 
   const res = await fetch(GEMINI + path + (url.searchParams.get("alt") === "sse" ? "?alt=sse" : ""), {
