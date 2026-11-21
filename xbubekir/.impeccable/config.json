@@ -11,6 +11,15 @@
         ],
         "createdAt": "2026-11-01T02:23:31.187Z",
         "reason": "Claude triage: false positive, .dbody inside dialog.sheet sets padding-top (index.html .sheet .dbody), so text is inset; only the wrapper is flush"
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-21T22:01:45.789Z",
+        "reason": "Claude triage: false positive, the scanned h1 is screen-reader only and the 32px greeting heading is rendered at runtime by app.js helloHTML, so the static scan only sees 16-18px dialog titles in an app UI"
       }
     ]
   }

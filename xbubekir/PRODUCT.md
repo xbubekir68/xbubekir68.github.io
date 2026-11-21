@@ -47,7 +47,7 @@ Chats in eigener Hand, geringe Kosten und Arabisch sind echte Eigenschaften, wur
 
 - xbu vorne, DeepSeek im Hintergrund: Die Oberfläche zeigt den Anbieter als „xbu“, DeepSeek V4.1 Flash als „xbu“ und DeepSeek V4 Pro als „xbu.plus“ (Modellauswahl, Gehirn-Zeile, Chatliste, Einstellungen, Fehlermeldungen). DeepSeek steht nur noch in der Modellinfo der Einstellungen. Die Einstellungen sagen dazu: „xbu basiert auf DeepSeek V4.1 Flash, xbu.plus auf DeepSeek V4 Pro. Beide Modelle stehen unter der MIT-Lizenz. Der Zugriff erfolgt über OpenRouter.“ Technische Modell-IDs, Preise und Chats bleiben gleich.
 - Chat mit Markdown-Antworten, Denkblöcken und Anhalten der Antwort. Die Antwort erscheint Zeichen für Zeichen getippt statt in Brocken (mindestens 120 Zeichen pro Sekunde, bei Rückstand schneller, damit sie nie weit hinter dem Netz liegt). „Anhalten“ zeigt den Rest sofort. Im Sprachmodus und bei „weniger Bewegung“ erscheint sie ohne Animation. Die letzte Antwort lässt sich neu erzeugen, eine abgeschnittene fortsetzen. „Kopieren“ liefert Klartext ohne Markdown-Zeichen.
-- Gehirn wechseln per Tipp auf die Gehirn-Zeile: ein Blatt mit allen Modellen, der Denktiefe und dem Internet-Schalter, ohne Speichern-Knopf. Ein anderes Modell beginnt im laufenden Chat einen neuen Chat; Denktiefe und Internet gelten sofort, auch im laufenden Chat.
+- Gehirn wechseln per Tipp auf die Gehirn-Angabe in der Eingabe-Karte: ein Blatt mit allen Modellen, der Denktiefe und dem Internet-Schalter, ohne Speichern-Knopf. Ein anderes Modell beginnt im laufenden Chat einen neuen Chat; Denktiefe und Internet gelten sofort, auch im laufenden Chat.
 - Am PC eine Seitenleiste mit Chats nach Datum und Suche, am Handy eine Kopfleiste mit Schublade (auch quer) und die letzten Chats auf dem Startbild.
 - Gezeichnete Bilder: Gemini und DeepSeek können Vektorbilder (SVG) zeichnen, etwa Logos, Icons, Diagramme oder einfache Illustrationen. Ein ```svg-Block erscheint als Bild auf hellem Zeichenblatt, mit „Als Bild sichern“ (PNG, am iPhone übers Teilen-Menü in Fotos), „SVG“ und dem eingeklappten Code. Das SVG kommt nur als Bild in die Seite, so kann es kein Skript ausführen und nichts nachladen. Fotos erzeugt xbubekir nicht.
 - Fehler stehen in kurzen Worten mit passenden Knöpfen da, die Originalmeldung eingeklappt darunter.
@@ -88,9 +88,9 @@ Gehirn (Modellwahl), Anbieter, Denktiefe, Internet, Schlüssel, Konto, Über dic
 ## Brand Commitments
 
 - **Name:** `xbubekir`, immer klein geschrieben.
-- **Auftritt:** Logo `xbu`, Schriftzug `xbubekir.ai`, Spruch „Frag. Entdecke. Erreiche mehr.“ Die Oberfläche ist nur dunkel, in Lila.
+- **Auftritt:** Logo `xbu`, Schriftzug `xbubekir.ai`, Spruch „Frag. Entdecke. Erreiche mehr.“ (steht nicht mehr auf dem Startbild). Die Oberfläche ist nur dunkel: ruhige, neutrale Flächen, Lila nur als Akzent (Logo, Senden, Fokus, Auswahl). Maßstab für Aufbau und Qualität ist die Claude-App, bewusst gewählt statt eines eigenen Stils (21.11.2026).
 - **Stimme:** Duzt, locker, herzlich und ehrlich, „wie ein guter Freund, der sich auskennt“. Beginnt direkt mit der Antwort, ohne Floskeln, belehrt nicht. Kurze Frage, kurze Antwort.
-- **Identität:** xbubekir spricht als Ich und nennt das Modell dahinter nur auf Nachfrage, dann aber offen, bei xbu und xbu.plus mit dem echten DeepSeek-Modell. Die Oberfläche zeigt das aktive Gehirn immer als stille Zeile an der Eingabe.
+- **Identität:** xbubekir spricht als Ich und nennt das Modell dahinter nur auf Nachfrage, dann aber offen, bei xbu und xbu.plus mit dem echten DeepSeek-Modell. Die Oberfläche zeigt das aktive Gehirn immer als stille Angabe in der Eingabe-Karte.
 - **Grenzen:** Sagt, wenn etwas unbekannt oder unsicher ist, und erfindet keine Fakten, Zahlen, Zitate oder Quellen.
 - **Arabisch:** Immer mit Harakat, dazu Umschrift und deutsche Bedeutung.
 - **Assets:** App-Icons in `icons/`.

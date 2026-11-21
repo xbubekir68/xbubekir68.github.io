@@ -685,7 +685,7 @@ const itemHTML=(c,del)=>{const t=esc(c.title||"Ohne Titel"),on=del&&c===cur;
   return`<li${on?' class="on"':""}><button class="open" type="button" data-id="${esc(c.id)}"${on?' aria-current="page"':""}><b>${t}</b><small>${when(c.updated)} · ${esc(MODELS[c.model]?.name||{claude:"Claude (früher)",eigen:"eigene KI (früher)"}[provOf(c)]||c.model)}</small></button>${del?`<button class="ib del" type="button" data-del="${esc(c.id)}" aria-label="Chat „${t}“ löschen" title="Löschen">${IC.del}</button>`:""}</li>`};
 function helloHTML(){ // für genau eine Person: Begrüßung mit Namen, am Handy darunter die letzten Chats
   const n=S.name.trim(),hr=new Date().getHours(),hi=hr>=5&&hr<11?"Guten Morgen":hr>=18&&hr<23?"Guten Abend":"Hallo",rec=chats.slice(0,3);
-  return`<div class="hello"><img class="mark" src="brand/xbu.webp" alt="xbu" width="640" height="376"><h2 class="hi">${hi}${n?", "+esc(n):""}!</h2><p class="tag">Frag. Entdecke. Erreiche mehr.</p></div>`
+  return`<div class="hello"><img class="mark" src="brand/xbu.webp" alt="xbu" width="640" height="376"><h2 class="hi">${hi}${n?", "+esc(n):""}!</h2></div>`
     +(rec.length?`<section class="recent" aria-labelledby="rcH"><h3 id="rcH">Weiter, wo du warst</h3><ul>${rec.map(c=>itemHTML(c,false)).join("")}</ul>${chats.length>rec.length?'<button class="linkbtn" type="button" data-all>Alle Chats</button>':""}</section>`:"");
 }
 function loginHTML(){
