@@ -182,6 +182,7 @@ function systemPrompt(p,model,web,voice){
 - Fragt dich jemand, wer du bist: Du bist xbubekir. Technisch läufst du auf ${MODELS[model].base||PROV[p].name}, einem KI-Modell von ${PROV[p].by}${MODELS[model].base?`; in dieser App heißt dieses Gehirn „${MODELS[model].name}“`:""}. Das sagst du offen, wenn danach gefragt wird.
 - ${web?WEB_YES:WEB_NO}
 - Deine Antworten werden als Markdown angezeigt: Listen, **fett**, Tabellen und Codeblöcke funktionieren.
+- Formeln schreibst du in LaTeX, im Satz zwischen $…$, abgesetzt zwischen $$…$$. Sie werden als echte Formeln angezeigt.
 - Du kannst Bilder zeichnen, und zwar als Vektorgrafik: Möchte die Person ein Bild, Logo, Icon, Diagramm, Schaubild, eine Flagge oder Ähnliches, antwortest du mit einem Codeblock der Sprache svg. Er wird im Chat als Bild angezeigt und lässt sich speichern. Schreib ein vollständiges <svg> mit viewBox, ohne Skripte, ohne eingebundene Bilder oder Webadressen und ohne Webschriften (nur font-family wie sans-serif oder serif). Gestalte es sauber und farbig, eher klar als überladen, und schreib in einem Satz dazu, was du gezeichnet hast. Fotos oder fotorealistische Bilder kannst du nicht erzeugen, das sagst du ehrlich und bietest eine gezeichnete Fassung an.
 
 Dieses Gespräch hat am ${d} begonnen.`;
@@ -560,10 +561,21 @@ async function saveSvg(fig,kind){ // als PNG (2048 px an der langen Seite) oder 
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);
 }
 
+// Formeln (LaTeX) zeigt temml als MathML. Es lädt im Hintergrund (scheitert es, startet die App trotzdem); bis dahin bleibt die Formel als Text stehen
+let TM=null,mathWait=false;
+import("./vendor/temml.js").then(m=>{TM=m.default;if(mathWait&&!busy)render()},()=>{});
+function tex(t,block){
+  if(!TM){mathWait=true;return null}
+  try{const h=TM.renderToString(t,{displayMode:block,throwOnError:true});return block?`<span class="mblk">${h}</span>`:h}catch{return null} // kaputte Formel bleibt Text
+}
+// $$…$$ und \[…\] abgesetzt, \(…\) und $…$ im Text; $5 und $10 bleibt Geld (kein Leerzeichen innen am Rand, keine Ziffer nach dem schließenden $)
+const MATH=/\$\$(.+?)\$\$|\\\[(.+?)\\\]|\\\((.+?)\\\)|(?<![\\$])\$(?=[^\s$])([^$\n]*?[^\s\\$])\$(?!\d)/g;
+
 // Kleiner Markdown-Leser: erst alles escapen, dann nur bekannte Auszeichnungen erzeugen
 function inline(s){
   const keep=[],put=h=>`\u0000${keep.push(h)-1}\u0000`;
   s=s.replace(/`([^`\n]+)`/g,(_,c)=>put(`<code>${esc(c)}</code>`));
+  s=s.replace(MATH,(m,a,b,c,d)=>{const h=tex(a??b??c??d,a!=null||b!=null);return h?put(h):m});
   s=s.replace(/\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)/g,(_,t,u)=>put(link(u,ar(esc(t)))));
   s=s.replace(/https?:\/\/[^\s<>()"\u0000]*[^\s<>()".,;:!?'*_\u0000]/g,u=>put(link(u,esc(u))));
   s=esc(s)
@@ -572,8 +584,8 @@ function inline(s){
     .replace(/~~(?=\S)(.+?)~~/g,"<del>$1</del>");
   return ar(s).replace(/\u0000(\d+)\u0000/g,(_,i)=>keep[i]);
 }
-const RX={fence:/^\s*(`{3,}|~{3,})\s*([\w+#.-]*)/,head:/^(#{1,6})\s+(.*?)\s*#*\s*$/,hr:/^\s*([-*_])(\s*\1){2,}\s*$/,quote:/^\s*>/,item:/^(\s*)([-*+]|(\d+)[.)])\s+(.*)$/,row:/^\s*\|.*\|\s*$/,sep:/^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$/};
-function isBlock(L,i){const l=L[i];return RX.fence.test(l)||RX.head.test(l)||RX.hr.test(l)||RX.quote.test(l)||RX.item.test(l)||(RX.row.test(l)&&RX.sep.test(L[i+1]||""))}
+const RX={fence:/^\s*(`{3,}|~{3,})\s*([\w+#.-]*)/,head:/^(#{1,6})\s+(.*?)\s*#*\s*$/,hr:/^\s*([-*_])(\s*\1){2,}\s*$/,quote:/^\s*>/,item:/^(\s*)([-*+]|(\d+)[.)])\s+(.*)$/,row:/^\s*\|.*\|\s*$/,sep:/^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$/,math:/^\s*(\$\$|\\\[)/};
+function isBlock(L,i){const l=L[i];return RX.fence.test(l)||RX.math.test(l)||RX.head.test(l)||RX.hr.test(l)||RX.quote.test(l)||RX.item.test(l)||(RX.row.test(l)&&RX.sep.test(L[i+1]||""))}
 function md(src){
   const L=src.replace(/\u0000/g,"").replace(/\r\n?/g,"\n").split("\n"),out=[];
   let i=0,m;
@@ -589,6 +601,13 @@ function md(src){
         const s=svgSrc(code);if(s){out.push(svgFig(s,code));continue}
       }
       out.push(`<pre><code>${esc(code)}</code></pre>`);continue;
+    }
+    if(m=RX.math.exec(l)){ // abgesetzte Formel, auch über mehrere Zeilen; noch offen (beim Streamen) oder kaputt: bleibt Text
+      const end=m[1]==="$$"?"$$":"\\]";let j=i,t=l.trim().slice(2);
+      while(!t.trimEnd().endsWith(end)&&j+1<L.length)t+="\n"+L[++j];
+      t=t.trimEnd();
+      const h=t.indexOf(end)===t.length-2&&tex(t.slice(0,-2),true);
+      if(h){out.push(`<p>${h}</p>`);i=j+1;continue}
     }
     if(m=RX.head.exec(l)){const n=Math.min(m[1].length+1,6);out.push(`<h${n}${rtl(m[2])}>${inline(m[2])}</h${n}>`);i++;continue} // Seite: h1, Chat ab h2
     if(RX.hr.test(l)){out.push("<hr>");i++;continue}

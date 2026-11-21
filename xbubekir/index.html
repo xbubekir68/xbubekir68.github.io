@@ -116,6 +116,10 @@ body.start #log{flex:none;overflow:visible;padding-top:0;padding-bottom:0}
 .md code{font-family:var(--mono);font-size:.86em;background:rgba(255,255,255,.07);padding:.12em .38em;border-radius:5px}
 .md pre{background:var(--code);border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow-x:auto;overflow-wrap:normal;line-height:1.55}
 .md pre code{background:none;padding:0;font-size:.84em}
+/* Formeln (MathML von temml); display:block braucht nur Firefox/Safari, Chromium nimmt das „block math“ aus dem style-Attribut */
+math{font-size:1.1em;direction:ltr}
+math.tml-display{display:block;width:100%}
+.mblk{display:block;overflow-x:auto;overflow-y:hidden;padding:.15em 0}
 /* Gezeichnete Bilder (SVG): auf hellem Zeichenblatt, damit auch dunkle Linien und durchsichtige Flächen gut sichtbar sind */
 .svgfig{display:grid;gap:4px;margin:12px 0}
 .svgpaper{display:grid;place-items:center;padding:14px;border:1px solid var(--line);border-radius:12px;background:#f7f5fb}
