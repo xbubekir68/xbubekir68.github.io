@@ -20,6 +20,15 @@
         ],
         "createdAt": "2026-11-21T22:01:45.789Z",
         "reason": "Claude triage: false positive, the scanned h1 is screen-reader only and the 32px greeting heading is rendered at runtime by app.js helloHTML, so the static scan only sees 16-18px dialog titles in an app UI"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "inherit\"></select><button type=\"button\" id=\"svoicetry\">anhören</button></div>",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-21T22:20:48.806Z",
+        "reason": "Claude triage: false positive, inline style font-family:inherit on #sVoice (from main) is not a font; detector misparsed the attribute"
       }
     ]
   }
