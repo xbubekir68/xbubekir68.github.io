@@ -683,9 +683,17 @@ function chatHTML(c){
 
 const itemHTML=(c,del)=>{const t=esc(c.title||"Ohne Titel"),on=del&&c===cur;
   return`<li${on?' class="on"':""}><button class="open" type="button" data-id="${esc(c.id)}"${on?' aria-current="page"':""}><b>${t}</b><small>${when(c.updated)} · ${esc(MODELS[c.model]?.name||{claude:"Claude (früher)",eigen:"eigene KI (früher)"}[provOf(c)]||c.model)}</small></button>${del?`<button class="ib del" type="button" data-del="${esc(c.id)}" aria-label="Chat „${t}“ löschen" title="Löschen">${IC.del}</button>`:""}</li>`};
+let hiLine="",hiLast=""; // Spruch bleibt stehen, bis ein Chat offen war; danach kommt ein neuer (nie zweimal derselbe hintereinander)
+function hiPick(){ // „%“ wird zum Namen; ohne Namen fällt „, %“ weg
+  const hr=new Date().getHours(),
+    time=hr>=5&&hr<11?["Guten Morgen, %","Schönen Morgen, %"]:hr>=11&&hr<14?["Mahlzeit, %","Hallo, %"]:hr>=14&&hr<18?["Schönen Nachmittag, %","Hallo, %"]:hr>=18&&hr<23?["Guten Abend, %","Schönen Abend, %"]:["Noch wach, %?","Späte Runde, %?","Nachtschicht, %?"],
+    pool=[...time,"Was steht an, %?","Wie kann ich helfen, %?","Womit fangen wir an, %?","Was willst du heute wissen, %?","Schön, dich zu sehen, %","Frag einfach, %","Was geht dir durch den Kopf, %?","Lass uns loslegen, %"].filter(t=>t!==hiLast);
+  hiLast=pool[Math.floor(Math.random()*pool.length)];
+  const n=S.name.trim();return hiLast.replace(", %",n?", "+esc(n):"");
+}
 function helloHTML(){ // für genau eine Person: Begrüßung mit Namen, am Handy darunter die letzten Chats
-  const n=S.name.trim(),hr=new Date().getHours(),hi=hr>=5&&hr<11?"Guten Morgen":hr>=18&&hr<23?"Guten Abend":"Hallo",rec=chats.slice(0,3);
-  return`<div class="hello"><img class="mark" src="brand/xbu.webp" alt="xbu" width="640" height="376"><h2 class="hi">${hi}${n?", "+esc(n):""}!</h2></div>`
+  const rec=chats.slice(0,3);hiLine||=hiPick();
+  return`<div class="hello"><img class="mark" src="brand/xbu.webp" alt="xbu" width="640" height="376"><h2 class="hi">${hiLine}</h2></div>`
     +(rec.length?`<section class="recent" aria-labelledby="rcH"><h3 id="rcH">Weiter, wo du warst</h3><ul>${rec.map(c=>itemHTML(c,false)).join("")}</ul>${chats.length>rec.length?'<button class="linkbtn" type="button" data-all>Alle Chats</button>':""}</section>`:"");
 }
 function loginHTML(){
@@ -795,6 +803,7 @@ function render(){
     }
     return;
   }
+  if(has)hiLine="";
   log.innerHTML=has?chatHTML(cur):helloHTML();
   if(!has)log.scrollTop=0;else{log.scrollTop=st;if(stick)toBottom()}
   updSend();updDown();
