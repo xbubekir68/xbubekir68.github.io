@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-21T12:00:00Z",
+  "title": "Design System: xbubekir",
+  "extensions": {
+    "colorMeta": {
+      "acc": { "role": "primary", "displayName": "Werkbank-Violett", "canonical": "oklch(54.1% 0.247 293.0)", "tonalRamp": ["oklch(15% 0.123 293.0)", "oklch(26% 0.123 293.0)", "oklch(37% 0.247 293.0)", "oklch(48% 0.247 293.0)", "oklch(59% 0.247 293.0)", "oklch(70% 0.247 293.0)", "oklch(82% 0.247 293.0)", "oklch(95% 0.123 293.0)"] },
+      "acch": { "role": "primary", "displayName": "Violett, aufgehellt", "canonical": "oklch(58.5% 0.239 294.7)", "tonalRamp": ["oklch(15% 0.120 294.7)", "oklch(26% 0.120 294.7)", "oklch(37% 0.239 294.7)", "oklch(48% 0.239 294.7)", "oklch(59% 0.239 294.7)", "oklch(70% 0.239 294.7)", "oklch(82% 0.239 294.7)", "oklch(95% 0.120 294.7)"] },
+      "acc2": { "role": "primary", "displayName": "Lavendel-Zeiger", "canonical": "oklch(70.9% 0.159 293.5)", "tonalRamp": ["oklch(15% 0.080 293.5)", "oklch(26% 0.080 293.5)", "oklch(37% 0.159 293.5)", "oklch(48% 0.159 293.5)", "oklch(59% 0.159 293.5)", "oklch(70% 0.159 293.5)", "oklch(82% 0.159 293.5)", "oklch(95% 0.080 293.5)"] },
+      "acct": { "role": "primary", "displayName": "Lavendel-Schleier" },
+      "side": { "role": "neutral", "displayName": "Seitenleisten-Nacht", "canonical": "oklch(20.3% 0.008 297.1)", "tonalRamp": ["#141317", "#17161a", "#1e1d22", "#29282e", "#34333a", "#9a97a4", "#c3c1cb", "#ededf0"] },
+      "bg": { "role": "neutral", "displayName": "Arbeitsgrund", "canonical": "oklch(23.4% 0.010 294.8)", "tonalRamp": ["#141317", "#17161a", "#1e1d22", "#29282e", "#34333a", "#9a97a4", "#c3c1cb", "#ededf0"] },
+      "raise": { "role": "neutral", "displayName": "Karten-Grau", "canonical": "oklch(28.0% 0.011 293.3)", "tonalRamp": ["#141317", "#17161a", "#1e1d22", "#29282e", "#34333a", "#9a97a4", "#c3c1cb", "#ededf0"] },
+      "raise2": { "role": "neutral", "displayName": "Karten-Grau, hoch", "canonical": "oklch(32.5% 0.012 292.3)", "tonalRamp": ["#141317", "#17161a", "#1e1d22", "#29282e", "#34333a", "#9a97a4", "#c3c1cb", "#ededf0"] },
+      "field": { "role": "neutral", "displayName": "Feld-Tiefe", "canonical": "oklch(19.0% 0.008 297.1)", "tonalRamp": ["#141317", "#17161a", "#1e1d22", "#29282e", "#34333a", "#9a97a4", "#c3c1cb", "#ededf0"] },
+      "code": { "role": "neutral", "displayName": "Code-Tiefe", "canonical": "oklch(19.4% 0.008 297.1)", "tonalRamp": ["#141317", "#17161a", "#1e1d22", "#29282e", "#34333a", "#9a97a4", "#c3c1cb", "#ededf0"] },
+      "ink": { "role": "neutral", "displayName": "Tinte", "canonical": "oklch(94.7% 0.004 286.3)", "tonalRamp": ["#141317", "#17161a", "#1e1d22", "#29282e", "#34333a", "#9a97a4", "#c3c1cb", "#ededf0"] },
+      "soft": { "role": "neutral", "displayName": "Leise Tinte", "canonical": "oklch(81.6% 0.014 295.3)", "tonalRamp": ["#141317", "#17161a", "#1e1d22", "#29282e", "#34333a", "#9a97a4", "#c3c1cb", "#ededf0"] },
+      "mute": { "role": "neutral", "displayName": "Stumm", "canonical": "oklch(68.3% 0.019 296.5)", "tonalRamp": ["#141317", "#17161a", "#1e1d22", "#29282e", "#34333a", "#9a97a4", "#c3c1cb", "#ededf0"] },
+      "line": { "role": "neutral", "displayName": "Haarlinie" },
+      "line2": { "role": "neutral", "displayName": "Haarlinie, Karte" },
+      "line3": { "role": "neutral", "displayName": "Haarlinie, Fokus" },
+      "hov": { "role": "neutral", "displayName": "Hover-Schleier" },
+      "sel": { "role": "neutral", "displayName": "Auswahl-Schleier" },
+      "on": { "role": "neutral", "displayName": "Weiß auf Violett", "canonical": "oklch(100% 0 0)" },
+      "bad": { "role": "error", "displayName": "Gedämpftes Korall", "canonical": "oklch(78.3% 0.101 30.8)", "tonalRamp": ["oklch(15% 0.050 30.8)", "oklch(26% 0.050 30.8)", "oklch(37% 0.101 30.8)", "oklch(48% 0.101 30.8)", "oklch(59% 0.101 30.8)", "oklch(70% 0.101 30.8)", "oklch(82% 0.101 30.8)", "oklch(95% 0.050 30.8)"] },
+      "badl": { "role": "error", "displayName": "Korall-Schleier" }
+    },
+    "typographyMeta": {
+      "headline": { "displayName": "Headline", "purpose": "Nur die Begrüßung auf dem Startbild; Handy 26px, Querformat 21px." },
+      "title": { "displayName": "Title", "purpose": "Überschrift der Anmelde- und Einrichtungskarte." },
+      "title-sm": { "displayName": "Title klein", "purpose": "Fenstertitel; im Gehirn-Blatt 16px." },
+      "body-reading": { "displayName": "Lesetext", "purpose": "Antworten; Fließtextblöcke höchstens 34em, am Handy 16px." },
+      "body": { "displayName": "Body", "purpose": "Grundtext, Felder, eigene Nachrichten." },
+      "chrome": { "displayName": "Chrome", "purpose": "Seitenleisten-Zeilen, Suche, Labels." },
+      "label": { "displayName": "Label", "purpose": "Antwort-Aktionen, Gehirn-Angabe, Unterzeilen." },
+      "group": { "displayName": "Gruppe", "purpose": "Datumsgruppen und Abschnitte, normal geschrieben in mute." },
+      "mono": { "displayName": "Mono", "purpose": "Inline-Code und Codeblöcke, Schlüsselfeld." },
+      "arabic": { "displayName": "Arabisch", "purpose": "Alles mit lang=ar, größer für Harakat." }
+    },
+    "shadows": [
+      { "name": "karte", "value": "0 1px 3px rgba(0,0,0,.18), 0 10px 30px rgba(0,0,0,.22)", "purpose": "Eingabe-Karte, das einzige Objekt mit Schatten im Hauptbereich." },
+      { "name": "fenster", "value": "0 24px 64px rgba(0,0,0,.5)", "purpose": "Dialoge, mit Abdunklung rgb(0 0 0/.55)." },
+      { "name": "schwebend", "value": "0 4px 14px rgba(0,0,0,.35)", "purpose": "Nach-unten-Knopf." },
+      { "name": "toast", "value": "0 10px 30px rgba(0,0,0,.45)", "purpose": "Kurze Hinweise." },
+      { "name": "segment", "value": "0 1px 2px rgba(0,0,0,.3)", "purpose": "Gedrückter Abschnitt im Segment-Schalter." },
+      { "name": "fokus-feld", "value": "0 0 0 3px var(--acct)", "purpose": "Fokushof um Formularfelder." }
+    ],
+    "motion": [
+      { "name": "state", "value": ".15s", "purpose": "Hintergrund-, Farb- und Randwechsel bei Hover und Fokus." },
+      { "name": "ease-out-soft", "value": "cubic-bezier(.2,.8,.3,1)", "purpose": "Fenster, Schublade und Blatt beim Öffnen." },
+      { "name": "pop", "value": ".18s", "purpose": "Dialog erscheint mit 6px Anhebung." },
+      { "name": "slide", "value": ".22s", "purpose": "Handy-Schublade von links." },
+      { "name": "rise", "value": ".24s", "purpose": "Gehirn-Blatt von unten am Handy." },
+      { "name": "pulse", "value": "1.6s ease-in-out infinite", "purpose": "Wartezustand; entfällt bei reduzierter Bewegung." }
+    ],
+    "breakpoints": [
+      { "name": "phone", "value": "max-width: 899px, oder max-height: 540px mit pointer:coarse" },
+      { "name": "tablet", "value": "900px bis 1199px" },
+      { "name": "desktop", "value": "ab 900px" },
+      { "name": "wide", "value": "ab 1200px" },
+      { "name": "low", "value": "ab 900px mit max-height: 700px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Senden",
+      "kind": "button",
+      "refersTo": "button-send",
+      "description": "Gefüllter violetter Quadratknopf rechts in der Eingabe-Karte; leer deaktiviert.",
+      "html": "<button class=\"ds-send\" type=\"button\" aria-label=\"Senden\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14M13 6l6 6-6 6\"/></svg></button> <button class=\"ds-send\" type=\"button\" disabled aria-label=\"Senden\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14M13 6l6 6-6 6\"/></svg></button>",
+      "css": ".ds-send{display:inline-grid;place-items:center;width:36px;height:36px;border:0;border-radius:10px;background:var(--acc,#7c3aed);color:var(--on,#fff);cursor:pointer;transition:background-color .15s,color .15s}.ds-send svg{width:18px;height:18px}.ds-send:hover:not(:disabled){background:var(--acch,#8b4cf7)}.ds-send:focus-visible{outline:2px solid var(--acc2,#a78bfa);outline-offset:2px}.ds-send:disabled{cursor:default;background:var(--raise2,#34333a);color:var(--mute,#9a97a4)}"
+    },
+    {
+      "name": "Hauptknopf",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Violetter Textknopf für die eine Hauptaktion in Anmeldung und Fenstern.",
+      "html": "<button class=\"ds-btn\" type=\"button\">Speichern</button>",
+      "css": ".ds-btn{min-height:42px;border:0;border-radius:10px;background:var(--acc,#7c3aed);color:var(--on,#fff);padding:10px 18px;font:600 15px system-ui,sans-serif;cursor:pointer;transition:background-color .15s}.ds-btn:hover{background:var(--acch,#8b4cf7)}.ds-btn:focus-visible{outline:2px solid var(--acc2,#a78bfa);outline-offset:2px}"
+    },
+    {
+      "name": "Zweitknopf",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Ungefüllter Knopf mit innerer Haarlinie für Nebenaktionen.",
+      "html": "<button class=\"ds-btn-alt\" type=\"button\">Abbrechen</button>",
+      "css": ".ds-btn-alt{min-height:42px;border:0;border-radius:10px;background:none;color:var(--ink,#ededf0);box-shadow:inset 0 0 0 1px var(--line2,rgba(255,255,255,.13));padding:10px 18px;font:600 15px system-ui,sans-serif;cursor:pointer;transition:background-color .15s}.ds-btn-alt:hover{background:var(--hov,rgba(255,255,255,.05))}.ds-btn-alt:focus-visible{outline:2px solid var(--acc2,#a78bfa);outline-offset:2px}"
+    },
+    {
+      "name": "Eingabe-Karte",
+      "kind": "custom",
+      "refersTo": "composer",
+      "description": "Das eine hervorgehobene Objekt: Textfeld oben, Werkzeugleiste mit Bild, Gehirn-Angabe und Senden unten.",
+      "html": "<div class=\"ds-composer\"><textarea placeholder=\"Frag xbubekir\" rows=\"1\"></textarea><div class=\"ds-tools\"><button class=\"ds-ib\" type=\"button\" aria-label=\"Bild anhängen\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3.5\" y=\"4.5\" width=\"17\" height=\"15\" rx=\"2.5\"/><circle cx=\"9\" cy=\"10\" r=\"1.6\"/><path d=\"m20.5 15.5-4.5-4.5-9 9\"/></svg></button><button class=\"ds-brain\" type=\"button\">Claude Sonnet 5.5 · Normal <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"><path d=\"m7 10 5 5 5-5\"/></svg></button><button class=\"ds-send2\" type=\"button\" aria-label=\"Senden\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14M13 6l6 6-6 6\"/></svg></button></div></div>",
+      "css": ".ds-composer{display:flex;flex-direction:column;max-width:720px;padding:10px 10px 8px;border:1px solid var(--line2,rgba(255,255,255,.13));border-radius:20px;background:var(--raise,#29282e);box-shadow:0 1px 3px rgba(0,0,0,.18),0 10px 30px rgba(0,0,0,.22);transition:border-color .15s}.ds-composer:focus-within{border-color:var(--line3,rgba(255,255,255,.22))}.ds-composer textarea{display:block;width:100%;resize:none;height:46px;padding:6px 8px 4px;border:0;background:none;color:var(--ink,#ededf0);font:16.5px/1.5 system-ui,sans-serif;caret-color:var(--acc2,#a78bfa);outline:0}.ds-composer textarea::placeholder{color:var(--mute,#9a97a4)}.ds-tools{display:flex;align-items:center;gap:4px;margin-top:4px}.ds-ib{display:grid;place-items:center;width:36px;height:36px;border:0;border-radius:10px;background:none;color:var(--soft,#c3c1cb);cursor:pointer;transition:background-color .15s,color .15s}.ds-ib svg{width:20px;height:20px}.ds-ib:hover{background:var(--hov,rgba(255,255,255,.05));color:var(--ink,#ededf0)}.ds-brain{display:inline-flex;align-items:center;gap:6px;height:36px;margin-left:auto;padding:0 8px 0 10px;border:0;border-radius:10px;background:none;color:var(--soft,#c3c1cb);font:13.5px/1.3 system-ui,sans-serif;cursor:pointer;transition:background-color .15s,color .15s}.ds-brain svg{width:15px;height:15px}.ds-brain:hover{background:var(--hov,rgba(255,255,255,.05));color:var(--ink,#ededf0)}.ds-send2{display:grid;place-items:center;width:36px;height:36px;border:0;border-radius:10px;background:var(--acc,#7c3aed);color:#fff;cursor:pointer}.ds-send2 svg{width:18px;height:18px}.ds-send2:hover{background:var(--acch,#8b4cf7)}.ds-composer button:focus-visible{outline:2px solid var(--acc2,#a78bfa);outline-offset:2px}"
+    },
+    {
+      "name": "Eigene Nachricht und Antwort",
+      "kind": "custom",
+      "refersTo": "bubble-user",
+      "description": "Eigene Nachricht als Blase rechts, Antwort als flächenloser Lesetext mit stillen Aktionen.",
+      "html": "<div class=\"ds-chat\"><div class=\"ds-bub\">Wie rechne ich Zinseszins?</div><div class=\"ds-ans\"><p>Mit der Formel K = K₀ · (1 + p)ⁿ. Bei 2.000 € und 3 % über fünf Jahre kommst du auf <strong>2.318,55 €</strong>.</p><div class=\"ds-acts\"><button class=\"ds-mini\" type=\"button\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"8\" y=\"8\" width=\"12\" height=\"12\" rx=\"2\"/><path d=\"M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2\"/></svg>Kopieren</button><button class=\"ds-mini\" type=\"button\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7\"/></svg>Nochmal</button></div></div></div>",
+      "css": ".ds-chat{display:flex;flex-direction:column;gap:30px;max-width:720px;color:var(--ink,#ededf0);font-family:system-ui,sans-serif}.ds-bub{align-self:flex-end;max-width:80%;background:var(--raise,#29282e);border-radius:18px;padding:9px 16px;font-size:16.5px;line-height:1.55}.ds-ans{font-size:16.5px;line-height:1.7}.ds-ans p{max-width:34em;margin:0}.ds-ans strong{font-weight:600;color:#fff}.ds-acts{display:flex;gap:2px;margin:10px 0 0 -9px}.ds-mini{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 9px;border:0;border-radius:8px;background:none;color:var(--mute,#9a97a4);font:13px system-ui,sans-serif;cursor:pointer;transition:background-color .15s,color .15s}.ds-mini svg{width:16px;height:16px}.ds-mini:hover{background:var(--hov,rgba(255,255,255,.05));color:var(--ink,#ededf0)}.ds-mini:focus-visible{outline:2px solid var(--acc2,#a78bfa);outline-offset:2px}"
+    },
+    {
+      "name": "Formularfeld",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Eingelassenes Feld in Anmeldung und Einstellungen, Fokus mit Lavendel-Rand und Hof.",
+      "html": "<label class=\"ds-label\" for=\"ds-mail\">E-Mail</label><input class=\"ds-f\" id=\"ds-mail\" type=\"email\" placeholder=\"du@beispiel.de\">",
+      "css": ".ds-label{display:block;font:500 14px system-ui,sans-serif;color:var(--soft,#c3c1cb);margin:0 0 6px}.ds-f{width:100%;padding:10px 12px;border:1px solid var(--line2,rgba(255,255,255,.13));border-radius:10px;background:var(--field,#141317);color:var(--ink,#ededf0);font:16px system-ui,sans-serif;caret-color:var(--acc2,#a78bfa);transition:border-color .15s,box-shadow .15s}.ds-f::placeholder{color:var(--mute,#9a97a4)}.ds-f:focus{border-color:var(--acc2,#a78bfa);outline:0;box-shadow:0 0 0 3px var(--acct,rgba(139,92,246,.22))}"
+    },
+    {
+      "name": "Seitenleiste mit Chatliste",
+      "kind": "nav",
+      "refersTo": "list-row",
+      "description": "Rahmenlose Zeilen, Datumsgruppen in mute, aktuelle Zeile auf sel.",
+      "html": "<nav class=\"ds-side\"><button class=\"ds-row-act\" type=\"button\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 4H6.5A2.5 2.5 0 0 0 4 6.5v11A2.5 2.5 0 0 0 6.5 20h11a2.5 2.5 0 0 0 2.5-2.5V12\"/><path d=\"M17.6 3.6a2 2 0 0 1 2.8 2.8L13 13.8l-3.6.8.8-3.6Z\"/></svg>Neuer Chat</button><h3>Heute</h3><ul><li class=\"on\"><button type=\"button\">Zinsaufgaben lösen</button></li><li><button type=\"button\">Haare waschen</button></li></ul><h3>Gestern</h3><ul><li><button type=\"button\">Resilienz Bedeutung</button></li></ul></nav>",
+      "css": ".ds-side{width:264px;padding:10px 8px 8px;background:var(--side,#17161a);border-right:1px solid var(--line,rgba(255,255,255,.08));font-family:system-ui,sans-serif}.ds-row-act{display:flex;align-items:center;gap:11px;width:100%;height:38px;padding:0 10px;border:0;border-radius:10px;background:none;color:var(--ink,#ededf0);font-size:14.5px;font-weight:500;cursor:pointer;transition:background-color .15s}.ds-row-act svg{width:18px;height:18px;color:var(--soft,#c3c1cb)}.ds-row-act:hover{background:var(--hov,rgba(255,255,255,.05))}.ds-side h3{margin:18px 10px 6px;font-size:12px;font-weight:500;color:var(--mute,#9a97a4)}.ds-side ul{list-style:none;margin:0;padding:0}.ds-side li{border-radius:8px}.ds-side li+li{margin-top:1px}.ds-side li button{display:block;width:100%;padding:7px 10px;border:0;border-radius:8px;background:none;color:var(--soft,#c3c1cb);font-size:14px;text-align:left;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ds-side li:hover{background:var(--hov,rgba(255,255,255,.05))}.ds-side li:hover button,.ds-side li.on button{color:var(--ink,#ededf0)}.ds-side li.on{background:var(--sel,rgba(255,255,255,.085))}.ds-side button:focus-visible{outline:2px solid var(--acc2,#a78bfa);outline-offset:2px}"
+    },
+    {
+      "name": "Gehirn-Zeile mit Auswahlmarke",
+      "kind": "chip",
+      "refersTo": "list-row-selected",
+      "description": "Zeile im Gehirn-Blatt; die gewählte trägt den gefüllten violetten Kreis.",
+      "html": "<div class=\"ds-pick\"><button class=\"ds-bm\" type=\"button\" aria-current=\"true\"><span class=\"ds-mx\"><b>Claude Sonnet 5.5</b><small>Eigener Schlüssel, nach Nutzung</small></span><span class=\"ds-ck\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m5 12 5 5 9-10\"/></svg></span></button><button class=\"ds-bm\" type=\"button\"><span class=\"ds-mx\"><b>Gemini 3.8 Flash</b><small>Konto, kostenlos mit Limits</small></span><span class=\"ds-ck\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m5 12 5 5 9-10\"/></svg></span></button></div>",
+      "css": ".ds-pick{width:420px;padding:12px;background:var(--raise,#29282e);border:1px solid var(--line2,rgba(255,255,255,.13));border-radius:16px;font-family:system-ui,sans-serif;color:var(--ink,#ededf0)}.ds-bm{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;padding:6px 10px;border:0;border-radius:10px;background:none;color:inherit;text-align:left;cursor:pointer;transition:background-color .15s}.ds-bm+.ds-bm{margin-top:1px}.ds-bm:hover{background:var(--hov,rgba(255,255,255,.05))}.ds-bm:focus-visible{outline:2px solid var(--acc2,#a78bfa);outline-offset:2px}.ds-mx{flex:1;min-width:0}.ds-bm b{display:block;font-size:15px;font-weight:500}.ds-bm small{display:block;font-size:13px;color:var(--mute,#9a97a4)}.ds-ck{display:grid;place-items:center;width:20px;height:20px;flex:none;border:1.5px solid var(--line3,rgba(255,255,255,.22));border-radius:50%;color:#fff}.ds-ck svg{width:12px;height:12px;opacity:0}.ds-bm[aria-current]{background:var(--sel,rgba(255,255,255,.085))}.ds-bm[aria-current] .ds-ck{background:var(--acc,#7c3aed);border-color:var(--acc,#7c3aed)}.ds-bm[aria-current] .ds-ck svg{opacity:1}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Die stille Werkbank",
+    "overview": "xbubekir ist ein Arbeitswerkzeug, das sich zurücknimmt: eine neutrale dunkle Hülle, Antworten als ruhiger Lesetext und die Eingabe-Karte als einziges hervorgehobenes Objekt. Der Maßstab für Aufbau und Handwerk ist bewusst die Claude-App, also der Kanon der Kategorie, gerade gespielt statt eines eigenen Stils. Das Lila ist kein Grundton, sondern ein Zeiger: Es markiert, wo gehandelt wird (Senden), wo der Fokus liegt und was ausgewählt ist.\n\nDie Flächen sind fast schwarzes Grau mit einem kaum spürbaren violetten Unterton und staffeln sich in drei Stufen: Seitenleiste am dunkelsten, Hauptbereich eine Stufe heller, Karten und Fenster noch eine Stufe heller. Getrennt wird mit Haarlinien aus Weiß bei 8 bis 22 Prozent, nicht mit Farbe. Die Chrome ist dicht und leise (14 bis 15px), der Lesetext großzügig (16,5px, Zeilenhöhe 1,7, höchstens 34em breit).\n\nBewusst abgelehnt ist der frühere Neon-Look: Bögen, Leuchten und Verläufe als Dekor, Verlaufs-Knöpfe, Glas und das übergroße zentrierte Logo als Startbild.",
+    "keyCharacteristics": [
+      "Nur dunkel, drei Flächenstufen, Haarlinien statt Farbflächen.",
+      "Lila nur auf Senden, Hauptknopf, Fokus, Auswahlmarken, Links, Fortschritt und Markenzeichen.",
+      "Eine Schriftfamilie (System-Sans), Arabisch mit eigener Schrift und größer gesetzt.",
+      "Tiefe nur auf Eingabe-Karte, Fenstern und schwebenden Hinweisen.",
+      "Werkzeuge erscheinen still: Zeilen und Symbolknöpfe ohne Rahmen, Hover nur als leichte Aufhellung."
+    ],
+    "rules": [
+      { "name": "The Zeiger Rule", "body": "Violett zeigt nur auf Handlung, Fokus oder Auswahl. Keine violetten Flächen, Ränder oder Hintergründe zur Stimmung.", "section": "colors" },
+      { "name": "The Drei-Stufen Rule", "body": "Flächen steigen nur in den Stufen `side`, `bg`, `raise` (`raise2` innerhalb von Karten). Eingelassenes (Felder, Code) geht eine Stufe unter das Umfeld.", "section": "colors" },
+      { "name": "The Lesetext Rule", "body": "Antworten sind Lesetext: 16,5px, Zeilenhöhe 1,7, Fließtextblöcke höchstens 34em. Tabellen und Code dürfen breiter laufen, bis zur Spalte (`col`).", "section": "typography" },
+      { "name": "The Arabisch Rule", "body": "Alles mit `lang=ar` bekommt die arabische Schrift bei 1,22em und Zeilenhöhe 1,5, damit Harakat Platz haben.", "section": "typography" },
+      { "name": "The Tabellenziffern Rule", "body": "Tabellen setzen Ziffern tabellarisch (`font-variant-numeric: tabular-nums`) bei 0,93em.", "section": "typography" },
+      { "name": "The Eine-Karte Rule", "body": "Im Hauptbereich trägt nur die Eingabe-Karte Schatten. Nachrichten, Codeblöcke und Tabellen bleiben flach und werden höchstens mit Haarlinie gefasst.", "section": "elevation" }
+    ],
+    "dos": [
+      "**Do** Violett (`acc`, `acc2`) nur für Senden, den Hauptknopf, Fokus, Auswahlmarken, Links, Fortschritt und Markenzeichen einsetzen.",
+      "**Do** Flächen in den Stufen `side`, `bg`, `raise`, `raise2` staffeln und mit Haarlinien (`line` bis `line3`) trennen.",
+      "**Do** Antworten als Lesetext ohne Fläche setzen: 16,5px, Zeilenhöhe 1,7, Fließtextblöcke höchstens 34em.",
+      "**Do** Symbole als Inline-SVG mit Kontur (1,6 bis 2,4) in `currentColor` zeichnen.",
+      "**Do** Werkzeuge rahmenlos halten und Hover nur als `hov` zeigen; die Auswahl als `sel`.",
+      "**Do** Touch-Ziele bei `pointer:coarse` auf mindestens 40 bis 44px bringen."
+    ],
+    "donts": [
+      "**Don't** Leuchten, Neon-Bögen, Glas oder Verläufe als Dekor auf Oberflächen legen. Der einzige Verlauf ist der funktionale Ladeschimmer im Fortschrittsbalken.",
+      "**Don't** Knöpfe mit Verlauf füllen oder violette Flächen als Hintergrund, Kartenrand oder Stimmung verwenden.",
+      "**Don't** das Logo als großes zentriertes Startbild zeigen; die Marke `xbu` bleibt klein (84px, am Handy 68px) über der Begrüßung.",
+      "**Don't** Schatten auf Nachrichten, Codeblöcke oder Tabellen setzen; Tiefe gehört der Eingabe-Karte, Fenstern und Schwebendem.",
+      "**Don't** einen hellen Modus oder helle Flächen einführen.",
+      "**Don't** Überzeilen in Versalien über Überschriften stellen; Gruppen heißen normal geschrieben in 12px `mute`."
+    ]
+  }
+}
