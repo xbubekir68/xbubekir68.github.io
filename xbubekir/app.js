@@ -1401,17 +1401,20 @@ function vHint(){
   $("#vHint").textContent=`Was du sagst, erkennt dein Browser über Server ${via}.`;
 }
 function openVoice(){
-  if(!SR||!TTS){toast("Dein Browser kann keine Sprache erkennen. Nimm Safari, Chrome oder Edge.");return}
-  if(!keyOf(cur?provOf(cur):S.provider)){openSettings();return}
-  Object.assign(V,{on:true,noCloud:false,misses:0,heard:false,mute:false,live:false,done:false,after:"",q:[]});V.turn++;
+  const p=cur&&!gone(cur)?provOf(cur):S.provider,live=p==="gemini"&&liveCan()&&ttsOk(); // Gemini-Chats: Gemini Live, sonst der Weg über die Browser-Spracherkennung
+  if(!live&&(!SR||!TTS)){toast("Dein Browser kann keine Sprache erkennen. Nimm Safari, Chrome oder Edge.");return}
+  if(!keyOf(p)){openSettings();return}
+  Object.assign(V,{on:true,classic:!live,noCloud:false,misses:0,heard:false,mute:false,live:false,done:false,after:"",q:[]});V.turn++;
   vYou.textContent="";vAi.textContent="";vLangUI();vHint();
-  vUnlock();vWake();blobStart();vWarm();
+  vUnlock();vWake();blobStart();if(!live)vWarm(); // vUnlock auch für Live: falls es auf den alten Weg ausweichen muss, darf der dann trotzdem vorlesen
   dVoice.showModal();
-  if(busy){vSet("think");const my=V.turn;idle.push(()=>{if(V.on&&my===V.turn)vListen()})}
-  else vListen(true);
+  const go=first=>live?liveStart():vListen(first);
+  if(busy){vSet("think");const my=V.turn;idle.push(()=>{if(V.on&&my===V.turn)go()})}
+  else go(true);
 }
 function closeVoice(){
   if(!V.on)return;
+  if(!V.classic)liveStop();
   V.on=false;V.live=false;V.turn++;vStopRec();vHush();blobStop();
   V.lock?.release().catch(()=>{});V.lock=null;
 }
@@ -1490,6 +1493,173 @@ function drawBlob(t,st){
   }
   bctx.globalAlpha=1;
 }
+// ---------- Sprachmodus mit Gemini Live ----------
+// In Gemini-Chats geht der Mikrofon-Ton per WebSocket direkt an Gemini Live, die Antwort kommt als Ton zurück: Erkennen, Denken und
+// Sprechen in einem Schritt. Google erkennt selbst, wann du fertig bist, und wer dazwischenredet, unterbricht die Antwort (das Mikrofon
+// filtert die eigene Stimme heraus). Beide Seiten kommen als Mitschrift zurück und landen nach jeder Runde im Chat.
+// Zugang: eigener Gemini-Schlüssel direkt, mit Konto ein Kurzzeit-Schlüssel vom eigenen Server (server/gemini, /live-token).
+// xbu-Chats und ein Fehlschlag beim ersten Verbinden nehmen den Weg oben (Spracherkennung des Browsers, Antwort, Vorlesen).
+const LIVE_MODEL="models/gemini-3.8-live",LIVE_WS="wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.";
+const LIVE_LANG={"de-DE":"Deutsch","en-US":"Englisch","ar-SA":"Arabisch"};
+const liveCan=()=>!!(window.WebSocket&&window.AudioWorkletNode&&navigator.mediaDevices?.getUserMedia);
+// gen: zählt Verbindungen, damit eine alte nichts mehr anfasst; ever: mindestens einmal verbunden; you/ai: Mitschrift der laufenden Runde;
+// at: Startzeit des nächsten Ton-Stücks; done: Runde fertig (keine Antwort unterwegs); mute: Rest der Antwort nicht abspielen (Tipp); bye: Google will die Verbindung bald beenden
+const LV={ws:null,gen:0,ready:false,ever:false,tries:0,node:null,mod:null,hist:[],chat:null,you:"",ai:"",at:0,srcs:new Set(),done:true,mute:false,paused:false,bye:false,think:0};
+const b64of=buf=>{const u=new Uint8Array(buf);let s="";for(let i=0;i<u.length;i+=0x8000)s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(s)};
+const liveTail=s=>s.length<=110?s:"… "+s.slice(s.indexOf(" ",s.length-110)+1); // im Kreis-Bildschirm nur das zuletzt Gesagte
+
+async function liveStart(){
+  const my=V.turn;
+  liveStop();Object.assign(LV,{ever:false,tries:0,paused:false,mute:false,done:true,bye:false});
+  if(!cur||gone(cur))cur=newChat(true); // kommt erst mit der ersten Runde in die Liste
+  LV.chat=cur;
+  vSet("think","Verbinde mit Gemini Live …");
+  $("#vHint").textContent="Gemini Live von Google hört zu und antwortet direkt. Dein Ton geht dafür an Google.";
+  try{
+    const c=LV.chat; // Gedächtnis wie beim ersten Satz eines getippten Chats; ohne Satz zählen nur die Notizen über die Person
+    if(memOn()&&!c.msgs.length&&!c.mem){if(Date.now()-memAt>300e3)await memLoad();c.mem=memPick("",MEM).map(m=>m.id)}
+    else if(c.mem?.length&&!memAt)await memLoad();
+  }catch(e){console.warn("xbubekir: Gedächtnis nicht geladen",e)}
+  try{await liveMic()}catch(e){if(my===V.turn&&V.on)liveFail(e);return}
+  if(my!==V.turn||!V.on)return;
+  liveConnect().catch(liveLost);
+}
+async function liveMic(){
+  if(LV.node)return;
+  const ac=B.ac??=new(window.AudioContext||window.webkitAudioContext)();
+  if(ac.state!=="running")await ac.resume();
+  LV.mod??=ac.audioWorklet.addModule("voice-worklet.js");
+  try{await LV.mod}catch(e){LV.mod=null;throw e}
+  const s=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true,channelCount:1}});
+  if(!V.on){s.getTracks().forEach(t=>t.stop());return}
+  // B.an misst den Pegel für den lebendigen Kreis; meterOff() gibt das Mikrofon beim Schließen wieder frei
+  B.stream=s;B.src=ac.createMediaStreamSource(s);B.an=ac.createAnalyser();B.an.fftSize=1024;B.buf=new Float32Array(B.an.fftSize);B.src.connect(B.an);
+  const n=LV.node=new AudioWorkletNode(ac,"xb-mic"),z=ac.createGain();
+  z.gain.value=0;B.src.connect(n);n.connect(z).connect(ac.destination); // stumm angeschlossen: ohne Ausgang rechnen manche Browser den Knoten nicht
+  n.port.onmessage=e=>{const w=LV.ws;if(w?.readyState===1&&LV.ready&&!LV.paused)w.send(JSON.stringify({realtimeInput:{audio:{data:b64of(e.data),mimeType:"audio/pcm;rate=16000"}}}))};
+}
+async function liveConnect(){
+  const my=++LV.gen;LV.ready=false;
+  let url;
+  if(S.gmode!=="konto"&&S.gkey)url=LIVE_WS+"BidiGenerateContent?key="+encodeURIComponent(S.gkey);
+  else{
+    const{data}=await(await auth()).getSession();
+    if(!data.session)throw new Error("Nicht angemeldet.");
+    const r=await fetch(SB_FN+"/live-token",{method:"POST",headers:{Authorization:"Bearer "+data.session.access_token}}),j=await r.json().catch(()=>({}));
+    if(!r.ok||!j.token)throw new Error(j.error?.message||`Kein Schlüssel für Gemini Live (${r.status}).`);
+    url=LIVE_WS+"BidiGenerateContentConstrained?access_token="+encodeURIComponent(j.token);
+  }
+  if(my!==LV.gen||!V.on)return;
+  const ws=LV.ws=new WebSocket(url);
+  ws.binaryType="arraybuffer";
+  ws.onopen=()=>{if(my===LV.gen)ws.send(JSON.stringify(liveSetup()))};
+  ws.onmessage=e=>{if(my!==LV.gen)return;let m;try{m=JSON.parse(typeof e.data==="string"?e.data:new TextDecoder().decode(e.data))}catch{return}liveMsg(m)};
+  ws.onclose=e=>{if(my!==LV.gen)return;LV.ws=null;LV.ready=false;if(!V.on)return;liveHush();liveCommit();liveLost(e.reason||`Verbindung beendet (${e.code}).`)};
+}
+function liveSetup(){
+  const c=LV.chat,p=provOf(c);
+  // bisheriger Chat als Text (ohne Bilder und Gedanken), höchstens die letzten 30 Nachrichten
+  LV.hist=c.msgs.filter(m=>!m.skip).slice(-30).map(m=>m.role==="user"?{role:"user",parts:[{text:m.content||"(Bild)"}]}
+    :{role:"model",parts:[{text:msgBlocks(p,m).filter(b=>b.type==="text").map(b=>b.text||"").join("")||"…"}]});
+  return{setup:{model:LIVE_MODEL,
+    generationConfig:{responseModalities:["AUDIO"],speechConfig:{voiceConfig:{prebuiltVoiceConfig:{voiceName:S.vvoice.startsWith("g:")?S.vvoice.slice(2):"Sulafat"}}}},
+    systemInstruction:{parts:[{text:sysOf(c)+(c.voice?"":VOICE_PROMPT)+`\n\nDie Person spricht meistens ${LIVE_LANG[S.vlang]||"Deutsch"}. Antworte in der Sprache, in der sie gerade mit dir spricht.`}]},
+    inputAudioTranscription:{},outputAudioTranscription:{},
+    realtimeInputConfig:{automaticActivityDetection:{silenceDurationMs:600}}, // Google empfiehlt 500–800 ms Pause als Ende der Frage
+    contextWindowCompression:{slidingWindow:{}},
+    ...(LV.hist.length&&{historyConfig:{initialHistoryInClientContent:true}})}};
+}
+function liveMsg(m){
+  if(m.setupComplete){
+    LV.ready=LV.ever=true;
+    if(LV.hist.length)LV.ws.send(JSON.stringify({clientContent:{turns:LV.hist,turnComplete:false}}));
+    if(!LV.paused)vSet("listen");
+    return;
+  }
+  if(m.goAway){LV.bye=true;if(LV.done&&!LV.srcs.size)liveRestart();return} // sonst nach dieser Runde neu verbinden
+  const sc=m.serverContent;
+  if(!sc)return;
+  const heard=sc.inputTranscription?.text;
+  if(heard){
+    LV.you+=heard;vYou.textContent=LV.you.trim();vYou.classList.remove("interim");
+    V.t0=performance.now();V.tAudio=0;clearTimeout(LV.think);
+    if(dVoice.dataset.state==="think")vSet("listen");
+    LV.think=setTimeout(()=>{if(V.on&&LV.ready&&!LV.srcs.size&&dVoice.dataset.state==="listen")vSet("think")},700); // still geworden: Gemini ist dran
+  }
+  for(const p of sc.modelTurn?.parts||[])if(p.inlineData?.data&&!LV.mute)livePlay(p.inlineData);
+  if(sc.outputTranscription?.text){LV.ai+=sc.outputTranscription.text;if(!LV.mute)vAi.innerHTML=ar(esc(liveTail(LV.ai.trim())))}
+  if(sc.interrupted){liveHush();liveCommit();if(!LV.paused)vSet("listen")} // dazwischengeredet: was schon gesagt war, kommt in den Chat
+  if(sc.turnComplete){LV.mute=false;liveCommit();LV.done=true;LV.tries=0;if(!LV.srcs.size)liveIdle()}
+}
+function livePlay(d){ // ein Stück Antwort-Ton (16-Bit-PCM, 24 kHz) lückenlos hinter das vorige hängen
+  const ac=B.ac,bin=atob(d.data),n=bin.length>>1;
+  if(!ac||!n)return;
+  const buf=ac.createBuffer(1,n,+(/rate=(\d+)/.exec(d.mimeType)?.[1])||24000),ch=buf.getChannelData(0);
+  for(let i=0;i<n;i++)ch[i]=((bin.charCodeAt(2*i)|bin.charCodeAt(2*i+1)<<8)<<16>>16)/32768;
+  const s=ac.createBufferSource(),t=Math.max(ac.currentTime+.05,LV.at);
+  s.buffer=buf;s.connect(ac.destination);s.start(t);LV.at=t+buf.duration;LV.srcs.add(s);
+  s.onended=()=>{LV.srcs.delete(s);if(!LV.srcs.size)liveIdle()};
+  clearTimeout(LV.think);
+  if(LV.done||dVoice.dataset.state!=="speak"){LV.done=false;vSet("speak","xbubekir spricht. Sprich einfach dazwischen, um zu unterbrechen.")}
+  V.speaking=true;B.kick=Math.max(B.kick,.6);
+  if(V.t0&&!V.tAudio){ // Messung: vom letzten verstandenen Wort bis zum ersten Ton, im Hinweis unten sichtbar
+    V.tAudio=performance.now();const m=`Letzte Runde: Stimme nach ${((V.tAudio-V.t0)/1000).toFixed(1).replace(".",",")} s.`;
+    console.info("Sprachmodus:",m);$("#vHint").textContent="Gemini Live von Google hört zu und antwortet direkt. "+m;
+  }
+}
+function liveIdle(){ // nichts mehr zu hören
+  V.speaking=false;
+  if(!LV.done||!V.on)return; // Antwort kommt noch, das Netz hängt nur kurz
+  if(LV.bye)liveRestart();else if(LV.paused)vSet("pause");else if(LV.ready)vSet("listen");
+}
+function liveHush(){for(const s of LV.srcs){s.onended=null;try{s.stop()}catch{}}LV.srcs.clear();LV.at=0;V.speaking=false}
+function liveCommit(){ // Mitschrift der Runde in den Chat: deine Worte als Frage, Geminis als Antwort
+  const you=LV.you.trim(),ai=LV.ai.trim(),c=LV.chat;LV.you=LV.ai="";
+  if(!c||!you&&!ai)return;
+  if(!chats.includes(c))chats.unshift(c);
+  if(!c.title)c.title=(you||ai).replace(/\s+/g," ").slice(0,60);
+  const last=c.msgs.at(-1);let um=null;
+  if(you)c.msgs.push(um={role:"user",content:you});
+  if(ai){if(!you&&last?.role==="assistant"&&Array.isArray(last.content))last.content.push({text:" "+ai});else c.msgs.push({role:"assistant",content:[{text:ai}]})}
+  store(c);if(c===cur)render();
+  if(um&&ai)memLearn(c,um);
+}
+function liveLost(e){ // Verbindung weg: beim ersten Mal auf den alten Weg ausweichen, sonst zweimal neu verbinden
+  if(!V.on||V.classic)return;
+  if(!LV.ever){liveFail(e);return}
+  console.warn("Gemini Live:",e);
+  if(LV.tries++<2){vSet("think","Verbinde neu …");liveConnect().catch(liveLost);return}
+  liveStop();vSet("error",`Die Verbindung zu Gemini Live ist abgebrochen (${e?.message||e}). Tippe auf den Kreis, um es nochmal zu versuchen.`);
+}
+function liveFail(e){ // erstes Verbinden klappt nicht: mit dem bisherigen Sprachmodus weiter, wenn der Browser ihn kann
+  console.warn("Gemini Live:",e);
+  if(e?.name==="NotAllowedError"){liveStop();vFail("not-allowed");return}
+  if(e?.name==="NotFoundError"){liveStop();vFail("audio-capture");return}
+  liveStop();
+  if(SR&&TTS){V.classic=true;toast("Gemini Live ist gerade nicht erreichbar. Ich nehme den bisherigen Sprachmodus.");vHint();vWarm();vListen(true);return}
+  vSet("error",`Gemini Live ist gerade nicht erreichbar (${e?.message||e}). Tippe auf den Kreis, um es nochmal zu versuchen.`);
+}
+function liveRestart(){ // neue Verbindung mit dem Chat als Vorgeschichte (Google beendet Verbindungen nach etwa 10 Minuten, Sprachwechsel)
+  LV.bye=false;LV.gen++;const w=LV.ws;LV.ws=null;LV.ready=false;
+  try{w?.close()}catch{}
+  liveHush();liveCommit();LV.done=true;
+  vSet("think","Einen Moment …");liveConnect().catch(liveLost);
+}
+function liveStop(){ // Verbindung und Mikrofon zu; die Mitschrift bis hierher bleibt im Chat
+  LV.gen++;clearTimeout(LV.think);
+  const w=LV.ws;LV.ws=null;LV.ready=false;
+  try{w?.close()}catch{}
+  liveHush();liveCommit();
+  if(LV.node){LV.node.port.onmessage=null;try{LV.node.disconnect()}catch{}LV.node=null;meterOff()}
+}
+function liveTap(s){ // Tipp auf den Kreis
+  if(s==="speak"){LV.mute=!LV.done;liveHush();vAi.textContent="";vSet("listen");return} // Rest nicht mehr hören, er steht trotzdem im Chat
+  if(s==="think"&&!LV.ready)return; // verbindet gerade
+  if(s==="listen"||s==="think"){LV.paused=true;if(LV.ws?.readyState===1)LV.ws.send(JSON.stringify({realtimeInput:{audioStreamEnd:true}}));vSet("pause");return}
+  if(s==="pause"&&LV.ready){LV.paused=false;vSet("listen");return}
+  liveStart(); // Fehler, oder pausiert ohne Verbindung
+}
+
 function fillVoices(){ // Einstellungen: Gemini-Stimmen, dazu die deutschen Stimmen dieses Geräts
   const sel=$("#sVoice"),vs=TTS?TTS.getVoices().filter(v=>/^de/i.test(v.lang)):[];
   sel.innerHTML='<optgroup label="Gemini (klingt menschlich)">'+Object.entries(GVOICES).map(([n,d])=>`<option value="g:${n}">${n} (${d})</option>`).join("")+
@@ -1507,25 +1677,28 @@ $("#sVoiceTry").addEventListener("click",async e=>{
   catch(err){console.warn("Gemini-Stimme:",err);toast("Die Gemini-Stimme ist gerade nicht erreichbar"+(err?.status===429?" (Limit erreicht).":"."))}
   finally{b.disabled=false;b.textContent="Anhören"}
 });
-$("#bVoice").hidden=$("#fsVoice").hidden=!SR||!TTS;
+$("#bVoice").hidden=$("#fsVoice").hidden=!(SR&&TTS||liveCan()); // ohne Spracherkennung (z. B. Firefox) geht es mit Gemini Live
 if(TTS){TTS.getVoices();TTS.addEventListener?.("voiceschanged",()=>{if(!dSet.open)return;const clean=setState()===snap;fillVoices();if(clean)snap=setState()})} // Stimmen laden oft erst später
 $("#bVoice").addEventListener("click",openVoice);
 $("#vClose").addEventListener("click",()=>dVoice.close());
 dVoice.addEventListener("close",()=>{closeVoice();if(desk.matches)inp.focus()});
 vOrb.addEventListener("click",()=>{
   const s=dVoice.dataset.state;
-  if(s==="listen"){vStopRec();V.misses=0;vSet("pause")}
+  if(!V.classic)liveTap(s);
+  else if(s==="listen"){vStopRec();V.misses=0;vSet("pause")}
   else if(s==="speak"){V.turn++;V.mute=true;V.done=false;vListen()} // Antwort läuft im Chat weiter, nur nicht mehr laut
   else if(s==="pause"||s==="error")vListen();
 });
 $("#vLang").addEventListener("click",e=>{
   const b=e.target.closest("[data-lang]");if(!b)return;
   S.vlang=b.dataset.lang;saveS();vLangUI();
+  if(!V.classic){if(LV.ready)liveRestart();return} // die Sprache steht in der Anweisung an Gemini, also neu verbinden
   if(dVoice.dataset.state==="listen"){V.misses=0;vListen()}
 });
 document.addEventListener("visibilitychange",()=>{ // App verlassen: anhalten statt im Hintergrund weiterzuhören
   if(!V.on)return;
-  if(document.hidden){V.turn++;V.mute=true;V.live=false;vStopRec();vHush();vSet("pause")}else vWake(); // eine noch laufende Antwort wird danach nicht mehr vorgelesen
+  if(document.hidden&&!V.classic){LV.paused=true;LV.mute=!LV.done;liveHush();if(LV.ws?.readyState===1)LV.ws.send(JSON.stringify({realtimeInput:{audioStreamEnd:true}}));vSet("pause")}
+  else if(document.hidden){V.turn++;V.mute=true;V.live=false;vStopRec();vHush();vSet("pause")}else vWake(); // eine noch laufende Antwort wird danach nicht mehr vorgelesen
 });
 
 // ---------- Bedienung ----------

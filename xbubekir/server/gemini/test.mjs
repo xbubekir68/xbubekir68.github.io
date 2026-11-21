@@ -4,13 +4,16 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { stripTypeScriptTypes } from "node:module";
 
-let handler, sent, checks = 0;
+let handler, sent, body, checks = 0;
 globalThis.Deno = { env: { get: (k) => "x-" + k }, serve: (f) => { handler = f; } };
 globalThis.__createClient = () => ({
   auth: { getUser: async (jwt) => (checks++, jwt === "ok" || jwt.startsWith("h.") ? { data: { user: { id: "u1" } } } : { data: {}, error: new Error("nein") }) },
   from: () => ({ select: () => ({ eq: () => ({ maybeSingle: async () => ({ data: { user_id: "u1" } }) }) }) }),
 });
-globalThis.fetch = async (url) => { sent = url; return new Response("{}", { status: 200, headers: { "content-type": "application/json" } }); };
+globalThis.fetch = async (url, init) => {
+  sent = url; body = init?.body;
+  return new Response(url.endsWith("/auth_tokens") ? '{"name":"auth_tokens/t1"}' : "{}", { status: 200, headers: { "content-type": "application/json" } });
+};
 
 const src = readFileSync(new URL("index.ts", import.meta.url), "utf8")
   .replace(/^import \{ createClient \} from .*$/m, "const createClient = globalThis.__createClient;");
@@ -38,6 +41,16 @@ assert.equal(await twice(tok(3600)), 1, "zweite Anfrage mit demselben Token ohne
 assert.equal(await twice(tok(-10)), 2, "abgelaufenes Token wird nicht gemerkt");
 assert.equal(await twice("ok"), 2, "Token ohne Ablaufdatum wird nicht gemerkt");
 assert.equal(await twice("falsch"), 2, "Abgelehntes wird nicht gemerkt");
+
+assert.equal(await ask("/live-token", "falsch"), 401, "Sprachmodus-Schlüssel nur mit Anmeldung");
+assert.equal(await ask("/live-token"), 200, "Sprachmodus-Schlüssel wird ausgestellt");
+assert.equal(sent, "https://generativelanguage.googleapis.com/v1beta/auth_tokens", "Schlüssel kommt von Google");
+const t = JSON.parse(body);
+assert.equal(t.uses, 1, "Schlüssel öffnet nur eine Sitzung");
+assert.deepEqual([t.bidiGenerateContentSetup.model, t.fieldMask], ["models/gemini-3.8-live", "model"], "nur für das Live-Modell");
+assert.ok(Date.parse(t.newSessionExpireTime) - Date.now() <= 60_000, "Sitzung muss binnen einer Minute starten");
+const res = await handler(new Request("https://x/functions/v1/gemini/live-token", { method: "POST", headers: { authorization: "Bearer ok" } }));
+assert.equal((await res.json()).token, "auth_tokens/t1", "App bekommt den Kurzzeit-Schlüssel, nie den echten");
 
 const pre = await handler(new Request("https://x/functions/v1/gemini" + TTS, { method: "OPTIONS" }));
 assert.equal(pre.status, 200, "Vorabfrage beantwortet");
