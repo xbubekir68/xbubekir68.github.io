@@ -846,16 +846,17 @@ run(`U="gast";loadS()`);
 
 // ---------- 17. Karten und Spiele gehen Etappe für Etappe auf ----------
 run(`U="frei1";loadS();S.ob={z:"lesen",d:today()};ui.fl=null;games()`);let gs=run(`app.innerHTML`);
-ok("Frischer Gast: Hörübung offen, Paare und Wort-Blitz gesperrt mit Grund",/data-go="listen"/.test(gs)&&/data-fl="pairs"/.test(gs)&&/data-fl="blitz"/.test(gs)&&!/data-go="pairs"/.test(gs)&&!/data-go="blitz"/.test(gs)
-  &&new RegExp(`Öffnet sich nach Etappe S3 · Kurze Vokale \\(noch ${run(`fLeft("s3")`)} Lektionen\\)`).test(gs)&&/Öffnet sich nach Etappe S5 · Lange Vokale/.test(gs)&&/id="ffree"/.test(gs));
+const lockOf=(h,t)=>((h.match(/class="mute glk">[\s\S]*?<\/p>/g)||[]).join("").split("<br>").find(x=>x.includes(t))||""); // Zeile der gesperrten Spiele, die das Spiel nennt
+ok("Frischer Gast: Hörübung offen, Paare und Wort-Blitz gesperrt mit Grund",/data-go="listen"/.test(gs)&&lockOf(gs,"Paare").includes("Nach Etappe")&&lockOf(gs,"Wort-Blitz").includes("Nach Etappe")&&!/data-go="pairs"/.test(gs)&&!/data-go="blitz"/.test(gs)
+  &&new RegExp(`Nach Etappe S3 · Kurze Vokale \\(noch ${run(`fLeft("s3")`)} Lektionen\\)`).test(gs)&&/Nach Etappe S5 · Lange Vokale/.test(gs)&&/id="ffree"/.test(gs));
 ok("… Lektionen bis S3 richtig gezählt",run(`fLeft("s3")===KL.filter(l=>["s1","s2","s3"].includes(l.e)).length`));
-run(`ui.fl="pairs";games()`);ok("… Antippen zeigt den Hinweis direkt darunter",/Lerne im Lernpfad weiter/.test(run(`app.innerHTML`)));run(`ui.fl=null`);
+ok("… gesperrte Spiele als eine Zeile je Etappe statt Schloss-Kacheln",!/class="gtl lock"/.test(gs)&&!/data-fl="pairs"/.test(gs));
 run(`cards()`);gs=run(`app.innerHTML`);
-ok("Karten gesperrt: Grund, Fortschritt, Knopf zum nächsten Halt",/Noch gesperrt/.test(gs)&&/Etappe S3 · Kurze Vokale/.test(gs)&&/data-kl="s1-1"/.test(gs)&&/Zum nächsten Halt/.test(gs)&&!/id="fl"/.test(gs));
+ok("Karten bis S3: Buchstabenkarten zum Üben, darunter Grund, Fortschritt, Knopf zum nächsten Halt",/data-al=/.test(gs)&&/data-go="aquiz"/.test(gs)&&/Wortkarten: noch gesperrt/.test(gs)&&/Etappe S3 · Kurze Vokale/.test(gs)&&/data-kl="s1-1"/.test(gs)&&/Zum nächsten Halt/.test(gs)&&!/id="fl"/.test(gs));
 run(`view="games";startBlitz()`);ok("Wort-Blitz lässt sich nicht an der Sperre vorbei starten",run(`view`)==="games");
 run(`S.ob.z="sprache";home()`);ok("Start: Ziel Sprache sagt, wann die Karten aufgehen",/Nach Etappe S3 öffnen sich die Karteikarten/.test(run(`app.innerHTML`)));
 run(`for(const l of KL.filter(l=>["s1","s2","s3"].includes(l.e)))S.kp.d[l.id]=1;games()`);gs=run(`app.innerHTML`);
-ok("Nach S3: Paare offen, Wort-Blitz noch zu",/data-go="pairs"/.test(gs)&&/data-fl="blitz"/.test(gs)&&run(`fGate("cards")===null`));
+ok("Nach S3: Paare offen, Wort-Blitz noch zu",/data-go="pairs"/.test(gs)&&lockOf(gs,"Wort-Blitz").includes("Nach Etappe")&&run(`fGate("cards")===null`));
 run(`cards()`);ok("… Karten offen",/id="fl"/.test(run(`app.innerHTML`)));
 run(`home()`);ok("… Start: Wörter schon unter Karten",/Wörter kannst du schon jetzt unter Karten üben/.test(run(`app.innerHTML`)));
 run(`for(const l of KL.filter(l=>["s4","s5"].includes(l.e)))S.kp.d[l.id]=1;games()`);gs=run(`app.innerHTML`);
@@ -890,7 +891,7 @@ run(`clearInterval(gt);U="gast";loadS()`);
   const css=html.slice(html.indexOf("<style>"),html.indexOf("</style>")),js=html.slice(html.indexOf("<script>"));
   const tok=css.match(/--ar1:20px;--ar2:24px;--ar3:30px;--ar4:44px;--ar5:64px;--ar6:96px/);
   ok("Arabisch-Skala: sechs Schritte 20 / 24 / 30 / 44 / 64 / 96",!!tok);
-  const AR=/(\.ar\b|\.sent\b|\.tk\b|\.kgl|\.kwd|\.nha|\.zar|\.obar|\.kfa|\.ut\b|\.kqg|\.kb button)/,bad=[],low=[];
+  const AR=/(\.ar\b|\.sent\b|\.kbt|\.ksu|\.kwr|\.kws|\.tk\b|\.kgl|\.kwd|\.nha|\.zar|\.obar|\.kfa|\.ut\b|\.kqg|\.kb button)/,bad=[],low=[];
   for(const m of css.matchAll(/([^{}]+)\{([^{}]*)\}/g)){
     const sel=m[1].replace(/\/\*[\s\S]*?\*\//g,"").trim(),body=m[2];
     if(!AR.test(sel)||!/font-size/.test(body))continue;
@@ -974,7 +975,7 @@ run(`U="gast";loadS()`);
 run(`U="sp25";loadS();S.ob={z:"lesen",d:today()};ui.fl=null;games()`);let g25=run(`app.innerHTML`);
 ok("Übersicht: Spiel des Tages als dunkle Karte, Kacheln in zwei Gruppen, Zähler der offenen Spiele",/<button class="gday" data-go="(regen|listen|kalli)">/.test(g25)&&/<p class="gh">Buchstaben<\/p><div class="gtg"><button class="gtl" data-go="regen">/.test(g25)&&/<p class="gh">Wörter und Sätze<\/p>/.test(g25)&&/3 von 11 offen/.test(g25),g25.slice(0,300));
 ok("… Spiel des Tages bleibt am selben Tag gleich und ist nie gesperrt",run(`gDay()===gDay()`)&&run(`!fGate(gDay().k)`)&&run(`(()=>{const ks=new Set();for(let d=1;d<31;d++){const x=gDay("2026-11-"+String(d).padStart(2,"0"));if(fGate(x.k))return false;ks.add(x.k)}return ks.size===3})()`));
-ok("… gesperrte Kachel mit Grund, Antippen zeigt den Hinweis",/<button class="gtl lock" data-fl="pairs" aria-expanded="false">/.test(g25)&&(run(`(ui.fl="pairs",games(),app.innerHTML)`).match(/Lerne im Lernpfad weiter/g)||[]).length===1);run(`ui.fl=null`);
+ok("… gesperrtes Spiel in der Sammelzeile mit Etappe und Name",lockOf(g25,"Paare").includes("Nach Etappe S")&&!/data-go="pairs"/.test(g25));
 ok("… ohne Stimme und Aufnahmen ist die Hörübung nie das Spiel des Tages",run(`(()=>{const a=ARV,n=AUDN;ARV=false;AUDN=0;let ok=true;for(let d=1;d<31;d++){if(gDay("2026-12-"+String(d).padStart(2,"0")).k==="listen")ok=false}ARV=a;AUDN=n;return ok})()`));
 ok("Regen: Buchstaben-Auswahl für Anfänger sind die ersten sechs aus S1",run(`rgPool().map(a=>a.i).join()`)==="alif,ba,ta,tha,jim,hha",run(`rgPool().map(a=>a.i).join()`));
 run(`for(const l of KL.filter(l=>["s1-1","s1-2","s1-3"].includes(l.id)))S.kp.d[l.id]=1`);
@@ -1023,7 +1024,7 @@ run(`U="gast";loadS()`);
 
 // ---------- 27. Buchstaben-Magnet ----------
 run(`U="mg27";loadS();S.ob={z:"lesen",d:today()};ui.fl=null;games()`);let g27=run(`app.innerHTML`);
-ok("Magnet: gesperrt bis S1, mit Grund",/<button class="gtl lock" data-fl="magnet"/.test(g27)&&/Öffnet sich nach Etappe S1 · Die Buchstaben/.test(g27)&&run(`fGate("magnet")`)==="s1");
+ok("Magnet: gesperrt bis S1, mit Grund",lockOf(g27,"Magnet").includes("Nach Etappe S1 · Die Buchstaben")&&run(`fGate("magnet")`)==="s1");
 run(`view="games";startMagnet()`);ok("… lässt sich nicht an der Sperre vorbei starten",run(`view`)==="games");
 run(`for(const l of KL.filter(l=>l.e==="s1"))S.kp.d[l.id]=1;games()`);
 ok("… nach S1 offen, Kachel mit Zeichen in „Buchstaben“",/<p class="gh">Buchstaben<\/p><div class="gtg">.*<button class="gtl" data-go="magnet"><span class="gi gia" lang="ar">كتـ<\/span>/s.test(run(`app.innerHTML`)));
@@ -1049,7 +1050,7 @@ run(`U="gast";loadS()`);
 
 // ---------- 28. Satz-Zug ----------
 run(`U="zg28";loadS();S.ob={z:"lesen",d:today()};ui.fl=null;games()`);let g28=run(`app.innerHTML`);
-ok("Satz-Zug: gesperrt bis S3, mit Grund",/<button class="gtl lock" data-fl="zug"/.test(g28)&&/Öffnet sich nach Etappe S3 · Kurze Vokale/.test(g28.slice(g28.indexOf('data-fl="zug"'))));
+ok("Satz-Zug: gesperrt bis S3, mit Grund",lockOf(g28,"Satz-Zug").includes("Nach Etappe S3 · Kurze Vokale"));
 run(`view="games";startZug()`);ok("… lässt sich nicht an der Sperre vorbei starten",run(`view`)==="games");
 run(`for(const l of KL.filter(l=>["s1","s2","s3"].includes(l.e)))S.kp.d[l.id]=1;games()`);
 ok("… nach S3 offen, Kachel in „Wörter und Sätze“",/<p class="gh">Wörter und Sätze<\/p><div class="gtg">.*<button class="gtl" data-go="zug"><span class="gi"><svg/s.test(run(`app.innerHTML`)));
@@ -1073,7 +1074,7 @@ run(`U="gast";loadS()`);
 
 // ---------- 29. Im Suq ----------
 run(`U="sq29";loadS();S.ob={z:"lesen",d:today()};ui.fl=null;games()`);let g29=run(`app.innerHTML`);
-ok("Im Suq: gesperrt bis S3, mit Grund",/<button class="gtl lock" data-fl="suq"/.test(g29)&&/Öffnet sich nach Etappe S3 · Kurze Vokale/.test(g29.slice(g29.indexOf('data-fl="suq"'))));
+ok("Im Suq: gesperrt bis S3, mit Grund",lockOf(g29,"Im Suq").includes("Nach Etappe S3 · Kurze Vokale"));
 run(`view="games";startSuq()`);ok("… lässt sich nicht an der Sperre vorbei starten",run(`view`)==="games");
 run(`for(const l of KL.filter(l=>["s1","s2","s3"].includes(l.e)))S.kp.d[l.id]=1;games()`);
 ok("… nach S3 offen, Kachel in „Wörter und Sätze“",/<button class="gtl" data-go="suq"><span class="gi"><svg/.test(run(`app.innerHTML`)));
@@ -1273,7 +1274,7 @@ run(`U="gast";loadS()`);
 
 // ---------- 37. Funkenflug ----------
 run(`U="fk37";loadS();S.ob={z:"lesen",d:today()};ui.fl=null;games()`);let g37=run(`app.innerHTML`);
-ok("Funkenflug: gesperrt bis S1, mit Grund",/<button class="gtl lock" data-fl="funken"/.test(g37)&&/Öffnet sich nach Etappe S1 · Die Buchstaben/.test(g37.slice(g37.indexOf('data-fl="funken"'))));
+ok("Funkenflug: gesperrt bis S1, mit Grund",lockOf(g37,"Funkenflug").includes("Nach Etappe S1 · Die Buchstaben"));
 run(`view="games";startFunken()`);ok("… lässt sich nicht an der Sperre vorbei starten",run(`view`)==="games");
 run(`for(const l of KL.filter(l=>l.e==="s1"))S.kp.d[l.id]=1;games()`);g37=run(`app.innerHTML`);
 ok("… nach S1 offen, Kachel bei den Buchstaben",/<p class="gh">Buchstaben<\/p><div class="gtg">.*<button class="gtl" data-go="funken"><span class="gi"><svg.*<p class="gh">Wörter und Sätze/s.test(g37));
@@ -1307,7 +1308,7 @@ run(`U="gast";loadS()`);
 
 // ---------- 38. Wort-Rakete ----------
 run(`U="rk38";loadS();S.ob={z:"lesen",d:today()};ui.fl=null;games()`);let g38=run(`app.innerHTML`);
-ok("Wort-Rakete: gesperrt bis S5, mit Grund",/<button class="gtl lock" data-fl="rakete"/.test(g38)&&/Öffnet sich nach Etappe S5 · Lange Vokale/.test(g38.slice(g38.indexOf('data-fl="rakete"'))));
+ok("Wort-Rakete: gesperrt bis S5, mit Grund",lockOf(g38,"Wort-Rakete").includes("Nach Etappe S5 · Lange Vokale"));
 run(`view="games";startRakete()`);ok("… lässt sich nicht an der Sperre vorbei starten",run(`view`)==="games");
 run(`for(const l of KL.filter(l=>["s1","s2","s3","s4","s5"].includes(l.e)))S.kp.d[l.id]=1;games()`);
 ok("… nach S5 offen, Kachel bei „Wörter und Sätze“",/<p class="gh">Wörter und Sätze<\/p>.*<button class="gtl" data-go="rakete"><span class="gi"><svg/s.test(run(`app.innerHTML`)));
@@ -1334,7 +1335,7 @@ run(`U="gast";loadS()`);
 
 // ---------- 39. Tauziehen und Abzeichen der bewegten Spiele ----------
 run(`U="tz39";loadS();S.ob={z:"lesen",d:today()};ui.fl=null;games()`);let g39=run(`app.innerHTML`);
-ok("Tauziehen: gesperrt bis S5, mit Grund",/<button class="gtl lock" data-fl="duell"/.test(g39)&&/Öffnet sich nach Etappe S5/.test(g39.slice(g39.indexOf('data-fl="duell"'))));
+ok("Tauziehen: gesperrt bis S5, mit Grund",lockOf(g39,"Tauziehen").includes("Nach Etappe S5"));
 run(`for(const l of KL.filter(l=>["s1","s2","s3","s4","s5"].includes(l.e)))S.kp.d[l.id]=1;games()`);
 ok("… nach S5 offen, aber nie Spiel des Tages (braucht zwei)",/<button class="gtl" data-go="duell">/.test(run(`app.innerHTML`))&&run(`(()=>{for(let d=1;d<=60;d++){const x=gDay("2026-"+(d>30?"12":"11")+"-"+String((d-1)%30+1).padStart(2,"0"));if(!x||x.k==="duell")return false}return true})()`));
 run(`startDuell()`);let t39=run(`app.innerHTML`);
@@ -1398,6 +1399,10 @@ run(`U="gast";loadS()`);
   run(`S.xp=30;S.streak=0;S.last="";S.badges=[];S.fav=[];S.alpha={};S.box={};S.kp={d:{}};resetAsk()`);let d37=run(`__dh`);
   ok("Zurücksetzen-Dialog: nur Posten, die es gibt (30 XP, keine Nullen)",/<li><b>30<\/b> XP<\/li>/.test(d37)&&!/<b>0<\/b>/.test(d37)&&(d37.match(/<li>/g)||[]).length===1,d37.match(/<ul>.*<\/ul>/s)&&d37.match(/<ul>.*<\/ul>/s)[0]);
   run(`S.xp=0;resetAsk()`);ok("… ohne Lernstand: ein Satz statt einer leeren Liste",/Bisher ist noch kein Lernstand gespeichert/.test(run(`__dh`))&&!/<ul>/.test(run(`__dh`)));
+  run(`globalThis.__u=U;U="a@b.de";S.xp=30;resetAsk(true)`);const d38=run(`__dh`);run(`U=__u;S.xp=0`);
+  ok("Konto löschen: eigener Dialog mit Konto, Liste, Export und „Endgültig löschen“",/Konto löschen\?/.test(d38)&&/a@b\.de/.test(d38)&&/<b>30<\/b> XP/.test(d38)&&/Vorher exportieren/.test(d38)&&/id="dno">Abbrechen/.test(d38)&&/id="dyes">Endgültig löschen/.test(d38));
+  ok("… ein Doppeltipp in den Einstellungen löscht nicht mehr direkt",/\$\("#dl"\)\.onclick=\(\)=>resetAsk\(true\)/.test(html)&&!/Nochmal tippen: alles wird gelöscht/.test(html));
+  ok("Leiste: „Lernpfad“ nur grün, wenn der Tab offen ist (sonst wirken zwei Tabs aktiv)",/nav button\.main\{font-weight:600\}/.test(html)&&/nav button\.main\.on\{color:var\(--vil\)/.test(html));
   run(`document.createElement=__oc`);
   ok("Ziel-Sätze: Fragen zeigen „؟“, andere Sätze bleiben, wie sie sind",run(`zAr(KE.s6.ziel)`)==="مِنْ أَيْنَ أَنْتَ؟"&&run(`zAr(KE.a1.ziel)`)==="أَهَذَا قَلَمٌ؟"&&run(`zAr(KE.s3.ziel)===KE.s3.ziel.ar&&zAr(KE.a2.ziel)===KE.a2.ziel.ar`));
   run(`view="path";ui.hint=null;path()`);ok("… auch auf dem Schild im Lernpfad",/data-kz="s6"[^>]*>مِنْ أَيْنَ أَنْتَ؟<\/button>/.test(run(`app.innerHTML`)));
