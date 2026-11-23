@@ -79,6 +79,11 @@ html.splash-lock .wel,html.splash-lock .wel *{animation-play-state:paused}
 .wl-eye[aria-pressed="true"]{color:var(--g)}
 .wel a{color:var(--g)}.wl-fg{margin:10px 0 0;text-align:right;font-size:14px}.wl-fg a,.wl-legal a{font-weight:600;text-underline-offset:3px}
 .wl-ac .btn{margin-top:0}.wl-note{margin:12px 4px 0;font-size:12px;text-align:center}.wl-legal{margin:8px 0 0;font-size:13px;text-align:center}.wl-legal a{color:var(--mute)}
+/* „Mit Google anmelden“: Farben, Rand und Logo nach Googles Markenvorgaben (hell/dunkel) */
+.wl-gg{--gg-bg:#fff;--gg-line:#747775;--gg-ink:#1f1f1f;--gg-r:#ea4335;--gg-b:#4285f4;--gg-y:#fbbc05;--gg-g:#34a853;margin-top:18px;display:flex;align-items:center;justify-content:center;gap:12px;width:100%;height:52px;border:1px solid var(--gg-line);border-radius:14px;background:var(--gg-bg);color:var(--gg-ink);font:600 16px var(--sans)}
+.wl-gg:disabled{opacity:.6;cursor:default}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .wl-gg{--gg-bg:#131314;--gg-line:#8e918f;--gg-ink:#e3e3e3}}:root[data-theme="dark"] .wl-gg{--gg-bg:#131314;--gg-line:#8e918f;--gg-ink:#e3e3e3}
+.wl-or{display:flex;align-items:center;gap:12px;margin:16px 0 0;color:var(--mute);font-size:13px}.wl-or::before,.wl-or::after{content:"";flex:1;height:1px;background:var(--line)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .wl-top,:root:not([data-theme="light"]) .wl-band{box-shadow:0 1px 0 var(--line)}:root:not([data-theme="light"]) .wl-go{background:var(--mint);color:var(--night)}:root:not([data-theme="light"]) .wl-go svg{color:var(--night)}}
 :root[data-theme="dark"] .wl-top,:root[data-theme="dark"] .wl-band{box-shadow:0 1px 0 var(--line)}:root[data-theme="dark"] .wl-go{background:var(--mint);color:var(--night)}:root[data-theme="dark"] .wl-go svg{color:var(--night)}
 @media (max-height:720px){.wl-top{height:46vh;min-height:290px}.wl-tk{margin-bottom:18px}.wl-tx{padding-top:20px}.wl-tx h1{font-size:38px}.wl-ac{padding-top:16px}} /* kleine Handys: alles ohne Scrollen sichtbar */
@@ -3751,7 +3756,7 @@ function settings(){
   <p class="mute" style="margin:-10px 0 18px">Bei „automatisch“ verschwinden die Vokalzeichen Schritt für Schritt, sobald ein Wort sicher sitzt – so wie in echten Texten. Antippen zeigt sie jederzeit wieder.</p>
   <p class="gh">Spiel</p><div class="grp">${swr("sd","Töne",S.sound!==false)}${swr("vb","Vibration",S.vib!==false)}${swr("au","Aussprache automatisch",S.auto!==false)}</div>
   <p class="gh">Benachrichtigungen</p><div class="grp">${swr("rm","Tägliche Lern-Erinnerung",remOn())}<label class="set"><span>Uhrzeit</span><input type="time" id="tm" value="${S.time}" style="border:0;background:none;color:var(--mute);font:inherit"></label></div>
-  <p class="mute" style="margin:-10px 0 18px">Die Erinnerung erscheint, solange die Seite geöffnet ist.</p><p class="gh">Darstellung und Konto</p><div class="grp">${pick("th","Darstellung",[["system","System"],["light","Hell"],["dark","Dunkel"]],S.theme)}${U!=="gast"?row("sy","Synchronisierung",`<span class="mute">${SY||"–"}</span>`):""}${row("lo",U==="gast"?"Anmelden oder registrieren":"Abmelden",`<span class="mute" style="max-width:50%;overflow:hidden;text-overflow:ellipsis">${U==="gast"?"Gast":esc(U)}</span>`)}${row("ex","Meine Daten exportieren",'<span class="mute">JSON</span>')}${row("lg","Datenschutz &amp; Impressum",ic("chev",18))}${row("rs","Fortschritt zurücksetzen",'<span class="setx">Löschen</span>')}${U!=="gast"?row("dl","Konto löschen",'<span class="mute" style="color:var(--bad)">Endgültig</span>'):""}</div>`);
+  <p class="mute" style="margin:-10px 0 18px">Die Erinnerung erscheint, solange die Seite geöffnet ist.</p><p class="gh">Darstellung und Konto</p><div class="grp">${pick("th","Darstellung",[["system","System"],["light","Hell"],["dark","Dunkel"]],S.theme)}${U!=="gast"?row("sy","Synchronisierung",`<span class="mute">${SY||"–"}</span>`):""}${row("lo",U==="gast"?"Anmelden oder registrieren":"Abmelden",`<span class="mute" style="max-width:50%;overflow:hidden;text-overflow:ellipsis">${U==="gast"?"Gast":esc(U)}</span>`)}${U!=="gast"&&GOK&&!PROV.includes("google")?row("gk","Mit Google verknüpfen",'<span class="mute">Google</span>'):""}${row("ex","Meine Daten exportieren",'<span class="mute">JSON</span>')}${row("lg","Datenschutz &amp; Impressum",ic("chev",18))}${row("rs","Fortschritt zurücksetzen",'<span class="setx">Löschen</span>')}${U!=="gast"?row("dl","Konto löschen",'<span class="mute" style="color:var(--bad)">Endgültig</span>'):""}</div>`);
   $("#sd").onclick=()=>{S.sound=S.sound===false;save();if(S.sound)sfx("good",1);settings()};
   $("#vb").onclick=()=>{S.vib=S.vib===false;save();if(S.vib)vib(30);settings()};
   $("#gl").onchange=e=>{S.goal=+e.target.value;save();settings()};
@@ -3764,6 +3769,7 @@ function settings(){
     S.rem=pm==="granted";save();if(!S.rem)toast("Benachrichtigungen sind im Browser blockiert. Du kannst sie in den Website-Einstellungen erlauben.");settings()};$("#tm").onchange=e=>{S.time=e.target.value;save()};
   $("#th").onchange=e=>{S.theme=e.target.value;save();applyTheme();settings()};
   $("#lo").onclick=logout;if($("#sy"))$("#sy").onclick=()=>sync();
+  if($("#gk"))$("#gk").onclick=e=>oauth("link",e.currentTarget,toast); // danach führt auch „Mit Google anmelden“ in dieses Konto, selbst bei anderer E-Mail
   $("#lg").onclick=()=>go("legal");$("#au").onclick=()=>{S.auto=S.auto===false;save();settings()};
   if($("#ex"))$("#ex").onclick=exportData;
   if($("#dl")){let a2=false;$("#dl").onclick=()=>{if(!a2){a2=true;$("#dl").lastChild.textContent="Nochmal tippen: alles wird gelöscht";return}deleteAccount()}}
@@ -3784,7 +3790,7 @@ function initSb(){
   if(window.supabase&&!sb){sb=window.supabase.createClient(SB_URL,SB_KEY);
     sb.auth.onAuthStateChange(ev=>{if(ev==="PASSWORD_RECOVERY"){recovering=true;showReset()}})}
 }
-let UID=null,T=0,ready=false,SY="",wasGuest=false,recovering=false,busy=false,again=false,lastSync=0;
+let UID=null,PROV=[],T=0,ready=false,SY="",wasGuest=false,recovering=false,busy=false,again=false,lastSync=0;
 const setSY=t=>{SY=t;if(view==="settings")settings()};
 const clone=o=>JSON.parse(JSON.stringify(o));
 function sched(){if(UID&&sb&&ready){clearTimeout(T);T=setTimeout(sync,2000)}}
@@ -3884,8 +3890,8 @@ function legal(){
   const topb=U?head("Datenschutz &amp; Impressum","more"):`<div class="top"><button class="x" id="lback" aria-label="Zurück">${ic("back")}</button><h2>Datenschutz &amp; Impressum</h2></div>`;
   paint(topb+
   sec("Wer ist verantwortlich?",`${miss(LEGAL.name)}<br>Kontakt: ${miss(LEGAL.kontakt)}<br>Wohnsitz: Österreich (Salzburg)<br>Art und Richtung: private, nicht kommerzielle Lern-App für arabische Vokabeln, ohne Einnahmen.`)+
-  sec("Was gespeichert wird",`<b>Ohne Konto (Gast):</b> Lernstand und Einstellungen liegen nur in deinem Browser (lokaler Speicher) und werden nicht übertragen.<br><b>Mit Konto:</b> deine E-Mail-Adresse, dein Passwort (nur als Hash), dein Lernstand (z. B. Wörter, XP, Serie, Abzeichen), deine Einstellungen und der Zeitpunkt der letzten Änderung.`)+
-  sec("Dienstleister",`<b>Supabase</b> (Anmeldung und Datenbank), Serverstandort: ${miss(LEGAL.region)}.<br><b>GitHub Pages</b> liefert diese Seite aus. Beim Aufruf verarbeitet GitHub technisch notwendige Verbindungsdaten wie deine IP-Adresse.<br>Schriften und Programmteile werden von dieser Seite selbst ausgeliefert.`)+
+  sec("Was gespeichert wird",`<b>Ohne Konto (Gast):</b> Lernstand und Einstellungen liegen nur in deinem Browser (lokaler Speicher) und werden nicht übertragen.<br><b>Mit Konto:</b> deine E-Mail-Adresse, dein Passwort (nur als Hash), dein Lernstand (z. B. Wörter, XP, Serie, Abzeichen), deine Einstellungen und der Zeitpunkt der letzten Änderung.<br><b>Mit Google:</b> statt eines Passworts die Kennung deines Google-Kontos und die Angaben, die Google bei der Anmeldung übermittelt (E-Mail-Adresse, Name, Link zum Profilbild).`)+
+  sec("Dienstleister",`<b>Supabase</b> (Anmeldung und Datenbank), Serverstandort: ${miss(LEGAL.region)}.<br><b>Google</b> (nur wenn du „Mit Google anmelden“ nutzt): Google bestätigt deine Anmeldung und übermittelt dafür die oben genannten Angaben an Supabase. Für dein Google-Konto gelten die Datenschutzbestimmungen von Google.<br><b>GitHub Pages</b> liefert diese Seite aus. Beim Aufruf verarbeitet GitHub technisch notwendige Verbindungsdaten wie deine IP-Adresse.<br>Schriften und Programmteile werden von dieser Seite selbst ausgeliefert.`)+
   sec("Aussprache","Die Aussprache kommt meist aus Aufnahmen, die vorab mit einer Sprachsynthese erzeugt wurden. Sie werden mit der App geladen und auf deinem Gerät gespeichert, dabei wird nichts von dir übertragen. Nur wenn eine Aufnahme fehlt, nutzt die App die Sprachausgabe deines Geräts. Manche Browser (z. B. Chrome) greifen dafür auf Online-Dienste des Herstellers zurück, dabei kann das gesprochene Wort übertragen werden.")+
   sec("Mikrofon und Spracherkennung","Beim Nachsprechen nimmst du dich mit dem Mikrofon auf. Die Aufnahme bleibt auf deinem Gerät und wird nicht gespeichert. Ab Etappe 8 kann zusätzlich die Spracherkennung deines Browsers zuhören, aber nur, wenn du vorher zustimmst. Dabei schickt der Browser deine Stimme an den Dienst seines Herstellers (bei Chrome an Google, bei Safari an Apple), der Text daraus kommt zurück und wird nur auf deinem Gerät verglichen. Die App selbst speichert davon nichts.")+
   sec("KI-Übungspartner (mufradaat.AI)","Der Übungspartner ist eine KI (DeepSeek V4.1 Flash). Es gibt ihn nur mit Konto, und nur wenn du ihn nutzt, wird etwas übertragen: deine Nachrichten im laufenden Gespräch, die Wörter des gewählten Themas und dein Anmelde-Token. Tippst du unter einer Antwort auf Übersetzung oder Umschrift, geht der Text dieser einen Antwort noch einmal denselben Weg.<br><b>Weg:</b> Die Daten gehen an den Server von xbubekir (Supabase, Serverstandort EU, Frankfurt). Er prüft mit dem Token bei der Anmeldung von Mufradaat, ob du angemeldet bist, und gibt das Gespräch ohne deine Konto-Daten an den Dienst OpenRouter (USA) weiter. OpenRouter leitet es an einen Anbieter des Modells DeepSeek weiter. Zugelassen sind nur Anbieter, die Anfragen nach Angabe von OpenRouter nicht speichern und nicht zum Training nutzen, und keine mit Sitz in China.<br><b>Gespeichert</b> wird beim Server von xbubekir nur, wie viele Nachrichten und Übersetzungen dein Konto an welchem Tag abgerufen hat (für das Tageslimit), nicht der Inhalt. Das Gespräch selbst liegt nur in der geöffneten App und ist weg, wenn du sie schließt.<br><b>Grenzen:</b> Die KI kann sich irren. Ihre Antworten sind keine gegengelesenen Lerninhalte.")+
@@ -3900,6 +3906,28 @@ const LOGO_N=`<img src='brand/mufradaat-nacht.webp' width='600' height='166' alt
 const WSTEPS=[["ب","as6","Bāʾ · der Buchstabe b"],["بَ","as6","ba · mit kurzem Vokal"],["كِتَابٌ","as6","kitābun · ein Buch"],["بِسْمِ اللَّهِ","as5","bismi llāh · Koranschrift"]];
 const wDelay=k=>[.5,3,5.5,8][k]+"s";
 const EYE=`<svg width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z'/><circle cx='12' cy='12' r='3'/></svg>`;
+const GLOGO=`<svg width='20' height='20' viewBox='0 0 48 48' aria-hidden='true'><path style='fill:var(--gg-r)' d='M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z'/><path style='fill:var(--gg-b)' d='M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z'/><path style='fill:var(--gg-y)' d='M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z'/><path style='fill:var(--gg-g)' d='M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z'/></svg>`;
+// Google nur zeigen, wenn Supabase es anbietet (sonst führte der Knopf auf eine Fehlerseite). Der letzte Stand bleibt im Gerät, damit der Knopf nach dem Neuladen sofort da ist.
+let GOK=false;try{GOK=localStorage.getItem('mfr_g')==='1'}catch(e){}
+function gCheck(){fetch(SB_URL+'/auth/v1/settings',{headers:{apikey:SB_KEY}}).then(r=>r.json()).then(j=>{GOK=!!(j.external||{}).google;try{localStorage.setItem('mfr_g',GOK?'1':'0')}catch(e){}}).catch(()=>{})}
+// Google: Weiterleitung über Supabase (m: "login", "register" oder "link" = mit dem angemeldeten Konto verknüpfen).
+// Die Seite lädt dabei neu, darum merken wir uns Bildschirm und Gast-Status für die Rückkehr (boot).
+async function oauth(m,btn,fail){
+  if(!sb)return fail('Der Server ist nicht erreichbar. Prüfe deine Verbindung und lade die Seite neu.');
+  const s=btn.querySelector('span'),t=s.textContent;btn.disabled=true;s.textContent='Weiter zu Google …';
+  try{sessionStorage.setItem('mfr_oa',JSON.stringify({m,g:wasGuest}))}catch(e){}
+  const o={provider:'google',options:{redirectTo:location.origin+location.pathname}};
+  try{const{error}=await(m==='link'?sb.auth.linkIdentity(o):sb.auth.signInWithOAuth(o));if(error)throw error}
+  catch(e){try{sessionStorage.removeItem('mfr_oa')}catch(x){}btn.disabled=false;s.textContent=t;fail(/manual.linking/i.test(e.message||'')?'Das Verknüpfen ist gerade nicht freigeschaltet.':'Verbindung fehlgeschlagen. Bitte versuche es noch einmal.')}
+}
+// Zurück mit der Zurück-Taste von Google: der Browser zeigt sonst die alte Seite mit gesperrtem Knopf
+addEventListener('pageshow',e=>{try{if(e.persisted&&sessionStorage.getItem('mfr_oa'))location.reload()}catch(x){}});
+// Rückkehr von Google mit Fehler: Abbruch ruhig, sonst kurz erklären
+function oaMsg(oe,code,m){
+  if(oe==='access_denied')return m==='link'?'':'Anmeldung mit Google abgebrochen.';
+  if(code==='identity_already_exists')return'Dieses Google-Konto gehört schon zu einem anderen Mufradaat-Konto.';
+  return m==='link'?'Das Verknüpfen mit Google hat nicht geklappt. Bitte versuche es noch einmal.':'Die Anmeldung mit Google hat nicht geklappt. Bitte versuche es noch einmal.';
+}
 const wBand=back=>`<section class='wl-band'><span class='wl-c1' aria-hidden='true'></span><span class='wl-c2' aria-hidden='true'></span><div class='wl-hd'>${back?`<button class='wl-bk' id='bk' aria-label='Zurück'><svg width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M15 6l-6 6 6 6'/></svg></button>`:"<span></span>"}${LOGO_N}</div></section>`;
 function showAuth(m){
   $('#nav').hidden=true;
@@ -3919,6 +3947,7 @@ function showAuth(m){
   const reg=m==='register';
   app.innerHTML=`<div class='wel'>${wBand(true)}<div class='wl-pad'><h1>${reg?'Konto erstellen':'Willkommen zurück'}</h1><p class='mute'>${reg?'Speichere deinen Lernfortschritt.':'Melde dich an und lerne dort weiter, wo du warst.'}</p>
 <div class='wl-tabs' role='tablist' aria-label='Konto erstellen oder anmelden'><button role='tab' id='treg' aria-selected='${reg}'>Konto erstellen</button><button role='tab' id='tlog' aria-selected='${!reg}'>Anmelden</button></div>
+${GOK?`<button type='button' class='wl-gg' id='gg'>${GLOGO}<span>${reg?'Mit Google registrieren':'Mit Google anmelden'}</span></button><p class='wl-or'>oder mit E-Mail</p>`:''}
 <label for='em'>E-Mail-Adresse</label><input class='t' id='em' type='email' autocomplete='email' inputmode='email' placeholder='name@beispiel.de'>
 <label for='pw'>Passwort</label><div class='wl-pw'><input class='t' id='pw' type='password' autocomplete='${reg?'new-password':'current-password'}' placeholder='Mindestens 8 Zeichen'><button type='button' class='wl-eye' id='tp' aria-label='Passwort anzeigen' aria-pressed='false'>${EYE}</button></div>
 ${reg?`<label for='pw2'>Passwort wiederholen</label><input class='t' id='pw2' type='password' autocomplete='new-password'>`:"<p class='wl-fg'><a href='#' id='fg'>Passwort vergessen?</a></p>"}
@@ -3926,6 +3955,7 @@ ${reg?`<label for='pw2'>Passwort wiederholen</label><input class='t' id='pw2' ty
 <div class='wl-ac'><button class='btn' id='ok'>${reg?'Registrieren':'Anmelden'}</button>
 <p class='mute wl-note'>Mit einem Konto wird dein Lernfortschritt gespeichert und auf allen Geräten synchronisiert. Wir senden dir nur E-Mails zur Bestätigung und zum Zurücksetzen des Passworts.</p><p class='wl-legal'><a href='#' id='lgl'>Datenschutz &amp; Impressum</a></p></div></div>`;
   $('#bk').onclick=()=>showAuth('start');$('#lgl').onclick=openLegal;
+  if($('#gg'))$('#gg').onclick=e=>oauth(m,e.currentTarget,t=>{const er=$('#err');er.style.color='var(--bad)';er.textContent=t});
   $('#tp').onclick=()=>{const sh=$('#pw').type==='password';['#pw','#pw2'].forEach(q=>{const e=$(q);if(e)e.type=sh?'text':'password'});$('#tp').setAttribute('aria-pressed',String(sh));$('#tp').setAttribute('aria-label',sh?'Passwort verbergen':'Passwort anzeigen')};
   const sw=to=>()=>{if(to===m)return;const em=$('#em').value;showAuth(to);$('#em').value=em;$(to==='register'?'#treg':'#tlog').focus()}; // E-Mail bleibt beim Wechsel stehen
   $('#treg').onclick=sw('register');$('#tlog').onclick=sw('login');
@@ -3936,7 +3966,7 @@ ${reg?`<label for='pw2'>Passwort wiederholen</label><input class='t' id='pw2' ty
 }
 function msgErr(e){
   const m=e.message||"";
-  if(/invalid login/i.test(m))return"E-Mail oder Passwort stimmt nicht.";
+  if(/invalid login/i.test(m))return"E-Mail oder Passwort stimmt nicht. Hast du dich mit Google registriert? Dann nutze „Mit Google anmelden“.";
   if(/already registered/i.test(m))return"Mit dieser E-Mail gibt es schon ein Konto. Bitte melde dich an.";
   if(/not confirmed/i.test(m))return"Bitte bestätige zuerst deine E-Mail-Adresse (Link in der Mail).";
   if(/rate limit|too many/i.test(m))return"Zu viele Versuche. Bitte warte kurz und versuche es erneut.";
@@ -3957,7 +3987,7 @@ async function submit(reg){
   }catch(e){btn.disabled=false;err('Verbindung fehlgeschlagen. Bitte versuche es noch einmal.')}
 }
 async function enter(user){
-  U=user.email||'konto';UID=user.id;ready=false;
+  U=user.email||'konto';UID=user.id;ready=false;PROV=(user.app_metadata||{}).providers||[];
   try{const n='mfr:'+UID,has=k=>localStorage.getItem(k);
     if(!has(n)){const old=has('mfr:'+U.toLowerCase())||(wasGuest&&has('mfr:gast')); // alten lokalen Fortschritt übernehmen
       if(old)localStorage.setItem(n,old)}}catch(e){}
@@ -3977,16 +4007,22 @@ function showReset(){
     const{data}=await sb.auth.getSession();recovering=false;enter(data.session.user)};
 }
 async function boot(){
-  let g=null;try{g=localStorage.getItem('mfr_ses')||sessionStorage.getItem('mfr_ses')}catch(e){}
-  if(sb){try{const{data}=await sb.auth.getSession();if(recovering)return;if(data.session)return enter(data.session.user)}catch(e){}}
-  if(g==='gast'){U='gast';UID=null;loadS();render()}else showAuth('start');
+  let g=null,oa={};try{g=localStorage.getItem('mfr_ses')||sessionStorage.getItem('mfr_ses');oa=JSON.parse(sessionStorage.getItem('mfr_oa'))||{};sessionStorage.removeItem('mfr_oa')}catch(e){}
+  const q=new URLSearchParams(location.search.slice(1)+'&'+location.hash.slice(1)),oe=oa.m&&q.get('error'),om=oe?oaMsg(oe,q.get('error_code'),oa.m):'';
+  if(oe)history.replaceState(history.state,'',location.pathname); // Fehlerangaben nicht in der Adresse stehen lassen
+  wasGuest=wasGuest||!!oa.g; // Gast vor der Weiterleitung: Fortschritt ins Konto übernehmen
+  if(sb){try{const{data}=await sb.auth.getSession();if(recovering)return;
+    if(data.session){await enter(data.session.user);if(om)toast(om);else if(oa.m==='link')toast('Google ist jetzt mit deinem Konto verknüpft.');return}}catch(e){}}
+  if(g==='gast'){U='gast';UID=null;loadS();render();return}
+  showAuth(oa.m==='login'||oa.m==='register'?oa.m:'start');
+  const er=$('#err');if(om&&er){er.style.color=oe==='access_denied'?'var(--mute)':'var(--bad)';er.textContent=om}
 }
 // Startbildschirm ausblenden, sobald Anmeldung geprüft und der erste Bildschirm gezeichnet ist
-loadSb().then(()=>{initSb();return boot()}).finally(()=>Splash.hide());
+loadSb().then(()=>{initSb();gCheck();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v58"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v59"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>

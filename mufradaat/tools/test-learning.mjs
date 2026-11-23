@@ -1454,5 +1454,38 @@ run(`U="gast";loadS()`);
   run(`U="gast";UID=null;loadS()`);
 }
 
+// ---------- Anmeldung mit Google: Rückkehr von der Weiterleitung ----------
+{
+  ok("Google: Abbruch beim Anmelden → ruhiger Hinweis",run(`oaMsg("access_denied",null,"login")`)==="Anmeldung mit Google abgebrochen.");
+  ok("… Abbruch beim Verknüpfen → gar keine Meldung",run(`oaMsg("access_denied",null,"link")`)==="");
+  ok("… Google-Konto gehört schon zu einem anderen Konto",/anderen Mufradaat-Konto/.test(run(`oaMsg("invalid_request","identity_already_exists","link")`)));
+  const ss={},loc={search:"",hash:"",pathname:"/mufradaat/"};let replaced=null,toasted=null;
+  Object.assign(ctx,{URLSearchParams,location:loc,history:{state:null,replaceState:(a,b,u)=>replaced=u},sessionStorage:{getItem:k=>ss[k]??null,setItem:(k,v)=>ss[k]=v,removeItem:k=>delete ss[k]}});
+  el.querySelectorAll=()=>[];ctx.SESS=null;
+  run(`GOK=false;showAuth("login")`);ok("Google in Supabase noch aus: kein Google-Knopf (sonst Fehlerseite)",!/id='gg'/.test(run(`app.innerHTML`)));
+  run(`GOK=true;showAuth("register")`);ok("… an: Knopf „Mit Google registrieren“ über dem E-Mail-Formular",/id='gg'.*Mit Google registrieren[\s\S]*id='em'/.test(run(`app.innerHTML`)));
+  run(`sync=async()=>{};toast=m=>{TOASTED=m};sb={auth:{getSession:async()=>({data:{session:SESS}})}}`);
+  // Gast startet Google-Registrierung: Seite lädt neu, Fortschritt des Gasts landet im neuen Konto
+  ss.mfr_oa=JSON.stringify({m:"register",g:true});store["mfr:gast"]=JSON.stringify({xp:77});delete store["mfr:g1"];
+  ctx.SESS={user:{id:"g1",email:"g@x.de",app_metadata:{providers:["google"]}}};run(`wasGuest=false`);
+  await run(`boot()`);
+  ok("Google-Anmeldung: Konto betreten, Anbieter gemerkt",run(`UID==="g1"&&U==="g@x.de"&&PROV.includes("google")`));
+  ok("… Gast-Fortschritt trotz Neuladen übernommen",JSON.parse(store["mfr:g1"]||"{}").xp===77,store["mfr:g1"]);
+  ok("… Merkzettel verbraucht, Adresse ohne Fehler unangetastet",!ss.mfr_oa&&replaced===null);
+  run(`settings()`);ok("… Einstellungen: kein „Mit Google verknüpfen“, wenn schon verknüpft",!/id="gk"/.test(run(`app.innerHTML`)));
+  run(`PROV=["email"];settings()`);ok("… Passwort-Konto: „Mit Google verknüpfen“ angeboten",/id="gk"/.test(run(`app.innerHTML`)));
+  run(`GOK=false;settings()`);ok("… nicht, solange Google in Supabase aus ist",!/id="gk"/.test(run(`app.innerHTML`)));run(`GOK=true`);
+  // Abbruch bei Google: zurück auf denselben Bildschirm, ruhiger Hinweis, Adresse aufgeräumt
+  ss.mfr_oa=JSON.stringify({m:"login",g:false});ctx.SESS=null;loc.hash="#error=access_denied&error_description=denied";el.textContent="";
+  run(`U=null;UID=null`);await run(`boot()`);
+  ok("Google-Abbruch: Anmelde-Bildschirm mit ruhigem Hinweis",/Willkommen zurück/.test(run(`app.innerHTML`))&&el.textContent==="Anmeldung mit Google abgebrochen.",el.textContent);
+  ok("… Fehlerangaben aus der Adresse entfernt",replaced==="/mufradaat/",replaced);
+  // Verknüpfen schlägt fehl (Google-Konto gehört schon jemand anderem): angemeldet bleiben, Meldung zeigen
+  ss.mfr_oa=JSON.stringify({m:"link",g:false});ctx.SESS={user:{id:"p1",email:"p@x.de",app_metadata:{providers:["email"]}}};loc.hash="#error=invalid_request&error_code=identity_already_exists&error_description=x";
+  await run(`boot()`);
+  ok("Verknüpfen abgelehnt: bleibt angemeldet, Hinweis als Meldung",run(`UID==="p1"`)&&/anderen Mufradaat-Konto/.test(run(`TOASTED`)),run(`TOASTED`));
+  loc.hash="";Object.assign(ctx,{sessionStorage:{getItem(){return null},setItem(){}}});run(`sb=null;U="gast";UID=null;loadS()`);
+}
+
 console.log("\n"+pass+" OK, "+fail+" FAIL");
 process.exit(fail?1:0);
