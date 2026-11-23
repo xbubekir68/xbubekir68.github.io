@@ -73,7 +73,7 @@ html.splash-lock .wel,html.splash-lock .wel *{animation-play-state:paused}
 .wl-tabs button[aria-selected="true"]{background:var(--card);color:var(--g);box-shadow:0 2px 0 var(--gl-d)}
 .wl-pad label{display:block;margin:16px 0 6px;font-size:14px;font-weight:600}
 .wel input.t{height:52px;border-width:2px;border-radius:14px;font-size:16px}
-.wel input.t:focus{outline:none;border-color:var(--g);box-shadow:0 0 0 4px var(--gl)}
+.wel input.t::placeholder{color:var(--mute);opacity:1}.wel input.t:focus{outline:none;border-color:var(--g);box-shadow:0 0 0 4px var(--gl)}
 .wl-pw{position:relative}.wl-pw input.t{padding-right:52px}
 .wl-eye{position:absolute;right:4px;top:4px;width:44px;height:44px;border:0;background:none;color:var(--mute);display:grid;place-items:center;cursor:pointer}
 .wl-eye[aria-pressed="true"]{color:var(--g)}
@@ -181,14 +181,14 @@ nav button span{font-size:20px}nav button.on{color:var(--g);font-weight:700}
 :root{--vi:var(--night);--vn:var(--mint);--vil:var(--g)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--vi:var(--mint);--vn:var(--night);--vil:var(--g)}}
 :root[data-theme="dark"]{--vi:var(--mint);--vn:var(--night);--vil:var(--g)}
-nav button.main{color:var(--vil);font-weight:600}nav button.main span{display:grid;place-items:center;width:46px;height:46px;margin:-30px 0 -2px;border-radius:50%;background:var(--vi);color:var(--vn);border:5px solid var(--card);box-sizing:content-box;box-shadow:0 4px 0 var(--band-d)}
+nav button.main{font-weight:600}nav button.main span{display:grid;place-items:center;width:46px;height:46px;margin:-30px 0 -2px;border-radius:50%;background:var(--vi);color:var(--vn);border:5px solid var(--card);box-sizing:content-box;box-shadow:0 4px 0 var(--band-d)}
 nav button.main span svg{width:24px;height:24px;stroke-width:2}
 nav button.main.on span{color:var(--vn);animation:vi-on .55s ease-out}
 nav button.main.on span svg{filter:drop-shadow(0 0 2px var(--vn)) drop-shadow(0 0 7px color-mix(in srgb,var(--vn) 60%,transparent));animation:vi-glow .55s ease-out}
 @keyframes vi-on{from{transform:scale(.9)}to{transform:none}}
 @keyframes vi-glow{0%{filter:drop-shadow(0 0 0 transparent);transform:scale(.9)}45%{filter:drop-shadow(0 0 4px var(--vn)) drop-shadow(0 0 14px var(--vn));transform:scale(1.12)}100%{filter:drop-shadow(0 0 2px var(--vn)) drop-shadow(0 0 7px color-mix(in srgb,var(--vn) 60%,transparent));transform:scale(1)}}
 @media (prefers-reduced-motion:reduce){nav button.main.on span,nav button.main.on span svg{animation:none}}
-nav button.main.on{font-weight:700}
+nav button.main.on{color:var(--vil);font-weight:700}
 nav button.main:focus-visible{outline:none}nav button.main:focus-visible span{outline:2px solid var(--ink);outline-offset:1px}
 .wm{filter:none}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .wm{filter:none}}:root[data-theme="dark"] .wm{filter:none}
@@ -201,7 +201,7 @@ nav[hidden]{display:none}
 .opt.ok{animation:pop .35s}.opt.no{animation:shake .35s}
 @keyframes pop{0%{transform:scale(.92)}60%{transform:scale(1.04)}100%{transform:scale(1)}}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
-.bg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.bdg{text-align:center;padding:14px 8px}.bgh{font-size:17px;margin:20px 0 0}.bgh small{font-size:13px;font-weight:400;margin-left:6px}.bdg .ic{font-size:34px;display:block;margin-bottom:4px}.bdg b{display:block;font-size:15px}.bdg small{display:block;color:var(--mute);font-size:12px;margin-top:2px}.bdg.lock .med{opacity:.45;filter:grayscale(1)}.bdg.lock b{color:var(--mute)}
+.bg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.bdg{text-align:center;padding:14px 8px}.bgh small{font-size:13px;font-weight:400;margin-left:6px}.bdg .ic{font-size:34px;display:block;margin-bottom:4px}.bdg b{display:block;font-size:15px}.bdg small{display:block;color:var(--mute);font-size:12px;margin-top:2px}.bdg.lock .med{opacity:.45;filter:grayscale(1)}.bdg.lock b{color:var(--mute)}
 .pg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.pg button{padding:12px 8px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);min-height:60px;font-size:16px}.pg button.ar{font-size:var(--ar3);line-height:1.5}.pg .sel{border-color:var(--g);background:var(--gl)}.pg .done{border-color:var(--g);color:var(--mute)}.pg .bad{border-color:var(--bad);background:var(--badl);animation:shake .3s}
 #toasts{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:60;pointer-events:none}
 #upd{position:fixed;left:12px;right:12px;top:calc(10px + env(safe-area-inset-top));z-index:60;display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--g);color:var(--on);padding:10px 12px 10px 18px;border-radius:16px;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.25);animation:pop .3s}#upd .btn{width:auto;margin:0;padding:8px 16px;min-height:0;background:var(--on);color:var(--g);box-shadow:none}
@@ -367,16 +367,16 @@ details.rule{display:block;margin-top:12px}details.rule>ol,details.rule>p{margin
 .kfm{margin-top:14px;display:grid;gap:10px;padding:16px 12px}.kfm .forms .ar{font-size:var(--ar4);line-height:1.5}.kfm>.mute{font-size:14px;line-height:1.5;text-align:center}.kfm .btn{justify-self:center;margin-top:2px}
 .kbsp{text-align:center;font-size:14px;color:var(--mute)}.kbsp .ar{font-size:var(--ar3);color:var(--ink);margin-left:6px;vertical-align:-6px;line-height:1.5}
 .kpos{text-align:center;margin-top:-10px;font-size:14px}.kwd{font-size:var(--ar5);line-height:1.5;margin:6px 0 14px}
-.kbt{text-align:center;font-size:40px;line-height:1.6;margin:18px 0 6px;word-spacing:4px}.kog .opt.ar{min-height:64px}
-.ksu{font-size:60px}.ksl .opt{text-align:center;font-weight:600}
+.kbt{text-align:center;font-size:var(--ar4);line-height:1.6;margin:18px 0 6px;word-spacing:4px}.kog .opt.ar{min-height:64px}
+.ksu{font-size:var(--ar5);line-height:1.5}.ksl .opt{text-align:center;font-weight:600}
 .ksn>.ar{font-size:var(--ar5);line-height:1.5}.ksn .klt{display:flex;flex-direction:row-reverse;justify-content:center;flex-wrap:wrap;gap:8px 16px;margin:6px 0 14px}.ksn .klt>span{display:grid;justify-items:center;gap:0}.ksn .klt .ar{font-size:var(--ar3);line-height:1.5;color:var(--g)}.ksn .klt small{font-size:12px;color:var(--mute)}
 .kzr{text-align:center;margin:14px 0 6px;font-size:14px}.kzs .tk{display:inline-grid;place-items:center}
-.kws{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 18px;font-size:30px}
+.kws{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 18px;font-size:var(--ar3);line-height:1.6}
 .kzl .sent{font-size:var(--ar4);line-height:1.6;margin:2px 0}.kzl .sent.lng{font-size:var(--ar3);line-height:1.5}
 /* Vokale und Tanwin: Zeichen, Silbentafel, Wörter mit Umschrift, Nachsprechen */
 .kzn>.ar{font-size:var(--ar6);line-height:1.4;color:var(--g)}.kwl{text-align:center;font-size:15px;color:var(--mute);line-height:1.45}.kwl .kgp{color:var(--g);font-weight:700}
-.kwr{font-size:56px;line-height:1.7;margin:10px 0 6px}
-.kwr.klg{font-size:36px;line-height:2}
+.kwr{font-size:var(--ar5);line-height:1.7;margin:10px 0 6px}
+.kwr.klg{font-size:var(--ar3);line-height:2}
 .kqg{font-size:var(--ar6);line-height:1.5}
 .kqn .kbsp .ar{font-size:var(--ar3);line-height:1.9}.kqn .mute .ar{font-size:1.4em;line-height:1.4}
 .kzn>.ar.up,.kqg.up{font-size:var(--ar5);line-height:1.4;padding-top:.8em} /* Pausenzeichen stehen hoch über der Zeile */
@@ -440,6 +440,7 @@ h1,.h1{font-size:28px;font-weight:900;letter-spacing:-.03em}h2{font-weight:800}
 .gday:active .gdp{transform:translateY(4px);box-shadow:0 0 0 var(--band-d)}
 @keyframes gfall{0%{transform:translateY(-40px);opacity:0}15%{opacity:1}85%{opacity:1}100%{transform:translateY(150px);opacity:0}}
 .gtg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.glk{display:flex;gap:8px;align-items:flex-start;margin:10px 4px 0;line-height:1.5}.glk svg{flex:none;margin-top:2px}
 .gtl{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px;color:var(--ink);font:inherit;cursor:pointer;min-height:44px}
 .gtl .gi{width:44px;height:44px;border-radius:12px;background:var(--gl);color:var(--g);display:grid;place-items:center;margin-bottom:4px}
 .gtl b{font-size:15px}.gtl small{font-size:13px;line-height:1.35;color:var(--mute)}
@@ -1451,10 +1452,10 @@ const kS1Done=()=>{const ls=KL.filter(l=>l.e==="s1");return ls.length>0&&ls.ever
 const aLocked=b=>b>0&&!S.aok&&!hasWords()&&!aPass(b-1);
 const dots=n=>`<span class="dots" aria-hidden="true">${[0,1,2].map(i=>`<i class="${i<n?"on":""}"></i>`).join("")}</span>`;
 const pgHead=(n,m,t)=>`<div class="pgk"><b>${n} von ${m}</b><span>${t}</span><span class="kpb" role="img" aria-label="${n} von ${m} ${t}"><i style="width:${m?Math.round(n/m*100):0}%"></i></span></div>`;
+const aGrid=()=>`<div class="agrid">${ALPHA.map(a=>`<button class="card at${aCnt(a.i)>=3?" ok":""}" data-al="${a.i}" aria-label="${a.n}, ${aCnt(a.i)>=3?"sicher":"noch nicht sicher"}"><span class="ar" lang="ar">${a.c}</span><b>${a.n}</b>${dots(Math.min(3,aCnt(a.i)))}</button>`).join("")}</div>`;
 function alphabet(){
   paint(head("Alphabet",ui.from||"home")+pgHead(alphaSure(),ALPHA.length,"Buchstaben sicher")+`<p class="mute">Ein Buchstabe gilt als sicher, wenn du ihn dreimal in Folge richtig erkannt hast (die Punkte zeigen den Stand).</p>
-  <button class="btn" data-go="aquiz" style="margin-top:12px">Buchstaben üben</button>
-  <div class="agrid">${ALPHA.map(a=>`<button class="card at${aCnt(a.i)>=3?" ok":""}" data-al="${a.i}" aria-label="${a.n}, ${aCnt(a.i)>=3?"sicher":"noch nicht sicher"}"><span class="ar" lang="ar">${a.c}</span><b>${a.n}</b>${dots(Math.min(3,aCnt(a.i)))}</button>`).join("")}</div>`);
+  <button class="btn" data-go="aquiz" style="margin-top:12px">Buchstaben üben</button>${aGrid()}`);
 }
 function letter(){
   const k=ALPHA.findIndex(a=>a.i===ui.al),a=ALPHA[k],pv=ALPHA[(k+ALPHA.length-1)%ALPHA.length],nx=ALPHA[(k+1)%ALPHA.length];
@@ -2603,12 +2604,13 @@ function games(){
   const d=gDay(),lk=GAMES.filter(x=>fGate(x.k)).length;
   const deco=x=>x.k==="regen"?rgPool().slice(0,3).map((a,i)=>`<span class="gdf" lang="ar" style="right:${18+i*44}px;animation-delay:${[0,.9,1.6][i]}s">${a.c}</span>`).join(""):x.k==="rakete"?`<span class="gdx gdr">${RKSVG}</span>`:x.ar?`<span class="gdx gda" lang="ar">${x.ar}</span>`:`<span class="gdx">${ic(x.ic,56)}</span>`;
   const gi=x=>x.ar?`<span class="gi gia" lang="ar">${x.ar}</span>`:`<span class="gi">${ic(x.ic)}</span>`;
-  const tile=x=>{const e=fGate(x.k);
-    return e?`<button class="gtl lock" data-fl="${x.k}" aria-expanded="${ui.fl===x.k}"><span class="gi">${ic("lock",20)}</span><b>${x.t}</b><small>${fWhy(e)}</small>${ui.fl===x.k?`<small class="hint" role="status">Lerne im Lernpfad weiter, dann geht das Spiel von selbst auf.</small>`:""}</button>`
-      :`<button class="gtl" data-go="${x.k}">${gi(x)}<b>${x.t}</b><small>${x.d()}</small></button>`};
+  const tile=x=>`<button class="gtl" data-go="${x.k}">${gi(x)}<b>${x.t}</b><small>${x.d()}</small></button>`;
+  const grp=(g,t)=>{const gs=GAMES.filter(x=>x.g===g),op=gs.filter(x=>!fGate(x.k)),by={}; // gesperrte Spiele: eine Zeile statt einer Wand aus Schlössern
+    gs.filter(x=>fGate(x.k)).forEach(x=>{const e=fGate(x.k);(by[e]=by[e]||[]).push(x.t)});const lo=Object.entries(by);
+    return `<p class="gh">${t}</p>${op.length?`<div class="gtg">${op.map(tile).join("")}</div>`:""}${lo.length?`<p class="mute glk">${ic("lock",16)}<span>${lo.map(([e,ts])=>{const n=fLeft(e);return `Nach Etappe ${eLab(e)} · ${esc(kEtap(e).titel)} (noch ${n} ${n===1?"Lektion":"Lektionen"}): ${ts.join(", ")}`}).join("<br>")}</span></p>`:""}`};
   paint(`<div class="ghd"><h1>Spiele</h1>${lk?`<span class="mute">${GAMES.length-lk} von ${GAMES.length} offen</span>`:""}</div>
   ${d?`<button class="gday" data-go="${d.k}"><span class="gdc" aria-hidden="true"></span><span class="gdd" aria-hidden="true">${deco(d)}</span><span class="gdl">Spiel des Tages</span><b>${d.t}</b><small>${d.d()}</small><span class="gdp" aria-hidden="true">Spielen ${ic("play",16,true)}</span></button>`:""}
-  ${GGRP.map(([g,t])=>`<p class="gh">${t}</p><div class="gtg">${GAMES.filter(x=>x.g===g).map(tile).join("")}</div>`).join("")}<p class="gh">Gespräch</p>${kiTile()}${lk||fGate("ki")?fFree():""}`);
+  ${GGRP.map(([g,t])=>grp(g,t)).join("")}<p class="gh">Gespräch</p>${kiTile()}${lk||fGate("ki")?fFree():""}`);
   document.querySelectorAll("[data-fl]").forEach(b=>b.onclick=()=>{ui.fl=ui.fl===b.dataset.fl?null:b.dataset.fl;sfx("tap");games()});
   fFreeOn(games);
 }
@@ -2633,10 +2635,12 @@ let cd={order:[],n:0,flip:false,sig:0,anim:false};
 function cards(){
   const e=fGate("cards");
   if(e){const ls=KL.filter(l=>l.k<=Math.max(...KL.filter(x=>x.e===e).map(x=>x.k))),dn=ls.filter(l=>kDone(l.id)).length,c=kCur();
-    paint(`<h1>Karteikarten</h1><div class="card nh"><p class="nhl">${ic("lock",16)} Noch gesperrt</p><p class="ar nha" lang="ar">كِتَابٌ</p>
-      <p>Die Karten öffnen sich nach <b>Etappe ${eLab(e)} · ${esc(kEtap(e).titel)}</b>. Dann liest du Wörter mit Vokalzeichen, wie dieses: „kitābun“, ein Buch.</p>
+    // bis zu den Wortkarten: Buchstabenkarten statt einer leeren Sperrseite, der Weg dorthin steht darunter
+    paint(`<h1>Karteikarten</h1>${pgHead(alphaSure(),ALPHA.length,"Buchstaben sicher")}<button class="btn" data-go="aquiz" style="margin-top:12px">Buchstaben üben</button>${aGrid()}
+      <div class="card nh"><p class="nhl">${ic("lock",16)} Wortkarten: noch gesperrt</p><p class="ar nha" lang="ar">كِتَابٌ</p>
+      <p>Die Wortkarten öffnen sich nach <b>Etappe ${eLab(e)} · ${esc(kEtap(e).titel)}</b>. Dann liest du Wörter mit Vokalzeichen, wie dieses: „kitābun“, ein Buch.</p>
       <div class="zb" role="img" aria-label="${dn} von ${ls.length} Lektionen bis dahin geschafft"><i style="width:${Math.round(dn/ls.length*100)}%"></i></div><p class="mute zs">${dn} von ${ls.length} Lektionen bis dahin geschafft</p>
-      <button class="btn" data-kl="${c.id}">Zum nächsten Halt</button></div>${fFree()}`);
+      <button class="btn alt" data-kl="${c.id}">Zum nächsten Halt</button></div>${fFree()}`);
     return fFreeOn(cards)}
   const pool=unlockedWords();
   if(!cd.order.length||cd.sig!==pool.length){cd.order=shuffle(pool.map(w=>w.i));cd.n=0;cd.sig=pool.length;cd.flip=false}
@@ -3772,7 +3776,7 @@ function settings(){
   if($("#gk"))$("#gk").onclick=e=>oauth("link",e.currentTarget,toast); // danach führt auch „Mit Google anmelden“ in dieses Konto, selbst bei anderer E-Mail
   $("#lg").onclick=()=>go("legal");$("#au").onclick=()=>{S.auto=S.auto===false;save();settings()};
   if($("#ex"))$("#ex").onclick=exportData;
-  if($("#dl")){let a2=false;$("#dl").onclick=()=>{if(!a2){a2=true;$("#dl").lastChild.textContent="Nochmal tippen: alles wird gelöscht";return}deleteAccount()}}
+  if($("#dl"))$("#dl").onclick=()=>resetAsk(true);
   $("#rs").onclick=resetAsk;
 }
 setInterval(()=>{try{const hm=new Date().toTimeString().slice(0,5);if(S.rem&&hm===S.time&&S.notified!==today()&&Notification.permission==="granted"){S.notified=today();save();new Notification("Mufradaat",{body:"Zeit für deine arabischen Vokabeln!"})}}catch(e){}},20000);
@@ -3848,15 +3852,15 @@ document.addEventListener("click",e=>{if(e.target.closest("#hx")){hintOff=true;i
 
 // Zurücksetzen: Dialog mit allem, was verloren geht. „Abbrechen“ hat den Fokus, Esc und die Zurück-Geste brechen ab, vorher exportieren geht direkt.
 function resetAll(){S.seen=[];S.seenDay="";S.xp=0;S.xpDays={};S.badges=[];S.st={perfect:0,rounds:0,goals:0,pairs:0,blitz:0,mix:0,sent:0};S.alpha={};S.aok="";S.kp={d:{}};S.wt=null;S.sent={};S.days={};S.fav=[];S.box={};S.due={};S.ef={};S.streak=0;S.last="";S.epoch=Date.now();kSnapDel();save()}
-function resetAsk(){
+function resetAsk(del){ // del: Konto löschen statt nur den Fortschritt (gleicher Schutz: Liste, Export, Fokus auf „Abbrechen“)
   const lost=[[S.xp||0,"XP"],[streak(),"Tag Serie","Tage Serie"],[badgeN(),"Abzeichen"],[alphaSure(),"sicherer Buchstabe","sichere Buchstaben"],[KL.length?KL.filter(l=>kDone(l.id)).length:Object.keys(kp().d).length,"geschaffte Lektion","geschaffte Lektionen"],[knownN(),"gelerntes Wort","gelernte Wörter"],[(S.fav||[]).length,"Favorit","Favoriten"]].filter(([n])=>n>0); // nur, was es wirklich gibt
   const d=document.createElement("dialog");d.className="dlg";d.setAttribute("aria-labelledby","dlgh");d.setAttribute("aria-describedby","dlgt");
-  d.innerHTML=`<h2 id="dlgh">Fortschritt zurücksetzen?</h2><p id="dlgt">Das wird auf diesem Gerät${U&&U!=="gast"?" und in deinem Konto":""} gelöscht und lässt sich nicht wiederherstellen:</p>
+  d.innerHTML=`<h2 id="dlgh">${del?"Konto löschen?":"Fortschritt zurücksetzen?"}</h2><p id="dlgt">${del?`Dein Konto <b>${esc(U)}</b> wird mit allem darin gelöscht und lässt sich nicht wiederherstellen:`:`Das wird auf diesem Gerät${U&&U!=="gast"?" und in deinem Konto":""} gelöscht und lässt sich nicht wiederherstellen:`}</p>
     ${lost.length?`<ul>${lost.map(([n,t,pl])=>`<li><b>${n}</b> ${n===1||!pl?t:pl}</li>`).join("")}</ul>`:`<p class="mute">Bisher ist noch kein Lernstand gespeichert.</p>`}<button class="lnk" id="dex">Vorher exportieren (JSON)</button>
-    <div class="dlga"><button class="btn alt" id="dno">Abbrechen</button><button class="btn bad" id="dyes">Alles löschen</button></div>`;
+    <div class="dlga"><button class="btn alt" id="dno">Abbrechen</button><button class="btn bad" id="dyes">${del?"Endgültig löschen":"Alles löschen"}</button></div>`;
   document.body.appendChild(d);d.addEventListener("close",()=>d.remove());
   d.querySelector("#dno").onclick=()=>d.close();d.querySelector("#dex").onclick=exportData;
-  d.querySelector("#dyes").onclick=()=>{resetAll();d.close();toast("Fortschritt zurückgesetzt");settings()};
+  d.querySelector("#dyes").onclick=()=>{d.close();if(del)return deleteAccount();resetAll();toast("Fortschritt zurückgesetzt");settings()};
   d.showModal();d.querySelector("#dno").focus();
 }
 function exportData(){
@@ -4022,7 +4026,7 @@ loadSb().then(()=>{initSb();gCheck();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v59"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v60"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>
