@@ -7,6 +7,7 @@
   --line: #303036;
   --purple: #b9a2fa;
   --green: #8bd9b8;
+  --amber: #e8bc83;
   font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
   font-synthesis: none;
 }
@@ -39,15 +40,23 @@ h1 em { font-family: Georgia, "Times New Roman", serif; color: var(--purple); fo
 .section-heading { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; align-items: baseline; margin-bottom: 20px; }
 h2 { margin: 0; font-size: 1.125rem; letter-spacing: -.025em; font-weight: 550; }
 .project-count { color: var(--muted); font-size: .875rem; }
-.project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.project-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
 .project-card { --accent: var(--purple); display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--line); border-radius: 20px; background: var(--surface); transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease; }
 .project-card:hover { transform: translateY(-5px); border-color: #665482; box-shadow: 0 16px 36px #0002; }
 .project-language { --accent: var(--green); }
 .project-language:hover { border-color: #456e5d; }
 .project-language:focus-visible { outline-color: var(--green); }
+.project-game { --accent: var(--amber); }
+.project-game:hover { border-color: #92744f; }
+.project-game:focus-visible { outline-color: var(--amber); }
 .preview { min-height: 280px; padding: 24px 28px 0; overflow: hidden; position: relative; }
 .preview-ai { background: #26212f; }
 .preview-language { background: #172c25; }
+.preview-game { background: #352b25; }
+.preview-game .preview-top { position: relative; z-index: 1; }
+.preview-game .preview-label, .game-mark { color: #e1c3a0; }
+.game-mark { flex-shrink: 0; }
+.runner-scene { position: absolute; bottom: 0; left: 0; width: 100%; height: 224px; }
 .preview-top { display: flex; justify-content: space-between; align-items: center; min-height: 32px; gap: 12px; }
 .preview-label { color: #bcb0d0; font-size: .75rem; letter-spacing: .1em; font-weight: 600; }
 .preview-language .preview-label { color: #acc6b9; }
@@ -77,6 +86,7 @@ h3 { font-size: 2rem; font-weight: 580; letter-spacing: -.055em; line-height: 1.
 .project-bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px 20px; margin-top: auto; }
 .project-action { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 10px 19px; background: var(--accent); border-radius: 9px; color: #1c1428; font-size: .9375rem; font-weight: 650; transition: filter .18s; }
 .project-language .project-action { color: #142e21; }
+.project-game .project-action { color: #322315; }
 .project-card:hover .project-action { filter: brightness(1.09); }
 .platform { color: var(--muted); font-size: .8125rem; }
 .closing-note { display: flex; align-items: center; gap: 18px; padding: 38px 0 43px; }
@@ -89,6 +99,12 @@ h3 { font-size: 2rem; font-weight: 580; letter-spacing: -.055em; line-height: 1.
 .site-footer p { margin: 0; }
 .site-footer a { margin-left: auto; display: inline-flex; align-items: center; min-height: 44px; transition: color .18s; }
 @media (min-width: 1600px) { .intro { padding-top: 88px; padding-bottom: 78px; } }
+@media (max-width: 1040px) and (min-width: 641px) {
+  .project-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .project-game { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .project-game .preview { min-height: 320px; }
+  .project-game .runner-scene { height: 274px; }
+}
 @media (max-width: 900px) {
   .wrap { width: calc(100% - 64px); }
   .intro-stamp { width: 68px; right: 3%; top: 104px; }
