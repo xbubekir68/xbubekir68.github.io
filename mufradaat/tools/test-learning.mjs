@@ -378,6 +378,8 @@ ok("… und die Rückmeldung sagt es",/am Ende noch einmal/.test(run(`app.innerH
 run(`K.n=0;K.fb=null;K.T.pop();K.miss=0;playK([${kW}])`);
 ok("Lektion abgeschlossen → gespeichert",run(`S.kp.d["s1-1"]`)===1,run(`JSON.stringify(S.kp)`));
 ok("Ende: „Lektion geschafft“ und Weiter zur nächsten",/Lektion geschafft/.test(run(`app.innerHTML`))&&/data-kl="s1-2"/.test(run(`app.innerHTML`)));
+ok("… Abschluss als dunkle Karte mit XP, ohne Note vorneweg",/class="gex"[\s\S]*Lektion geschafft[\s\S]*class="gxp">\+\d+ XP/.test(run(`app.innerHTML`))&&!/Gleich richtig<\/p>/.test(run(`app.innerHTML`)));
+ok("Lektion: Prüfen/Weiter sitzt unten fest (Rückmeldung schiebt ihn nicht)",run(`view==="klek"&&app.dataset.v==="klek"`)&&html.includes("#app[data-v=klek]>:is(#nx,#chk,.fb){margin-top:auto}"));
 ok("Wiederholte Aufgabe zählt nicht als gleich richtig",run(`K.first===K.graded-1`),[run(`K.first`),run(`K.graded`)]);
 ok("XP: 3 pro Aufgabe, 1 für die Wiederholung, Bonus für den Abschluss",run(`S.xp`)===run(`K.xp`)&&run(`K.bonus`)===10,[run(`S.xp`),run(`K.xp`),run(`K.bonus`)]);
 ok("zweite Lektion jetzt offen, dritte noch gesperrt",run(`!kLocked(KL[1])&&kLocked(KL[2])&&kCur().id==="s1-2"`));

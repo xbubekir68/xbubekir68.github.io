@@ -654,6 +654,9 @@ h1,.h1{font-size:28px;font-weight:900;letter-spacing:-.03em}h2{font-weight:800}
 .gex .gen{margin-top:6px;font-size:14px;color:var(--night-mute)}
 @keyframes gxpin{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08);opacity:1}100%{transform:none}}
 .gtt{margin-top:12px}.gtt+.btn{margin-top:16px}
+/* Lektion: Prüfen/Weiter sitzt unten fest, die Rückmeldung wächst darüber, statt den Knopf zu verschieben */
+#app[data-v=klek]{display:flex;flex-direction:column;min-height:min(100dvh,860px);padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}
+#app[data-v=klek]>:is(#nx,#chk,.fb){margin-top:auto}#app[data-v=klek]>.fb+#nx{margin-top:12px}
 /* Hörübung: dunkle Bühne mit großem Lautsprecher */
 .lnb{position:relative;overflow:hidden;margin-top:14px;min-height:170px;padding:16px;border-radius:20px;background:var(--night);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
 .lnb .mgc{position:absolute;right:-40px;top:-40px;width:150px;height:150px;border-radius:50%;background:var(--night2)}
@@ -2235,8 +2238,8 @@ function kEnd(){
     S.st.kurs=(S.st.kurs||0)+1;K.bonus=(l?10:5)+(K.miss?0:5);K.xp+=K.bonus;addXP(K.bonus);
     if(K.newDone)confetti();sfx("win")}
   const etDone=K.newDone&&(!nx||nx.e!==l.e),et=l&&kEtap(l.e),nxe=nx&&kEtap(nx.e),zl=l&&KE[l.e]&&KE[l.e].ziel;
-  paint(`<div style="text-align:center;margin-top:20px"><h1>${l?"Lektion geschafft":"Runde beendet"}</h1><p class="mute">${l?`Etappe ${eLab(l.e)} · Lektion ${l.li+1}: ${esc(l.titel)}`:"Wiederholung · Etappe "+eLab(K.e)}</p></div>
-  <div class="tiles"><div class="card"><p class="mute">Gleich richtig</p><b>${K.first} / ${K.graded}</b></div><div class="card"><p class="mute">XP verdient</p><b>+${K.xp}</b>${K.bonus?`<span class="mute">davon ${K.bonus} Bonus</span>`:""}</div></div>
+  // Abschluss wie bei den Spielen: dunkle Karte mit XP in Mint, darunter zuerst, was die Lektion gebracht hat (keine Note vorneweg)
+  paint(`<div class="gex"><span class="gdc" aria-hidden="true"></span><h1>${l?"Lektion geschafft":"Runde beendet"}</h1><b class="gxp">+${K.xp} XP</b><p class="gen">${l?`Etappe ${eLab(l.e)} · Lektion ${l.li+1}: ${esc(l.titel)}`:"Wiederholung · Etappe "+eLab(K.e)}</p>${K.graded?`<p class="gen">${K.miss?`${K.first} von ${K.graded} gleich richtig`:`Alles gleich richtig, davon ${K.bonus} XP Bonus`}</p>`:""}</div>
   ${l?`<div class="card" style="margin-top:10px"><p class="mute">${l.art==="wortschatz"?"Neue Wörter":l.art==="saetze"?"Sätze":l.art==="dialog"?"Gespräche":l.art!=="buchstaben"?"Gelesen":K.newDone?"Neu gelernt":"Geübt"}</p>${kSum(l)}</div>`:""}
   ${etDone?`<div class="card note" role="status"><p><b>Etappe „${esc(et.titel)}“ geschafft.</b> ${zl&&zl.geschafft?esc(zl.geschafft):""}${nx?"":" Die nächste Etappe ist in Arbeit."}</p></div>`:""}
   ${nx?`<button class="btn" data-kl="${nx.id}">Weiter: ${nxe.id!==l.e?"Etappe "+eLab(nx.e)+", ":""}${esc(nx.titel)}</button><button class="btn alt" data-go="path">Zum Lernpfad</button>`:`<button class="btn" data-go="path">Zum Lernpfad</button>${l?"":`<button class="btn alt" data-krev="${K.e}">Noch eine Runde</button>`}`}`);
@@ -2356,7 +2359,7 @@ function render(){
   clearInterval(gt);
   const nt=navTab(view);
   $("#nav").innerHTML=TABS.map(t=>`<button class="${nt===t[0]?"on":""}${t[0]==="path"?" main":""}" data-go="${t[0]}" ${nt===t[0]?'aria-current="page"':""}><span>${ic(t[1])}</span>${t[2]}</button>`).join("");
-  $("#nav").hidden=["quiz","pairs","blitz","aquiz","listen","satz","klek","regen","kalli","magnet","zug","suq","funken","rakete","duell"].includes(view)||view==="ki"||(view==="legal"&&!U);
+  app.dataset.v=view;$("#nav").hidden=["quiz","pairs","blitz","aquiz","listen","satz","klek","regen","kalli","magnet","zug","suq","funken","rakete","duell"].includes(view)||view==="ki"||(view==="legal"&&!U);
   ({home,path,lesson,alphabet,letter,aquiz,listen,satz,cards,more,list,stats,settings,quiz,fav,games,badges,pairs,blitz,legal,klek,regen,kalli,magnet,zug,suq,funken,rakete,duell,ki})[view]();
   app.classList.remove("enter");void app.offsetWidth;app.classList.add("enter");
   window.scrollTo(0,0);pushH();
@@ -4026,7 +4029,7 @@ loadSb().then(()=>{initSb();gCheck();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v60"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v61"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>
