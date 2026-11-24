@@ -430,18 +430,16 @@ h1,.h1{font-size:28px;font-weight:900;letter-spacing:-.03em}h2{font-weight:800}
 .gday{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:flex-start;gap:4px;width:100%;margin-top:14px;padding:18px 20px;border:0;border-radius:20px;background:var(--night);color:var(--on-night);text-align:left;font:inherit;cursor:pointer}
 .gday>*{position:relative}.gday .gdc{position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;background:var(--night2)}
 .gday .gdd{position:absolute;inset:0;pointer-events:none}
-.gday .gdf{position:absolute;top:0;font-family:var(--ar);font-size:var(--ar3);line-height:1.5;color:var(--mint);animation:gfall 2.6s linear infinite;opacity:0}
-.gday .gdf:nth-child(2){color:var(--g2)}.gday .gdf:nth-child(3){color:var(--night-mute)}
 .gday .gdx{position:absolute;right:30px;top:50%;transform:translateY(-50%);color:var(--mint)}
 .gday .gdl{font-size:13px;font-weight:800;color:var(--mint)}
 .gday b{font-size:22px;font-weight:900;letter-spacing:-.02em;line-height:1.15;max-width:62%}
 .gday small{font-size:14px;line-height:1.4;color:var(--night-mute);max-width:62%}
 .gday .gdp{margin-top:10px;display:inline-flex;align-items:center;gap:8px;background:var(--mint);color:var(--night);font-weight:900;font-size:15px;padding:9px 16px;border-radius:14px;box-shadow:0 4px 0 var(--band-d);transition:transform .08s,box-shadow .08s}
 .gday:active .gdp{transform:translateY(4px);box-shadow:0 0 0 var(--band-d)}
-@keyframes gfall{0%{transform:translateY(-40px);opacity:0}15%{opacity:1}85%{opacity:1}100%{transform:translateY(150px);opacity:0}}
+.gtd{position:absolute;top:12px;right:12px;padding:3px 8px;border-radius:99px;background:var(--gl);color:var(--g);font-size:11px;font-weight:800;line-height:1.3}
 .gtg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .glk{display:flex;gap:8px;align-items:flex-start;margin:10px 4px 0;line-height:1.5}.glk svg{flex:none;margin-top:2px}
-.gtl{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px;color:var(--ink);font:inherit;cursor:pointer;min-height:44px}
+.gtl{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px;color:var(--ink);font:inherit;cursor:pointer;min-height:44px}
 .gtl .gi{width:44px;height:44px;border-radius:12px;background:var(--gl);color:var(--g);display:grid;place-items:center;margin-bottom:4px}
 .gtl b{font-size:15px}.gtl small{font-size:13px;line-height:1.35;color:var(--mute)}
 .gtl.lock{border:1px dashed var(--line-d)}.gtl.lock .gi{background:var(--line);color:var(--mute)}
@@ -461,8 +459,7 @@ h1,.h1{font-size:28px;font-weight:900;letter-spacing:-.03em}h2{font-weight:800}
 @keyframes rgfall{from{transform:translateY(-80px)}to{transform:translateY(var(--fall,640px))}}
 @keyframes rgpop{to{scale:1.35;opacity:0}}
 .rgl{text-align:center;margin-top:8px;font-size:14px}
-@media (prefers-reduced-motion:reduce){.rgi{animation-duration:9s!important}.gday .gdf{animation:none;opacity:1;top:24px}}
-.gday .gda{font-family:var(--ar);font-size:var(--ar5);line-height:1.4;right:34px}
+@media (prefers-reduced-motion:reduce){.rgi{animation-duration:9s!important}}
 .gtl .gia{font-family:var(--ar);font-size:var(--ar2);line-height:1.5}
 /* Kalligrafie */
 .kacs{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px;margin:0 -2px;scrollbar-width:none}.kacs::-webkit-scrollbar{display:none}
@@ -602,7 +599,6 @@ h1,.h1{font-size:28px;font-weight:900;letter-spacing:-.03em}h2{font-weight:800}
 @keyframes rkwob{20%{transform:rotate(-12deg) translateX(-5px)}45%{transform:rotate(10deg) translateX(5px)}70%{transform:rotate(-6deg)}}
 .rkfb{position:absolute;left:50%;bottom:8px;z-index:3;transform:translateX(-50%);display:flex;align-items:center;gap:6px;max-width:calc(100% - 24px);min-height:36px;padding:0 14px;border-radius:999px;background:var(--night2);color:var(--night-mute);font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;pointer-events:none}
 .rkfb .ar{font-size:var(--ar2);line-height:1.4;color:var(--on-night)}.rkfb.ok{color:var(--mint)}.rkfb.no{color:var(--bad-night)}
-.gday .gdr .rks{width:44px;height:78px;animation:rkbob 2.4s ease-in-out infinite}
 /* Funkenflug: Buchstabenscheiben fliegen im Bogen über ein dunkles Feld, ein Wisch schneidet sie */
 .fkin{position:relative;overflow:hidden;margin-top:6px;padding:18px 20px;border-radius:20px;background:var(--night);color:var(--night-mute);font-size:15px;line-height:1.45}
 .fkin>*{position:relative}.fkin .mgc{position:absolute;right:-40px;top:-40px;width:150px;height:150px;border-radius:50%;background:var(--night2)}.fkin p b{color:var(--on-night)}
@@ -646,7 +642,7 @@ h1,.h1{font-size:28px;font-weight:900;letter-spacing:-.03em}h2{font-weight:800}
 .tzx{margin-top:12px;text-align:center;font-size:15px;font-weight:700;color:var(--mute)}.tzx .ar{font-size:var(--ar2);line-height:1.5;color:var(--ink)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .rkin,:root:not([data-theme="light"]) .rkf,:root:not([data-theme="light"]) .fkin,:root:not([data-theme="light"]) .fkf,:root:not([data-theme="light"]) .tzb{box-shadow:0 0 0 1px var(--line)}:root:not([data-theme="light"]) .fki{border-color:var(--band-d);background:var(--night2);box-shadow:0 5px 0 var(--night3)}:root:not([data-theme="light"]) .fki.no{border-color:var(--bad);background:var(--badl)}:root:not([data-theme="light"]) .tzwb.a{background:var(--mint);color:var(--night)}}
 :root[data-theme="dark"] .rkin,:root[data-theme="dark"] .rkf,:root[data-theme="dark"] .fkin,:root[data-theme="dark"] .fkf,:root[data-theme="dark"] .tzb{box-shadow:0 0 0 1px var(--line)}:root[data-theme="dark"] .fki{border-color:var(--band-d);background:var(--night2);box-shadow:0 5px 0 var(--night3)}:root[data-theme="dark"] .fki.no{border-color:var(--bad);background:var(--badl)}:root[data-theme="dark"] .tzwb.a{background:var(--mint);color:var(--night)}
-@media (prefers-reduced-motion:reduce){.spk,.rkln{display:none}.flt,.rkin .rks,.gday .gdr .rks,.rkfl,.rkfi,.rkr .rks,.tzw,.tzcd,.tzm,.tzr .tzl,.rgs.pop,.tzp.win .tzh b{animation:none!important}.rkr,.tzk{transition:none}.rkrow.gone{animation:none;opacity:0}.fkh{animation:none;opacity:0}}
+@media (prefers-reduced-motion:reduce){.spk,.rkln{display:none}.flt,.rkin .rks,.rkfl,.rkfi,.rkr .rks,.tzw,.tzcd,.tzm,.tzr .tzl,.rgs.pop,.tzp.win .tzh b{animation:none!important}.rkr,.tzk{transition:none}.rkrow.gone{animation:none;opacity:0}.fkh{animation:none;opacity:0}}
 /* Ergebnis-Seite aller Spiele */
 .gex{position:relative;overflow:hidden;margin-top:18px;padding:22px 20px;border-radius:20px;background:var(--night);color:var(--on-night);text-align:center}
 .gex>*{position:relative}.gex .gdc{position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;background:var(--night2)}
@@ -771,7 +767,6 @@ h1,.h1{font-size:28px;font-weight:900;letter-spacing:-.03em}h2{font-weight:800}
 /* ===== mufradaat.AI: Übungspartner (xbubekir mit DeepSeek, powered by xbu) =====
    Ein eigener Raum in Logo-Nacht, in beiden Designs gleich (wie die Bühnen der Spiele). Solange er offen ist, zeigen die Farb-Tokens
    auf die Nachtfarben; so passen auch Tastatur, Hinweise, Meldungen und der Dialog dazu. Ohne :has() folgt der Raum dem Design der App. */
-.gtl.kitl{flex-direction:row;align-items:center;gap:12px;width:100%}.gtl.kitl .gi{flex:none;margin:0}.gtl.kitl .kitx{display:flex;flex-direction:column;gap:4px;min-width:0}
 :root:has(.kiv){--bg:var(--night);--card:var(--night2);--ink:var(--on-night);--mute:var(--night-mute);--line:var(--night-track);--line-d:var(--night-track);--g:var(--mint);--g2:var(--mint);--gl:var(--night-track);--gl-d:var(--night3);--on:var(--night);--g-d:var(--band-d);--bad:var(--bad-night);--badl:var(--night2);color-scheme:dark}
 body:has(.kiv){background:none}
 body:has(.kiv)::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at calc(100% - 20px) 30px,var(--night2) 0 200px,transparent 201px),radial-gradient(circle at 10px calc(100% - 20px),var(--night3) 0 170px,transparent 171px)}
@@ -794,7 +789,7 @@ body:has(.kiv)::after{content:"";position:fixed;inset:0;z-index:-1;pointer-event
 .kich:active:not(:disabled){border-color:var(--g)}.kich:disabled{opacity:.5;cursor:default}.kich .ar{font-size:1.4em;line-height:1.4}
 .kim{display:flex;flex-direction:column;gap:10px}.kim.b{align-items:flex-end}
 .kim.new{animation:kiin .28s cubic-bezier(.2,.8,.2,1) both}@keyframes kiin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.kiub{max-width:82%;padding:10px 16px;border-radius:20px 20px 6px 20px;background:var(--gl);color:var(--ink);font-size:16px;line-height:1.45;overflow-wrap:anywhere}
+.kiub{max-width:82%;padding:10px 16px;border-radius:20px 20px 6px 20px;background:var(--gl);color:var(--ink);font-size:16px;line-height:1.45;overflow-wrap:anywhere;white-space:pre-wrap}
 .kiub.ar{font-size:var(--ar2);line-height:1.6}.kiub .ar{font-size:1.4em;line-height:1.5}
 .kibb{align-self:flex-start;max-width:92%;padding:10px 16px 12px;border:1px solid var(--line);border-radius:20px 20px 20px 6px;background:var(--card);overflow-wrap:anywhere}
 .kibb .kiar{color:var(--g);line-height:1.8}
@@ -817,13 +812,17 @@ body:has(.kiv)::after{content:"";position:fixed;inset:0;z-index:-1;pointer-event
 .kith{position:relative;display:inline-flex;align-items:center;gap:8px;min-height:40px;max-width:100%;border-radius:8px;color:var(--mute);font-size:13px;font-weight:600}
 .kith>i{flex:none;width:8px;height:8px;border-radius:50%;background:var(--g)}.kith>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.kith b{color:var(--ink);font-weight:700}.kith .i{flex:none;transform:rotate(90deg)}
 .kith select{position:absolute;inset:0;width:100%;height:100%;opacity:0;font-size:16px;cursor:pointer}.kith:focus-within{outline:3px solid var(--g2);outline-offset:2px}
-.kir{display:flex;align-items:center;gap:6px;padding:6px 6px 8px;border:1px solid var(--line);border-radius:32px;background:var(--card);transition:border-color .15s}.kir:focus-within{border-color:var(--g)}
-.kii{flex:1;min-width:0;min-height:44px;padding:8px 4px;border:0;background:none;color:var(--ink);font:inherit;font-size:16px}.kii:focus-visible{outline:none}.kii::placeholder{color:var(--mute);opacity:1}
-.kii.ar{padding-top:2px;padding-bottom:2px;text-align:right}
+.kir{display:flex;align-items:flex-end;gap:6px;padding:6px 6px 8px;border:1px solid var(--line);border-radius:32px;background:var(--card);transition:border-color .15s}.kir:focus-within{border-color:var(--g)}
+.kii{flex:1;min-width:0;min-height:44px;max-height:140px;padding:12px 4px;border:0;background:none;color:var(--ink);font:inherit;font-size:16px;resize:none;overflow-y:auto}.kii:focus-visible{outline:none}.kii::placeholder{color:var(--mute);opacity:1}
+.kii.ar{padding-top:4px;padding-bottom:4px;text-align:right}
 .kik,.kig{flex:none;width:44px;height:44px;border:0;border-radius:50%;display:grid;place-items:center}
 .kik{background:none;color:var(--mute);font-family:var(--ar);font-size:var(--ar2);line-height:1.4}.kik[aria-pressed="true"]{background:var(--gl);color:var(--g)}
 .kig{background:var(--g);color:var(--on);box-shadow:0 3px 0 var(--g-d);transition:transform .08s,box-shadow .08s}.kig:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 var(--g-d)}.kig:disabled{opacity:.35;cursor:default;box-shadow:none}
 .kifn{margin:8px 8px 0;text-align:center;font-size:12px;line-height:1.5;color:var(--mute)}.kifn .lnk{padding:6px 0;font-size:12px}
+.kidn{position:absolute;left:50%;top:-18px;translate:-50% 0;display:inline-flex;align-items:center;gap:4px;min-height:44px;padding:0 16px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--g);font:inherit;font-size:14px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.4)}.kidn[hidden]{display:none}.kidn .i{transform:rotate(90deg)}
+.kiun{margin-top:14px}
+@media (pointer:coarse){.kic:has(.kii:focus) :is(.kiln,.kifn){display:none}}
+@media (pointer:fine){.kis{flex-wrap:wrap;overflow:visible}} /* mit Maus: Vorschläge umbrechen statt seitlich scrollen (sonst abgeschnitten) */ /* Handy-Tastatur offen: Thema und Fußzeile weichen, damit mehr vom Gespräch zu sehen ist */
 .kic.kbon .kis,.kic.kbon .kifn{display:none}.kic.kbon .kb{margin-bottom:6px}
 .dlg .kidl{margin-top:10px;line-height:1.5;font-size:15px}
 /* ===== MUFRADAAT STARTBILDSCHIRM ===== */
@@ -2744,18 +2743,19 @@ function gDay(day=today()){ // gleiches Spiel den ganzen Tag, morgen das nächst
   const c=GAMES.filter(x=>!fGate(x.k)&&(x.k!=="listen"||canSpeak())&&x.k!=="duell");if(!c.length)return null;
   const h=[...day].reduce((a,ch)=>(a*31+ch.charCodeAt(0))>>>0,7);return c[h%c.length];
 }
+// Kopf des Spiele-Tabs: der Übungspartner als hervorgehobener Einstieg. Gesperrt nennt er den Grund, Antippen zeigt dann den Weg dorthin.
+const kiCard=()=>{const e=fGate("ki");
+  return `<button class="gday" data-go="ki"><span class="gdc" aria-hidden="true"></span><span class="gdd" aria-hidden="true"><span class="gdx">${ic(e?"lock":"chat",56)}</span></span><span class="gdl">KI-Übungspartner</span><b>Schreib mit xbubekir</b><small>${e?fWhy(e):"Einfache Sätze auf Arabisch schreiben"+(kiGuest()?" · mit kostenlosem Konto":" · mufradaat.AI")}</small><span class="gdp" aria-hidden="true">${e?"Ansehen "+ic("chev",16):"Loslegen "+ic("play",16,true)}</span></button>`};
 function games(){
   const d=gDay(),lk=GAMES.filter(x=>fGate(x.k)).length;
-  const deco=x=>x.k==="regen"?rgPool().slice(0,3).map((a,i)=>`<span class="gdf" lang="ar" style="right:${18+i*44}px;animation-delay:${[0,.9,1.6][i]}s">${a.c}</span>`).join(""):x.k==="rakete"?`<span class="gdx gdr">${RKSVG}</span>`:x.ar?`<span class="gdx gda" lang="ar">${x.ar}</span>`:`<span class="gdx">${ic(x.ic,56)}</span>`;
   const gi=x=>x.ar?`<span class="gi gia" lang="ar">${x.ar}</span>`:`<span class="gi">${ic(x.ic)}</span>`;
-  const tile=x=>`<button class="gtl" data-go="${x.k}">${gi(x)}<b>${x.t}</b><small>${x.d()}</small></button>`;
+  const tile=x=>`<button class="gtl" data-go="${x.k}">${x===d?`<span class="gtd">Tagesspiel</span>`:""}${gi(x)}<b>${x.t}</b><small>${x.d()}</small></button>`; // das Spiel des Tages trägt ein Schild
   const grp=(g,t)=>{const gs=GAMES.filter(x=>x.g===g),op=gs.filter(x=>!fGate(x.k)),by={}; // gesperrte Spiele: eine Zeile statt einer Wand aus Schlössern
     gs.filter(x=>fGate(x.k)).forEach(x=>{const e=fGate(x.k);(by[e]=by[e]||[]).push(x.t)});const lo=Object.entries(by);
     return `<p class="gh">${t}</p>${op.length?`<div class="gtg">${op.map(tile).join("")}</div>`:""}${lo.length?`<p class="mute glk">${ic("lock",16)}<span>${lo.map(([e,ts])=>{const n=fLeft(e);return `Nach Etappe ${eLab(e)} · ${esc(kEtap(e).titel)} (noch ${n} ${n===1?"Lektion":"Lektionen"}): ${ts.join(", ")}`}).join("<br>")}</span></p>`:""}`};
   paint(`<div class="ghd"><h1>Spiele</h1>${lk?`<span class="mute">${GAMES.length-lk} von ${GAMES.length} offen</span>`:""}</div>
-  ${d?`<button class="gday" data-go="${d.k}"><span class="gdc" aria-hidden="true"></span><span class="gdd" aria-hidden="true">${deco(d)}</span><span class="gdl">Spiel des Tages</span><b>${d.t}</b><small>${d.d()}</small><span class="gdp" aria-hidden="true">Spielen ${ic("play",16,true)}</span></button>`:""}
-  ${GGRP.map(([g,t])=>grp(g,t)).join("")}<p class="gh">Gespräch</p>${kiTile()}${lk||fGate("ki")?fFree():""}`);
-  document.querySelectorAll("[data-fl]").forEach(b=>b.onclick=()=>{ui.fl=ui.fl===b.dataset.fl?null:b.dataset.fl;sfx("tap");games()});
+  ${kiCard()}
+  ${GGRP.map(([g,t])=>grp(g,t)).join("")}${lk||fGate("ki")?fFree():""}`);
   fFreeOn(games);
 }
 function wordRow(w){const nt=noteOf(w);return `<button class="w" data-say="${w.i}"><span class="ar" lang="ar">${w.ar}</span><span style="flex:1"><b>${w.de}</b><span class="tr"><br>(${w.tr})${nt?" · "+arIn(nt):""}</span></span><span class="mute" style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">${memBar(w.i)}${isLearned(w.i)?ic("check",16):""}${ic("speaker",18)}</span></button>`}
@@ -3642,7 +3642,7 @@ function duell(){
 // Aussehen: ein eigener Raum in Logo-Nacht (siehe CSS und DESIGN.md), Aufbau wie in xbubekir: Begrüßung in der Mitte, ein rundes Eingabefeld unten.
 const KI_URL="https://ydasoikczdjjdtdarrpx.supabase.co/functions/v1/mufradaat";
 const KI_MAX=20,KI_LEN=1500; // so viele Nachrichten gehen mit (der Server nimmt höchstens 24), so lang darf eine sein
-const KI={tid:null,msgs:[],busy:false,live:"",stopd:false,kb:false,draft:"",cerr:"",cact:"",rest:null,chips:null,cv:0,n:0,ctl:null};
+const KI={tid:null,msgs:[],busy:false,live:"",stopd:false,kb:false,draft:"",cerr:"",cact:"",rest:null,chips:null,cv:0,n:0,ctl:null,t0:0,retry:"",undo:null};
 // Themen: im neuen Lernpfad jede Etappe der Stufe 2 mit den Wörtern ihrer geschafften Lektionen, dazu alle offenen Lektionen der Wortliste
 function kiTopics(){
   const t=[];
@@ -3695,9 +3695,6 @@ function kiChips(p){
     :["Fang du an.","Frag mich ab.",`Was heißt „${a.de}“ auf Arabisch?`,`Gib mir einen Satz mit „${b.de}“.`];
 }
 const kiGuest=()=>!UID||U==="gast"||!sb;
-const kiTile=()=>{const e=fGate("ki");
-  return e?`<button class="gtl kitl lock" data-fl="ki" aria-expanded="${ui.fl==="ki"}"><span class="gi">${ic("lock",20)}</span><span class="kitx"><b>Übungspartner</b><small>${fWhy(e)}</small>${ui.fl==="ki"?`<small class="hint" role="status">Lerne im Lernpfad weiter, dann geht der Übungspartner von selbst auf.</small>`:""}</span></button>`
-    :`<button class="gtl kitl" data-go="ki"><span class="gi">${ic("chat")}</span><span class="kitx"><b>Übungspartner</b><small>Mit der KI xbubekir einfache Sätze schreiben · mufradaat.AI</small></span></button>`};
 function ki(){
   const e=fGate("ki");
   if(e){const ls=KL.filter(l=>l.k<=Math.max(...KL.filter(x=>x.e===e).map(x=>x.k))),dn=ls.filter(l=>kDone(l.id)).length,c=kCur();
@@ -3716,10 +3713,10 @@ function kiChat(){
   paint(`<div class="kiv"><header class="kih"><button class="kihb" data-go="games" aria-label="Zurück">${ic("back")}</button>
     <h1 class="kiid" aria-label="Übungspartner mufradaat.AI"><span>mufradaat<b>.AI</b></span><small>powered by <img src="../xbubekir/brand/xbu.webp" width="640" height="376" alt="xbu"></small></h1>
     ${guest?"<span></span>":`<button class="kihb" id="kinew" aria-label="Neues Gespräch">${ic("edit")}</button>`}</header>
-  <div class="kil" id="kil"${guest?"":' role="log" aria-label="Gespräch mit xbubekir"'}></div>
-  ${guest?"":`<div class="kic"><div class="kis" id="kis" role="group" aria-label="Vorschläge" hidden></div>
+  <div class="kil" id="kil" role="region" aria-label="Gespräch mit xbubekir"></div>
+  ${guest?"":`<p class="sr" id="kisr" aria-live="polite"></p><div class="kic"><button class="kidn" id="kidn" hidden>Neue Antwort ${ic("chev",16)}</button><div class="kis" id="kis" role="group" aria-label="Vorschläge" hidden></div>
   <div class="kiln"><label class="kith"><i aria-hidden="true"></i><span>Thema: <b>${esc(p.lab)}</b></span>${ic("chev",16)}<select id="kit" aria-label="Thema">${grp("Lernpfad",ts.filter(t=>t.id[0]==="e"))}${grp("Wörter",ts.filter(t=>t.id[0]==="l"))}</select></label></div>
-  <div class="kir"><button class="kik" id="kik" lang="ar" aria-pressed="${KI.kb}" aria-label="Arabische Tastatur">ع</button><input class="kii" id="kii" dir="auto" maxlength="300" autocomplete="off" autocapitalize="off" enterkeyhint="send" placeholder="Nachricht schreiben …" aria-label="Deine Nachricht"><button class="kig" id="kig"></button></div>
+  <div class="kir"><button class="kik" id="kik" lang="ar" aria-pressed="${KI.kb}" aria-label="Arabische Tastatur">ع</button><textarea class="kii" id="kii" rows="1" dir="auto" maxlength="300" autocomplete="off" autocapitalize="off" enterkeyhint="send" placeholder="Nachricht schreiben …" aria-label="Deine Nachricht"></textarea><button class="kig" id="kig"></button></div>
   <div id="kikb"></div>
   <p class="kifn">xbubekir ist eine KI und kann sich irren, auch bei Vokalzeichen. <span id="kin"></span><button class="lnk" id="kinf">Mehr dazu</button></p></div>`}</div>`);
   $("#kil").onclick=e=>{
@@ -3729,34 +3726,41 @@ function kiChat(){
       kiMenu();
       return k==="say"?kiSay(kiPlain(m.content)):k==="copy"?kiCopy(kiPlain(m.content)):kiFold(i,k)}
     const c=e.target.closest("[data-kic]");if(c){sfx("tap");return kiSend(c.dataset.kic)}
+    if(e.target.closest("#kire")){sfx("tap");return KI.draft===KI.retry?kiSend():kiSend(KI.retry)} // die Nachricht steht noch im Feld: von dort senden, damit es leer wird
+    if(e.target.closest("#kiun")){const u=KI.undo;sfx("tap");KI.undo=null;KI.msgs=u.msgs;KI.tid=u.tid;KI.chips=null;KI.cv++;return ki()}
     if(e.target.closest("#kiacc,#kiin")){sfx("tap");logout()}}; // neu anmelden bzw. als Gast zur Anmeldung (wie in den Einstellungen)
   if(guest)return kiLog();
   const tx=$("#kii");tx.value=KI.draft;
   tx.oninput=()=>{KI.draft=tx.value;kiBar()};
-  tx.onkeydown=e=>{if(e.key==="Enter"&&!e.isComposing){e.preventDefault();kiSend()}};
-  $("#kig").onclick=()=>{if(KI.busy)kiStop();else kiSend()};
+  tx.onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing&&e.keyCode!==229){e.preventDefault();kiSend()}}; // Umschalt+Enter: neue Zeile; 229: Eingabehilfe (IME) schließt noch ab
+  $("#kig").onclick=kiGo;
+  $("#kig").onmousedown=$("#kis").onmousedown=e=>{if(e.target.closest("#kig,[data-kic]"))e.preventDefault()}; // Fokus bleibt im Feld, die Handy-Tastatur bleibt offen
+  $("#kidn").onclick=()=>{sfx("tap");kiDown()};
   $("#kik").onclick=()=>{KI.kb=!KI.kb;sfx("tap");kiBar();tx.focus()};
   $("#kikb").onclick=e=>{const k=e.target.closest("[data-k]");if(!k)return;const c=k.dataset.k;sfx("tap");KI.draft=c==="⌫"?KI.draft.slice(0,-1):(KI.draft+c).slice(0,300);tx.value=KI.draft;kiBar();tx.focus()};
   $("#kis").onclick=e=>{const c=e.target.closest("[data-kic]");if(c){sfx("tap");kiSend(c.dataset.kic)}};
-  $("#kit").onchange=e=>{KI.tid=e.target.value;kiNew()};
+  $("#kit").onchange=e=>kiNew(e.target.value);
   $("#kinew").onclick=()=>{sfx("tap");kiNew()};
   $("#kinf").onclick=kiInfo;
   kiLog();kiBar();
   if(KI.msgs.length||KI.cerr)requestAnimationFrame(()=>kiDown()); // zurück im Gespräch: ans Ende (render() scrollt erst nach oben)
 }
 // Verlauf neu zeichnen. Leer: Begrüßung mit Vorschlägen (Gast: Hinweis auf das Konto). Sonst die Nachrichten, die laufende Antwort, ein Fehler.
-// fresh: Die letzte Nachricht ist gerade dazugekommen.
-function kiLog(fresh){
+// fresh: Die letzte Nachricht ist gerade dazugekommen. soft: nur ans Ende, wenn man schon unten ist (gibt zurück, ob es ans Ende ging).
+function kiLog(fresh,soft){
   const el=$("#kil");if(view!=="ki"||!el)return;
   if(kiGuest()){el.innerHTML=kiHero(`<p class="kihn">Für den Übungspartner brauchst du ein kostenloses Konto. Der Server zählt damit, wie viele Nachrichten du am Tag schreibst.</p><button class="btn" id="kiin">Anmelden oder registrieren</button>`);return}
-  const n=KI.msgs.length,er=KI.cerr?`<div class="card hint" role="alert"><p>${esc(KI.cerr)}</p>${KI.cact==="acc"?`<button class="btn alt" id="kiacc">Neu anmelden</button>`:""}</div>`:"";
-  el.innerHTML=!n&&!KI.busy?kiHero(`<div class="kist" role="group" aria-label="Vorschläge">${(KI.chips||[]).map(c=>kiChip(c)).join("")}</div><p class="kihn">Deine Nachrichten gehen an die KI DeepSeek und werden nicht gespeichert.</p>`)+er
+  const n=KI.msgs.length,er=KI.cerr?`<div class="card hint" role="alert"><p>${esc(KI.cerr)}</p>${KI.cact==="acc"?`<button class="btn alt" id="kiacc">Neu anmelden</button>`:KI.cact==="re"&&KI.retry?`<button class="btn alt" id="kire">Nochmal senden</button>`:""}</div>`:"";
+  el.innerHTML=!n&&!KI.busy?kiHero(`<div class="kist" role="group" aria-label="Vorschläge">${(KI.chips||[]).map(c=>kiChip(c)).join("")}</div>${KI.undo?`<button class="lnk kiun" id="kiun">Vorheriges Gespräch zurückholen</button>`:""}<p class="kihn">Deine Nachrichten gehen an die KI DeepSeek und werden nicht gespeichert.</p>`)+er
     :KI.msgs.map((m,i)=>kiMsg(m,i,{fresh:fresh&&i===n-1})).join("")+(KI.busy?kiMsg({role:"assistant",content:KI.live},n,{live:true,fresh}):"")+er;
-  kiDown();
+  return kiDown(soft);
 }
-function kiLive(){const el=$("#kilive");if(view!=="ki"||!el)return;el.classList.remove("new");el.innerHTML=kiBody({content:KI.live},true);kiDown(true)}
-// ans Ende scrollen; soft: nur, wenn man ohnehin unten ist (wer beim Mitlesen hochscrollt, bleibt dort)
-function kiDown(soft){try{const max=document.documentElement.scrollHeight-innerHeight;if(!soft||max-scrollY<200)scrollTo(0,max)}catch(e){}}
+function kiLive(){const el=$("#kilive");if(view!=="ki"||!el)return;el.classList.remove("new");el.innerHTML=kiBody({content:KI.live},true);if(!kiDown(true))kiMark()}
+// ans Ende scrollen; soft: nur, wenn man ohnehin unten ist (wer beim Mitlesen hochscrollt, bleibt dort und bekommt den Knopf „Neue Antwort“)
+const kiEnd=()=>document.documentElement.scrollHeight-innerHeight-scrollY<200;
+function kiDown(soft){try{if(soft&&!kiEnd())return false;scrollTo(0,document.documentElement.scrollHeight-innerHeight);const b=$("#kidn");if(b)b.hidden=true}catch(e){}return true}
+const kiMark=()=>{const b=$("#kidn");if(b)b.hidden=false};
+addEventListener("scroll",()=>{if(view!=="ki")return;const b=$("#kidn");if(b&&!b.hidden&&kiEnd())b.hidden=true},{passive:true});
 // Eingabezeile auf Stand bringen, ohne das Feld neu zu bauen (sonst schließt das Handy die Tastatur)
 function kiBar(){
   const tx=$("#kii"),g=$("#kig"),kb=$("#kikb"),cs=$("#kis"),nt=$("#kin");if(view!=="ki"||kiGuest()||!tx||!g||!kb||!cs)return;
@@ -3768,16 +3772,21 @@ function kiBar(){
   cs.hidden=!on;if(on&&cs.dataset.v!==v){cs.dataset.v=v;cs.innerHTML=(KI.chips||[]).map(c=>kiChip(c,KI.busy)).join("")}
   $("#kinew").disabled=!on;
   if(nt)nt.textContent=KI.rest!=null&&KI.rest<=10?`Heute noch ${KI.rest} ${KI.rest===1?"Nachricht":"Nachrichten"}. `:"";
+  tx.style.height="";tx.style.height=Math.min(tx.scrollHeight,140)+"px"; // Feld wächst mit dem Text, bis etwa fünf Zeilen
 }
-// Fehler in kurzen Worten; act "acc": Knopf „Neu anmelden“
+// Senden-Knopf: senden oder anhalten. Ein zweiter Tipp gleich nach dem Senden (Doppeltipp) hält die Antwort nicht an.
+function kiGo(){if(!KI.busy)return kiSend();if(Date.now()-KI.t0>800)kiStop()}
+// Text aus dem Feld: Leerzeichen zusammenziehen, Zeilenumbrüche behalten (höchstens eine Leerzeile)
+const kiClean=s=>String(s).replace(/[^\S\n]+/g," ").replace(/ ?\n ?/g,"\n").replace(/\n{3,}/g,"\n\n").trim().slice(0,300);
+// Fehler in kurzen Worten; act "acc": Knopf „Neu anmelden“, "re": Knopf „Nochmal senden“
 function kiErrText(e){
   const s=e&&e.status,r=e&&e.reason;
   if(s===401)return["Du bist nicht mehr angemeldet. Melde dich neu an, dann geht es weiter.","acc"];
   if(s===429)return[e.message||"Für heute sind deine Nachrichten aufgebraucht. Morgen geht es weiter.",""];
   if(s===413)return["Das Gespräch ist zu lang geworden. Fang am besten ein neues an.",""];
-  if(!s&&(e instanceof TypeError||navigator.onLine===false))return["Keine Verbindung. Der Übungspartner braucht Internet.",""];
-  if(r==="credit"||r==="busy"||r==="server"||s>=500)return["Der Übungspartner ist gerade nicht erreichbar. Versuch es gleich noch einmal.",""];
-  return["xbubekir konnte gerade nicht antworten. Versuch es noch einmal.",""];
+  if(!s&&(e instanceof TypeError||navigator.onLine===false))return["Keine Verbindung. Der Übungspartner braucht Internet.","re"];
+  if(r==="credit"||r==="busy"||r==="server"||s>=500)return["Der Übungspartner ist gerade nicht erreichbar. Versuch es gleich noch einmal.","re"];
+  return["xbubekir konnte gerade nicht antworten. Versuch es noch einmal.","re"];
 }
 // Anfrage an den Server, Antwort als Server-Sent Events („data: {…}“-Zeilen wie bei OpenRouter); onText bekommt den ganzen bisherigen Text
 async function kiAsk(p,msgs,onText,signal){
@@ -3844,30 +3853,35 @@ function kiMenu(box,btn){
 function kiCopy(t){const no=()=>toast("Kopieren hat nicht geklappt.");try{navigator.clipboard.writeText(t).then(()=>toast("Kopiert"),no)}catch(e){no()}}
 // text: fester Text (Vorschlag), sonst der Inhalt des Eingabefelds
 async function kiSend(text){
-  const own=text===undefined;text=String(own?KI.draft:text).replace(/\s+/g," ").trim().slice(0,300);
+  const own=text===undefined;text=kiClean(own?KI.draft:text);
   if(!text||KI.busy)return;
   if(kiGuest()){KI.cerr="Du bist nicht mehr angemeldet. Melde dich neu an, dann geht es weiter.";KI.cact="acc";return kiLog()}
   const p=kiTopic(),n=++KI.n,ctl=KI.ctl=new AbortController();
   if(own){KI.draft="";$("#kii").value=""}
-  KI.msgs.push({role:"user",content:text});KI.busy=true;KI.live="";KI.stopd=false;KI.cerr="";KI.cact="";
+  KI.msgs.push({role:"user",content:text});KI.busy=true;KI.t0=Date.now();KI.live="";KI.stopd=false;KI.cerr="";KI.cact="";KI.retry="";KI.undo=null;
   kiLog(true);kiBar();
-  let out="",err=null;
-  try{out=await kiAsk(p,KI.msgs,t=>{if(n===KI.n){KI.live=t;kiLive()}},ctl.signal)}catch(e){err=e;out=KI.live}
+  let out="",err=null,idle=0;const arm=()=>{clearTimeout(idle);idle=setTimeout(()=>ctl.abort(),45000)};arm(); // 45 s ohne ein Zeichen vom Server: abbrechen und Fehler zeigen statt endlos Punkte
+  try{out=await kiAsk(p,KI.msgs,t=>{arm();if(n===KI.n){KI.live=t;kiLive()}},ctl.signal)}catch(e){err=e;out=KI.live}
+  clearTimeout(idle);
   if(n!==KI.n)return; // inzwischen neues Gespräch oder anderes Thema
   KI.busy=false;KI.live="";KI.ctl=null;
   out=String(out||"").trim();
-  if(out&&(!err||KI.stopd))KI.msgs.push({role:"assistant",content:out,...(KI.stopd?{note:"Angehalten."}:{})});
+  const ok=out&&(!err||KI.stopd);
+  if(ok)KI.msgs.push({role:"assistant",content:out,...(KI.stopd?{note:"Angehalten."}:{})});
   else{KI.msgs.pop();if(own&&!KI.draft)KI.draft=text; // nichts gekommen: Nachricht zurück ins Feld
-    if(!KI.stopd){[KI.cerr,KI.cact]=kiErrText(err);if(err)console.warn("mufradaat.AI",err)}}
+    if(!KI.stopd){[KI.cerr,KI.cact]=kiErrText(err);KI.retry=text;if(err)console.warn("mufradaat.AI",err)}}
   KI.chips=kiChips(p);KI.cv++;
   if(view!=="ki")return;
   const t=$("#kii");if(t&&t.value!==KI.draft)t.value=KI.draft;
-  kiLog();kiBar();
-  const a=kiPlain(out);if(kiIsAr(a)&&!err&&!KI.stopd&&S.auto!==false&&kiCanSay(a))kiSay(a);
+  if(!kiLog(false,!!ok))kiMark();kiBar(); // fertige Antwort: nicht ans Ende springen, wenn man gerade weiter oben liest
+  const a=kiPlain(out),sr=$("#kisr");
+  if(ok&&sr)sr.innerHTML="xbubekir: "+(kiIsAr(a)?`<span lang="ar">${esc(a)}</span>`:esc(a)); // Vorlesehilfen hören nur die neue Antwort, nicht das ganze Gespräch
+  if(kiIsAr(a)&&!err&&!KI.stopd&&S.auto!==false&&kiCanSay(a))kiSay(a);
 }
 function kiStop(){KI.stopd=true;if(KI.ctl)KI.ctl.abort()}
-function kiReset(){KI.n++;if(KI.busy)kiStop();KI.busy=false;KI.live="";KI.msgs=[];KI.cerr="";KI.cact="";KI.draft="";KI.chips=null;KI.cv++;KI.ctl=null}
-function kiNew(){const d=KI.draft;kiReset();KI.draft=d;if(view==="ki")ki()}
+function kiReset(){KI.n++;if(KI.busy)kiStop();KI.busy=false;KI.live="";KI.msgs=[];KI.cerr="";KI.cact="";KI.retry="";KI.undo=null;KI.draft="";KI.chips=null;KI.cv++;KI.ctl=null}
+// Neues Gespräch (tid: anderes Thema). Das bisherige lässt sich zurückholen, bis die nächste Nachricht geht.
+function kiNew(tid){const d=KI.draft,m=KI.busy?KI.msgs.slice(0,-1):KI.msgs,u=m.length?{msgs:m,tid:KI.tid}:null;kiReset();KI.draft=d;KI.undo=u;if(tid)KI.tid=tid;if(view==="ki")ki()}
 function kiInfo(){
   const d=document.createElement("dialog");d.className="dlg";d.setAttribute("aria-labelledby","dlgh");
   d.innerHTML=`<h2 id="dlgh">Über mufradaat.AI</h2>
@@ -4170,7 +4184,7 @@ loadSb().then(()=>{initSb();gCheck();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v64"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v65"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>

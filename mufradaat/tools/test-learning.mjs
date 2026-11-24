@@ -989,7 +989,7 @@ run(`U="gast";loadS()`);
 
 // ---------- 25. Spiele-Übersicht und Buchstaben-Regen ----------
 run(`U="sp25";loadS();S.ob={z:"lesen",d:today()};ui.fl=null;games()`);let g25=run(`app.innerHTML`);
-ok("Übersicht: Spiel des Tages als dunkle Karte, Kacheln in zwei Gruppen, Zähler der offenen Spiele",/<button class="gday" data-go="(regen|listen|kalli)">/.test(g25)&&/<p class="gh">Buchstaben<\/p><div class="gtg"><button class="gtl" data-go="regen">/.test(g25)&&/<p class="gh">Wörter und Sätze<\/p>/.test(g25)&&/3 von 11 offen/.test(g25),g25.slice(0,300));
+ok("Übersicht: oben der Übungspartner als dunkle Karte, Spiel des Tages als Schild an seiner Kachel, Kacheln in zwei Gruppen, Zähler der offenen Spiele",/<\/div>\s*<button class="gday" data-go="ki">/.test(g25)&&/<button class="gtl" data-go="(regen|listen|kalli)"><span class="gtd">Tagesspiel<\/span>/.test(g25)&&(g25.match(/class="gtd"/g)||[]).length===1&&/<p class="gh">Buchstaben<\/p><div class="gtg"><button class="gtl" data-go="regen">/.test(g25)&&/<p class="gh">Wörter und Sätze<\/p>/.test(g25)&&/3 von 11 offen/.test(g25),g25.slice(0,300));
 ok("… Spiel des Tages bleibt am selben Tag gleich und ist nie gesperrt",run(`gDay()===gDay()`)&&run(`!fGate(gDay().k)`)&&run(`(()=>{const ks=new Set();for(let d=1;d<31;d++){const x=gDay("2026-11-"+String(d).padStart(2,"0"));if(fGate(x.k))return false;ks.add(x.k)}return ks.size===3})()`));
 ok("… gesperrtes Spiel in der Sammelzeile mit Etappe und Name",lockOf(g25,"Paare").includes("Nach Etappe S")&&!/data-go="pairs"/.test(g25));
 ok("… ohne Stimme und Aufnahmen ist die Hörübung nie das Spiel des Tages",run(`(()=>{const a=ARV,n=AUDN;ARV=false;AUDN=0;let ok=true;for(let d=1;d<31;d++){if(gDay("2026-12-"+String(d).padStart(2,"0")).k==="listen")ok=false}ARV=a;AUDN=n;return ok})()`));
@@ -1431,9 +1431,9 @@ run(`U="gast";loadS()`);
   ok("CSP: Server von xbubekir erlaubt, kein WebAssembly, kein Hugging Face",/connect-src[^;]*https:\/\/ydasoikczdjjdtdarrpx\.supabase\.co/.test(csp)&&!/wasm-unsafe-eval|huggingface/.test(csp),csp);
   ok("Übungspartner gehört zum Tab Spiele, ohne Leiste",run(`SUB.games.includes("ki")&&navTab("ki")==="games"`)&&/\|\|view==="ki"\|\|/.test(html));
   run(`U="ki41";loadS();S.np=true;S.ob={z:"lesen",d:today()};S.kp={d:{"s1-1":1}};ui.fl=null`);
-  ok("Gesperrt bis S3 wie die Karteikarten, mit Grund in der Kachel",run(`fGate("ki")`)==="s3"&&/<button class="gtl kitl lock" data-fl="ki"[^>]*>.*Öffnet sich nach Etappe S3/.test(run(`kiTile()`)));
-  run(`S.aok="skip"`);ok("… „kann schon lesen“ öffnet ihn",run(`fGate("ki")`)===null&&/<button class="gtl kitl" data-go="ki">/.test(run(`kiTile()`)));
-  run(`games()`);ok("… Kachel unter „Gespräch“ in den Spielen",/<p class="gh">Gespräch<\/p><button class="gtl kitl" data-go="ki">/.test(run(`app.innerHTML`)));
+  ok("Gesperrt bis S3 wie die Karteikarten: Karte nennt den Grund und führt zur Erklärung",run(`fGate("ki")`)==="s3"&&/<button class="gday" data-go="ki">.*Öffnet sich nach Etappe S3.*Ansehen/.test(run(`kiCard()`)));
+  run(`S.aok="skip"`);ok("… „kann schon lesen“ öffnet ihn",run(`fGate("ki")`)===null&&/<button class="gday" data-go="ki">.*Schreib mit xbubekir.*Loslegen/.test(run(`kiCard()`)));
+  run(`games()`);ok("… ganz oben im Spiele-Tab, genau einmal, kein eigener Abschnitt „Gespräch“ mehr",/^<div class="ghd">[\s\S]*?<\/div>\s*<button class="gday" data-go="ki">/.test(run(`app.innerHTML`))&&(run(`app.innerHTML`).match(/data-go="ki"/g)||[]).length===1&&!/Gespräch<\/p>/.test(run(`app.innerHTML`)));
   run(`U="gast";UID=null;loadS();S.aok="skip";view="ki";ki()`);let g41=run(`app.innerHTML`);
   ok("Gast: Hinweis auf ein Konto statt Gespräch",/id="kiin"/.test(g41)&&!/id="kii"/.test(g41));
   // Arabisch zuerst: Was gilt als arabische Antwort?
@@ -1472,6 +1472,20 @@ run(`U="gast";loadS()`);
   ok("Begrüßung: Arabisch groß, Einladung, Hinweis auf Arabisch zuerst",/^<div class="kihero"><p class="ar nha" lang="ar">مَرْحَبًا<\/p><h2>Schreib mit xbubekir<\/h2><p class="kihp">xbubekir antwortet auf Arabisch\. [^<]+<\/p>X<\/div>$/.test(run(`kiHero("X")`)));
   ok("Vorschlag als Pille, Arabisch darin in Naskh",run(`kiChip("Was bedeutet قَلَم?")`)==='<button class="kich" data-kic="Was bedeutet قَلَم?">Was bedeutet <span class="ar" lang="ar">قَلَم</span>?</button>'&&/ disabled>/.test(run(`kiChip("x",true)`)));
   ok("Datenschutz nennt Server, OpenRouter und DeepSeek",/KI-Übungspartner \(mufradaat\.AI\)/.test(html)&&/Supabase, Serverstandort EU, Frankfurt/.test(html)&&/OpenRouter \(USA\)/.test(html)&&!/Qwen/.test(html));
+  // Bedienung: Senden, Zeilen, Fehler, Zurückholen, Scrollen, Vorlesehilfen
+  ok("Senden: Doppeltipp hält die Antwort nicht an, späterer Tipp schon",run(`(()=>{KI.busy=true;KI.ctl=null;KI.stopd=false;KI.t0=Date.now();kiGo();const a=!KI.stopd;KI.t0=Date.now()-2000;kiGo();const b=KI.stopd;KI.busy=false;KI.stopd=false;return a&&b})()`));
+  ok("… Enter sendet, Umschalt+Enter macht eine neue Zeile, Feld wächst mit (bis etwa fünf Zeilen)",/<textarea class="kii" id="kii" rows="1"/.test(html)&&html.includes('e.key==="Enter"&&!e.shiftKey&&!e.isComposing&&e.keyCode!==229')&&/\.kii\{[^}]*max-height:140px[^}]*resize:none/.test(css41));
+  ok("… Zeilenumbrüche bleiben (höchstens eine Leerzeile), Leerzeichen werden zusammengezogen",run(`kiClean("  Hallo   du \\n\\n\\n\\n  Welt  ")`)==="Hallo du\n\nWelt"&&run(`kiMsg({role:"user",content:"a\\nb"},0)`).includes("a<br>b")&&/\.kiub\{[^}]*white-space:pre-wrap/.test(css41));
+  ok("Fehler: Netz oder Server bieten „Nochmal senden“, Limit und Anmeldung nicht",JSON.parse(run(`JSON.stringify([kiErrText(new TypeError("x"))[1],kiErrText({status:503})[1],kiErrText({status:429,message:"m"})[1],kiErrText({status:401})[1],kiErrText(Object.assign(new Error("a"),{name:"AbortError"}))[1]])`)).join()==="re,re,,acc,re");
+  run(`U="ki41";UID="u41";globalThis.__sb=sb;sb={};view="ki";KI.msgs=[{role:"user",content:"a"},{role:"assistant",content:"b"}];KI.cerr="Keine Verbindung.";KI.cact="re";KI.retry="hallo";kiLog()`);
+  ok("… Fehlerkarte mit Knopf „Nochmal senden“",/role="alert"><p>Keine Verbindung\.<\/p><button class="btn alt" id="kire">Nochmal senden<\/button>/.test(run(`app.innerHTML`)));
+  run(`KI.cerr="";KI.tid="l:0";view="x";kiNew("l:1");view="ki";kiLog()`);
+  ok("Neues Gespräch oder anderes Thema: das bisherige lässt sich zurückholen, samt Thema",run(`KI.msgs.length===0&&KI.tid==="l:1"&&KI.undo.tid==="l:0"&&KI.undo.msgs.length===2`)&&/id="kiun">Vorheriges Gespräch zurückholen/.test(run(`app.innerHTML`)));
+  run(`kiReset();sb=__sb;view="games"`);ok("… Abmelden oder anderes Konto vergisst es",run(`KI.undo===null&&KI.retry===""`));
+  ok("Scrollen: fertige Antwort springt nicht ans Ende, wenn man weiter oben liest; Knopf „Neue Antwort“ führt hin",html.includes("if(!kiLog(false,!!ok))kiMark()")&&html.includes("if(!kiDown(true))kiMark()")&&/<button class="kidn" id="kidn" hidden>Neue Antwort/.test(html)&&/\.kidn\[hidden\]\{display:none\}/.test(css41));
+  ok("Antwort hängt: nach 45 s ohne Zeichen Abbruch mit Fehler statt endloser Punkte",html.includes("idle=setTimeout(()=>ctl.abort(),45000)")&&html.includes("arm();if(n===KI.n)"));
+  ok("Vorlesehilfen: Gespräch nicht als Live-Bereich (sonst wird alles neu vorgelesen), nur die neue Antwort",!/id="kil"[^>]*role="log"/.test(html)&&html.includes('<p class="sr" id="kisr" aria-live="polite"></p>'));
+  ok("Handy: beim Tippen weichen Thema und Fußzeile, Tippen auf Senden lässt die Tastatur offen",/@media \(pointer:coarse\)\{\.kic:has\(\.kii:focus\) :is\(\.kiln,\.kifn\)\{display:none\}\}/.test(css41)&&html.includes('onmousedown=e=>{if(e.target.closest("#kig,[data-kic]"))e.preventDefault()}'));
   run(`U="gast";UID=null;loadS()`);
 }
 
