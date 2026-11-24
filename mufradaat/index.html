@@ -655,7 +655,7 @@ h1,.h1{font-size:28px;font-weight:900;letter-spacing:-.03em}h2{font-weight:800}
 @keyframes gxpin{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08);opacity:1}100%{transform:none}}
 .gtt{margin-top:12px}.gtt+.btn{margin-top:16px}
 /* Lernpfad: Landschaft am Rand, Schatzkiste und Spiele-Halt */
-.lsc{position:absolute;width:96px;height:64px;fill:var(--ac);opacity:.22;pointer-events:none}.lsc.l{left:-4px}.lsc.r{right:-4px;transform:scaleX(-1)}
+.lsc{position:absolute;width:75px;height:50px;fill:var(--ac);opacity:.22;pointer-events:none}.lsc.l{left:-4px}.lsc.r{right:-4px;transform:scaleX(-1)}
 .pn.pchest .nd{fill:currentColor}.pn.pchest.rdy .nd{background:var(--ac);color:var(--card);--kh:var(--ac);animation:kpulse 1.6s ease-in-out infinite}
 @keyframes kpulse{50%{transform:scale(1.08)}}
 .kgs .kgr{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:6px 0 2px}
@@ -2279,7 +2279,9 @@ const LSC={ths:'<path d="M0 48C14 30 26 30 40 40S62 30 72 34V48Z"/><path d="M8 4
   th7:'<path d="M20 6l2 6 6 2-6 2-2 6-2-6-6-2 6-2Z"/><path d="M54 22l1.5 4 4 1.5-4 1.5-1.5 4-1.5-4-4-1.5 4-1.5Z" opacity=".7"/><circle cx="40" cy="8" r="1.6"/><circle cx="8" cy="34" r="1.4"/><circle cx="64" cy="44" r="1.6"/>', // Sterne
   th9:'<path d="M4 48l8-14 10-4 8 10 4 8Z"/><path d="M36 48l10-18 12 6 10 12Z" opacity=".6"/>'}; // Felsen
 LSC.th0=LSC.ths;LSC.th8=LSC.th1;
-const kScen=(th,h)=>{let s="";for(let k=0,t=170;t+70<h;k++,t+=250)s+=`<svg class="lsc ${k%2?"l":"r"}" style="top:${t}px" viewBox="0 0 72 48" aria-hidden="true">${LSC[th]||LSC.ths}</svg>`;return s};
+// in jeder zweiten Lücke zwischen zwei Halten (dort steht kein Etikett), auf der Seite, die vom Weg abgewandt ist; nicht vor Schildern (x 50)
+const kScen=(th,ps,top)=>ps.map((b,k)=>{const a=ps[k-1];if(!a||k%2===0||b.y-a.y<90||b.x===50)return "";const x=(a.x+b.x)/2;
+  return `<svg class="lsc ${x>50?"l":"r"}" style="top:${Math.round((a.y+b.y)/2-25-top)}px" viewBox="0 0 72 48" aria-hidden="true">${LSC[th]||LSC.ths}</svg>`}).join("");
 const kKist=e=>{const ls=KL.filter(l=>l.e===e);return ls.length>=3?ls[Math.floor(ls.length/2)-1]:null}; // eine Schatzkiste nach der Mitte jeder Etappe
 const kChest=op=>`<svg viewBox="0 0 32 28" width="30" height="26" aria-hidden="true">${op?'<path d="M3 14h26v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M4 11 6 2h20l2 9Z" opacity=".55"/>':'<path d="M3 12h26v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M5 4h22a2 2 0 0 1 2 2v5H3V6a2 2 0 0 1 2-2Z" opacity=".75"/><rect x="14" y="10" width="4" height="7" rx="1" style="fill:var(--kh,var(--card))"/>'}</svg>`;
 function kpath(){
@@ -2343,7 +2345,7 @@ function kpath(){
   const seg=pts.slice(1).map((b,k)=>{if(b.brk)return null;const a=pts[k],m=(a.y+b.y)/2;return{d:`M${a.x.toFixed(1)} ${a.y} C${a.x.toFixed(1)} ${m} ${b.x.toFixed(1)} ${m} ${b.x.toFixed(1)} ${b.y}`,th:a.th,k}}).filter(Boolean);
   const lay=c=>seg.map(s=>`<path class="${c(s)} ${s.th}" d="${s.d}"/>`).join("");
   const road=`<svg viewBox="0 0 100 ${y}" preserveAspectRatio="none" aria-hidden="true">${lay(()=>"ed")}${lay(s=>"bed c"+s.k%5)}</svg>${FPS}`;FP=pts;
-  const land=bands.map((b,n)=>`<div class="ub ${b.th}" style="top:${b.y+4}px;height:${(n+1<bands.length?bands[n+1].y:y)-b.y-8}px">${b.h}${kScen(b.th,(n+1<bands.length?bands[n+1].y:y)-b.y-8)}</div>`).join("");
+  const land=bands.map((b,n)=>`<div class="ub ${b.th}" style="top:${b.y+4}px;height:${(n+1<bands.length?bands[n+1].y:y)-b.y-8}px">${b.h}${kScen(b.th,pts.filter(p=>p.y>b.y&&p.y<(n+1<bands.length?bands[n+1].y:y)),b.y+4)}</div>`).join("");
   const dn=KL.filter(l=>kDone(l.id)).length,st1=kStOf(cur.e)||KURS.stufen[0],sl=KL.filter(l=>kStOf(l.e)===st1),sd=sl.filter(l=>kDone(l.id)).length; // Kopf: die Stufe des nächsten Halts
   const dmn=KURS.stufen.filter(s=>s.demnaechst&&kStE(s).length).map(s=>`<p class="mute">${esc(s.demnaechst)}</p>`).join(""); // Stufe mit Inhalt, die gerade weiterwächst
   const old=`<p class="mute kold">Alle Wörter als Liste und die Satzrunden gibt es auch im bisherigen Lernpfad. Dein Fortschritt ist in beiden derselbe.</p>${off}`; // der bisherige Pfad bleibt erreichbar, am Ende statt über dem Weg
@@ -4066,7 +4068,7 @@ loadSb().then(()=>{initSb();gCheck();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v62"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v63"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>
