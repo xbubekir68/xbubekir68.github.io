@@ -3743,7 +3743,7 @@ function kiChat(){
   $("#kinew").onclick=()=>{sfx("tap");kiNew()};
   $("#kinf").onclick=kiInfo;
   kiLog();kiBar();
-  if(KI.msgs.length||KI.cerr)requestAnimationFrame(()=>kiDown()); // zurück im Gespräch: ans Ende (render() scrollt erst nach oben)
+  if(KI.msgs.length||KI.cerr)Promise.resolve().then(()=>kiDown()); // zurück im Gespräch: ans Ende, sobald render() fertig ist (das scrollt erst nach oben); nicht per Frame, der kann ausbleiben
 }
 // Verlauf neu zeichnen. Leer: Begrüßung mit Vorschlägen (Gast: Hinweis auf das Konto). Sonst die Nachrichten, die laufende Antwort, ein Fehler.
 // fresh: Die letzte Nachricht ist gerade dazugekommen. soft: nur ans Ende, wenn man schon unten ist (gibt zurück, ob es ans Ende ging).
@@ -4184,7 +4184,7 @@ loadSb().then(()=>{initSb();gCheck();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v65"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v66"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>
