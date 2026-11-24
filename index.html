@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>xbubekir – Meine Projekte</title>
-    <meta name="description" content="Entdecke meine Projekte: xbubekir, meine persönliche KI, Mufradaat zum Arabischlernen und Salzach Sprint, ein 3D-Laufspiel durch Salzburg. Alles direkt im Browser öffnen.">
+    <meta name="description" content="Entdecke meine Projekte: xbubekir, meine persönliche KI, Mufradaat zum Arabischlernen und Salzach Sprint, ein 3D-Laufspiel durch Salzburg. KI und Arabischlernen direkt im Browser; das Spiel erscheint in Kürze.">
     <meta name="theme-color" content="#111113">
     <meta name="color-scheme" content="dark">
     <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -12,18 +12,18 @@
     <meta property="og:type" content="website">
     <meta property="og:locale" content="de_DE">
     <meta property="og:title" content="xbubekir – Meine Projekte">
-    <meta property="og:description" content="Eine persönliche KI, Arabisch lernen und durch Salzburg sprinten. Entdecke meine drei Browserprojekte.">
+    <meta property="og:description" content="Eine persönliche KI und Arabisch lernen direkt im Browser. Das Salzburg-Spiel erscheint in Kürze.">
     <meta property="og:url" content="https://xbubekir68.github.io/">
     <meta property="og:image" content="https://xbubekir68.github.io/xbubekir/icons/icon-512.png">
     <link rel="canonical" href="https://xbubekir68.github.io/">
     <link rel="icon" type="image/png" href="./xbubekir/icons/favicon-64.png">
     <link rel="apple-touch-icon" href="./xbubekir/icons/icon-180.png">
-    <link rel="stylesheet" href="./home.css">
+    <link rel="stylesheet" href="./home.css?v=original-logos-20261124">
   </head>
   <body>
     <a class="skip-link" href="#projekte">Direkt zu den Projekten</a>
     <header class="site-header wrap">
-      <a class="brand" href="./" aria-label="xbubekir – Startseite">xbu<span class="brand-dot" aria-hidden="true">.</span></a>
+      <a class="brand" href="./" aria-label="xbubekir – Startseite"><img src="./xbubekir/brand/xbu.webp" alt="xbu" width="624" height="376"></a>
       <nav aria-label="Hauptnavigation">
         <a class="nav-projects" href="#projekte">Projekte</a>
         <a class="github-link" href="https://github.com/xbubekir68">
@@ -49,7 +49,7 @@
         <div class="project-grid">
           <a class="project-card project-ai" href="./xbubekir/" aria-labelledby="ai-title ai-action" aria-describedby="ai-description">
             <div class="preview preview-ai" aria-hidden="true">
-              <div class="preview-top"><span class="preview-label">RAUM FÜR DEINE FRAGEN</span><span class="mini-xbu">xbu.</span></div>
+              <div class="preview-top"><span class="preview-label">RAUM FÜR DEINE FRAGEN</span><img class="mini-xbu" src="./xbubekir/brand/xbu.webp" alt="" width="624" height="376"></div>
               <div class="chat-preview">
                 <span class="chat-question">Erkläre mir APIs ganz einfach.</span>
                 <div class="chat-answer"><img src="./xbubekir/icons/favicon-64.png" alt="" width="32" height="32"><p>Eine API verbindet Programme,<br>damit sie Daten austauschen können.</p></div>
@@ -58,7 +58,7 @@
             </div>
             <div class="project-info">
               <p class="project-category">KI &amp; CHAT</p>
-              <h3 id="ai-title">xbubekir<span class="title-dot" aria-hidden="true">.</span></h3>
+              <h3 id="ai-title"><img class="project-wordmark" src="./xbubekir/brand/wortmarke.webp" alt="xbubekir" width="900" height="263"></h3>
               <p id="ai-description">Fragen stellen, Gedanken sortieren und neue Ideen entwickeln – im Chat mit meiner persönlichen KI.</p>
               <div class="project-bottom"><span id="ai-action" class="project-action">Chat öffnen</span><span class="platform">Direkt im Browser</span></div>
             </div>
@@ -66,22 +66,23 @@
 
           <a class="project-card project-language" href="./mufradaat/" aria-labelledby="language-title language-action" aria-describedby="language-description">
             <div class="preview preview-language" aria-hidden="true">
-              <div class="preview-top"><span class="preview-label">EINE NEUE SPRACHE ENTDECKEN</span><img class="mufradaat-mark" src="./mufradaat/icons/favicon-64.png" alt="" width="32" height="32"></div>
+              <div class="preview-top"><span class="preview-label">EINE NEUE SPRACHE ENTDECKEN</span><img class="mufradaat-mark" src="./mufradaat/icons/icon-192.png" alt="" width="32" height="32"></div>
               <div class="vocabulary-stack">
                 <div class="vocabulary-card"><span class="vocabulary-label">DEIN NÄCHSTES WORT</span><span class="arabic" lang="ar" dir="rtl">مَرْحَبًا</span><span class="translation">Hallo</span><span class="vocabulary-rule"></span><span class="vocabulary-note">Wort für Wort. In deinem Tempo.</span></div>
               </div>
             </div>
             <div class="project-info">
               <p class="project-category">SPRACHE &amp; LERNEN</p>
-              <h3 id="language-title">Mufradaat<span class="title-dot" aria-hidden="true">.</span></h3>
+              <h3 id="language-title"><img class="project-wordmark" src="./mufradaat/brand/mufradaat.webp" alt="Mufradaat" width="720" height="197"></h3>
               <p id="language-description">Arabisch entdecken, Vokabeln mit Karteikarten wiederholen und dein Wissen spielerisch festigen.</p>
               <div class="project-bottom"><span id="language-action" class="project-action">Arabisch lernen</span><span class="platform">Direkt im Browser</span></div>
             </div>
           </a>
 
-          <a class="project-card project-game" href="./salzach-sprint/" aria-labelledby="game-title game-action" aria-describedby="game-description">
+          <article class="project-card project-game project-coming-soon" aria-labelledby="game-name game-status">
+            <div class="project-unreleased" aria-hidden="true" inert>
             <div class="preview preview-game" aria-hidden="true">
-              <div class="preview-top"><span class="preview-label">DEIN SPRINT DURCH SALZBURG</span><svg class="game-mark" viewBox="0 0 32 32" width="28" height="28" fill="none"><path d="M9 12h14a5 5 0 0 1 5 4l2 7a3 3 0 0 1-5 3l-4-4H11l-4 4a3 3 0 0 1-5-3l2-7a5 5 0 0 1 5-4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M10 15v6m-3-3h6" stroke="currentColor" stroke-width="2"/><circle cx="22" cy="16" r="1.5" fill="currentColor"/><circle cx="25" cy="20" r="1.5" fill="currentColor"/></svg></div>
+              <div class="preview-top"><span class="preview-label">DEIN SPRINT DURCH SALZBURG</span></div>
               <svg class="runner-scene" viewBox="0 0 440 240" fill="none" preserveAspectRatio="xMidYMax slice" focusable="false">
                 <circle cx="315" cy="53" r="27" fill="#bd8963"/>
                 <path d="M0 115 65 93 111 107 165 81 207 98 249 73 295 86 338 67 395 88 440 76v164H0Z" fill="#635747"/>
@@ -113,15 +114,20 @@
               <p class="project-category">SPIEL &amp; SALZBURG</p>
               <h3 id="game-title">Salzach Sprint<span class="title-dot" aria-hidden="true">.</span></h3>
               <p id="game-description">Durch Salzburg sprinten, Hindernissen ausweichen und Brezeln sammeln – die Schokokugel ist dir auf den Fersen.</p>
-              <div class="project-bottom"><span id="game-action" class="project-action">Spiel starten</span><span class="platform">3D-Spiel im Browser</span></div>
+              <div class="project-bottom"><span class="project-action">In Entwicklung</span><span class="platform">3D-Spiel im Browser</span></div>
             </div>
-          </a>
+            </div>
+            <div class="coming-soon">
+              <span id="game-name" class="coming-soon-name">Salzach Sprint</span>
+              <strong id="game-status">Erscheint in Kürze</strong>
+            </div>
+          </article>
         </div>
       </section>
 
       <aside class="closing-note" aria-label="Über diese Sammlung"><span class="note-mark" aria-hidden="true">*</span><p>Kleine Ideen, die weiterwachsen.<br><span>Hier ist Platz für das, was als Nächstes kommt.</span></p></aside>
     </main>
 
-    <footer class="site-footer wrap"><span>xbubekir<span class="footer-dot">.</span></span><p>Von mir gebaut. Für dich zum Entdecken.</p><a href="https://github.com/xbubekir68/xbubekir68.github.io">Code ansehen</a></footer>
+    <footer class="site-footer wrap"><img class="footer-wordmark" src="./xbubekir/brand/wortmarke.webp" alt="xbubekir" width="900" height="263"><p>Von mir gebaut. Für dich zum Entdecken.</p><a href="https://github.com/xbubekir68/xbubekir68.github.io">Code ansehen</a></footer>
   </body>
 </html>
