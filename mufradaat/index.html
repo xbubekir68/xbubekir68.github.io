@@ -654,6 +654,14 @@ h1,.h1{font-size:28px;font-weight:900;letter-spacing:-.03em}h2{font-weight:800}
 .gex .gen{margin-top:6px;font-size:14px;color:var(--night-mute)}
 @keyframes gxpin{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08);opacity:1}100%{transform:none}}
 .gtt{margin-top:12px}.gtt+.btn{margin-top:16px}
+/* Lernpfad: Landschaft am Rand, Schatzkiste und Spiele-Halt */
+.lsc{position:absolute;width:96px;height:64px;fill:var(--ac);opacity:.22;pointer-events:none}.lsc.l{left:-4px}.lsc.r{right:-4px;transform:scaleX(-1)}
+.pn.pchest .nd{fill:currentColor}.pn.pchest.rdy .nd{background:var(--ac);color:var(--card);--kh:var(--ac);animation:kpulse 1.6s ease-in-out infinite}
+@keyframes kpulse{50%{transform:scale(1.08)}}
+.kgs .kgr{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:6px 0 2px}
+.kgb{display:grid;justify-items:center;gap:2px;width:88px;padding:8px 4px;border-radius:14px;border:2px solid var(--line);background:var(--card);color:var(--ac,var(--g));font:inherit}
+.kgb small{font-size:12px;font-weight:700;line-height:1.25;color:var(--ink)}.kgb .ar{font-size:var(--ar1);line-height:1.4}
+.kgb.lock{border-style:dashed;opacity:.6}
 /* Lektion: Prüfen/Weiter sitzt unten fest, die Rückmeldung wächst darüber, statt den Knopf zu verschieben */
 #app[data-v=klek]{display:flex;flex-direction:column;min-height:min(100dvh,860px);padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}
 #app[data-v=klek]>:is(#nx,#chk,.fb){margin-top:auto}#app[data-v=klek]>.fb+#nx{margin-top:12px}
@@ -2260,6 +2268,20 @@ function fpDraw(){
   g.parentNode.setAttribute("viewBox",`0 0 ${W} ${p.clientHeight}`);g.innerHTML=out.join("");
 }
 addEventListener("resize",()=>{if(view==="path")fpDraw()});
+// Landschaft neben dem Weg: je Etappe ein flaches Motiv in ihrer Akzentfarbe, abwechselnd am linken und rechten Rand. Keine Ornamente, kein Arabisch als Deko.
+const LSC={ths:'<path d="M0 48C14 30 26 30 40 40S62 30 72 34V48Z"/><path d="M8 48C22 38 34 38 48 48Z" opacity=".6"/>', // Dünen
+  th1:'<path d="M0 48C6 22 30 22 38 48Z"/><path d="M26 48C34 30 58 30 72 48Z" opacity=".6"/>', // Hügel
+  th2:'<circle cx="54" cy="12" r="8"/><path d="M0 48h72v-6H0zM6 36h60v-4H6zM14 27h44v-3H14z" opacity=".6"/>', // Sonne über Feldern
+  th3:'<path d="M12 40a9 9 0 0 1 4-17 12 12 0 0 1 23-3 9 9 0 0 1 14 7 7 7 0 0 1-1 13Z"/><path d="M50 22a5 5 0 0 1 3-9 7 7 0 0 1 13 0 5 5 0 0 1 0 9Z" opacity=".6"/>', // Wolken
+  th4:'<path d="M0 30q9-8 18 0t18 0 18 0 18 0v6q-9-8-18 0t-18 0-18 0-18 0Z"/><path d="M0 44q9-8 18 0t18 0 18 0 18 0v4H0Z" opacity=".6"/>', // Wellen
+  th5:'<rect x="12" y="32" width="4" height="16"/><path d="M14 6c9 7 9 22 0 28-9-6-9-21 0-28Z"/><g opacity=".6"><rect x="44" y="36" width="3" height="12"/><path d="M45.5 18c7 6 7 16 0 20-7-4-7-14 0-20Z"/></g>', // Zypressen
+  th6:'<path d="M35 48l3-28h2l3 28Z"/><path d="M39 20C31 12 19 12 11 20c10-3 18-2 28 0ZM39 20c8-8 20-8 28 0-10-3-18-2-28 0ZM39 20c-4-9-2-16 4-20-2 7-2 13-4 20Z"/>', // Palme
+  th7:'<path d="M20 6l2 6 6 2-6 2-2 6-2-6-6-2 6-2Z"/><path d="M54 22l1.5 4 4 1.5-4 1.5-1.5 4-1.5-4-4-1.5 4-1.5Z" opacity=".7"/><circle cx="40" cy="8" r="1.6"/><circle cx="8" cy="34" r="1.4"/><circle cx="64" cy="44" r="1.6"/>', // Sterne
+  th9:'<path d="M4 48l8-14 10-4 8 10 4 8Z"/><path d="M36 48l10-18 12 6 10 12Z" opacity=".6"/>'}; // Felsen
+LSC.th0=LSC.ths;LSC.th8=LSC.th1;
+const kScen=(th,h)=>{let s="";for(let k=0,t=170;t+70<h;k++,t+=250)s+=`<svg class="lsc ${k%2?"l":"r"}" style="top:${t}px" viewBox="0 0 72 48" aria-hidden="true">${LSC[th]||LSC.ths}</svg>`;return s};
+const kKist=e=>{const ls=KL.filter(l=>l.e===e);return ls.length>=3?ls[Math.floor(ls.length/2)-1]:null}; // eine Schatzkiste nach der Mitte jeder Etappe
+const kChest=op=>`<svg viewBox="0 0 32 28" width="30" height="26" aria-hidden="true">${op?'<path d="M3 14h26v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M4 11 6 2h20l2 9Z" opacity=".55"/>':'<path d="M3 12h26v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M5 4h22a2 2 0 0 1 2 2v5H3V6a2 2 0 0 1 2-2Z" opacity=".75"/><rect x="14" y="10" width="4" height="7" rx="1" style="fill:var(--kh,var(--card))"/>'}</svg>`;
 function kpath(){
   const off=`<button class="lnk" data-ko>Zum bisherigen Lernpfad</button>`;
   if(!KURS||!KL.length){paint(`<h1>Lernpfad</h1>${KURS===false?`<div class="card note"><p>Der neue Lernpfad konnte nicht geladen werden. Prüfe die Verbindung.</p><button class="btn alt" id="kr">Nochmal versuchen</button></div>`:`<p class="mute">Lädt …</p>`}${off}`);
@@ -2267,7 +2289,7 @@ function kpath(){
   const hint=ui.hint,cur=kCur(),rsm=kSnapAll(),nodes=[],pts=[],bands=[],soon=[],P=104;
   let y=0,br=true,i=0,amp=22,fr=1.1,ph=0,th="";
   const bend=s=>{i=0;amp=18+(s*5)%9;fr=[1.15,.8,1.4,.95,1.25][(s+5)%5];ph=s*1.7};
-  let stIn=null;
+  let stIn=null;const wx=()=>Math.max(24,Math.min(76,50+amp*Math.sin(i++*fr+ph)));
   KURS.stufen.forEach(st=>st.etappen.forEach((e,ei)=>{
     const f=KE[e.id];if(!f){soon.push({...e,st});return}
     if(st!==stIn){stIn=st;if(st.id>1){ // Band zu Beginn jeder weiteren Stufe; wer schon lesen kann, kommt mit dem Einstufungstest hierher
@@ -2277,11 +2299,15 @@ function kpath(){
     const ls=KL.filter(l=>l.e===e.id),jp=ls.length&&kLocked(ls[0])&&st.id===1;th=e.id==="s1"?"ths":"th"+(ei%10); // Sprungtest nur in Stufe 1
     bands.push({y,th,h:`<div class="pgr" style="top:0"><span class="ar ut" lang="ar">${e.ar}</span><b>Etappe ${eLab(e.id)} · ${esc(e.titel)}</b><small>${ls.length} Lektionen · ${esc(e.kurz)}</small>${jp?`<button class="sbt kjp ${th}" data-kj="${e.id}" aria-label="Mit einem Test bis Etappe ${eLab(e.id)} springen">Hierher springen<small>Test mit 10 Aufgaben</small></button>`:""}</div>`}); // gesperrte Etappe: mit einem Test überspringen
     y+=jp?196:140;br=true;bend(ei-1);
-    ls.forEach(l=>{const lock=kLocked(l),dn=kDone(l.id),c=l===cur&&!dn,attr=`data-kl="${l.id}"`,x=Math.max(24,Math.min(76,50+amp*Math.sin(i*fr+ph))),pv=KL[l.k-1];i++;
+    ls.forEach(l=>{const lock=kLocked(l),dn=kDone(l.id),c=l===cur&&!dn,attr=`data-kl="${l.id}"`,x=wx(),pv=KL[l.k-1];
       pts.push({x,y:y+32,dn,brk:br,th});br=false;
       const rs=!lock&&rsm[l.id],rr=!!rs,sm=lock?(pv.e!==l.e?"nach Etappe "+eLab(pv.e):"nach Lektion "+(pv.li+1)):rr?"Weitermachen · "+kResTxt(rs):dn?"geschafft":kSm(l);
       nodes.push(`<button class="pn abl ${lock?"lock":dn?"done":""} ${c?"cur":""} ${th}" ${attr} style="left:${x.toFixed(1)}%;top:${y}px" aria-label="Lektion ${l.li+1}: ${esc(l.titel)}, ${lock?"gesperrt":dn?"geschafft":"offen"}${rr?", weitermachen: "+kResTxt(rs):""}"><span class="nd">${dn&&!c?ic("check",24):`<span class="ar${l.station&&l.station.replace(/[ً-ٰۖ-ۭ]/g,"").length>5?" lng":""}" lang="ar">${l.station||kLet(l).slice(0,2).map(a=>a.c).join(" ")}</span>`}</span><span class="lb ${x>50?"l":"r"}"><b>${esc(l.titel)}</b><small>${sm}</small>${lock&&hint===attr?`<small class="hint" role="status">Schließe erst „${esc(pv.titel)}“ ab.</small>`:""}</span></button>`);
-      y+=P});
+      y+=P;
+      if(l===kKist(e.id)){const op=S.kist&&S.kist[e.id],rd=kDone(l.id),xk=wx(); // Schatzkiste: geht auf, sobald die Lektion davor geschafft ist
+        pts.push({x:xk,y:y+32,dn:rd,brk:false,th});
+        nodes.push(`<button class="pn pchest ${op?"done":rd?"rdy":"lock"} ${th}" data-kist="${e.id}" style="left:${xk.toFixed(1)}%;top:${y}px" aria-label="Schatzkiste, ${op?"geöffnet":rd?"bereit, 20 Bonus-XP":"gesperrt"}"><span class="nd">${kChest(op)}</span><span class="lb ${xk>50?"l":"r"}"><b>Schatzkiste</b><small>${op?"geöffnet · +20 XP":rd?"Antippen: +20 XP":"nach „"+esc(l.titel)+"“"}</small></span></button>`);
+        y+=P}});
     if(f.ziel&&f.ziel.art==="alle-buchstaben"){ // Ziel der Etappe: alle Buchstaben, gelernte färben sich grün
       const lt=new Set(kLearnt().map(a=>a.i)),sure=ALPHA.filter(a=>aCnt(a.i)>=3).length,can=lt.size>=4,all=lt.size===ALPHA.length;
       pts.push({x:50,y:y+14,dn:false,brk:br,th});br=false;
@@ -2306,11 +2332,18 @@ function kpath(){
         <span class="de">${esc(f.ziel.text)}</span><small>${all?"Geschafft: "+esc(f.ziel.geschafft||f.ziel.text):dl+" von "+ls.length+" Lektionen geschafft"}</small>
         <span class="row" style="justify-content:center;gap:14px;margin-top:8px"><button class="sbt ${dl?"":"lock"}" data-krev="${e.id}" aria-label="Diese Etappe üben${dl?"":", noch gesperrt"}">Alle üben<small>${dl?dl+(dl>1?" Lektionen":" Lektion"):"nach Lektion 1"}</small></button></span></div>`);
       y+=250}
+    const gs=GAMES.filter(x=>FREI[x.k]===e.id);
+    if(gs.length){const lk=gs.some(x=>fGate(x.k)),n=fLeft(e.id); // Spiele-Halt: hier gehen Spiele auf, danach starten sie von hier
+      pts.push({x:50,y:y+14,dn:false,brk:br,th});br=false;
+      nodes.push(`<div class="sgn kgs ${lk?"":"all"} ${th}" style="top:${y}px"><span class="eta">${lk?"Hier öffnen sich neue Spiele":"Spiele dieser Etappe"}</span>
+        <span class="kgr">${gs.map(x=>{const g=x.ar?`<span class="ar" lang="ar">${x.ar}</span>`:ic(x.ic,22);return lk?`<span class="kgb lock">${g}<small>${x.t}</small></span>`:`<button class="kgb" data-go="${x.k}">${g}<small>${x.t}</small></button>`}).join("")}</span>
+        ${lk?`<small>nach Etappe ${eLab(e.id)} · noch ${n} ${n===1?"Lektion":"Lektionen"}</small>`:""}</div>`);
+      y+=172}
   }));
   const seg=pts.slice(1).map((b,k)=>{if(b.brk)return null;const a=pts[k],m=(a.y+b.y)/2;return{d:`M${a.x.toFixed(1)} ${a.y} C${a.x.toFixed(1)} ${m} ${b.x.toFixed(1)} ${m} ${b.x.toFixed(1)} ${b.y}`,th:a.th,k}}).filter(Boolean);
   const lay=c=>seg.map(s=>`<path class="${c(s)} ${s.th}" d="${s.d}"/>`).join("");
   const road=`<svg viewBox="0 0 100 ${y}" preserveAspectRatio="none" aria-hidden="true">${lay(()=>"ed")}${lay(s=>"bed c"+s.k%5)}</svg>${FPS}`;FP=pts;
-  const land=bands.map((b,n)=>`<div class="ub ${b.th}" style="top:${b.y+4}px;height:${(n+1<bands.length?bands[n+1].y:y)-b.y-8}px">${b.h}</div>`).join("");
+  const land=bands.map((b,n)=>`<div class="ub ${b.th}" style="top:${b.y+4}px;height:${(n+1<bands.length?bands[n+1].y:y)-b.y-8}px">${b.h}${kScen(b.th,(n+1<bands.length?bands[n+1].y:y)-b.y-8)}</div>`).join("");
   const dn=KL.filter(l=>kDone(l.id)).length,st1=kStOf(cur.e)||KURS.stufen[0],sl=KL.filter(l=>kStOf(l.e)===st1),sd=sl.filter(l=>kDone(l.id)).length; // Kopf: die Stufe des nächsten Halts
   const dmn=KURS.stufen.filter(s=>s.demnaechst&&kStE(s).length).map(s=>`<p class="mute">${esc(s.demnaechst)}</p>`).join(""); // Stufe mit Inhalt, die gerade weiterwächst
   const old=`<p class="mute kold">Alle Wörter als Liste und die Satzrunden gibt es auch im bisherigen Lernpfad. Dein Fortschritt ist in beiden derselbe.</p>${off}`; // der bisherige Pfad bleibt erreichbar, am Ende statt über dem Weg
@@ -2391,6 +2424,10 @@ document.addEventListener("click",e=>{
   const kl=e.target.closest("[data-kl]");
   if(kl){const l=KL.find(x=>x.id===kl.dataset.kl);if(!l)return sfx("tap");if(kLocked(l)){sfx("tap");return pHint(`data-kl="${l.id}"`)}sfx("path");return startK(l)} // Lernpfad: Schritt-Klang, gesperrte Station nur der Tick
   const kr=e.target.closest("[data-krev]");if(kr){sfx("path");return startK(null,kr.dataset.krev||"s1")}
+  const ks=e.target.closest("[data-kist]");
+  if(ks){const id=ks.dataset.kist,m=kKist(id);S.kist=S.kist||{};if(S.kist[id]||!m)return sfx("tap");
+    if(!kDone(m.id)){sfx("tap");return toast(`Die Kiste geht auf, wenn du „${m.titel}“ geschafft hast.`)}
+    S.kist[id]=1;addXP(20);sfx("win");confetti();toast("Schatzkiste: +20 XP");ui.keep=true;return path()}
   const kj=e.target.closest("[data-kj]");if(kj){sfx("path");return startKT("sprung",kj.dataset.kj)}
   const kt=e.target.closest("[data-kt]");if(kt){sfx("path");if(kt.dataset.kt==="nein"){S.wt={skip:true,d:today()};save();return go("path")}return startKT("wissen")}
   const kz=e.target.closest("[data-kz]");if(kz){const f=KE[kz.dataset.kz];if(f&&f.ziel&&f.ziel.sp)speak(f.ziel.sp);return}
@@ -4029,7 +4066,7 @@ loadSb().then(()=>{initSb();gCheck();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v61"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v62"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>

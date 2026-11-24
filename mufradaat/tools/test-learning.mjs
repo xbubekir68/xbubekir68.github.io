@@ -388,7 +388,15 @@ run(`startK(KL[0]);playK([])`);
 ok("eine abgeschlossene Lektion lässt sich wiederholen",run(`S.kp.d["s1-1"]`)===2&&/Geübt/.test(run(`app.innerHTML`)));
 // der neue Pfad
 run(`view="path";ui.hint=null;path()`);let kh=run(`app.innerHTML`);
-ok("Pfad zeigt die Stationen von S1 bis S8 (6, 7, 5, 4, 5, 4, 5 und 7) und danach die von Stufe 2",(kh.match(/class="pn /g)||[]).length===run(`KL.length`)&&run(`KL.filter(l=>l.e[0]==="s").length`)===43&&[["s1",6],["s2",7],["s3",5],["s4",4],["s5",5],["s6",4],["s7",5],["s8",7]].every(([e,n])=>(kh.match(new RegExp('data-kl="'+e+'-\\d"',"g"))||[]).length===n),["s1","s2","s3","s4","s5","s6","s7","s8"].map(e=>(kh.match(new RegExp('data-kl="'+e+'-\\d"',"g"))||[]).length));
+ok("Pfad zeigt die Stationen von S1 bis S8 (6, 7, 5, 4, 5, 4, 5 und 7) und danach die von Stufe 2",(kh.match(/class="pn abl /g)||[]).length===run(`KL.length`)&&run(`KL.filter(l=>l.e[0]==="s").length`)===43&&[["s1",6],["s2",7],["s3",5],["s4",4],["s5",5],["s6",4],["s7",5],["s8",7]].every(([e,n])=>(kh.match(new RegExp('data-kl="'+e+'-\\d"',"g"))||[]).length===n),["s1","s2","s3","s4","s5","s6","s7","s8"].map(e=>(kh.match(new RegExp('data-kl="'+e+'-\\d"',"g"))||[]).length));
+ok("Lernpfad: eine Schatzkiste je Etappe mit mindestens drei Lektionen, nach der Mitte",(kh.match(/data-kist="/g)||[]).length===run(`[...new Set(KL.map(l=>l.e))].filter(e=>kKist(e)).length`)&&run(`kKist("s1").id`)==="s1-3");
+ok("… vor der Lektion gesperrt",/class="pn pchest lock ths" data-kist="s1"/.test(kh)&&/nach „/.test(kh));
+run(`globalThis.__kd=JSON.stringify(S.kp.d);globalThis.__xp=S.xp||0;kMark(l=>l.e==="s1"&&l.li<3);S.kist={};path()`);let kh2=run(`app.innerHTML`);
+ok("… nach der Lektion bereit mit „Antippen: +20 XP“",/class="pn pchest rdy ths" data-kist="s1"/.test(kh2)&&kh2.includes("Antippen: +20 XP"));
+ok("Spiele-Halt: nach S1, S3 und S5, offene Spiele starten von dort",(kh.match(/class="sgn kgs/g)||[]).length===3&&/Spiele dieser Etappe[\s\S]*?data-go="magnet"[\s\S]*?data-go="funken"/.test(kh)&&/data-go="zug"/.test(kh)&&/data-go="duell"/.test(kh));
+ok("… gesperrt: „Hier öffnen sich neue Spiele“, ohne Startknopf, mit Grund",html.includes(`lk?"Hier öffnen sich neue Spiele"`)&&html.includes(`<span class="kgb lock">`)&&html.includes("nach Etappe ${eLab(e.id)} · noch ${n}"));
+ok("Landschaft: Motive am Rand der Etappen, für Screenreader verborgen",(kh.match(/class="lsc [lr]"[^>]*aria-hidden="true"/g)||[]).length>=8);
+run(`S.kp.d=JSON.parse(__kd);S.xp=__xp;S.kist={};path()`);
 ok("… erledigt, aktuell (Mim) und gesperrt",/pn abl done[^"]*" data-kl="s1-1"/.test(kh)&&/pn abl\s+cur[^"]*" data-kl="s1-2"/.test(kh)&&/pn abl lock[^"]*" data-kl="s1-3"/.test(kh),kh.match(/class="pn [^"]*" data-kl="s1-\d"/g));
 ok("… Ziel der Etappe mit allen 29 Buchstaben",/Ziel der Etappe/.test(kh)&&((kh.match(/<div class="sgn ksg[\s\S]*?<\/div>/)||[""])[0].match(/<span class="[ku]">/g)||[]).length===29);
 ok("… Stufe 2 beginnt mit eigenem Band, unter „Demnächst“ steht, wie sie weitergeht",/<div class="stb" style="top:\d+px"><span class="ar" lang="ar">تَعَلُّمُ اللُّغَةِ<\/span><b>Stufe 2 · Sprache lernen<\/b>/.test(kh)&&kh.includes(`<div class="card ksoon"><b>Demnächst</b><p class="mute">${kidx.stufen[1].demnaechst}</p>`)&&!/Danach: Stufe/.test(kh)&&!/entsteht gerade/.test(kh));
