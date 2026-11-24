@@ -654,14 +654,31 @@ h1,.h1{font-size:28px;font-weight:900;letter-spacing:-.03em}h2{font-weight:800}
 .gex .gen{margin-top:6px;font-size:14px;color:var(--night-mute)}
 @keyframes gxpin{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08);opacity:1}100%{transform:none}}
 .gtt{margin-top:12px}.gtt+.btn{margin-top:16px}
-/* Lernpfad: Landschaft am Rand, Schatzkiste und Spiele-Halt */
-.lsc{position:absolute;width:75px;height:50px;fill:var(--ac);opacity:.22;pointer-events:none}.lsc.l{left:-4px}.lsc.r{right:-4px;transform:scaleX(-1)}
+/* Lernpfad: Schatzkiste */
 .pn.pchest .nd{fill:currentColor}.pn.pchest.rdy .nd{background:var(--ac);color:var(--card);--kh:var(--ac);animation:kpulse 1.6s ease-in-out infinite}
 @keyframes kpulse{50%{transform:scale(1.08)}}
-.kgs .kgr{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:6px 0 2px}
-.kgb{display:grid;justify-items:center;gap:2px;width:88px;padding:8px 4px;border-radius:14px;border:2px solid var(--line);background:var(--card);color:var(--ac,var(--g));font:inherit}
-.kgb small{font-size:12px;font-weight:700;line-height:1.25;color:var(--ink)}.kgb .ar{font-size:var(--ar1);line-height:1.4}
-.kgb.lock{border-style:dashed;opacity:.6}
+/* Lernpfad: Welt am Wegrand. Eigene Palette, hell und dunkel; pastellig, damit Weg und Halte vorn bleiben */
+.pth{--sc1:#8fcaa7;--sc2:#4f9c79;--sc3:#a8835f;--sc4:#f1ddb3;--sc5:#d9b97f;--sc6:#b9dbef;--sc7:#7db3d6;--sc8:#ffffff;--sc9:#f2c14e;--sc10:#d9866a;--sc11:#c5cec9;--sc12:#3f5d52;--sc13:#7fdcc4;--sc14:#f09d95}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pth{--sc1:#2c6a51;--sc2:#21533f;--sc3:#6e5239;--sc4:#4a3d29;--sc5:#5c4a2f;--sc6:#22506b;--sc7:#2f6a8c;--sc8:#9fb5ac;--sc9:#d6a536;--sc10:#93503a;--sc11:#3b4944;--sc12:#a7c0b6;--sc13:#2fae8e;--sc14:#a65f59}}
+:root[data-theme="dark"] .pth{--sc1:#2c6a51;--sc2:#21533f;--sc3:#6e5239;--sc4:#4a3d29;--sc5:#5c4a2f;--sc6:#22506b;--sc7:#2f6a8c;--sc8:#9fb5ac;--sc9:#d6a536;--sc10:#93503a;--sc11:#3b4944;--sc12:#a7c0b6;--sc13:#2fae8e;--sc14:#a65f59}
+.sc{position:absolute;pointer-events:none}.sc svg{position:absolute;overflow:visible}
+:is(.sc,.pgb) .f1{fill:var(--sc1)}:is(.sc,.pgb) .f2{fill:var(--sc2)}:is(.sc,.pgb) .f3{fill:var(--sc3)}:is(.sc,.pgb) .f4{fill:var(--sc4)}:is(.sc,.pgb) .f5{fill:var(--sc5)}:is(.sc,.pgb) .f6{fill:var(--sc6)}:is(.sc,.pgb) .f7{fill:var(--sc7)}
+:is(.sc,.pgb) .f8{fill:var(--sc8)}:is(.sc,.pgb) .f9{fill:var(--sc9)}:is(.sc,.pgb) .f10{fill:var(--sc10)}:is(.sc,.pgb) .f11{fill:var(--sc11)}:is(.sc,.pgb) .f12{fill:var(--sc12)}:is(.sc,.pgb) .f13{fill:var(--sc13)}:is(.sc,.pgb) .f14{fill:var(--sc14)}
+.sc.vis .ssw{transform-box:fill-box;transform-origin:50% 100%;animation:scSw 4.6s ease-in-out infinite alternate}.sc.vis svg:nth-child(2n) .ssw{animation-duration:5.8s;animation-delay:-2s}
+@keyframes scSw{from{rotate:-2.5deg}to{rotate:2.5deg}}
+.sc.vis .sdr{animation:scDr 7s ease-in-out infinite alternate}@keyframes scDr{to{translate:5px 0}}
+.sc.vis .sbo{animation:scBo 2.8s ease-in-out infinite alternate}@keyframes scBo{to{translate:0 2px}}
+.sc.vis .stw{animation:scTw 2.6s ease-in-out infinite alternate}.sc.vis .sd2{animation-delay:-1s}.sc.vis .sd3{animation-delay:-1.8s}@keyframes scTw{from{opacity:.3}}
+.sc.vis .ssp{transform-box:fill-box;transform-origin:50% 50%;animation:scSp 18s linear infinite}@keyframes scSp{to{rotate:1turn}}
+.sc.vis .sfl{transform-box:fill-box;transform-origin:0 50%;animation:scFl 1.6s ease-in-out infinite alternate}@keyframes scFl{to{scale:.8 1}}
+/* Lernpfad: Spielplatz. Safranfarbene Kachel unter einer Wimpelkette, gesperrt gestrichelt, besucht mit Haken */
+.pn.pgm .nd{border-radius:16px;background:var(--sk-bg);border-color:var(--sk-ink);color:var(--sk-ink);box-shadow:0 4px 0 color-mix(in srgb,var(--sk-ink) 40%,transparent);position:relative;overflow:visible}
+.pn.pgm .nd .ar{font-size:var(--ar2);line-height:1.5}
+.pn.pgm.lock .nd{background:var(--card);border:3px dashed color-mix(in srgb,var(--sk-ink) 45%,transparent);color:var(--mute);box-shadow:none}
+.pn.pgm.lock .pgb{opacity:.45}
+.pn.pgm .pck{position:absolute;right:-8px;top:-8px;width:22px;height:22px;border-radius:50%;background:var(--mint);color:var(--night);display:grid;place-items:center}
+.pn.pgm .pgb{position:absolute;left:50%;top:-17px;width:96px;height:20px;translate:-50% 0;transform-origin:50% 0;animation:scBu 3.4s ease-in-out infinite alternate;pointer-events:none}
+@keyframes scBu{from{rotate:-1.5deg}to{rotate:1.5deg}}
 /* Lektion: Prüfen/Weiter sitzt unten fest, die Rückmeldung wächst darüber, statt den Knopf zu verschieben */
 #app[data-v=klek]{display:flex;flex-direction:column;min-height:min(100dvh,860px);padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}
 #app[data-v=klek]>:is(#nx,#chk,.fb){margin-top:auto}#app[data-v=klek]>.fb+#nx{margin-top:12px}
@@ -1156,7 +1173,7 @@ lang:'<path d="M3 5.5h9M7.5 3.5v2M10.2 5.5c-.8 3.6-3.2 6.300-6.700 7.800M5.300 5
 edit:'<path d="M11 5H7a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/><path d="M17.6 3.9a1.8 1.8 0 0 1 2.5 2.5L12.5 14l-3.3.8.8-3.3z"/>'
 };
 const ic=(n,s=22,f=false)=>`<svg class="i" viewBox="0 0 24 24" width="${s}" height="${s}" ${f?'fill="currentColor" stroke="none"':'fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"'} aria-hidden="true">${ICO[n]}</svg>`;
-const xbtn=(go,label="Beenden")=>`<button class="x" data-go="${go}" aria-label="${label}">${ic("close")}</button>`;
+const xbtn=(go,label="Beenden")=>`<button class="x" data-go="${go==="games"&&ui.pst?"path":go}" aria-label="${label}">${ic("close")}</button>`;
 
 // ===== Klang (synthetisch erzeugt, ohne Audiodateien) =====
 // Klangfamilie „Holz und Glocke“: weicher Schlägel (Sinus mit leisen Teiltönen, kurzer Anschlag, langsames Ausklingen),
@@ -1318,7 +1335,7 @@ function addXP(n){
 function gEnd(t,tiles,xp,note,again){
   paint(`<div class="gex"><span class="gdc" aria-hidden="true"></span><h1>${t}</h1><b class="gxp">+${xp} XP</b>${note?`<p class="gen">${note}</p>`:""}</div>
   <div class="tiles gtt">${tiles.map(([l,v,x])=>`<div class="card"><p class="mute">${l}</p><b>${v}</b>${x?`<span class="mute">${x}</span>`:""}</div>`).join("")}</div>
-  <button class="btn" id="again">Nochmal</button><button class="btn alt" data-go="games">Zu den Spielen</button>`);
+  ${ui.pst?`<button class="btn" data-go="path">Weiter auf dem Pfad</button><button class="btn alt" id="again">Nochmal</button>`:`<button class="btn" id="again">Nochmal</button><button class="btn alt" data-go="games">Zu den Spielen</button>`}`);
   $("#again").onclick=again;
 }
 // ===== Spiel 3: Hörübung (Wort hören, Bedeutung wählen) =====
@@ -2267,28 +2284,113 @@ function fpDraw(){
       out.push(`<use href="#fp" class="${a.th}" transform="translate(${(r[0]-dy/d*4*sd).toFixed(1)} ${(r[1]+dx/d*4*sd).toFixed(1)}) rotate(${Math.round(Math.atan2(dy,dx)*180/Math.PI)})"/>`)}});
   g.parentNode.setAttribute("viewBox",`0 0 ${W} ${p.clientHeight}`);g.innerHTML=out.join("");
 }
-addEventListener("resize",()=>{if(view==="path")fpDraw()});
-// Landschaft neben dem Weg: je Etappe ein flaches Motiv in ihrer Akzentfarbe, abwechselnd am linken und rechten Rand. Keine Ornamente, kein Arabisch als Deko.
-const LSC={ths:'<path d="M0 48C14 30 26 30 40 40S62 30 72 34V48Z"/><path d="M8 48C22 38 34 38 48 48Z" opacity=".6"/>', // Dünen
-  th1:'<path d="M0 48C6 22 30 22 38 48Z"/><path d="M26 48C34 30 58 30 72 48Z" opacity=".6"/>', // Hügel
-  th2:'<circle cx="54" cy="12" r="8"/><path d="M0 48h72v-6H0zM6 36h60v-4H6zM14 27h44v-3H14z" opacity=".6"/>', // Sonne über Feldern
-  th3:'<path d="M12 40a9 9 0 0 1 4-17 12 12 0 0 1 23-3 9 9 0 0 1 14 7 7 7 0 0 1-1 13Z"/><path d="M50 22a5 5 0 0 1 3-9 7 7 0 0 1 13 0 5 5 0 0 1 0 9Z" opacity=".6"/>', // Wolken
-  th4:'<path d="M0 30q9-8 18 0t18 0 18 0 18 0v6q-9-8-18 0t-18 0-18 0-18 0Z"/><path d="M0 44q9-8 18 0t18 0 18 0 18 0v4H0Z" opacity=".6"/>', // Wellen
-  th5:'<rect x="12" y="32" width="4" height="16"/><path d="M14 6c9 7 9 22 0 28-9-6-9-21 0-28Z"/><g opacity=".6"><rect x="44" y="36" width="3" height="12"/><path d="M45.5 18c7 6 7 16 0 20-7-4-7-14 0-20Z"/></g>', // Zypressen
-  th6:'<path d="M35 48l3-28h2l3 28Z"/><path d="M39 20C31 12 19 12 11 20c10-3 18-2 28 0ZM39 20c8-8 20-8 28 0-10-3-18-2-28 0ZM39 20c-4-9-2-16 4-20-2 7-2 13-4 20Z"/>', // Palme
-  th7:'<path d="M20 6l2 6 6 2-6 2-2 6-2-6-6-2 6-2Z"/><path d="M54 22l1.5 4 4 1.5-4 1.5-1.5 4-1.5-4-4-1.5 4-1.5Z" opacity=".7"/><circle cx="40" cy="8" r="1.6"/><circle cx="8" cy="34" r="1.4"/><circle cx="64" cy="44" r="1.6"/>', // Sterne
-  th9:'<path d="M4 48l8-14 10-4 8 10 4 8Z"/><path d="M36 48l10-18 12 6 10 12Z" opacity=".6"/>'}; // Felsen
-LSC.th0=LSC.ths;LSC.th8=LSC.th1;
-// in jeder zweiten Lücke zwischen zwei Halten (dort steht kein Etikett), auf der Seite, die vom Weg abgewandt ist; nicht vor Schildern (x 50)
-const kScen=(th,ps,top)=>ps.map((b,k)=>{const a=ps[k-1];if(!a||k%2===0||b.y-a.y<90||b.x===50)return "";const x=(a.x+b.x)/2;
-  return `<svg class="lsc ${x>50?"l":"r"}" style="top:${Math.round((a.y+b.y)/2-25-top)}px" viewBox="0 0 72 48" aria-hidden="true">${LSC[th]||LSC.ths}</svg>`}).join("");
+addEventListener("resize",()=>{if(view==="path"){fpDraw();scFit()}});
+// Welt am Wegrand: kleine Szenen statt eines wiederholten Motivs. Jede Etappe hat ihre Gegend (Schreiblager in den Dünen, Oase, Felder mit Wasserrad,
+// Wind über den Hügeln, am Wasser, Garten, Markt im Palmenhain, Nacht), nach der ersten Lektion einen großen Ausblick, danach wechselnd Gruppen,
+// Einzelstücke und freie Stellen. Flache Formen in der Szenenpalette (--sc1 … --sc14), dezente Bewegung nur im Bild und ohne „Bewegung reduzieren“.
+// Kein Maskottchen, kein Ornament, kein Arabisch. Requisit: [Breite, Höhe, SVG], der Boden liegt unten.
+const SP={
+  palm:[50,58,'<g class="ssw"><path class="f3" d="M22 58c0-15 1-28 4-40l3 1c-3 12-4 25-3 39Z"/><path class="f2" d="M27 19C20 10 8 9 2 16c9-3 17-1 25 3Z"/><path class="f1" d="M27 19c4-10 14-14 22-9-9 0-16 3-22 9Z"/><path class="f2" d="M27 19c7-5 17-4 21 3-7-3-14-3-21-3Z"/><path class="f1" d="M27 19c-6-3-16-1-20 6 6-4 13-6 20-6Z"/><path class="f1" d="M27 19c-2-8 1-15 7-18-3 6-5 12-7 18Z"/><circle class="f10" cx="25" cy="22" r="1.7"/><circle class="f10" cx="28.6" cy="22.6" r="1.7"/></g>'],
+  cypress:[16,54,'<g class="ssw"><rect class="f3" x="6.8" y="46" width="2.4" height="8"/><path class="f2" d="M8 0c6 10 8 30 6 42-2 5-10 5-12 0C0 30 2 10 8 0Z"/><path class="f1" d="M8 5c3 9 4 23 3 33-1 2-3 3-3 3Z" opacity=".7"/></g>'],
+  olive:[44,44,'<path class="f3" d="M20 44c1-8 0-14-4-19l3-1c3 4 4 8 4 12 1-5 3-8 7-10l1 2c-4 3-6 8-5 16Z"/><g class="ssw"><circle class="f2" cx="13" cy="18" r="10"/><circle class="f1" cx="25" cy="13" r="12"/><circle class="f2" cx="34" cy="22" r="8.5"/><circle class="f12" cx="21" cy="11" r="1.3"/><circle class="f12" cx="30" cy="19" r="1.3"/><circle class="f12" cx="12" cy="20" r="1.3"/><circle class="f12" cx="26" cy="5" r="1.1"/></g>'],
+  orange:[38,42,'<rect class="f3" x="17" y="26" width="4" height="16" rx="1"/><g class="ssw"><circle class="f2" cx="19" cy="16" r="15"/><circle class="f1" cx="14" cy="11" r="6" opacity=".7"/><circle class="f9" cx="11" cy="19" r="2.5"/><circle class="f9" cx="24" cy="9" r="2.5"/><circle class="f9" cx="27" cy="21" r="2.5"/><circle class="f9" cx="17" cy="26" r="2.3"/></g>'],
+  dragon:[40,44,'<path class="f3" d="M18.5 44V27l-8-8 2-2 7 7 7-7 2 2-8 8v17Z"/><g class="ssw"><path class="f2" d="M2 17C5 6 35 6 38 17c-6 3-30 3-36 0Z"/><path class="f1" d="M8 12c6-4 18-4 24 0-6 1.5-18 1.5-24 0Z"/></g>'],
+  agave:[36,24,'<path class="f1" d="M18 24C16 14 10 6 2 4c6 5 10 12 12 20Z"/><path class="f2" d="M18 24c1-10 6-18 14-22-5 6-8 13-9 22Z"/><path class="f2" d="M17 24c0-11 0-18 1-24 2 7 2 15 1 24Z"/><path class="f1" d="M19 24c4-6 10-10 17-10-7 3-11 6-12 10Z"/><path class="f1" d="M17 24C14 19 8 16 0 16c7 2 11 5 12 8Z"/>'],
+  cactus:[30,36,'<ellipse class="f2" cx="15" cy="27" rx="8" ry="9"/><ellipse class="f1" cx="7.5" cy="16" rx="5.5" ry="7" transform="rotate(-20 7.5 16)"/><ellipse class="f2" cx="21.5" cy="13" rx="5.5" ry="7" transform="rotate(18 21.5 13)"/><circle class="f14" cx="23" cy="5" r="2.6"/><circle class="f12" cx="13" cy="25" r=".9"/><circle class="f12" cx="18" cy="30" r=".9"/><circle class="f12" cx="7" cy="15" r=".9"/><circle class="f12" cx="22" cy="14" r=".9"/>'],
+  grass:[22,12,'<path class="f1" d="M2 12c1-5 3-8 6-10-2 4-2 7-1 10Zm6 0c0-6 2-10 5-12-1 5-1 9 0 12Zm6 0c1-4 3-6 7-7-2 2-3 4-3 7Z"/>'],
+  flowers:[26,20,'<path class="f2" d="M5 20V9h1.2v11Zm8 0V5h1.2v15Zm8 0V10h1.2v10Z"/><g class="ssw"><circle class="f14" cx="5.6" cy="8" r="3"/><circle class="f9" cx="13.6" cy="4" r="3"/><circle class="f13" cx="21.6" cy="9" r="3"/><circle class="f9" cx="5.6" cy="8" r="1"/><circle class="f10" cx="13.6" cy="4" r="1"/><circle class="f9" cx="21.6" cy="9" r="1"/></g>'],
+  rocks:[36,18,'<path class="f11" d="M2 18l5-9 8-3 7 6 2 6Z"/><path class="f12" d="M7 9l8-3 2 3-7 2Z" opacity=".2"/><path class="f11" d="M22 18l4-7 6 1 3 6Z" opacity=".8"/>'],
+  dunes:[80,22,'<path class="f4" d="M0 22C14 8 28 6 44 14S70 10 80 12v10Z"/><path class="f5" d="M30 22c10-7 22-8 32 0Z"/>'],
+  hill:[76,26,'<path class="f1" d="M0 26C12 6 34 2 50 12s22 10 26 14Z"/><path class="f2" d="M40 26c8-8 22-10 36-2v2Z" opacity=".7"/>'],
+  tent:[46,36,'<path class="f5" d="M4 36L23 8l19 28Z"/><path class="f10" d="M23 8l19 28h-7L23 13Z"/><path class="f12" d="M19 36l4-11 4 11Z" opacity=".5"/><rect class="f3" x="22.4" y="0" width="1.2" height="9"/><path class="f9 sfl" d="M23.6 .5h8l-2 2.5 2 2.5h-8Z"/>'],
+  house:[30,30,'<rect class="f8" x="2" y="11" width="20" height="19"/><path class="f11" d="M22 11h7v19h-7Z"/><rect class="f5" x="1" y="8" width="22" height="3.5" rx="1"/><path class="f5" d="M22 8h8v3.5h-8Z" opacity=".75"/><rect class="f6" x="5" y="15" width="5" height="5" rx="1"/><path class="f3" d="M13 30v-8a3 3 0 0 1 6 0v8Z"/>'],
+  houseN:[30,30,'<rect class="f8" x="2" y="11" width="20" height="19"/><path class="f11" d="M22 11h7v19h-7Z"/><rect class="f5" x="1" y="8" width="22" height="3.5" rx="1"/><path class="f5" d="M22 8h8v3.5h-8Z" opacity=".75"/><rect class="f9 stw" x="5" y="15" width="5" height="5" rx="1"/><path class="f3" d="M13 30v-8a3 3 0 0 1 6 0v8Z"/>'],
+  well:[34,38,'<path class="f3" d="M5 14h2v14H5Zm22 0h2v14h-2Z"/><path class="f10" d="M2 14L17 4l15 10Z"/><rect class="f12" x="16.5" y="14" width="1" height="8"/><rect class="f9" x="14.5" y="21" width="5" height="4" rx="1"/><rect class="f11" x="3" y="26" width="28" height="12" rx="2"/><path class="f12" d="M3 30h28v1H3Zm0 4h28v1H3Z" opacity=".2"/>'],
+  noria:[56,52,'<path class="f11" d="M39 12h3v40h-3Z"/><path class="f3" d="M30 8h26v4H30Z"/><path class="f7" d="M52 12h3v6a1.5 1.5 0 0 1-3 0Z"/><ellipse class="f6" cx="22" cy="48" rx="21" ry="4"/><g class="ssp"><path class="f3" fill-rule="evenodd" d="M2 24a20 20 0 1 0 40 0a20 20 0 1 0-40 0Zm3 0a17 17 0 1 0 34 0a17 17 0 1 0-34 0Z"/><rect class="f3" x="21" y="5" width="2" height="38"/><rect class="f3" x="3" y="23" width="38" height="2"/><rect class="f3" x="21" y="5" width="2" height="38" transform="rotate(45 22 24)"/><rect class="f3" x="21" y="5" width="2" height="38" transform="rotate(-45 22 24)"/><rect class="f7" x="19" y="1" width="6" height="5" rx="1"/><rect class="f7" x="19" y="42" width="6" height="5" rx="1"/><rect class="f7" x="0" y="21.5" width="5" height="5" rx="1"/><rect class="f7" x="39" y="21.5" width="5" height="5" rx="1"/><circle class="f12" cx="22" cy="24" r="3"/></g>'],
+  signpost:[30,42,'<rect class="f3" x="13.5" y="6" width="3" height="36" rx="1"/><path class="f9" d="M15 8h12l3 4-3 4H15Z"/><path class="f13" d="M15 19H3l-3 4 3 4h12Z"/><rect class="f12" x="17" y="11.3" width="7" height="1.4" opacity=".45"/><rect class="f12" x="5" y="22.3" width="7" height="1.4" opacity=".45"/>'],
+  stall:[52,42,'<rect class="f3" x="4" y="12" width="2.5" height="30"/><rect class="f3" x="45.5" y="12" width="2.5" height="30"/><path class="f8" d="M0 5h52v8H0Z"/><path class="f10" d="M0 5h6.5v8H0Zm13 0h6.5v8H13Zm13 0h6.5v8H26Zm13 0h6.5v8H39Z"/><path class="f10" d="M0 13a3.25 3.25 0 0 0 6.5 0Zm13 0a3.25 3.25 0 0 0 6.5 0Zm13 0a3.25 3.25 0 0 0 6.5 0Zm13 0a3.25 3.25 0 0 0 6.5 0Z"/><path class="f8" d="M6.5 13a3.25 3.25 0 0 0 6.5 0Zm13 0a3.25 3.25 0 0 0 6.5 0Zm13 0a3.25 3.25 0 0 0 6.5 0Zm13 0a3.25 3.25 0 0 0 6.5 0Z"/><rect class="f5" x="2" y="31" width="48" height="11" rx="1.5"/><circle class="f9" cx="11" cy="28.5" r="3.5"/><circle class="f9" cx="16.5" cy="29" r="3"/><circle class="f14" cx="26" cy="28.5" r="3.5"/><circle class="f2" cx="36" cy="28.5" r="3.5"/><circle class="f1" cx="41" cy="29" r="3"/>'],
+  boat:[46,38,'<g class="sbo"><path class="f3" d="M3 28h40l-6 8H9Z"/><rect class="f3" x="22" y="4" width="2" height="24"/><path class="f4" d="M24 5c8 6 13 13 14 21H24Z"/><path class="f5" d="M22 8C15 13 11 19 10 26h12Z"/><path class="f10 sfl" d="M24 3h6l-2 2 2 2h-6Z"/></g><path class="f7 sdr" d="M0 37c4-2 8-2 12 0s8 2 12 0 8-2 12 0 8 2 10 0v1H0Z"/>'],
+  waves:[64,14,'<g class="sdr"><path class="f7" d="M0 7q8-6 16 0t16 0 16 0 16 0v3q-8-6-16 0t-16 0-16 0-16 0Z"/></g><path class="f6" d="M6 14q6-4 12 0t12 0 12 0 12 0Z"/>'],
+  pond:[56,20,'<ellipse class="f6" cx="28" cy="14" rx="26" ry="6"/><ellipse class="f7" cx="30" cy="15" rx="16" ry="3" opacity=".6"/><path class="f2" d="M6 15c0-5 1-9 3-12-1 4-1 8 0 12Zm4 0c0-4 2-7 4-9-1 3-2 6-2 9Zm36 0c0-5 1-8 3-10-1 3-1 7 0 10Z"/><rect class="f3" x="8.2" y="1" width="2" height="5" rx="1"/>'],
+  fountain:[34,34,'<g class="sbo"><path class="f6" d="M17 4c-6 0-11 5-12 12h2c1-5 5-9 10-9s9 4 10 9h2C28 9 23 4 17 4Z"/><circle class="f6" cx="17" cy="3" r="2.5"/></g><rect class="f11" x="15" y="12" width="4" height="12"/><rect class="f11" x="9" y="10" width="16" height="3" rx="1.5"/><path class="f11" d="M1 24h32l-3 10H4Z"/><path class="f7" d="M3 24h28v2H3Z" opacity=".8"/>'],
+  sun:[30,30,'<g class="ssp"><path class="f9" d="M15 0l2 6h-4Zm0 30l-2-6h4ZM0 15l6-2v4Zm30 0l-6 2v-4ZM4.4 4.4l5.6 3-2.6 2.6Zm21.2 21.2-5.6-3 2.6-2.6ZM25.6 4.4l-3 5.6-2.6-2.6ZM4.4 25.6l3-5.6 2.6 2.6Z"/></g><circle class="f9" cx="15" cy="15" r="7"/>'],
+  cloud:[46,22,'<g class="sdr"><path class="f6" d="M10 22a8 8 0 0 1 1-16 11 11 0 0 1 21-1 8 8 0 0 1 12 9 6 6 0 0 1-2 8Z"/></g>'],
+  kite:[28,46,'<g class="ssw"><path class="f10" d="M14 0l10 12-10 14L4 12Z"/><path class="f9" d="M14 0l10 12H4Z"/><path class="f12" d="M13.5 26h1v5h-1Zm0 7h1v5h-1Zm0 7h1v5h-1Z" opacity=".45"/><path class="f13" d="M11 30l3 1.5 3-1.5v3l-3-1.5-3 1.5Zm0 8l3 1.5 3-1.5v3l-3-1.5-3 1.5Z"/></g>'],
+  stars:[56,34,'<path class="f9 stw" d="M12 4l1.6 5 5 1.6-5 1.6L12 17l-1.6-4.8-5-1.6 5-1.6Z"/><path class="f8 stw sd2" d="M40 16l1 3.2 3.2 1-3.2 1-1 3.2-1-3.2-3.2-1 3.2-1Z"/><circle class="f8 stw sd3" cx="28" cy="6" r="1.4"/><circle class="f9" cx="50" cy="4" r="1.2"/><circle class="f8 stw sd2" cx="22" cy="28" r="1.2"/><circle class="f8" cx="4" cy="26" r="1"/>'],
+  moon:[20,20,'<circle class="f8" cx="10" cy="10" r="9"/><circle class="f11" cx="7" cy="8" r="2" opacity=".55"/><circle class="f11" cx="13" cy="13" r="1.4" opacity=".55"/>'],
+  inkpot:[28,30,'<path class="f5" d="M15 30L25 2l1.6.6L17 30Z"/><path class="f12" d="M4 18h14l2 4v8H2v-8Z"/><rect class="f3" x="6" y="15" width="10" height="3" rx="1"/><path class="f8" d="M5 22h3v5H5Z" opacity=".35"/>'],
+  scroll:[36,22,'<path class="f8" d="M4 6h28v13H4Z"/><rect class="f5" x="1" y="3" width="6" height="18" rx="3"/><rect class="f5" x="29" y="3" width="6" height="18" rx="3"/><path class="f12" d="M10 10h16v1.3H10Zm0 4h11v1.3H10Z" opacity=".4"/>'],
+  bench:[32,16,'<rect class="f3" x="2" y="0" width="28" height="3" rx="1" opacity=".85"/><rect class="f3" x="2" y="6" width="28" height="3" rx="1"/><rect class="f12" x="4" y="9" width="2" height="7"/><rect class="f12" x="26" y="9" width="2" height="7"/><rect class="f12" x="4" y="3" width="2" height="3"/><rect class="f12" x="26" y="3" width="2" height="3"/>'],
+  birds:[24,10,'<g class="sdr"><path class="f12" d="M2 6q3-4 6 0 3-4 6 0l-.7.6Q11 4 8 6.6 5 4 2.7 6.6Z"/><path class="f12" d="M14 2.6q2-2.6 4 0 2-2.6 4 0l-.5.5Q20 1.4 18 3.1 16 1.4 14.5 3.1Z" opacity=".7"/></g>'],
+  wheat:[40,24,'<path class="f5" d="M4 24V9h1v15Zm7 0V6h1v18Zm7 0V8h1v16Zm7 0V5h1v19Zm7 0V9h1v15Zm7 0V7h1v17Z"/><g class="ssw"><ellipse class="f9" cx="4.5" cy="7" rx="2" ry="4"/><ellipse class="f9" cx="11.5" cy="4" rx="2" ry="4"/><ellipse class="f9" cx="18.5" cy="6" rx="2" ry="4"/><ellipse class="f9" cx="25.5" cy="3" rx="2" ry="4"/><ellipse class="f9" cx="32.5" cy="7" rx="2" ry="4"/><ellipse class="f9" cx="39" cy="5" rx="2" ry="4"/></g>']
+};
+// Szenen je Gegend: [Breite, Höhe, [[Requisit, x, Maßstab, Abstand vom Boden]]]; hero = Ausblick, sets = Gruppen, one = Einzelstücke
+const SCN={
+  ths:{hero:[150,92,[["dunes",0,1.9],["tent",58,1.35,8],["inkpot",14,.95,6],["signpost",118,.9,4],["birds",36,1,70]]],
+    sets:[[84,30,[["dunes",0,1],["agave",50,.85,4]]],[60,42,[["signpost",0,1],["rocks",30,.8]]],[66,30,[["scroll",0,.9],["inkpot",34,1]]],[70,34,[["tent",0,.9],["grass",44,1]]]],one:["agave","rocks","birds","cactus"]},
+  th1:{hero:[150,96,[["pond",20,2],["palm",0,1.5,6],["palm",104,1.2,10],["agave",64,.9,4],["birds",70,1,84]]],
+    sets:[[78,58,[["palm",0,1],["agave",44,.9]]],[70,38,[["well",0,1],["grass",40,1]]],[66,50,[["palm",0,.85],["palm",30,.7]]]],one:["agave","pond","cactus","grass"]},
+  th2:{hero:[150,98,[["sun",116,1,68],["noria",0,1.5],["wheat",84,1.1],["wheat",114,.9]]],
+    sets:[[72,30,[["house",0,1],["wheat",34,.9]]],[62,42,[["signpost",0,1],["flowers",32,1]]],[72,38,[["well",0,1],["flowers",40,1.2]]]],one:["flowers","birds","signpost","grass"]},
+  th3:{hero:[150,100,[["cloud",8,1,78],["hill",0,2],["house",34,.9,30],["house",64,1.1,36],["kite",118,1,54]]],
+    sets:[[60,46,[["kite",0,1],["grass",30,1]]],[64,30,[["house",0,1],["house",32,.8]]],[76,26,[["hill",0,1]]]],one:["cloud","birds","grass","rocks"]},
+  th4:{hero:[150,96,[["waves",0,2.3],["boat",44,1.6,14],["rocks",112,1,4],["birds",14,1,80]]],
+    sets:[[64,40,[["boat",8,.9,4],["waves",0,1]]],[70,18,[["rocks",0,1],["waves",34,.6]]]],one:["waves","birds","pond","rocks"]},
+  th5:{hero:[150,92,[["cypress",0,1.6],["cypress",22,1.3],["fountain",50,1.5],["flowers",84,1],["orange",104,1.2]]],
+    sets:[[78,44,[["olive",0,1],["bench",44,1]]],[56,54,[["cypress",0,1],["cypress",16,.8],["flowers",30,1]]],[64,42,[["orange",0,1],["flowers",38,1]]]],one:["flowers","cypress","olive","bench"]},
+  th6:{hero:[156,90,[["palm",0,1.5],["stall",52,1.6],["cactus",138,.6]]],
+    sets:[[52,42,[["stall",0,1]]],[72,58,[["palm",0,1],["house",40,1]]],[70,44,[["dragon",0,1],["agave",38,.9]]]],one:["dragon","cactus","agave","flowers"]},
+  th7:{hero:[150,100,[["moon",6,1.3,74],["stars",50,1.7,42],["houseN",14,1.3],["houseN",58,1.05],["cypress",104,1.3],["cypress",124,1]]],
+    sets:[[52,54,[["houseN",0,1],["cypress",34,1]]],[68,34,[["stars",0,1],["cypress",56,.62]]]],one:["stars","cypress","houseN"]},
+  th0:{hero:[150,90,[["dunes",0,1.9],["house",30,1.2,14],["house",68,1,18],["palm",104,1.2,6]]],
+    sets:[[78,58,[["palm",0,1],["agave",44,.9]]],[70,38,[["well",0,1],["rocks",36,.7]]],[84,30,[["dunes",0,1],["cactus",54,.8]]]],one:["agave","birds","cactus","rocks"]},
+  th8:{hero:[150,90,[["orange",0,1.3],["house",52,1.3],["bench",96,1],["flowers",124,1],["birds",60,1,74]]],
+    sets:[[64,42,[["orange",0,1],["flowers",38,1]]],[60,20,[["bench",0,1],["flowers",34,1]]],[70,42,[["house",0,1],["orange",32,1]]]],one:["flowers","orange","bench"]},
+  th9:{hero:[150,90,[["hill",0,2],["rocks",8,1.2],["dragon",60,1.4,20],["signpost",118,1]]],
+    sets:[[72,24,[["rocks",0,1],["agave",36,1]]],[56,42,[["signpost",0,1],["grass",32,1]]],[78,44,[["dragon",0,1],["rocks",40,.9]]]],one:["rocks","agave","dragon"]}
+};
+const SCP=[2,0,1,2,1,0,2,1,0]; // Dichte je Lücke: 2 Gruppe, 1 Einzelstück, 0 frei; der hohe Ausblick nach der ersten Lektion bekommt immer die große Szene
+function kScene(ps){ // ps: Wegpunkte des Pfads (x in %, y in px); je Lücke eine Szene auf der Seite mit mehr Platz, an dichten Stellen dazu ein Stück gegenüber
+  const out=[],cnt={};let ei=-1,gi=0;
+  ps.forEach((b,k)=>{const a=ps[k-1];if(b.brk){ei++;gi=0;return}if(!a)return; // brk: erste Lektion einer Etappe, darüber steht der Etappen-Kopf
+    const y0=a.y+22,y1=b.y-(b.sg?20:b.gm?52:22),hh=y1-y0,fl=Math.min(a.x,b.x)*3.12-24,fr=(100-Math.max(a.x,b.x))*3.12-24,side=fr>=fl?"r":"l"; // 3,12 px je %: schmalster Pfad (360-px-Bildschirm); der Weg reicht in der Lücke von a.x bis b.x
+    const v=SCP[(gi+ei*4)%SCP.length],kind=hh>=100?"hero":v===2?"sets":v===1?"one":"",off=(gi*7+ei*5)%14;gi++;if(!kind)return;
+    const sn=SCN[b.th]||SCN.ths,pick=(kd,l)=>{const c=cnt[b.th+kd]=(cnt[b.th+kd]||0)+1;return l[(c-1+ei)%l.length]},one=()=>{const n=pick("one",sn.one);return [SP[n][0]*1.4,SP[n][1]*1.4,[[n,0,1.4]]]};
+    const put=([w,h,its],sd,free)=>{const sc=Math.min(1,hh/h,(free-off)/w);if(sc<.5)return;
+      out.push(`<div class="sc" style="top:${Math.round((y0+y1)/2-h*sc/2)}px;${sd==="r"?"right":"left"}:${2+off}px;width:${Math.round(w*sc)}px;height:${Math.round(h*sc)}px" aria-hidden="true">${its.map(([n,x,z,dy=0])=>{const [W,H,g]=SP[n];
+      return `<svg viewBox="0 0 ${W} ${H}" style="left:${(x*sc).toFixed(1)}px;top:${((h-dy-H*z)*sc).toFixed(1)}px;width:${(W*z*sc).toFixed(1)}px;height:${(H*z*sc).toFixed(1)}px">${g}</svg>`}).join("")}</div>`)};
+    put(kind==="hero"?sn.hero:kind==="sets"?pick("sets",sn.sets):one(),side,Math.max(fl,fr));
+    if(kind==="sets")put(one(),side==="r"?"l":"r",Math.min(fl,fr))}); // dichte Stelle: auch auf der anderen Wegseite etwas
+  return out.join("")}
+// Was Weg, Halt, Etikett oder Schild berührt, wird ausgeblendet (je Requisit). Läuft nach dem Zeichnen, nach dem Laden der Schrift und bei neuer Breite.
+function scFit(){try{const p=$(".pth");if(!p||!FP||!p.getBoundingClientRect)return;const pr=p.getBoundingClientRect(),W=p.clientWidth,road=[];
+  FP.forEach((b,k)=>{const a=FP[k-1];if(!k||b.brk)return;const x0=a.x*W/100,x1=b.x*W/100,m=(a.y+b.y)/2; // dieselbe Kurve wie der Weg
+    for(let i=0;i<=20;i++){const t=i/20,u=1-t,c0=u*u*u,c1=3*u*u*t,c2=3*u*t*t,c3=t*t*t;road.push([(c0+c1)*x0+(c2+c3)*x1,c0*a.y+(c1+c2)*m+c3*b.y])}});
+  const blk=[...p.querySelectorAll(".lb,.nd,.sgn,.pgr,.stb,.pgb")].map(e=>e.getBoundingClientRect()),ss=[...p.querySelectorAll(".sc svg")];
+  ss.forEach(e=>e.style.visibility="");
+  ss.filter(e=>{const r=e.getBoundingClientRect(),l=r.left-pr.left,t=r.top-pr.top;
+    return road.some(([x,y])=>x>l-24&&x<l+r.width+24&&y>t-10&&y<t+r.height+10)||blk.some(o=>r.left<o.right+6&&o.left<r.right+6&&r.top<o.bottom+4&&o.top<r.bottom+4)}).forEach(e=>e.style.visibility="hidden")}catch(e){}}
+let SCO=null; // Bewegung nur bei Szenen im Bild
+function scWatch(){const ss=document.querySelectorAll(".sc");if(SCO)SCO.disconnect();
+  if(typeof IntersectionObserver==="undefined"){ss.forEach(e=>e.classList.add("vis"));return}
+  SCO=new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle("vis",e.isIntersecting)),{rootMargin:"80px"});ss.forEach(e=>SCO.observe(e))}
+// Spielplätze unterwegs: in jeder Etappe nach etwa einem Viertel und drei Vierteln der Lektionen (nie neben der Schatzkiste). Neu freigeschaltete Spiele
+// kommen zuerst, danach das am längsten nicht gezeigte; bis S3 Buchstabenspiele, danach Wortspiele. Offen, sobald die Lektion davor geschafft ist.
+const PGX=["listen","duell"]; // braucht eine arabische Stimme bzw. zwei Spieler: kein Spielplatz unterwegs
+function kPlay(){const out={},used={},E=KURS.stufen.flatMap(st=>st.etappen.filter(e=>KE[e.id]));let t=0,last=null;
+  E.forEach((e,ei)=>{const n=KL.filter(l=>l.e===e.id).length,ck=kKist(e.id)?Math.floor(n/2):0,done=new Set(E.slice(0,ei).map(x=>x.id)),grp=["s1","s2","s3"].includes(e.id)?"b":"w";
+    const pool=GAMES.filter(g=>g.g===grp&&!PGX.includes(g.k)&&(!FREI[g.k]||done.has(FREI[g.k])));out[e.id]={};if(!pool.length)return;
+    let k1=n>4?Math.max(1,Math.round(n/4)):0,k2=Math.min(n-1,Math.round(n*3/4));if(k1===ck)k1--;if(k2===ck)k2=k2+1<n?k2+1:0;
+    [k1,k2].filter((k,i,a)=>k>0&&a.indexOf(k)===i).forEach(k=>{const g=pool.filter(x=>x.k!==last).sort((x,y)=>(used[x.k]||0)-(used[y.k]||0))[0]||pool[0];used[g.k]=++t;last=g.k;out[e.id][k]=g})});
+  return out}
+const PGB=`<svg class="pgb" viewBox="0 0 96 20" aria-hidden="true"><path class="f12" d="M2 3q46 12 92 0v1q-46 12-92 0Z" opacity=".5"/>${[[10,4.9,9],[22,7.1,10],[34,8.4,13],[46,9,7],[58,8.7,14],[70,7.6,9],[82,5.7,13]].map(([x,y,c])=>`<path class="f${c}" d="M${x-4} ${y}h8l-4 8Z"/>`).join("")}</svg>`; // Wimpelkette über dem Spielplatz
 const kKist=e=>{const ls=KL.filter(l=>l.e===e);return ls.length>=3?ls[Math.floor(ls.length/2)-1]:null}; // eine Schatzkiste nach der Mitte jeder Etappe
 const kChest=op=>`<svg viewBox="0 0 32 28" width="30" height="26" aria-hidden="true">${op?'<path d="M3 14h26v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M4 11 6 2h20l2 9Z" opacity=".55"/>':'<path d="M3 12h26v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M5 4h22a2 2 0 0 1 2 2v5H3V6a2 2 0 0 1 2-2Z" opacity=".75"/><rect x="14" y="10" width="4" height="7" rx="1" style="fill:var(--kh,var(--card))"/>'}</svg>`;
 function kpath(){
   const off=`<button class="lnk" data-ko>Zum bisherigen Lernpfad</button>`;
   if(!KURS||!KL.length){paint(`<h1>Lernpfad</h1>${KURS===false?`<div class="card note"><p>Der neue Lernpfad konnte nicht geladen werden. Prüfe die Verbindung.</p><button class="btn alt" id="kr">Nochmal versuchen</button></div>`:`<p class="mute">Lädt …</p>`}${off}`);
     const r=$("#kr");if(r)r.onclick=()=>{KURS=null;loadKurs();kpath()};return}
-  const hint=ui.hint,cur=kCur(),rsm=kSnapAll(),nodes=[],pts=[],bands=[],soon=[],P=104;
+  const hint=ui.hint,cur=kCur(),KPG=kPlay(),rsm=kSnapAll(),nodes=[],pts=[],bands=[],soon=[],P=104;
   let y=0,br=true,i=0,amp=22,fr=1.1,ph=0,th="";
   const bend=s=>{i=0;amp=18+(s*5)%9;fr=[1.15,.8,1.4,.95,1.25][(s+5)%5];ph=s*1.7};
   let stIn=null;const wx=()=>Math.max(24,Math.min(76,50+amp*Math.sin(i++*fr+ph)));
@@ -2305,14 +2407,19 @@ function kpath(){
       pts.push({x,y:y+32,dn,brk:br,th});br=false;
       const rs=!lock&&rsm[l.id],rr=!!rs,sm=lock?(pv.e!==l.e?"nach Etappe "+eLab(pv.e):"nach Lektion "+(pv.li+1)):rr?"Weitermachen · "+kResTxt(rs):dn?"geschafft":kSm(l);
       nodes.push(`<button class="pn abl ${lock?"lock":dn?"done":""} ${c?"cur":""} ${th}" ${attr} style="left:${x.toFixed(1)}%;top:${y}px" aria-label="Lektion ${l.li+1}: ${esc(l.titel)}, ${lock?"gesperrt":dn?"geschafft":"offen"}${rr?", weitermachen: "+kResTxt(rs):""}"><span class="nd">${dn&&!c?ic("check",24):`<span class="ar${l.station&&l.station.replace(/[ً-ٰۖ-ۭ]/g,"").length>5?" lng":""}" lang="ar">${l.station||kLet(l).slice(0,2).map(a=>a.c).join(" ")}</span>`}</span><span class="lb ${x>50?"l":"r"}"><b>${esc(l.titel)}</b><small>${sm}</small>${lock&&hint===attr?`<small class="hint" role="status">Schließe erst „${esc(pv.titel)}“ ab.</small>`:""}</span></button>`);
-      y+=P;
+      y+=P;if(!l.li)y+=64; // Ausblick: nach der ersten Lektion Platz für die große Szene der Etappe
       if(l===kKist(e.id)){const op=S.kist&&S.kist[e.id],rd=kDone(l.id),xk=wx(); // Schatzkiste: geht auf, sobald die Lektion davor geschafft ist
         pts.push({x:xk,y:y+32,dn:rd,brk:false,th});
         nodes.push(`<button class="pn pchest ${op?"done":rd?"rdy":"lock"} ${th}" data-kist="${e.id}" style="left:${xk.toFixed(1)}%;top:${y}px" aria-label="Schatzkiste, ${op?"geöffnet":rd?"bereit, 20 Bonus-XP":"gesperrt"}"><span class="nd">${kChest(op)}</span><span class="lb ${xk>50?"l":"r"}"><b>Schatzkiste</b><small>${op?"geöffnet · +20 XP":rd?"Antippen: +20 XP":"nach „"+esc(l.titel)+"“"}</small></span></button>`);
-        y+=P}});
+        y+=P}
+      const gm=KPG[e.id]&&KPG[e.id][l.li+1];
+      if(gm){const id=e.id+"-"+(l.li+1),rd=kDone(l.id),pl=S.pst&&S.pst[id],lk=!rd||!!fGate(gm.k);y+=12; // Spielplatz: offen, sobald die Lektion davor geschafft ist
+        const xg=wx();pts.push({x:xg,y:y+32,dn:rd,brk:false,th,gm:1});
+        nodes.push(`<button class="pn pgm ${lk?"lock":pl?"pld":"rdy"} ${th}" ${lk?`data-pstl="Der Spielplatz öffnet sich nach „${esc(l.titel)}“."`:`data-go="${gm.k}" data-pst="${id}"`} style="left:${xg.toFixed(1)}%;top:${y}px" aria-label="Spiel: ${esc(gm.t)}, ${lk?"gesperrt":pl?"schon gespielt":"offen"}">${PGB}<span class="nd">${gm.ar?`<span class="ar" lang="ar">${gm.ar}</span>`:ic(gm.ic,26)}${pl?`<span class="pck">${ic("check",12)}</span>`:""}</span><span class="lb ${xg>50?"l":"r"}"><b>${esc(gm.t)}</b><small>${lk?"nach „"+esc(l.titel)+"“":pl?"gespielt · nochmal spielen":"Spielpause · jetzt spielen"}</small></span></button>`);
+        y+=P+12}});
     if(f.ziel&&f.ziel.art==="alle-buchstaben"){ // Ziel der Etappe: alle Buchstaben, gelernte färben sich grün
       const lt=new Set(kLearnt().map(a=>a.i)),sure=ALPHA.filter(a=>aCnt(a.i)>=3).length,can=lt.size>=4,all=lt.size===ALPHA.length;
-      pts.push({x:50,y:y+14,dn:false,brk:br,th});br=false;
+      pts.push({x:50,y:y+14,dn:false,brk:br,th,sg:1});br=false;
       nodes.push(`<div class="sgn ksg ${all?"all":""} ${th}" style="top:${y}px"><span class="eta">Ziel der Etappe</span>
         <div class="sent ar" lang="ar" role="img" aria-label="${lt.size} von ${ALPHA.length} Buchstaben gelernt">${ALPHA.map(a=>`<span class="${lt.has(a.i)?"k":"u"}">${a.c}</span>`).join("")}</div>
         <span class="de">${esc(f.ziel.text)}</span><small>${lt.size} von ${ALPHA.length} gelernt · ${sure} sicher</small>
@@ -2320,7 +2427,7 @@ function kpath(){
       y+=272}
     if(f.ziel&&f.ziel.art==="lesen"){ // Ziel der Etappe: ein Text, der am Ende lesbar ist
       const dl=ls.filter(l=>kDone(l.id)).length,all=dl===ls.length;
-      pts.push({x:50,y:y+14,dn:false,brk:br,th});br=false;
+      pts.push({x:50,y:y+14,dn:false,brk:br,th,sg:1});br=false;
       nodes.push(`<div class="sgn kzl ${all?"all":""} ${th}" style="top:${y}px"><span class="eta">Ziel der Etappe</span>
         <button class="sent ar ${f.ziel.ar.split(" ").length>3?"lng":""}" lang="ar" ${f.ziel.sp?`data-kz="${e.id}" aria-label="Ziel anhören"`:'tabindex="-1"'}>${zAr(f.ziel)}</button>
         <span class="de">${all?(f.ziel.de?`${esc(f.ziel.tr||kTr(f.ziel.ar))}<br>${esc(f.ziel.de)}`:esc(kLesung(f.ziel.ar))):esc(f.ziel.text)}</span><small>${all?"Geschafft: "+esc(f.ziel.text):dl+" von "+ls.length+" Lektionen geschafft"}</small>
@@ -2328,34 +2435,27 @@ function kpath(){
       y+=f.ziel.de?280:236}
     if(f.ziel&&f.ziel.art==="woerter"){ // Ziel der Etappe: Kernwörter, angefangene färben sich grün
       const zw=(f.ziel.woerter||[]).map(i=>BY[i]).filter(Boolean),dl=ls.filter(l=>kDone(l.id)).length,all=dl===ls.length;
-      pts.push({x:50,y:y+14,dn:false,brk:br,th});br=false;
+      pts.push({x:50,y:y+14,dn:false,brk:br,th,sg:1});br=false;
       nodes.push(`<div class="sgn kzw ${all?"all":""} ${th}" style="top:${y}px"><span class="eta">Ziel der Etappe</span>
         <div class="sent ar zww" lang="ar" role="img" aria-label="${zw.filter(w=>S.box[w.i]!==undefined).length} von ${zw.length} Wörtern angefangen">${zw.map(w=>`<span class="${S.box[w.i]!==undefined?"k":"u"}">${w.ar}</span>`).join("")}</div>
         <span class="de">${esc(f.ziel.text)}</span><small>${all?"Geschafft: "+esc(f.ziel.geschafft||f.ziel.text):dl+" von "+ls.length+" Lektionen geschafft"}</small>
         <span class="row" style="justify-content:center;gap:14px;margin-top:8px"><button class="sbt ${dl?"":"lock"}" data-krev="${e.id}" aria-label="Diese Etappe üben${dl?"":", noch gesperrt"}">Alle üben<small>${dl?dl+(dl>1?" Lektionen":" Lektion"):"nach Lektion 1"}</small></button></span></div>`);
       y+=250}
-    const gs=GAMES.filter(x=>FREI[x.k]===e.id);
-    if(gs.length){const lk=gs.some(x=>fGate(x.k)),n=fLeft(e.id); // Spiele-Halt: hier gehen Spiele auf, danach starten sie von hier
-      pts.push({x:50,y:y+14,dn:false,brk:br,th});br=false;
-      nodes.push(`<div class="sgn kgs ${lk?"":"all"} ${th}" style="top:${y}px"><span class="eta">${lk?"Hier öffnen sich neue Spiele":"Spiele dieser Etappe"}</span>
-        <span class="kgr">${gs.map(x=>{const g=x.ar?`<span class="ar" lang="ar">${x.ar}</span>`:ic(x.ic,22);return lk?`<span class="kgb lock">${g}<small>${x.t}</small></span>`:`<button class="kgb" data-go="${x.k}">${g}<small>${x.t}</small></button>`}).join("")}</span>
-        ${lk?`<small>nach Etappe ${eLab(e.id)} · noch ${n} ${n===1?"Lektion":"Lektionen"}</small>`:""}</div>`);
-      y+=172}
   }));
   const seg=pts.slice(1).map((b,k)=>{if(b.brk)return null;const a=pts[k],m=(a.y+b.y)/2;return{d:`M${a.x.toFixed(1)} ${a.y} C${a.x.toFixed(1)} ${m} ${b.x.toFixed(1)} ${m} ${b.x.toFixed(1)} ${b.y}`,th:a.th,k}}).filter(Boolean);
   const lay=c=>seg.map(s=>`<path class="${c(s)} ${s.th}" d="${s.d}"/>`).join("");
   const road=`<svg viewBox="0 0 100 ${y}" preserveAspectRatio="none" aria-hidden="true">${lay(()=>"ed")}${lay(s=>"bed c"+s.k%5)}</svg>${FPS}`;FP=pts;
-  const land=bands.map((b,n)=>`<div class="ub ${b.th}" style="top:${b.y+4}px;height:${(n+1<bands.length?bands[n+1].y:y)-b.y-8}px">${b.h}${kScen(b.th,pts.filter(p=>p.y>b.y&&p.y<(n+1<bands.length?bands[n+1].y:y)),b.y+4)}</div>`).join("");
+  const land=bands.map((b,n)=>`<div class="ub ${b.th}" style="top:${b.y+4}px;height:${(n+1<bands.length?bands[n+1].y:y)-b.y-8}px">${b.h}</div>`).join("");
   const dn=KL.filter(l=>kDone(l.id)).length,st1=kStOf(cur.e)||KURS.stufen[0],sl=KL.filter(l=>kStOf(l.e)===st1),sd=sl.filter(l=>kDone(l.id)).length; // Kopf: die Stufe des nächsten Halts
   const dmn=KURS.stufen.filter(s=>s.demnaechst&&kStE(s).length).map(s=>`<p class="mute">${esc(s.demnaechst)}</p>`).join(""); // Stufe mit Inhalt, die gerade weiterwächst
   const old=`<p class="mute kold">Alle Wörter als Liste und die Satzrunden gibt es auch im bisherigen Lernpfad. Dein Fortschritt ist in beiden derselbe.</p>${off}`; // der bisherige Pfad bleibt erreichbar, am Ende statt über dem Weg
   paint(`<h1 class="hi">Lernpfad</h1><div class="kph"><span>Stufe ${st1.id} · ${esc(st1.titel)}</span><span class="kpb" role="img" aria-label="${sd} von ${sl.length} Lektionen geschafft"><i style="width:${Math.round(sd/sl.length*100)}%"></i></span><b>${sd}/${sl.length}</b></div>
   ${!dn&&!S.wt?`<div class="card askip kwt"><b>Kannst du schon etwas lesen?</b><p class="mute">Ein kurzer Einstufungstest zeigt, wo du einsteigst. Was du schon kannst, zählt dann als geschafft.</p><button class="btn" data-kt="wissen">Einstufungstest starten</button><button class="lnk" data-kt="nein">Ich fange von vorn an</button></div>`:""}
   <details class="card rule"><summary><b>So funktioniert der Lernpfad</b></summary><ol><li><i>1</i><span>Stufe 1 bringt dir das <b>Lesen</b> bei, von den Buchstaben bis zur Schrift des Korans. Danach lernst du in Stufe 2 die Sprache.</span></li><li><i>2</i><span>Jede <b>Lektion</b> mischt kurze Aufgaben: kennenlernen, erkennen, hören, zuordnen und Wörter in Buchstaben zerlegen.</span></li><li><i>3</i><span>Fehler kommen am Ende der Lektion noch einmal, bis sie sitzen. Danach öffnet sich die nächste Lektion.</span></li><li><i>4</i><span>Du kannst schon etwas? In Stufe 1 springst du vor jeder gesperrten Etappe mit einem <b>Test</b> weiter.</span></li></ol><button class="lnk" data-kt="wissen">Einstufungstest machen</button></details>
-  <div class="pth" style="height:${y}px">${land}${road}${nodes.join("")}</div>
+  <div class="pth" style="height:${y}px">${land}${kScene(pts)}${road}${nodes.join("")}</div>
   ${soon.length?`<div class="card ksoon"><b>Demnächst</b><p class="mute">Diese Etappen entstehen gerade.</p><ol>${soon.map(e=>`<li><span class="ar" lang="ar">${e.ar}</span><span><b>${eLab(e.id)} · ${esc(e.titel)}</b><small>${esc(e.kurz||"")}</small></span></li>`).join("")}</ol>${dmn}${KURS.stufen.filter(s=>!kStE(s).length&&!soon.some(e=>e.st===s)).map(s=>`<p class="mute">Danach: Stufe ${s.id} · ${esc(s.titel)}</p>`).join("")}${old}</div>`
     :KURS.stufen.some(s=>!kStE(s).length)||dmn?`<div class="card ksoon"><b>Demnächst</b>${dmn}${KURS.stufen.filter(s=>!kStE(s).length).map(s=>`<p class="mute">Stufe ${s.id} · ${esc(s.titel)} entsteht gerade: Wörter, Sätze und Grammatik, Lektion für Lektion.</p>`).join("")}${old}</div>`:`<p class="kold">${off}</p>`}`);
-  fpDraw();
+  fpDraw();scFit();scWatch();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{if(view==="path")scFit()});
   if(ui.keep){ui.keep=false;return}
   const c=$(".pn.cur");if(c&&dn)requestAnimationFrame(()=>c.scrollIntoView({block:"center"}));
 }
@@ -2420,12 +2520,14 @@ document.addEventListener("pointerdown",e=>{tapPt=e.pointerType||""},true);
 document.addEventListener("click",e=>{if(tapBlock(e)){e.preventDefault();e.stopImmediatePropagation();return}tapIn=true;tapX=e.clientX;tapY=e.clientY;setTimeout(()=>{tapIn=false},0)},true);
 document.addEventListener("click",e=>{
   const g=e.target.closest("[data-go]");
-  if(g){const t=g.dataset.go;sfx(sndOf(t));if(t==="review")return startQuiz(null);if(t==="mix")return startMix();if(t==="satz")return startSatz();if(t==="pairs")return startPairs();if(t==="blitz")return startBlitz();if(t==="aquiz")return startAQ();if(t==="listen")return startListen();if(t==="regen")return startRegen();if(t==="kalli")return startKalli();if(t==="magnet")return startMagnet();if(t==="zug")return startZug();if(t==="suq")return startSuq();if(t==="funken")return startFunken();if(t==="rakete")return startRakete();if(t==="duell")return startDuell();return go(t)}
+  if(g){const t=g.dataset.go;ui.pst=g.dataset.pst||null;if(ui.pst){S.pst=S.pst||{};S.pst[ui.pst]=1;save()}sfx(sndOf(t)); // Spielplatz im Pfad: danach geht es dorthin zurück
+  if(t==="review")return startQuiz(null);if(t==="mix")return startMix();if(t==="satz")return startSatz();if(t==="pairs")return startPairs();if(t==="blitz")return startBlitz();if(t==="aquiz")return startAQ();if(t==="listen")return startListen();if(t==="regen")return startRegen();if(t==="kalli")return startKalli();if(t==="magnet")return startMagnet();if(t==="zug")return startZug();if(t==="suq")return startSuq();if(t==="funken")return startFunken();if(t==="rakete")return startRakete();if(t==="duell")return startDuell();return go(t)}
   const ab=e.target.closest("[data-ab]");
   if(ab){const b=+ab.dataset.ab;sfx("tap");if(aLocked(b))return pHint(`data-ab="${b}"`);return startAQ(b,false,"path")}
   const kl=e.target.closest("[data-kl]");
   if(kl){const l=KL.find(x=>x.id===kl.dataset.kl);if(!l)return sfx("tap");if(kLocked(l)){sfx("tap");return pHint(`data-kl="${l.id}"`)}sfx("path");return startK(l)} // Lernpfad: Schritt-Klang, gesperrte Station nur der Tick
   const kr=e.target.closest("[data-krev]");if(kr){sfx("path");return startK(null,kr.dataset.krev||"s1")}
+  const pl=e.target.closest("[data-pstl]");if(pl){sfx("tap");return toast(pl.dataset.pstl)}
   const ks=e.target.closest("[data-kist]");
   if(ks){const id=ks.dataset.kist,m=kKist(id);S.kist=S.kist||{};if(S.kist[id]||!m)return sfx("tap");
     if(!kDone(m.id)){sfx("tap");return toast(`Die Kiste geht auf, wenn du „${m.titel}“ geschafft hast.`)}
@@ -4068,7 +4170,7 @@ loadSb().then(()=>{initSb();gCheck();return boot()}).finally(()=>Splash.hide());
 // Neue Version: meldet ein frischer Service Worker eine andere Version als die geladene Seite, bieten wir das Neuladen an (nie automatisch mitten in einer Runde)
 // Kein Zoomen per Pinch oder Doppeltipp (iOS ignoriert user-scalable=no teilweise)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
-const APPV="mfr-v63"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
+const APPV="mfr-v64"; // muss mit V in sw.js übereinstimmen (prüft tools/test-learning.mjs)
 function updBanner(){if($("#upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Neue Version bereit</span><button class="btn" id="updb">Aktualisieren</button>';document.body.appendChild(d);$("#updb").onclick=()=>location.reload()}
 if('serviceWorker' in navigator&&window.isSecureContext)addEventListener('load',()=>{try{navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.v&&e.data.v!==APPV)updBanner()});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{})}catch(e){}});
 </script>
