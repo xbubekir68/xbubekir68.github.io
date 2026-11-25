@@ -2006,15 +2006,15 @@ function kSr(tx){
   }catch(e){SRNO=true;K.sr=null;klek()}
 }
 function startK(l,e){ // l = Lektion; ohne l: Wiederholung der Etappe e
-  const hear=canSpeak();let T;e=l?l.e:e||"s1";
+  const hear=canSpeak(),back=ui.kb||"path";let T;e=l?l.e:e||"s1";ui.kb=null; // X führt dorthin zurück, wo die Lektion gestartet wurde (Start oder Lernpfad)
   const r=l&&l.art!=="test"&&kSnapGet(l.id);
   if(r){ // gespeicherten Stand fortsetzen; Buchstaben wieder als dieselben Objekte wie im Katalog (Antworten werden damit verglichen)
-    K={l,e,T:r.T.map(x=>x.a&&ALBY[x.a.i]?{...x,a:ALBY[x.a.i]}:x),n:r.n,graded:r.graded,first:r.first,miss:r.miss,xp:r.xp,fb:null,picked:null,ps:null,sel:[],rec:null,fin:false,test:null};
+    K={l,e,T:r.T.map(x=>x.a&&ALBY[x.a.i]?{...x,a:ALBY[x.a.i]}:x),n:r.n,graded:r.graded,first:r.first,miss:r.miss,xp:r.xp,fb:null,picked:null,ps:null,sel:[],rec:null,fin:false,test:null,back};
     view="klek";return render();
   }
   if(l)T=kGen(l,hear);
   else{if(!kRevOk(e)){toast(e==="s1"?"Schließe erst die erste Lektion ab.":"Schließe erst die erste Lektion dieser Etappe ab.");return go("path")}T=kRevE(e,hear)}
-  K={l,e,T,n:0,graded:T.filter(x=>!KCARD.includes(x.t)).length,first:0,miss:0,xp:0,fb:null,picked:null,ps:null,sel:[],rec:null,fin:false,test:l&&l.art==="test"?{kind:"ab",need:Math.ceil(T.length*.8),res:[]}:null};
+  K={l,e,T,n:0,graded:T.filter(x=>!KCARD.includes(x.t)).length,first:0,miss:0,xp:0,fb:null,picked:null,ps:null,sel:[],rec:null,fin:false,test:l&&l.art==="test"?{kind:"ab",need:Math.ceil(T.length*.8),res:[]}:null,back};
   view="klek";render();
 }
 // Tests: keine Karten, kein Zuordnen, keine zweite Runde. Abschlusstest der Stufe (20 Aufgaben, 16 richtig), Sprungtest vor einer gesperrten Etappe (10 Aufgaben, 8 richtig),
@@ -2085,7 +2085,7 @@ function klek(){
   if(K.n>=K.T.length&&!(K.test&&K.test.kind==="wissen"&&!K.fin&&kWNext()))return kEnd();
   const it=K.T[K.n],a=it.a,s=it.s,done=K.fb!==null,p=K.picked;
   if(it.t==="sprechen"&&!K.rec&&!(it.sr&&kSrUse())&&(!kSpOk()||it.sr&&!kHearT(it.wo.w))){K.n++;return klek()}fTask(K,K.n); // ohne Mikrofon oder gerade pausiert; ohne Spracherkennung nur mit Vorbild
-  const top=`<div class="top">${xbtn("path",K.test?"Test beenden":"Lektion beenden")}<div class="bar"><i style="width:${Math.round(K.n/(K.test&&K.test.kind==="wissen"?Math.max(K.T.length,12):K.T.length)*100)}%"></i></div></div>${it.rep?'<p class="mute kre">Noch einmal</p>':K.test?`<p class="mute kre">${K.test.kind==="wissen"?"Einstufung":"Test"} · Aufgabe ${K.n+1}${K.test.kind==="wissen"?"":" von "+K.T.length}</p>`:""}`;
+  const top=`<div class="top">${xbtn(K.back||"path",K.test?"Test beenden":"Lektion beenden")}<div class="bar"><i style="width:${Math.round(K.n/(K.test&&K.test.kind==="wissen"?Math.max(K.T.length,12):K.T.length)*100)}%"></i></div></div>${it.rep?'<p class="mute kre">Noch einmal</p>':K.test?`<p class="mute kre">${K.test.kind==="wissen"?"Einstufung":"Test"} · Aufgabe ${K.n+1}${K.test.kind==="wissen"?"":" von "+K.T.length}</p>`:""}`;
   const nx=`<button class="btn" id="nx" ${done||KCARD.includes(it.t)?"":"disabled"}>Weiter</button>`;
   const again=K.test?"":". Das kommt am Ende noch einmal."; // im Test gibt es keine zweite Runde
   const fb=h=>done?`<div class="fb ${K.fb.ok?"ok":"no"}" role="status"><span>${K.fb.ok?"Richtig":"Richtig ist"}: ${h}${K.fb.ok?"":again}</span>${K.fb.ok?`<span class="xpf">+${K.fb.x} XP</span>`:""}</div>`:"";
@@ -2528,7 +2528,7 @@ document.addEventListener("click",e=>{
   const ab=e.target.closest("[data-ab]");
   if(ab){const b=+ab.dataset.ab;sfx("tap");if(aLocked(b))return pHint(`data-ab="${b}"`);return startAQ(b,false,"path")}
   const kl=e.target.closest("[data-kl]");
-  if(kl){const l=KL.find(x=>x.id===kl.dataset.kl);if(!l)return sfx("tap");if(kLocked(l)){sfx("tap");return pHint(`data-kl="${l.id}"`)}sfx("path");return startK(l)} // Lernpfad: Schritt-Klang, gesperrte Station nur der Tick
+  if(kl){const l=KL.find(x=>x.id===kl.dataset.kl);if(!l)return sfx("tap");if(kLocked(l)){sfx("tap");return pHint(`data-kl="${l.id}"`)}sfx("path");ui.kb=view==="home"?"home":view==="klek"&&K&&K.back||"path";return startK(l)} // Lernpfad: Schritt-Klang, gesperrte Station nur der Tick
   const kr=e.target.closest("[data-krev]");if(kr){sfx("path");return startK(null,kr.dataset.krev||"s1")}
   const pl=e.target.closest("[data-pstl]");if(pl){sfx("tap");return toast(pl.dataset.pstl)}
   const ks=e.target.closest("[data-kist]");
