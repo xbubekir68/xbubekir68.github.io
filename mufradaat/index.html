@@ -770,33 +770,37 @@ h1,.h1{font-size:28px;font-weight:900;letter-spacing:-.03em}h2{font-weight:800}
 :root:has(.kiv){--bg:var(--night);--card:var(--night2);--ink:var(--on-night);--mute:var(--night-mute);--line:var(--night-track);--line-d:var(--night-track);--g:var(--mint);--g2:var(--mint);--gl:var(--night-track);--gl-d:var(--night3);--on:var(--night);--g-d:var(--band-d);--bad:var(--bad-night);--badl:var(--night2);color-scheme:dark}
 body:has(.kiv){background:none}
 body:has(.kiv)::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at calc(100% - 20px) 30px,var(--night2) 0 200px,transparent 201px),radial-gradient(circle at 10px calc(100% - 20px),var(--night3) 0 170px,transparent 171px)}
-.kiv{display:flex;flex-direction:column;min-height:calc(100dvh - 20px - 2*env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));margin-bottom:-110px;color:var(--ink)}
-.kih{position:sticky;top:env(safe-area-inset-top,0px);z-index:4;display:grid;grid-template-columns:44px 1fr 44px;align-items:center;gap:8px;margin:-20px -24px 0;padding:10px 16px;background:color-mix(in srgb,var(--bg) 76%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
-.kihb{width:44px;height:44px;border:0;border-radius:14px;background:var(--card);color:var(--g);display:grid;place-items:center}.kihb:disabled{opacity:.4;cursor:default}
-.kiid{margin:0;display:flex;flex-direction:column;align-items:center;min-width:0;font-size:18px;font-weight:900;letter-spacing:-.02em;line-height:1.15;color:var(--ink)}
-.kiid b{font-weight:900;color:var(--g)}
-.kiid small{display:flex;align-items:center;font-size:11px;font-weight:600;letter-spacing:.03em;color:var(--mute)}.kiid small img{display:block;width:auto;height:22px;margin:-3px 0 -4px -1px}
-.kil{flex:1;display:flex;flex-direction:column;gap:18px;padding:18px 0 8px}
-.kihero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8px 0}
-.kihero .nha{font-size:var(--ar5);line-height:1.4;color:var(--g)}
-.kihero h2{margin:4px 0 0;font-size:28px;font-weight:900;letter-spacing:-.03em;line-height:1.1}
-.kihp{margin-top:10px;max-width:300px;font-size:15px;line-height:1.5;color:var(--mute)}
-.kist{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:24px}
-.kihn{margin-top:20px;max-width:300px;font-size:13px;line-height:1.45;color:var(--mute)}
+html:has(.kiv),body:has(.kiv){overflow:hidden;overscroll-behavior:none} /* die Seite selbst scrollt nicht: Kopf und Eingabe stehen still, nur das Gespräch scrollt */
+.enter:has(>.kiv){animation-name:kienter}@keyframes kienter{from{opacity:0}} /* ohne transform, sonst hängt der feste Rahmen kurz am Inhalt */
+.kiv{--kipad:max(16px,calc((100% - 528px)/2));position:fixed;left:0;right:0;top:var(--kvt,0px);z-index:6;height:var(--kvh,100dvh);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);color:var(--ink)}
+.kih{flex:none;display:grid;grid-template-columns:40px 1fr 40px;align-items:center;gap:8px;padding:8px var(--kipad)}
+.kihb{width:40px;height:40px;border:0;border-radius:12px;background:var(--card);color:var(--g);display:grid;place-items:center}.kihb .i{width:20px;height:20px}.kihb:disabled{opacity:.4;cursor:default}
+.kiid{margin:0;display:flex;flex-direction:column;align-items:center;min-width:0;font-size:15px;font-weight:800;letter-spacing:-.01em;line-height:1.15;color:var(--ink)}
+.kiid b{font-weight:800;color:var(--g)}
+.kiid small{display:flex;align-items:center;font-size:10px;font-weight:600;letter-spacing:.03em;color:var(--mute)}.kiid small img{display:block;width:auto;height:17px;margin:-2px 0 -3px -1px}
+.kil{flex:1;min-height:0;display:flex;flex-direction:column;gap:16px;padding:12px var(--kipad) 16px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:var(--line) transparent;-webkit-mask-image:linear-gradient(to bottom,transparent,#000 12px,#000 calc(100% - 20px),transparent);mask-image:linear-gradient(to bottom,transparent,#000 12px,#000 calc(100% - 20px),transparent)}
+.kil>*{flex:none}
+.kil>.kihero{flex:1 0 auto}
+.kihero{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8px 0}
+.kihero .nha{font-size:var(--ar4);line-height:1.5;color:var(--g)}
+.kihero h2{margin:2px 0 0;font-size:21px;font-weight:800;letter-spacing:-.02em;line-height:1.2}
+.kihp{margin-top:8px;max-width:290px;font-size:14px;line-height:1.5;color:var(--mute)}
+.kist{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:400px;margin-top:20px}
+.kihn{margin-top:18px;max-width:280px;font-size:12px;line-height:1.45;color:var(--mute)}
 .kihero .btn{margin-top:18px}
-@media (max-height:700px){.kihero .nha{font-size:var(--ar4);line-height:1.5}.kihero h2{font-size:24px}.kihp{margin-top:6px}.kist{margin-top:16px}.kihn{margin-top:14px}.kil{padding-top:8px}}
-.kich{min-height:44px;padding:10px 16px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--ink);font-size:14px;font-weight:600;line-height:1.3}
+@media (max-height:700px){.kihero .nha{font-size:var(--ar3);line-height:1.5}.kihero h2{font-size:19px}.kihp{margin-top:6px}.kist{margin-top:14px}.kihn{margin-top:12px}}
+.kich{min-height:40px;padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--ink);font-size:13px;font-weight:600;line-height:1.3}
 .kich:active:not(:disabled){border-color:var(--g)}.kich:disabled{opacity:.5;cursor:default}.kich .ar{font-size:1.4em;line-height:1.4}
 .kim{display:flex;flex-direction:column;gap:10px}.kim.b{align-items:flex-end}
 .kim.new{animation:kiin .28s cubic-bezier(.2,.8,.2,1) both}@keyframes kiin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.kiub{max-width:82%;padding:10px 16px;border-radius:20px 20px 6px 20px;background:var(--gl);color:var(--ink);font-size:16px;line-height:1.45;overflow-wrap:anywhere;white-space:pre-wrap}
-.kiub.ar{font-size:var(--ar2);line-height:1.6}.kiub .ar{font-size:1.4em;line-height:1.5}
-.kibb{align-self:flex-start;max-width:92%;padding:10px 16px 12px;border:1px solid var(--line);border-radius:20px 20px 20px 6px;background:var(--card);overflow-wrap:anywhere}
-.kibb .kiar{color:var(--g);line-height:1.8}
-.kiq{font-size:16px;line-height:1.55}.kiq .ar{font-size:1.4em;line-height:1.5;color:var(--g)}
+.kiub{max-width:82%;padding:9px 14px;border-radius:20px 20px 6px 20px;background:var(--gl);color:var(--ink);font-size:15px;line-height:1.45;overflow-wrap:anywhere;white-space:pre-wrap}
+.kiub.ar{font-size:var(--ar1);line-height:1.6}.kiub .ar{font-size:1.4em;line-height:1.5}
+.kibb{align-self:flex-start;max-width:92%;padding:9px 14px 11px;border:1px solid var(--line);border-radius:20px 20px 20px 6px;background:var(--card);overflow-wrap:anywhere}
+.kibb .kiar{font-size:var(--ar2);color:var(--g);line-height:1.8}
+.kiq{font-size:15px;line-height:1.55}.kiq .ar{font-size:1.4em;line-height:1.5;color:var(--g)}
 .kifold{display:grid;grid-template-rows:0fr;transition:grid-template-rows .26s ease}.kifold.on{grid-template-rows:1fr}
 .kifold>div{min-height:0;overflow:hidden;visibility:hidden;transition:visibility 0s .26s}.kifold.on>div{visibility:visible;transition-delay:0s}
-.kifp{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:15px;line-height:1.5;text-align:left}.kitr{color:var(--mute)}
+.kifp{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:14px;line-height:1.5;text-align:left}.kitr{color:var(--mute)}
 .kiac{position:relative;display:flex;align-items:center;margin:-6px 0 -6px 2px}
 .kibt{width:44px;height:44px;border:0;border-radius:50%;background:none;color:var(--mute);display:grid;place-items:center}.kibt.on{color:var(--g)}.kibt:active{background:var(--gl)}
 .kibt.busy .i{animation:kipulse 1s ease-in-out infinite}@keyframes kipulse{50%{opacity:.3}}
@@ -806,20 +810,20 @@ body:has(.kiv)::after{content:"";position:fixed;inset:0;z-index:-1;pointer-event
 .kidots{align-self:flex-start;display:inline-flex;gap:5px;padding:14px 16px;border-radius:20px;background:var(--card)}.kidots i{width:7px;height:7px;border-radius:50%;background:var(--g);animation:kidot 1.2s ease-in-out infinite}.kidots i:nth-child(2){animation-delay:.15s}.kidots i:nth-child(3){animation-delay:.3s}.kidots.s{padding:5px 0;background:none}
 @keyframes kidot{0%,60%,100%{opacity:.35;transform:none}30%{opacity:1;transform:translateY(-3px)}}
 .kil .hint{margin-top:0;flex-direction:column;align-items:stretch;gap:2px}.kil .hint .btn{margin-top:10px}
-.kic{position:sticky;bottom:0;z-index:3;margin:0 -24px;padding:28px 16px calc(10px + env(safe-area-inset-bottom,0px));background:linear-gradient(to bottom,transparent,var(--bg) 28px)}
-.kis{display:flex;gap:8px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;margin:0 -16px 2px;padding:2px 16px}.kis::-webkit-scrollbar{display:none}.kis[hidden]{display:none}.kis .kich{flex:none;white-space:nowrap}
-.kiln{display:flex;align-items:center;min-height:40px;padding:0 10px}
-.kith{position:relative;display:inline-flex;align-items:center;gap:8px;min-height:40px;max-width:100%;border-radius:8px;color:var(--mute);font-size:13px;font-weight:600}
-.kith>i{flex:none;width:8px;height:8px;border-radius:50%;background:var(--g)}.kith>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.kith b{color:var(--ink);font-weight:700}.kith .i{flex:none;transform:rotate(90deg)}
+.kic{position:relative;z-index:3;flex:none;padding:4px var(--kipad) max(8px,env(safe-area-inset-bottom,0px))}
+.kis{display:flex;gap:8px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;margin:0 calc(-1*var(--kipad)) 2px;padding:2px var(--kipad)}.kis::-webkit-scrollbar{display:none}.kis[hidden]{display:none}.kis .kich{flex:none;white-space:nowrap}
+.kiln{display:flex;align-items:center;min-height:36px;padding:0 10px}
+.kith{position:relative;display:inline-flex;align-items:center;gap:7px;min-height:36px;max-width:100%;border-radius:8px;color:var(--mute);font-size:12px;font-weight:600}
+.kith>i{flex:none;width:7px;height:7px;border-radius:50%;background:var(--g)}.kith>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.kith b{color:var(--ink);font-weight:700}.kith .i{flex:none;width:14px;height:14px;transform:rotate(90deg)}
 .kith select{position:absolute;inset:0;width:100%;height:100%;opacity:0;font-size:16px;cursor:pointer}.kith:focus-within{outline:3px solid var(--g2);outline-offset:2px}
-.kir{display:flex;align-items:flex-end;gap:6px;padding:6px 6px 8px;border:1px solid var(--line);border-radius:32px;background:var(--card);transition:border-color .15s}.kir:focus-within{border-color:var(--g)}
-.kii{flex:1;min-width:0;min-height:44px;max-height:140px;padding:12px 4px;border:0;background:none;color:var(--ink);font:inherit;font-size:16px;resize:none;overflow-y:auto}.kii:focus-visible{outline:none}.kii::placeholder{color:var(--mute);opacity:1}
+.kir{display:flex;align-items:flex-end;gap:4px;padding:4px;border:1px solid var(--line);border-radius:32px;background:var(--card);transition:border-color .15s}.kir:focus-within{border-color:var(--g)}
+.kii{flex:1;min-width:0;min-height:40px;max-height:140px;padding:9px 4px;border:0;background:none;color:var(--ink);font:inherit;font-size:16px;resize:none;overflow-y:auto}.kii:focus-visible{outline:none}.kii::placeholder{color:var(--mute);opacity:1}
 .kii.ar{padding-top:4px;padding-bottom:4px;text-align:right}
-.kik,.kig{flex:none;width:44px;height:44px;border:0;border-radius:50%;display:grid;place-items:center}
-.kik{background:none;color:var(--mute);font-family:var(--ar);font-size:var(--ar2);line-height:1.4}.kik[aria-pressed="true"]{background:var(--gl);color:var(--g)}
-.kig{background:var(--g);color:var(--on);box-shadow:0 3px 0 var(--g-d);transition:transform .08s,box-shadow .08s}.kig:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 var(--g-d)}.kig:disabled{opacity:.35;cursor:default;box-shadow:none}
-.kifn{margin:8px 8px 0;text-align:center;font-size:12px;line-height:1.5;color:var(--mute)}.kifn .lnk{padding:6px 0;font-size:12px}
-.kidn{position:absolute;left:50%;top:-18px;translate:-50% 0;display:inline-flex;align-items:center;gap:4px;min-height:44px;padding:0 16px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--g);font:inherit;font-size:14px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.4)}.kidn[hidden]{display:none}.kidn .i{transform:rotate(90deg)}
+.kik,.kig{flex:none;width:40px;height:40px;border:0;border-radius:50%;display:grid;place-items:center}
+.kik{background:none;color:var(--mute);font-family:var(--ar);font-size:var(--ar1);line-height:1.4}.kik[aria-pressed="true"]{background:var(--gl);color:var(--g)}
+.kig .i{width:20px;height:20px}.kig{background:var(--g);color:var(--on);box-shadow:0 2px 0 var(--g-d);transition:transform .08s,box-shadow .08s}.kig:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 var(--g-d)}.kig:disabled{opacity:.35;cursor:default;box-shadow:none}
+.kifn{margin:6px 8px 0;text-align:center;font-size:11px;line-height:1.5;color:var(--mute)}.kifn .lnk{padding:4px 0;font-size:11px}
+.kidn{position:absolute;left:50%;top:-44px;translate:-50% 0;display:inline-flex;align-items:center;gap:4px;min-height:38px;padding:0 14px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--g);font:inherit;font-size:13px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.4)}.kidn[hidden]{display:none}.kidn .i{transform:rotate(90deg)}
 .kiun{margin-top:14px}
 @media (pointer:coarse){.kic:has(.kii:focus) :is(.kiln,.kifn){display:none}}
 @media (pointer:fine){.kis{flex-wrap:wrap;overflow:visible}} /* mit Maus: Vorschläge umbrechen statt seitlich scrollen (sonst abgeschnitten) */ /* Handy-Tastatur offen: Thema und Fußzeile weichen, damit mehr vom Gespräch zu sehen ist */
@@ -3742,7 +3746,7 @@ function kiChat(){
   $("#kit").onchange=e=>kiNew(e.target.value);
   $("#kinew").onclick=()=>{sfx("tap");kiNew()};
   $("#kinf").onclick=kiInfo;
-  kiLog();kiBar();
+  kiLog();kiBar();kiVV();
   if(KI.msgs.length||KI.cerr)Promise.resolve().then(()=>kiDown()); // zurück im Gespräch: ans Ende, sobald render() fertig ist (das scrollt erst nach oben); nicht per Frame, der kann ausbleiben
 }
 // Verlauf neu zeichnen. Leer: Begrüßung mit Vorschlägen (Gast: Hinweis auf das Konto). Sonst die Nachrichten, die laufende Antwort, ein Fehler.
@@ -3757,13 +3761,17 @@ function kiLog(fresh,soft){
 }
 function kiLive(){const el=$("#kilive");if(view!=="ki"||!el)return;el.classList.remove("new");el.innerHTML=kiBody({content:KI.live},true);if(!kiDown(true))kiMark()}
 // ans Ende scrollen; soft: nur, wenn man ohnehin unten ist (wer beim Mitlesen hochscrollt, bleibt dort und bekommt den Knopf „Neue Antwort“)
-const kiEnd=()=>document.documentElement.scrollHeight-innerHeight-scrollY<200;
-function kiDown(soft){try{if(soft&&!kiEnd())return false;scrollTo(0,document.documentElement.scrollHeight-innerHeight);const b=$("#kidn");if(b)b.hidden=true}catch(e){}return true}
+const kiEnd=()=>{const l=$("#kil");return !l||l.scrollHeight-l.clientHeight-l.scrollTop<200};
+function kiDown(soft){try{if(soft&&!kiEnd())return false;const l=$("#kil");if(l)l.scrollTop=l.scrollHeight;const b=$("#kidn");if(b)b.hidden=true}catch(e){}return true}
 const kiMark=()=>{const b=$("#kidn");if(b)b.hidden=false};
-addEventListener("scroll",()=>{if(view!=="ki")return;const b=$("#kidn");if(b&&!b.hidden&&kiEnd())b.hidden=true},{passive:true});
+addEventListener("scroll",e=>{if(view!=="ki"||e.target.id!=="kil")return;const b=$("#kidn");if(b&&!b.hidden&&kiEnd())b.hidden=true},{passive:true,capture:true}); // scroll steigt nicht auf: im Einfangen hören
+// Der Rahmen folgt dem sichtbaren Bereich (Handy-Tastatur offen: kleiner, iOS schiebt ihn nach oben), damit Kopf und Eingabe sichtbar bleiben
+function kiVV(){const v=window.visualViewport,el=document.querySelector(".kiv");if(!v||!el)return;const end=kiEnd();el.style.setProperty("--kvh",v.height+"px");el.style.setProperty("--kvt",v.offsetTop+"px");if(end)kiDown()}
+if(window.visualViewport){visualViewport.addEventListener("resize",kiVV);visualViewport.addEventListener("scroll",kiVV)}
 // Eingabezeile auf Stand bringen, ohne das Feld neu zu bauen (sonst schließt das Handy die Tastatur)
 function kiBar(){
   const tx=$("#kii"),g=$("#kig"),kb=$("#kikb"),cs=$("#kis"),nt=$("#kin");if(view!=="ki"||kiGuest()||!tx||!g||!kb||!cs)return;
+  const end=kiEnd(); // wächst die Eingabe (Feld, Tastatur, Vorschläge), bleibt das Gespräch am Ende, wenn man dort war
   const a=KI_AR.test(KI.draft);tx.classList.toggle("ar",a);tx.classList.toggle("as2",a);tx.setAttribute("inputmode",KI.kb?"none":"text");
   $("#kik").setAttribute("aria-pressed",KI.kb);
   if(kb.dataset.on!==String(KI.kb)){kb.dataset.on=String(KI.kb);kb.innerHTML=KI.kb?kbHtml(false):"";kb.parentNode.classList.toggle("kbon",KI.kb)} // mit Tastatur weichen Vorschläge und Fußzeile
@@ -3773,6 +3781,7 @@ function kiBar(){
   $("#kinew").disabled=!on;
   if(nt)nt.textContent=KI.rest!=null&&KI.rest<=10?`Heute noch ${KI.rest} ${KI.rest===1?"Nachricht":"Nachrichten"}. `:"";
   tx.style.height="";tx.style.height=Math.min(tx.scrollHeight,140)+"px"; // Feld wächst mit dem Text, bis etwa fünf Zeilen
+  if(end)kiDown();
 }
 // Senden-Knopf: senden oder anhalten. Ein zweiter Tipp gleich nach dem Senden (Doppeltipp) hält die Antwort nicht an.
 function kiGo(){if(!KI.busy)return kiSend();if(Date.now()-KI.t0>800)kiStop()}
