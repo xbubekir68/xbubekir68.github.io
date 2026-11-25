@@ -144,8 +144,8 @@ input[type=search],input.t{width:100%;padding:13px 14px;border-radius:12px;borde
 .opt{width:100%;text-align:left;margin-top:10px;padding:15px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);font-size:16px}
 .opt.ok{border-color:var(--g);background:var(--gl)}.opt.no{border-color:var(--bad);background:var(--badl)}
 .opt.ar{text-align:center;font-size:var(--ar3);line-height:1.5}
-.kb{direction:rtl;display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:10px}
-.kb button{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px 0;font-family:var(--ar);font-size:var(--ar2);line-height:1.5}
+.kb{display:grid;grid-template-columns:repeat(11,1fr);gap:5px;margin-top:10px}
+.kb button{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:10px 0;min-width:0;font-family:var(--ar);font-size:var(--ar2);line-height:1.5}
 .tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
 .tiles .card b{font-size:24px;display:block}
 .chart{display:flex;align-items:flex-end;gap:10px;height:110px;margin-top:12px}
@@ -2926,7 +2926,7 @@ function quiz(){
 }
 
 // Arabische Bildschirm-Tastatur (das Eingabefeld hat inputmode="none", damit die Handy-Tastatur nicht aufgeht)
-const kbHtml=dis=>`<div class="kb" id="kb">${[..."ابتثجحخدذرزسشصضطظعغفقكلمنهويءأإآؤئةى"].map(c=>`<button data-k="${c}" ${dis?"disabled":""}>${c}</button>`).join("")}<button data-k=" " style="grid-column:span 4;font-family:var(--sans);font-size:14px" ${dis?"disabled":""}>Leerzeichen</button><button data-k="⌫" aria-label="Löschen" style="grid-column:span 2;font-family:var(--sans)">⌫</button></div>`;
+const kbHtml=dis=>`<div class="kb" id="kb">${[..."ضصثقفغعهخحجشسيبلاتنمكطذئءؤرىةوزظدأإآ"].map(c=>`<button data-k="${c}" ${dis?"disabled":""}>${c}</button>`).join("")}<button data-k=" " style="grid-column:span 6;font-family:var(--sans);font-size:14px" ${dis?"disabled":""}>Leerzeichen</button><button data-k="⌫" aria-label="Löschen" style="grid-column:span 2;font-family:var(--sans)">⌫</button></div>`;
 // ===== Spiel 1: Paare zuordnen =====
 function startPairs(){
   if(fGate("pairs"))return go("games");
