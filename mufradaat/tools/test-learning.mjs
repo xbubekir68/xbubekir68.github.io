@@ -862,6 +862,7 @@ run(`U="gast";loadS()`);
 
 // ---------- 17. Karten und Spiele gehen Etappe für Etappe auf ----------
 run(`U="frei1";loadS();S.ob={z:"lesen",d:today()};ui.fl=null;games()`);let gs=run(`app.innerHTML`);
+// Tagesspiel-Schild: welches Spiel es trägt, hängt vom Datum ab (gDay), Kachel-Tests lassen es deshalb optional zu
 const lockOf=(h,t)=>((h.match(/class="mute glk">[\s\S]*?<\/p>/g)||[]).join("").split("<br>").find(x=>x.includes(t))||""); // Zeile der gesperrten Spiele, die das Spiel nennt
 ok("Frischer Gast: Hörübung offen, Paare und Wort-Blitz gesperrt mit Grund",/data-go="listen"/.test(gs)&&lockOf(gs,"Paare").includes("Nach Etappe")&&lockOf(gs,"Wort-Blitz").includes("Nach Etappe")&&!/data-go="pairs"/.test(gs)&&!/data-go="blitz"/.test(gs)
   &&new RegExp(`Nach Etappe S3 · Kurze Vokale \\(noch ${run(`fLeft("s3")`)} Lektionen\\)`).test(gs)&&/Nach Etappe S5 · Lange Vokale/.test(gs)&&/id="ffree"/.test(gs));
@@ -1016,7 +1017,7 @@ run(`U="gast";loadS()`);
 
 // ---------- 26. Kalligrafie ----------
 run(`U="ka26";loadS();S.ob={z:"lesen",d:today()};ui.fl=null;games()`);let g26=run(`app.innerHTML`);
-ok("Kalligrafie: Kachel in „Buchstaben“ mit Zeichen statt Symbol, sofort offen",/<button class="gtl" data-go="kalli"><span class="gi gia" lang="ar">ب<\/span><b>Kalligrafie<\/b><small>Buchstaben nachfahren<\/small>/.test(g26)&&run(`fGate("kalli")`)===null);
+ok("Kalligrafie: Kachel in „Buchstaben“ mit Zeichen statt Symbol, sofort offen",/<button class="gtl" data-go="kalli">(?:<span class="gtd">Tagesspiel<\/span>)?<span class="gi gia" lang="ar">ب<\/span><b>Kalligrafie<\/b><small>Buchstaben nachfahren<\/small>/.test(g26)&&run(`fGate("kalli")`)===null);
 ok("… acht Formen in Kursreihenfolge, jede mit Pfad, Abtastpunkten und Pfeil",run(`KALI.map(x=>x.i).join()`)==="ba,ta,tha,dal,dhal,ra,zay,nun"&&run(`KALI.every(x=>x.a&&/^M[\\d. ]+C/.test(x.d)&&x.S.length>=21&&/^M[\\d.\\- ]+L[\\d.\\- ]+$/.test(x.arr))`));
 ok("… Punkte liegen in der Fläche und nicht auf dem Strich",run(`KALI.every(x=>x.dots.every(d=>d[0]>20&&d[0]<300&&d[1]>20&&d[1]<300&&kaNear(d,x.S)>34))`),run(`KALI.map(x=>x.i+":"+x.dots.map(d=>Math.round(kaNear(d,x.S))).join("/")).join(" ")`));
 run(`startKalli()`);ok("… Start beim ersten Buchstaben ohne drei Sterne, Leiste aus",run(`view==="kalli"&&KA.k===0&&KA.phase==="draw"`)&&/Schreib Bāʾ <span class="ar" lang="ar">ب<\/span>/.test(run(`app.innerHTML`))&&/"klek","regen","kalli"[,\]]/.test(html));
@@ -1043,7 +1044,7 @@ run(`U="mg27";loadS();S.ob={z:"lesen",d:today()};ui.fl=null;games()`);let g27=ru
 ok("Magnet: gesperrt bis S1, mit Grund",lockOf(g27,"Magnet").includes("Nach Etappe S1 · Die Buchstaben")&&run(`fGate("magnet")`)==="s1");
 run(`view="games";startMagnet()`);ok("… lässt sich nicht an der Sperre vorbei starten",run(`view`)==="games");
 run(`for(const l of KL.filter(l=>l.e==="s1"))S.kp.d[l.id]=1;games()`);
-ok("… nach S1 offen, Kachel mit Zeichen in „Buchstaben“",/<p class="gh">Buchstaben<\/p><div class="gtg">.*<button class="gtl" data-go="magnet"><span class="gi gia" lang="ar">كتـ<\/span>/s.test(run(`app.innerHTML`)));
+ok("… nach S1 offen, Kachel mit Zeichen in „Buchstaben“",/<p class="gh">Buchstaben<\/p><div class="gtg">.*<button class="gtl" data-go="magnet">(?:<span class="gtd">Tagesspiel<\/span>)?<span class="gi gia" lang="ar">كتـ<\/span>/s.test(run(`app.innerHTML`)));
 ok("… Wortauswahl: 3–5 Grundbuchstaben, ohne Artikel, eindeutig, Bedeutung ohne Klammern",run(`(()=>{const P=mgPool();return P.length>100&&P.every(o=>o.L.length>=3&&o.L.length<=5&&o.L.every(a=>ALPHA.includes(a))&&o.L.map(a=>a.c).join("")===hkStrip(o.w.ar,2)&&!/[()]/.test(o.w.de)&&!hkStrip(o.w.ar,2).startsWith("ال"))&&P.filter(o=>o.w.i==="kitab").length===1&&!P.some(o=>hkStrip(o.w.ar,2)==="رجل")})()`),run(`mgPool().length`));
 run(`startMagnet()`);
 ok("… Runde mit 3, 3, 4, 4, 5 Buchstaben, Ablenker gehören nicht zum Wort",run(`M.ws.map(o=>o.L.length).join()`)==="3,3,4,4,5"&&run(`M.bank.length===M.ws[0].L.length+2&&M.bank.filter(a=>!M.ws[0].L.includes(a)).length===2`),run(`M.ws.map(o=>o.L.length).join()`));
