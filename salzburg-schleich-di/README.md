@@ -30,6 +30,6 @@ Treppen, enge Gassen und Hindernisse bremsen die Radfahrer. Vor unpassierbaren W
 
 ## Strecken und Fortschritt
 
-Ein Code im Format `SD2-NAME` legt den Zufallsschlüssel der modularen Hindernisstrecke fest. Gleiche Codes und Versionen verwenden dieselbe Streckenfolge; unterschiedliche Codes erzeugen andere Hindernisse und Brezelreihen. Ergebnisse mit einer anderen Codeversion, beispielsweise `SD1`, sind nicht vergleichbar.
+Ein Code im Format `SD3-NAME` legt den Zufallsschlüssel der modularen Hindernisstrecke fest. Gleiche Codes und Versionen verwenden dieselbe Streckenfolge; unterschiedliche Codes erzeugen andere Hindernisse und Brezelreihen. Ergebnisse mit einer anderen Codeversion, beispielsweise `SD2`, sind nicht vergleichbar.
 
 Bestleistung, Brezelvorrat, Outfits, Einstellungen und Challenges werden lokal im Browser gespeichert. Die vorhandenen Speicherstände mit dem Schlüssel `salzach_sprint_save_v1` bleiben lesbar. Neu erhältlich sind griffige Schuhe und eine große Pakettasche. Geräusch- und Stimmenlautstärke sowie reduzierte Bewegung lassen sich im Pausenmenü einstellen. Stimmen sind standardmäßig stumm.

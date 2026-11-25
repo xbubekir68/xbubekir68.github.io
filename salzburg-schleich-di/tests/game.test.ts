@@ -113,7 +113,7 @@ describe('Salzach Sprint Core Systems', () => {
     const save1 = new SaveManager(mem);
 
     expect(save1.getData().selectedOutfit).toBe('kurier');
-    save1.recordRun(1450, 75);
+    save1.recordRun(1450, 175);
     expect(save1.unlockOrSelectOutfit('stadtentdecker').ok).toBe(true);
     save1.setMuted(true);
 
@@ -121,7 +121,7 @@ describe('Salzach Sprint Core Systems', () => {
     const save2 = new SaveManager(mem);
     const data = save2.getData();
     expect(data.highScore).toBe(1450);
-    expect(data.totalPretzels).toBe(15); // 75 - 60 cost
+    expect(data.totalPretzels).toBe(25); // 175 - 150 cost
     expect(data.selectedOutfit).toBe('stadtentdecker');
     expect(data.unlockedOutfits).toContain('stadtentdecker');
     expect(data.muted).toBe(true);

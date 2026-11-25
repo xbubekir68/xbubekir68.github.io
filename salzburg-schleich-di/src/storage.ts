@@ -2,6 +2,7 @@ import { OUTFITS } from './constants';
 import { OutfitId, SaveData } from './types';
 
 const STORAGE_KEY = 'salzach_sprint_save_v1';
+export const CHALLENGE_REWARD = 50;
 
 export interface StorageBackend {
   getItem(key: string): string | null;
@@ -140,9 +141,13 @@ export class SaveManager {
   public setPreferences(effectsVolume: number, voiceVolume: number, reducedMotion: boolean): void {
     Object.assign(this.data, {effectsVolume, voiceVolume, reducedMotion}); this.persist();
   }
-  public recordProgress(deliveries: number, challenges: string[]): void {
+  /** Records a run's deliveries and challenges; each challenge reached for the first time pays 50 pretzels. Returns those new ones. */
+  public recordProgress(deliveries: number, challenges: string[]): string[] {
+    const fresh = [...new Set(challenges)].filter(c => !this.data.challenges.includes(c));
     this.data.deliveries += deliveries;
-    this.data.challenges = [...new Set([...this.data.challenges, ...challenges])]; this.persist();
+    this.data.totalPretzels += fresh.length * CHALLENGE_REWARD;
+    this.data.challenges = [...this.data.challenges, ...fresh]; this.persist();
+    return fresh;
   }
   public markTutorialSeen(): void {
     if (!this.data.tutorialSeen) {

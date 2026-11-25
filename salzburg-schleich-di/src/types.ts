@@ -15,7 +15,8 @@ export type ObstacleKind =
   | 'low_arch'
   | 'puddle_work'
   | 'pedestrian'
-  | 'roof_gap';
+  | 'roof_gap'
+  | 'high_wall';
 
 export type PowerUpKind = 'umbrella' | 'watch' | 'magnet';
 
@@ -138,6 +139,8 @@ export interface HUDState {
   delivery: string;
   message: string;
   trackCode: string;
+  playerX: number;
+  gang: { name: string; x: number; gap: number }[];
 }
 
 export interface RunSummary {
@@ -147,6 +150,7 @@ export interface RunSummary {
   highlight: string;
   trackCode: string;
   challenges: string[];
+  newChallenges: string[];
   score: number;
   highScore: number;
   isNewRecord: boolean;

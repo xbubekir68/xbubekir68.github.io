@@ -2,6 +2,7 @@ import { OUTFIT_ORDER, OUTFITS, POWERUP_DURATIONS } from '../constants';
 import { GameEngine } from '../game/GameEngine';
 import { GameStatus, HUDState, OutfitId, PowerUpKind, RunSummary } from '../types';
 import { ICONS } from './icons';
+import { CHALLENGE_REWARD } from '../storage';
 
 const POWERUP_LABELS: Record<PowerUpKind, { label: string; icon: string }> = {
   umbrella: { label: 'Schnürlregen-Schirm', icon: ICONS.umbrella },
@@ -25,8 +26,10 @@ export class UIManager {
   private scoreValEl!: HTMLElement;
   private scoreMetaEl!: HTMLElement;
   private biomeTagEl!: HTMLElement;
-  private dangerPillEl!: HTMLElement;
-  private dangerFillEl!: HTMLElement;
+  private biomeFadeTimer = 0;
+  private radarEl!: HTMLElement;
+  private radarYouEl!: HTMLElement;
+  private radarDots: HTMLElement[] = [];
   private pretzelCountEl!: HTMLElement;
   private powerUpsContainer!: HTMLElement;
   private muteButtons: HTMLButtonElement[] = [];
@@ -49,6 +52,8 @@ export class UIManager {
 
   constructor(private readonly root: HTMLElement) {
     this.buildDOM();
+    // Touch devices see swipe help first and buttons without keyboard hints.
+    document.body.classList.toggle('touch', window.matchMedia?.('(pointer: coarse)').matches ?? false);
   }
 
   public bindEngine(engine: GameEngine): void {
@@ -90,7 +95,7 @@ export class UIManager {
             Du hast die Pakete. Die Kids haben E-Bikes. Und Mini-Maxi wettet, dass seine Gang dich vor der nächsten Lieferung erwischt. Zeig ihnen deine Stadt!
           </p>
           <div class="run-options" data-ui-interactive>
-            <label>Streckencode <input id="track-code" value="SD2-SALZBURG" maxlength="20" spellcheck="false" aria-describedby="code-error"></label>
+            <label>Streckencode <input id="track-code" value="SD3-SALZBURG" maxlength="20" spellcheck="false" aria-describedby="code-error"></label>
             <label>Auftrag <select id="parcel-kind"><option value="light">Leicht · 450 Punkte pro Lieferung</option><option value="large">Groß · 750 Punkte, langsamer, passt nicht unter Tore</option></select></label>
             <small id="code-error" role="status">Gleicher Code, gleiche Strecke. Neustart behält den Code.</small>
           </div>
@@ -117,13 +122,11 @@ export class UIManager {
             <div class="score-value" id="hud-score">0</div>
             <div class="score-meta" id="hud-meta">0 m · Rekord 0</div>
           </div>
-          <div id="hud-delivery" class="stat-pill"></div>
-          <div id="hud-gap" class="stat-pill"></div>
-          <div class="biome-tag" id="hud-biome">Getreidegasse</div>
-          <div class="danger-pill hidden" id="hud-danger">
-            <span>Gang dicht hinter dir!</span>
-            <div class="danger-bar-track"><div class="danger-bar-fill" id="hud-danger-fill"></div></div>
+          <div class="hud-pills">
+            <div id="hud-delivery" class="stat-pill"></div>
+            <div id="hud-gap" class="stat-pill"></div>
           </div>
+          <div class="biome-tag" id="hud-biome">Getreidegasse</div>
         </div>
 
         <div class="hud-right">
@@ -141,9 +144,17 @@ export class UIManager {
       <div class="powerups-hud hidden" id="hud-powerups"></div>
 
       <div id="chase-caption" class="chase-caption hidden" role="status" aria-live="polite"></div>
+      <div id="gang-radar" class="gang-radar hidden" aria-hidden="true">
+        <span class="radar-lane"></span><span class="radar-lane"></span>
+        <span class="radar-you"></span>
+        <span class="radar-dot" style="--c:#f7b52c">M</span>
+        <span class="radar-dot" style="--c:#ef6b50">T</span>
+        <span class="radar-dot" style="--c:#41a99a">G</span>
+        <span class="radar-dot" style="--c:#8694d2">B</span>
+      </div>
       <div id="runner-actions" class="runner-actions hidden">
-        <button class="btn" id="btn-look">↶ Blick zurück · Q</button>
-        <button class="btn" id="btn-throw">Brezel werfen · B</button>
+        <button class="btn" id="btn-look">↶ Blick zurück<span class="key"> · Q</span></button>
+        <button class="btn" id="btn-throw">Brezel werfen<span class="key"> · B</span></button>
       </div>
       <!-- PAUSE MODAL -->
       <div class="modal-backdrop hidden" id="pause-modal" data-testid="pause-modal">
@@ -236,28 +247,28 @@ export class UIManager {
         <div class="modal-card">
           <h2 class="modal-title">Ein Paket. Vier E-Bikes. Deine Stadt.</h2>
           <p class="modal-lead">
-            Mini-Maxi rückt seinen viel zu großen Helm zurecht: „Bis zur nächsten Paketpost haben wir dich!“ Du schnappst dein Paket. Die Gang tritt in die Pedale. Los geht’s!
+            Mini-Maxi rückt seinen viel zu großen Helm zurecht: „Bis zur nächsten Paketpost haben wir dich!“ Du schnappst dein Paket, die Gang tritt in die Pedale.
           </p>
           <div class="controls-grid">
-            <div class="control-box">
+            <div class="control-box ctrl-keys">
               <strong>Tastatur</strong>
-              <span><b>A / D</b> oder <b>◀ / ▶</b> Spurwechsel<br/><b>W / ▲ / Leertaste</b> Springen<br/><b>S / ▼</b> Rutschen · <b>P / Esc</b> Pause</span>
+              <span><b>A / D</b> oder <b>◀ / ▶</b> Spur wechseln<br/><b>W / ▲ / Leertaste</b> springen<br/><b>S / ▼</b> rutschen · <b>P / Esc</b> Pause<br/><b>Q</b> Blick zurück · <b>B</b> Brezel werfen</span>
             </div>
-            <div class="control-box">
+            <div class="control-box ctrl-touch">
               <strong>Smartphone</strong>
-              <span><b>Links / Rechts wischen</b> Spurwechsel<br/><b>Nach oben wischen</b> Springen<br/><b>Nach unten wischen</b> Rutschen</span>
+              <span><b>Links / rechts wischen</b> Spur wechseln<br/><b>Hoch wischen</b> springen<br/><b>Runter wischen</b> rutschen</span>
             </div>
             <div class="control-box">
-              <strong>Du bist beweglicher</strong>
-              <span>Die Räder sind auf freier Straße schneller. Nutze Treppen und Hindernisse! Q: Schulterblick · B: eine Brezel für Beni zurückwerfen. Paketpost: im mittleren Ring vorbeilaufen. Auf Kisten und am Mauerrand erneut springen zum Abstoßen.</span>
+              <strong>So hängst du die Gang ab</strong>
+              <span>Auf freier Straße sind die Räder schneller. Treppen, Tore und Mauern bremsen sie stärker als dich. Zwei Zusammenstöße in 10 Sekunden werfen dich um. Hohe Mauer: springen und an der Mauer nochmal springen. Paketpost: durch den Ring in der Mitte.</span>
             </div>
             <div class="control-box">
-              <strong>Power-ups</strong>
-              <span><b>Schirm:</b> Arcade-Gleitflug über Hindernisse<br/><b>Taschenuhr:</b> Arcade-Zeitlupe für alle<br/><b>Magnet:</b> Zieht Brezeln an</span>
+              <strong>Hilfen</strong>
+              <span><b>Brezel werfen:</b> Der nächste Fahrer bis 30 m hinter dir hält zum Essen an.<br/><b>Schirm:</b> 8 s über alle Hindernisse schweben<br/><b>Taschenuhr:</b> 7,5 s Zeitlupe für alle<br/><b>Magnet:</b> zieht 9 s lang Brezeln an</span>
             </div>
           </div>
-          <div class="menu-actions">
-            <button class="btn btn-primary" id="btn-close-tutorial" data-testid="close-tutorial-btn">Szene überspringen · Loslaufen!</button>
+          <div class="menu-actions tutorial-actions">
+            <button class="btn btn-primary" id="btn-close-tutorial" data-testid="close-tutorial-btn">Los geht’s!</button>
           </div>
         </div>
       </div>
@@ -274,8 +285,9 @@ export class UIManager {
     this.scoreValEl = this.root.querySelector('#hud-score')!;
     this.scoreMetaEl = this.root.querySelector('#hud-meta')!;
     this.biomeTagEl = this.root.querySelector('#hud-biome')!;
-    this.dangerPillEl = this.root.querySelector('#hud-danger')!;
-    this.dangerFillEl = this.root.querySelector('#hud-danger-fill')!;
+    this.radarEl = this.root.querySelector('#gang-radar')!;
+    this.radarYouEl = this.root.querySelector('.radar-you')!;
+    this.radarDots = Array.from(this.root.querySelectorAll('.radar-dot'));
     this.pretzelCountEl = this.root.querySelector('#hud-pretzels')!;
     this.powerUpsContainer = this.root.querySelector('#hud-powerups')!;
 
@@ -422,7 +434,7 @@ export class UIManager {
     const save = this.engine.saveManager.getData();
     this.outfitsBankEl.textContent = save.totalPretzels.toLocaleString('de-AT');
     this.outfitsListEl.innerHTML = '';
-    this.root.querySelector('#challenge-progress')!.textContent = 'Herausforderungen: 3 saubere Lieferungen · ganze Gang abhängen · 3 Parkourketten · Treppenweg. Erreicht: ' + (save.challenges.join(', ') || 'noch keine') + ' · Lieferungen insgesamt: ' + save.deliveries;
+    this.root.querySelector('#challenge-progress')!.textContent = `Herausforderungen (beim ersten Mal je ${CHALLENGE_REWARD} Brezeln): 3 saubere Lieferungen · alle vier gleichzeitig 40 m abhängen, ohne eingeholt zu werden · 3 Parkourketten · Treppenweg. Erreicht: ` + (save.challenges.join(', ') || 'noch keine') + ' · Lieferungen insgesamt: ' + save.deliveries;
 
     for (const id of OUTFIT_ORDER) {
       const cfg = OUTFITS[id];
@@ -482,6 +494,7 @@ export class UIManager {
   public handleStatusChange(status: GameStatus): void {
     this.root.querySelector('#runner-actions')!.classList.toggle('hidden',status!=='playing');
     this.root.querySelector('#chase-caption')!.classList.toggle('hidden',status!=='playing');
+    this.radarEl.classList.toggle('hidden', status !== 'playing');
     this.menuLayer.classList.toggle('hidden', status !== 'menu');
     this.hudLayer.classList.toggle('hidden', status !== 'playing' && status !== 'paused');
     this.powerUpsContainer.classList.toggle('hidden', status !== 'playing' && status !== 'paused');
@@ -494,7 +507,18 @@ export class UIManager {
   }
 
   public updateHud(hud: HUDState): void {
-    this.root.querySelector('#hud-gap')!.textContent = hud.gap>=999?'Gang abgehängt!':Math.floor(hud.gap)+' m Vorsprung';
+    const gapEl = this.root.querySelector('#hud-gap')!;
+    gapEl.textContent = hud.gap >= 40 ? 'Gang abgehängt – sie suchen eine Abkürzung' : `Gang ${Math.floor(hud.gap)} m hinter dir`;
+    gapEl.classList.toggle('danger', hud.gap < 8);
+    // Rear radar: you at the top, each rider on its lane, closer riders nearer to you.
+    this.radarYouEl.style.left = `${50 + hud.playerX / 2.35 * 33}%`;
+    hud.gang.forEach((g, i) => {
+      const dot = this.radarDots[i];
+      dot.style.left = `${50 + g.x / 2.35 * 33}%`;
+      dot.style.top = `${12 + Math.min(30, Math.max(0, g.gap)) / 30 * 40}px`;
+      dot.classList.toggle('far', g.gap > 30);
+      dot.classList.toggle('close', g.gap < 8);
+    });
     this.root.querySelector('#hud-delivery')!.textContent = hud.delivery;
     const caption=this.root.querySelector('#chase-caption')!;
     if(caption.textContent!==hud.message) caption.textContent=hud.message;
@@ -507,16 +531,15 @@ export class UIManager {
       this.biomeTagEl.textContent = hud.biomeName;
     }
     if (hud.biomeChanged) {
+      // The district name shows on arrival and then gets out of the way.
+      this.biomeTagEl.classList.remove('faded');
       this.biomeTagEl.classList.add('pop');
       setTimeout(() => this.biomeTagEl.classList.remove('pop'), 550);
+      clearTimeout(this.biomeFadeTimer);
+      this.biomeFadeTimer = window.setTimeout(() => this.biomeTagEl.classList.add('faded'), 3500);
     }
 
-    const inDanger = hud.dangerRatio > 0.01;
-    this.dangerPillEl.classList.toggle('hidden', !inDanger);
-    this.dangerVignette.classList.toggle('active', inDanger);
-    if (inDanger) {
-      this.dangerFillEl.style.width = `${Math.round(hud.dangerRatio * 100)}%`;
-    }
+    this.dangerVignette.classList.toggle('active', hud.dangerRatio > 0.01);
 
     // Active Power-Up timer chips
     const activeEntries = (['umbrella', 'watch', 'magnet'] as const).filter(
@@ -550,8 +573,10 @@ export class UIManager {
 
   public showGameOver(summary: RunSummary): void {
     this.handleStatusChange('gameover');
-    this.root.querySelector('#go-title')!.textContent = summary.reason.includes('Karton') ? 'Ab in die Kartons!' : summary.reason.includes('Markt') ? 'Marktstand im Anflug!' : summary.reason.includes('Paket verloren') ? 'Paket auf Abwegen!' : 'Eingeholt!';
-    this.root.querySelector('#go-details')!.textContent=summary.deliveries+' Lieferungen · '+summary.spent+' Brezeln eingesetzt · '+summary.highlight+' · '+summary.trackCode+' · Erreicht: '+(summary.challenges.join(', ')||'weiterüben!');
+    this.root.querySelector('#go-title')!.textContent = summary.reason.includes('Dachlücke') ? 'Ab in die Kartons!' : summary.reason.includes('Hingefallen') ? 'Hingefallen!' : 'Eingeholt!';
+    const fresh = summary.newChallenges;
+    this.root.querySelector('#go-details')!.textContent = `${summary.deliveries} Lieferungen · ${summary.spent} Brezeln geworfen · ${summary.highlight} · ${summary.trackCode}`
+      + (fresh.length ? ` · Neu geschafft: ${fresh.join(', ')} (+${fresh.length * CHALLENGE_REWARD} Brezeln)` : summary.challenges.length ? ` · Geschafft: ${summary.challenges.join(', ')}` : '');
     this.goRecordBadge.classList.toggle('hidden', !summary.isNewRecord);
     this.goScoreEl.textContent = summary.score.toLocaleString('de-AT');
     this.goBestEl.textContent = summary.highScore.toLocaleString('de-AT');

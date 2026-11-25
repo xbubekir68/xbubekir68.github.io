@@ -62,7 +62,7 @@ export const BIOMES: Record<BiomeId, BiomeConfig> = {
     hasWaterSound: false,
     hasDrizzle: false,
     stepSurface: 'stone',
-    allowedObstacles: ['crates', 'market_stall', 'barrier_low', 'low_arch', 'puddle_work'],
+    allowedObstacles: ['crates', 'market_stall', 'barrier_low', 'low_arch', 'puddle_work', 'high_wall'],
   },
   salzachufer: {
     id: 'salzachufer',
@@ -104,7 +104,7 @@ export const BIOMES: Record<BiomeId, BiomeConfig> = {
     hasWaterSound: false,
     hasDrizzle: false,
     stepSurface: 'stone',
-    allowedObstacles: ['crates', 'low_arch', 'barrier_low', 'market_stall', 'puddle_work'],
+    allowedObstacles: ['crates', 'low_arch', 'barrier_low', 'market_stall', 'puddle_work', 'high_wall'],
   },
   daecher: {
     id: 'daecher',
@@ -124,12 +124,12 @@ export const BIOMES: Record<BiomeId, BiomeConfig> = {
 
 export const OUTFITS: Record<OutfitId, OutfitConfig> = {
   gripkurier: {
-    id:'gripkurier', name:'Griffige Schuhe', description:'Korallrote Jacke und helle Profilsohlen. Pfützen bremsen dich nur 0,65 statt 1,8 Sekunden.',
-    cost:160,jacketColor:0xd86d52,accentColor:0xf5dab2,pantsColor:0x334d50,hatColor:0x267e73,hatStyle:'cap',swatchHex:'#d86d52',
+    id:'gripkurier', name:'Griffige Schuhe', description:'Korallrote Jacke und helle Profilsohlen. Pfützen bremsen dich nur 0,45 statt 1,2 Sekunden und zählen nicht als Zusammenstoß.',
+    cost:420,jacketColor:0xd86d52,accentColor:0xf5dab2,pantsColor:0x334d50,hatColor:0x267e73,hatStyle:'cap',swatchHex:'#d86d52',
   },
   paketprofi: {
     id:'paketprofi', name:'Paketprofi', description:'Violette Kurierjacke und große türkisfarbene Pakettasche. Ein neuer Look für erfahrene Zusteller.',
-    cost:220,jacketColor:0x72619a,accentColor:0x38a399,pantsColor:0x394351,hatColor:0xdeb445,hatStyle:'explorer',swatchHex:'#72619a',
+    cost:600,jacketColor:0x72619a,accentColor:0x38a399,pantsColor:0x394351,hatColor:0xdeb445,hatStyle:'explorer',swatchHex:'#72619a',
   },
   kurier: {
     id: 'kurier',
@@ -147,7 +147,7 @@ export const OUTFITS: Record<OutfitId, OutfitConfig> = {
     id: 'stadtentdecker',
     name: 'Stadtentdecker',
     description: 'Salzburger Lodenjacke in Tannengrün mit Ockerschal und Filzhut.',
-    cost: 60,
+    cost: 150,
     jacketColor: 0x2f6148,
     accentColor: 0xdba038,
     pantsColor: 0x4d3c2e,
@@ -159,7 +159,7 @@ export const OUTFITS: Record<OutfitId, OutfitConfig> = {
     id: 'regenoutfit',
     name: 'Regenoutfit',
     description: 'Leuchtgelber Schnürlregen-Mantel mit Südwester und Reflektorstreifen.',
-    cost: 120,
+    cost: 300,
     jacketColor: 0xe6af24,
     accentColor: 0x25738a,
     pantsColor: 0x2b3642,

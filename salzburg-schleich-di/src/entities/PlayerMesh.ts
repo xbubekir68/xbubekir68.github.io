@@ -28,14 +28,20 @@ export class PlayerMesh {
   private readonly shoeMat = new THREE.MeshStandardMaterial({color:0x282320,roughness:.75});
   private readonly bonusBag = new THREE.Group();
   private parcelHome = new THREE.Vector3();
+  private parcelScale = 1;
+  private popTimer = 0;
 
   public resetParcel(large: boolean): void {
     if (this.parcelHome.lengthSq() === 0) this.parcelHome.copy(this.parcelGroup.position);
     this.parcelGroup.position.copy(this.parcelHome);
     this.parcelGroup.rotation.set(0,0,0);
-    this.parcelGroup.scale.setScalar(large ? 1.65 : 1);
+    this.parcelScale = large ? 1.65 : 1;
+    this.parcelGroup.scale.setScalar(this.parcelScale);
+    this.popTimer = 0;
     this.bodyRig.rotation.z = 0;
   }
+  /** Handover: the parcel shrinks away and the next one pops into the arms. */
+  public popParcel(): void { this.popTimer = .6; }
   public animateDefeat(t: number): void {
     t=Math.min(t,1.4);
     this.bodyRig.visible=true;
@@ -311,7 +317,12 @@ export class PlayerMesh {
     isMenuIdle: boolean;
     vaulting?: boolean;
     reducedMotion?: boolean;
+    down?: boolean;
   }): void {
+    if (this.popTimer > 0) {
+      this.popTimer = Math.max(0, this.popTimer - opts.dt);
+      this.parcelGroup.scale.setScalar(this.parcelScale * Math.min(1, Math.abs(this.popTimer - .3) / .3));
+    }
     this.root.position.set(opts.playerX, 0, 0);
     this.bodyRig.position.y = opts.playerY;
 
@@ -321,7 +332,7 @@ export class PlayerMesh {
     (this.groundShadow.material as THREE.MeshBasicMaterial).opacity = 0.36 * heightScale;
 
     // Invulnerability blink feedback after a stumble
-    if (opts.invulnTimer > 0 && !opts.reducedMotion) {
+    if (opts.invulnTimer > 0 && !opts.reducedMotion && !opts.down) {
       this.bodyRig.visible = Math.floor(opts.invulnTimer * 18) % 2 === 0;
     } else {
       this.bodyRig.visible = true;
@@ -348,6 +359,17 @@ export class PlayerMesh {
       this.rightLeg.rotation.x = 0;
       this.leftArm.rotation.set(-0.35, 0, 0.12);
       this.rightArm.rotation.set(-0.75, -0.2, -0.15);
+      return;
+    }
+
+    if (opts.down) {
+      // Fallen flat on the cobbles, parcel still clutched.
+      this.bodyRig.rotation.set(-1.3, 0, 0);
+      this.torsoGroup.position.y = 0.4;
+      this.leftLeg.rotation.x = 0.3;
+      this.rightLeg.rotation.x = -0.2;
+      this.leftArm.rotation.set(-2.6, 0, 0.3);
+      this.rightArm.rotation.set(-2.4, 0, -0.3);
       return;
     }
 

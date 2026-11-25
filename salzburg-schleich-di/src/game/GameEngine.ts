@@ -19,8 +19,8 @@ import {
   WATCH_SPEED_FACTOR,
 } from '../constants';
 import { BikeGang } from '../entities/BikeGang';
-import { Chase } from './Chase';
-import { isDelivery, isFork, segmentAt, terrainAt, trackCode } from '../world/Route';
+import { Chase, RIDER_LINES } from './Chase';
+import { biomeAt, FORKS, isDelivery, isFork, segmentAt, terrainAt, trackCode } from '../world/Route';
 import { PlayerAction } from './InputController';
 import { ParticleSystem } from '../entities/ParticleSystem';
 import { PlayerMesh } from '../entities/PlayerMesh';
@@ -55,7 +55,7 @@ export class GameEngine {
   private readonly playerMesh: PlayerMesh;
   private readonly gang = new BikeGang();
   private readonly chase = new Chase();
-  private code = 'SD2-SALZBURG';
+  private code = 'SD3-SALZBURG';
   private largeParcel = false;
   private deliveries = 0;
   private spent = 0;
@@ -78,13 +78,26 @@ export class GameEngine {
   private shortcuts = 0;
   private gameoverTime = 0;
   private summary: RunSummary | null = null;
+  private blockTimer = 0;
+  private downTimer = 0;
+  private runTime = 0;
+  private lastHitTime = -100;
+  private warnCooldown = 0;
+  private warnCount = 0;
+  private gangShaken = false;
+  private betSettled = false;
+  private announced = new Set<string>();
+  private crateRun = 0;
+  private lastCrateId = -1;
+  private lastGap = 999;
 
   public configureRun(code: string, large: boolean): void { this.code = trackCode(code); this.largeParcel = large; }
   public getDebugState() { return { status: this.status, distance: this.distanceMeters, x: this.playerX, y: this.playerY,
     gap: this.chase.gap(this.distanceMeters), riders: this.chase.riders.map(r => ({name:r.name,s:r.s,x:r.x,state:r.state,speed:r.speed})),
     code:this.code, deliveries:this.deliveries, spent:this.spent, invulnerable:this.invulnTimer, obstacles:this.world.getAllObstacles() }; }
-  private say(message: string): void {
-    if(this.messageTimer > 0) return;
+  /** Urgent messages (gang, hits, danger ahead) replace whatever is showing; flavour text waits its turn. */
+  private say(message: string, urgent = false): void {
+    if (this.messageTimer > 0 && (!urgent || this.message === message)) return;
     this.message = message; this.messageTimer = 3;
     if (this.speechCooldown <= 0) { this.sound.speak(message); this.speechCooldown = 9; }
   }
@@ -307,6 +320,8 @@ export class GameEngine {
     this.bestCleanDeliveries = 0; this.summary = null; this.hitSinceDelivery = false; this.lastManoeuvre = -100;
     this.vaultTimer = 0; this.wallJumpUsed = false;
     this.deliveredSegments.clear(); this.scoredObstacles.clear(); this.shortcutSegments.clear();
+    this.blockTimer = this.downTimer = this.runTime = this.warnCooldown = this.warnCount = this.crateRun = 0;
+    this.lastHitTime = -100; this.lastCrateId = -1; this.lastGap = 999; this.gangShaken = this.betSettled = false; this.announced.clear();
     this.message = 'Mini-Maxi: „Wetten, wir sind vor dir bei der Paketpost?“'; this.messageTimer = 4; this.speechCooldown = 0;
     this.playerMesh.resetParcel(this.largeParcel);
     this.currentBiome = 'getreidegasse';
@@ -344,7 +359,7 @@ export class GameEngine {
 
   public returnToMenu(): void {
     this.input.clearQueue();
-    this.distanceMeters=0; this.lookTimer=0; this.sound.stopVoice(); this.playerMesh.resetParcel(false); this.particles.reset();
+    this.distanceMeters=0; this.lookTimer=0; this.blockTimer=0; this.downTimer=0; this.lastGap=999; this.sound.stopVoice(); this.playerMesh.resetParcel(false); this.particles.reset();
     this.powerUps = { umbrella: 0, watch: 0, magnet: 0 };
     this.dangerTimer = 0;
     this.invulnTimer = 0;
@@ -369,6 +384,8 @@ export class GameEngine {
     const cfg = BIOMES[biome];
     this.paintSkyGradient(cfg.skyTopHex, cfg.skyBottomHex);
     this.fog.color.setHex(cfg.fogColor);
+    // Standing on the fortress, you cannot also see it on the horizon.
+    for (const name of ['festung', 'festungsberg']) { const o = this.world.backdropGroup.getObjectByName(name); if (o) o.visible = biome !== 'festung'; }
   }
 
   private step(dt: number): void {
@@ -456,8 +473,18 @@ export class GameEngine {
     this.messageTimer = Math.max(0, this.messageTimer - dt);
     this.speechCooldown = Math.max(0, this.speechCooldown - dt);
     this.vaultTimer = Math.max(0,this.vaultTimer-dt);
+    this.runTime += dt;
+    this.blockTimer = Math.max(0, this.blockTimer - dt);
+    this.downTimer = Math.max(0, this.downTimer - dt);
+    this.warnCooldown = Math.max(0, this.warnCooldown - dt);
     const terrain = terrainAt(this.distanceMeters, this.playerX);
     const support = this.world.getNearbyObstacles().find(o => o.kind==='crates' && Math.abs(o.lane*LANE_WIDTH-this.playerX)<.65 && Math.abs(o.worldZ)<o.halfDepth+.3 && this.playerY>=o.maxY-.08 && this.playerY<=o.maxY+.2);
+    // A run along touching crates is a raised path the bikes cannot follow.
+    if (support && support.id !== this.lastCrateId) { this.lastCrateId = support.id; this.crateRun++; }
+    if (!support && this.playerY <= .05) {
+      if (this.crateRun >= 4) { this.bonus += 30 * this.crateRun; this.say(`Kistenweg: ${this.crateRun} Kisten am Stück +${30 * this.crateRun}`); }
+      this.crateRun = 0;
+    }
 
     for (const key of ['umbrella', 'watch', 'magnet'] as const) {
       if (this.powerUps[key] > 0) {
@@ -473,17 +500,21 @@ export class GameEngine {
     }
     this.wasGliding = isGliding;
 
-    const effectiveSpeed = this.baseRunSpeed * (this.stumble > 0 ? .4 : 1) * (terrain.narrow ? .88 : 1) * (terrain.stairs ? (this.largeParcel ? .62 : .9) : 1) * (this.largeParcel ? .94 : 1);
+    const halted = this.blockTimer > 0 || this.downTimer > 0;
+    const effectiveSpeed = halted ? 0 : this.baseRunSpeed * (this.stumble > 0 ? .5 : 1) * (terrain.narrow ? .88 : 1) * (terrain.stairs ? (this.largeParcel ? .62 : .8) : 1) * (terrain.boost ? 1.15 : 1) * (this.largeParcel ? .94 : 1);
 
     // 2. Process buffered player inputs
     const actions = this.input.consumeActions();
     for (const act of actions) {
+      if (this.downTimer > 0 && act !== 'look') continue;
       if (act === 'look') { this.lookTimer = 1.1; }
       else if (act === 'throw') {
-        if (this.runPretzels - this.spent > 0 && this.chase.distract(this.distanceMeters)) {
-          this.spent++; this.say('Brezel-Beni: „Jausenpause!“');
+        const left = this.runPretzels - this.spent;
+        const target = left > 0 ? this.chase.distract(this.distanceMeters) : undefined;
+        if (target) {
+          this.spent++; this.say(this.chase.event, true);
           this.particles.emitBurst({pos:new THREE.Vector3(this.playerX,1,1),count:5,colors:[0xe6ad54],speed:3,life:.8});
-        } else this.say('Beni muss hinter dir und höchstens 45 m entfernt sein. Du brauchst eine Brezel.');
+        } else this.say(left > 0 ? 'Niemand ist nah genug hinter dir – eine Brezel fliegt bis 30 m.' : 'Keine Brezel mehr zum Werfen.', true);
       }
       else if (act === 'left' && this.targetLane > -1 && !(terrain.stairs && terrain.local>5 && terrain.local<14)) {
         this.targetLane = (this.targetLane - 1) as Lane;
@@ -493,9 +524,12 @@ export class GameEngine {
         this.sound.playLaneShift();
       } else if (act === 'jump') {
         const wall = this.world.getNearbyObstacles().find(o => (o.kind==='barrier_low' || o.kind==='crates') && Math.abs(o.lane*LANE_WIDTH-this.playerX)<.75 && o.worldZ<1 && o.worldZ>-2);
-        if (!isGliding && (this.playerY <= 0.08 || support || (wall && this.playerY>.7 && this.playerY<1.5 && !this.wallJumpUsed))) {
-          if(this.playerY>.08) { this.wallJumpUsed=true; this.say('Abgestoßen! Sprung vom Mauerrand.'); }
-          if(wall) this.vaultTimer=.55;
+        // A high wall ahead can be kicked off from any height while airborne; the window grows with speed.
+        const high = this.world.getAllObstacles().find(o => o.kind==='high_wall' && Math.abs(o.lane*LANE_WIDTH-this.playerX)<.75 && o.worldZ < -.2 && o.worldZ > -Math.max(3, this.baseRunSpeed*.3));
+        const kick = (wall && this.playerY>.7 && this.playerY<1.5) || (high && this.playerY>.3);
+        if (!isGliding && (this.playerY <= 0.08 || support || (kick && !this.wallJumpUsed))) {
+          if(this.playerY>.08 && !support) { this.wallJumpUsed=true; this.say(high ? 'Mauersprung! Abgestoßen und drüber.' : 'Abgestoßen! Sprung vom Mauerrand.'); }
+          if(wall || high) this.vaultTimer=.55;
           this.velY = JUMP_VELOCITY;
           this.isJumping = true;
           this.fastFalling = false;
@@ -661,14 +695,23 @@ export class GameEngine {
     }
 
     this.chase.update(dt, this.distanceMeters, this.playerX, this.baseRunSpeed, this.world.getAllObstacles(), terrainAt);
-    if (this.chase.event) this.say(this.chase.event);
+    if (this.chase.event) this.say(this.chase.event, true);
     const gap = this.chase.gap(this.distanceMeters);
-    const closest = this.chase.riders.filter(r=>r.active).sort((a,b)=>Math.abs(this.distanceMeters-a.s)-Math.abs(this.distanceMeters-b.s))[0];
-    if (gap < 9 && closest) this.say(closest.name + ': „Schleich di!“ — ' + (closest.x < -1 ? 'links' : closest.x > 1 ? 'rechts' : 'Mitte') + ' hinter dir!');
-    const caught = this.chase.caught(this.distanceMeters, this.playerX, this.playerY + terrain.height);
-    if (caught && this.invulnTimer <= 0) { this.finishRun(caught.name + ' hat dich auf deiner Spur eingeholt.'); return; }
+    this.lastGap = gap;
+    if (this.chase.riders.every(r => this.distanceMeters - r.s > 40)) this.gangShaken = true;
+    const closest = this.chase.riders.filter(r=>r.active).sort((a,b)=>b.s-a.s)[0];
+    if (gap < 9 && closest && this.warnCooldown <= 0) {
+      // Direction relative to the courier, so "links" always means the rider is to your left.
+      const dx = closest.x - this.playerX;
+      const lines = RIDER_LINES[closest.name].warn;
+      this.say(`${closest.name}: „${lines[this.warnCount++ % lines.length]}“ – ${Math.max(1, Math.round(gap))} m ${dx < -1 ? 'links' : dx > 1 ? 'rechts' : 'direkt'} hinter dir!`, true);
+      this.warnCooldown = 3.2;
+    }
+    // Obstacle invulnerability does not protect from the gang: if they reach you, they have you.
+    const caught = this.chase.caught(this.distanceMeters, this.playerX, this.playerY + terrain.height, this.downTimer > 0);
+    if (caught) { this.finishRun(this.downTimer > 0 ? `Hingefallen – ${caught.name} war sofort da.` : `${caught.name} hat dich eingeholt.`, true); return; }
     this.updateObjectives();
-    const dangerRatio = Math.max(0, 1 - gap / 18);
+    const dangerRatio = Math.max(0, 1 - gap / 8);
     const speedRatio = (this.baseRunSpeed - BASE_SPEED) / (MAX_SPEED - BASE_SPEED);
 
     this.playerMesh.update({
@@ -685,6 +728,7 @@ export class GameEngine {
       isMenuIdle: false,
       vaulting: this.vaultTimer>0,
       reducedMotion: this.saveManager.getData().reducedMotion,
+      down: this.downTimer > 0,
     });
 
     this.gang.update(dt, this.chase.riders, this.distanceMeters, false, this.saveManager.getData().reducedMotion);
@@ -719,40 +763,75 @@ export class GameEngine {
   private handlePlayerCollision(wasGap: boolean, kind: string): void {
     this.world.forgiveImmediateObstacles(2);
     this.hitSinceDelivery = true; this.cleanDeliveries = 0;
-    const outfit=this.saveManager.getData().selectedOutfit;
-    this.stumble = kind === 'puddle_work' && outfit === 'gripkurier' ? .65 : 1.8;
     this.invulnTimer = HIT_INVULNERABILITY_TIME;
-    this.cameraShakeTimer = kind==='puddle_work' && outfit==='regenoutfit' ? 0 : .25;
     this.isSliding = false; this.slideTimer = 0;
-    if(wasGap) { this.finishRun('Dachlücke verpasst — im Kartonstapel gelandet.'); return; }
+    if(wasGap) { this.finishRun('Dachlücke verpasst – im Kartonstapel gelandet.'); return; }
+    const outfit=this.saveManager.getData().selectedOutfit;
+    const mild = kind === 'puddle_work' && outfit === 'gripkurier';
+    this.cameraShakeTimer = kind==='puddle_work' && outfit==='regenoutfit' ? 0 : .25;
     this.sound.playCollision(false);
-    this.say('Angestoßen! Du verlierst Tempo — die Gang fährt weiter.');
+    if (!mild && this.runTime - this.lastHitTime < 10) {
+      // The second knock within ten seconds puts you on the ground; the gang does the rest.
+      this.downTimer = 1.6; this.stumble = 0; this.lastHitTime = -100;
+      this.say('Hingefallen! Zweiter Zusammenstoß in 10 Sekunden – schnell wieder auf!', true);
+      return;
+    }
+    if (!mild) this.lastHitTime = this.runTime;
+    if (kind === 'market_stall' || kind === 'pedestrian') {
+      // Solid things stop you dead: you step around them while the gang keeps rolling.
+      this.blockTimer = .45; this.stumble = 0;
+      const blocked = (lane: number) => this.world.getAllObstacles().some(o => Math.abs((o.centerX ?? o.lane*LANE_WIDTH) - lane*LANE_WIDTH) < o.halfWidth + .4 && o.worldZ > -3 && o.worldZ < 1.5);
+      const side = ([-1, 0, 1] as Lane[]).filter(l => l !== this.targetLane && !blocked(l)).sort((a, b) => Math.abs(a - this.targetLane) - Math.abs(b - this.targetLane))[0];
+      if (side !== undefined) this.targetLane = side;
+      this.say(kind === 'pedestrian' ? 'Zusammengestoßen! Der Passant schimpft, die Gang holt auf.' : 'Voll in den Marktstand! Außen herum – die Gang holt auf.', true);
+      return;
+    }
+    this.stumble = mild ? .45 : 1.2;
+    this.say('Angestoßen! Du verlierst Tempo – noch ein Stoß in 10 s, und du liegst.', true);
   }
 
   private updateObjectives(): void {
     const t=terrainAt(this.distanceMeters,this.playerX), i=t.index;
-    if(isFork(i) && t.local > 6 && t.local < 12) {
-      if(this.playerX < -1.6 && !this.shortcutSegments.has(i)) {
+    if(isFork(i) && t.local > 6 && t.local < 12 && !this.shortcutSegments.has(i)) {
+      if(this.playerX < -1.6) {
         this.shortcutSegments.add(i); this.shortcuts++; this.bonus+=120;
-        this.say('Treppenweg +120! Die Fahrräder müssen schieben.');
-      } else if(this.playerX > 1.5) this.say('Offene Straße: schnell für dich — und für die Gang.');
+        this.say(`${FORKS[t.biome][0]} +120! Die Räder müssen schieben.`);
+      } else if(this.playerX > 1.5) { this.shortcutSegments.add(i); this.say(`${FORKS[t.biome][1]}: Tempo für dich – und für die Gang.`); }
     }
-    if(isFork(segmentAt(this.distanceMeters+24))) this.say('Weggabelung: links Treppe + Brezeln, rechts freie Straße.');
+    const fork = segmentAt(this.distanceMeters+24);
+    if(isFork(fork) && !this.announced.has('f'+fork)) {
+      this.announced.add('f'+fork); const [left, right] = FORKS[biomeAt(fork)];
+      this.say(`Gabelung: links ${left} (Räder schieben, +120), rechts ${right} (schneller für alle, Power-up).`, true);
+    }
     if(isDelivery(i) && t.local >= 8 && !this.deliveredSegments.has(i)) {
       if(t.local < 12 && Math.abs(this.playerX)<.85 && this.playerY<.6) {
-        this.deliveredSegments.add(i); this.deliveries++; this.bonus+=this.largeParcel?750:450;
+        const points = this.largeParcel?750:450;
+        this.deliveredSegments.add(i); this.deliveries++; this.bonus+=points;
         if(!this.hitSinceDelivery) this.cleanDeliveries++; this.bestCleanDeliveries=Math.max(this.bestCleanDeliveries,this.cleanDeliveries); this.hitSinceDelivery=false;
-        this.say('Zugestellt! +' + (this.largeParcel?750:450) + ' · Nächstes Paket übernommen.');
+        this.playerMesh.popParcel();
+        this.particles.emitBurst({pos:new THREE.Vector3(this.playerX+.6,1.2,-.6),count:10,colors:[0xd49b5e,0xc9352b],speed:3,upBias:2,life:.6});
+        // Mini-Maxi bet the gang would be at the first post before you.
+        if(!this.betSettled) { this.betSettled = true; this.bonus += 100; this.say(`Zugestellt +${points}! Mini-Maxi: „Na guat, Wette verloren.“ Wettbonus +100`, true); }
+        else this.say(`Zugestellt! +${points} – neues Paket geschnappt.`, true);
         this.sound.playUiClick();
-      } else if(t.local>=12) { this.deliveredSegments.add(i); this.cleanDeliveries=0; this.say('Paketpost verpasst. Nächste Station folgt.'); }
+      } else if(t.local>=12) {
+        this.deliveredSegments.add(i); this.cleanDeliveries=0;
+        if(!this.betSettled) { this.betSettled = true; this.say('Paketpost verpasst. Mini-Maxi: „Gwonnen! Wette is Wette.“', true); }
+        else this.say('Paketpost verpasst. Nächste Station folgt.', true);
+      }
     }
     for(const o of this.world.getAllObstacles()) {
-      if(o.kind==='pedestrian' && o.worldZ < -12 && o.worldZ > -25) this.say('Achtung links: Ein Passant rettet seine Brezel!');
+      // Danger ahead is announced once, early enough to act on.
+      if(o.kind==='pedestrian' && o.worldZ < -12 && o.worldZ > -25 && !this.announced.has('o'+o.id)) { this.announced.add('o'+o.id); this.say('Achtung links: Ein Passant überquert die Gasse!', true); }
+      if(o.kind==='roof_gap' && o.worldZ < -30 && o.worldZ > -45 && !this.announced.has('o'+o.id)) { this.announced.add('o'+o.id); this.say(`Dachlücke ${o.lane<0?'links':o.lane>0?'rechts':'in der Mitte'} voraus – springen oder ausweichen!`, true); }
+      if(o.kind==='high_wall' && o.worldZ < -25 && o.worldZ > -40 && !this.announced.has('wall')) { this.announced.add('wall'); this.say('Hohe Mauer: springen und an der Mauer nochmal springen – oder ausweichen.', true); }
       if(o.worldZ < o.halfDepth+.5 || o.worldZ > o.halfDepth+2 || this.scoredObstacles.has(o.id)) continue;
       this.scoredObstacles.add(o.id);
       if(o.forgiven || this.invulnTimer>0) continue;
       const dx=Math.abs(this.playerX-o.lane*LANE_WIDTH);
-      if(dx < .65 && (this.playerY>.25 || this.isSliding)) {
+      if(dx < .65 && o.kind==='high_wall' && this.playerY>2) { this.bonus+=150; this.say('Mauersprung geschafft! +150'); this.lastManoeuvre=this.distanceMeters; }
+      else if(o.kind==='crates' && this.crateRun>0) continue; // a crate path pays once, as a whole (Kistenweg bonus)
+      else if(dx < .65 && (this.playerY>.25 || this.isSliding)) {
         this.bonus+=75;
         if(this.distanceMeters-this.lastManoeuvre<26) {this.combos++;this.bonus+=100;this.say('Saubere Parkourkette +100');}
         else this.say(o.requiresSlide?'Sauber unter dem Tor! +75':'Sauber übers Hindernis! +75');
@@ -764,29 +843,31 @@ export class GameEngine {
     for(const id of this.scoredObstacles) if(id<minId) this.scoredObstacles.delete(id);
   }
 
-  private finishRun(reason: string): void {
+  private finishRun(reason: string, caught = false): void {
     if(this.status!=='playing') return;
     this.status='gameover'; this.gameoverTime=0; this.sound.stopVoice(); this.sound.playCollision(true);
     this.score=Math.floor(this.distanceMeters*DISTANCE_SCORE_MULTIPLIER)+this.runPretzels*PRETZEL_SCORE_BONUS+this.bonus;
     const result=this.saveManager.recordRun(this.score,this.runPretzels-this.spent);
     const challenges: string[]=[];
     if(this.bestCleanDeliveries>=3) challenges.push('Drei saubere Lieferungen');
-    if(this.chase.riders.every(r=>r.escaped)) challenges.push('Die ganze Gang abgehängt');
+    if(this.gangShaken && !caught) challenges.push('Die ganze Gang abgehängt');
     if(this.combos>=3) challenges.push('Drei Parkourketten');
     if(this.shortcuts>0) challenges.push('Treppenprofi');
-    this.saveManager.recordProgress(this.deliveries,challenges);
+    const newChallenges = this.saveManager.recordProgress(this.deliveries,challenges);
     this.summary={score:this.score,highScore:this.saveManager.getData().highScore,isNewRecord:result.isNewRecord,
       distanceMeters:Math.floor(this.distanceMeters),runPretzels:this.runPretzels-this.spent,totalPretzels:this.saveManager.getData().totalPretzels,
-      deliveries:this.deliveries,spent:this.spent,reason,highlight:this.shortcuts+' Treppenwege · '+this.combos+' Parkourketten',trackCode:this.code,challenges};
+      deliveries:this.deliveries,spent:this.spent,reason,highlight:this.shortcuts+' Treppenwege · '+this.combos+' Parkourketten',trackCode:this.code,challenges,newChallenges};
     this.particles.emitBurst({pos:new THREE.Vector3(this.playerX,1,0),count:35,colors:[0xd5a16a,0xf1b747,0xffead0],speed:5,upBias:4,life:1.2});
     // The result panel appears after the physical parcel tumble, not before it.
   }
 
   private updateFollowCamera(dt: number): void {
     const aspect = this.camera.aspect;
-    const pullBack = aspect < 0.85 ? 8.85 : 8.45;
+    // When the gang is within 10 m the camera rises and pulls back, so the riders right behind come into view.
+    const near = this.status === 'playing' && this.lookTimer <= 0 ? Math.max(0, Math.min(1, (10 - this.lastGap) / 6)) : 0;
+    const pullBack = (aspect < 0.85 ? 8.85 : 8.45) + near * 3.5;
     const targetCamX = this.playerX * 0.46;
-    const targetCamY = 6.85 + this.playerY * 0.34;
+    const targetCamY = 6.85 + near * 1.4 + this.playerY * 0.34;
     const targetCamZ = this.lookTimer > 0 ? -6 : pullBack;
 
     this.camera.position.x += (targetCamX - this.camera.position.x) * Math.min(1, dt * 8.5);
@@ -799,7 +880,7 @@ export class GameEngine {
       this.camera.position.y += (Math.random() - 0.5) * mag;
     }
 
-    this.camera.lookAt(this.playerX * 0.25, 0.95 + this.playerY * 0.25, this.lookTimer > 0 ? 13 : -13.0);
+    this.camera.lookAt(this.playerX * 0.25, 0.95 + this.playerY * 0.25, this.lookTimer > 0 ? 13 : -13 + near * 3);
   }
 
   private emitHud(biomeChanged: boolean): void {
@@ -814,9 +895,11 @@ export class GameEngine {
       totalPretzels: save.totalPretzels + this.runPretzels-this.spent,
       biomeName: BIOMES[this.currentBiome].name,
       biomeChanged,
-      dangerRatio: Math.max(0, 1-this.chase.gap(this.distanceMeters)/18),
+      dangerRatio: Math.max(0, 1-this.chase.gap(this.distanceMeters)/8),
       gap: this.chase.gap(this.distanceMeters),
-      delivery: this.deliveries + ' zugestellt · Paketpost in ' + Math.max(0, Math.ceil(nextStation*18-14+8-this.distanceMeters)) + ' m · MITTE',
+      delivery: 'Paketpost in ' + Math.max(0, Math.ceil(nextStation*18-14+8-this.distanceMeters)) + ' m · Mitte' + (this.deliveries ? ' · ' + this.deliveries + ' zugestellt' : ''),
+      playerX: this.playerX,
+      gang: this.chase.riders.map(r => ({ name: r.name, x: r.x, gap: this.distanceMeters - r.s })),
       message: this.messageTimer>0?this.message:'', trackCode:this.code,
       powerUps: { ...this.powerUps },
       speedKmh: Math.round(this.baseRunSpeed * 2.1),

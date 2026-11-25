@@ -11,44 +11,75 @@ export const OBSTACLE_RULES: Record<ObstacleKind, { player: string; bike: string
   low_arch: { player: 'Rutschen', bike: 'Absteigen, Fahrrad flach schieben (2 m/s)', speed: 2 },
   puddle_work: { player: 'Springen oder Tempoverlust', bike: 'Durchrollen (5 m/s)', speed: 5 },
   roof_gap: { player: 'Springen', bike: 'Ausweichen oder anhalten', speed: 0 },
+  high_wall: { player: 'Mauersprung: springen, an der Mauer nochmal springen', bike: 'Umweg über eine freie Spur', speed: 0 },
 };
+
+// One voice per rider, so the gang reads as four kids and not one repeated line.
+export const RIDER_LINES: Record<string, { warn: string[]; back: string; snack: string }> = {
+  'Mini-Maxi': { warn: ['Schleich di, Paketler!', 'Glei hamma di!', 'Mei Helm is schneller ois du!'], back: 'Abkürzung durchs Durchhaus!', snack: 'Na guat, a Brezn geht immer.' },
+  'Turbo-Toni': { warn: ['Turbo-Modus ein!', 'Schleich di, i bin schneller!', 'Brille sitzt, Gas geht!'], back: 'Gib Gas, Toni!', snack: 'Mampf … Moment!' },
+  'Gassen-Gabi': { warn: ['I kenn jede Gassn!', 'Schleich di, Kurier!', 'Do vorn is eh a Sackgassn!'], back: 'I kenn a Abkürzung!', snack: 'Danke! Oba i krieg di trotzdem.' },
+  'Brezel-Beni': { warn: ['Hast a Brezn für mi?', 'Wart, i bin glei do!', 'Riecht nach frischer Brezn!'], back: 'Do bin i wieda!', snack: 'Jausenpause!' },
+};
+/** Beyond this gap a rider takes a side alley back into the chase; it shrinks the longer the run lasts. */
+export function rejoinDistance(playerS: number): number { return Math.max(26, 46 - playerS / 130); }
 
 export interface Rider {
   name: string; s: number; x: number; lane: number; speed: number;
   maxExtra: number; caution: number; state: 'ride' | 'brake' | 'push' | 'crash' | 'snack' | 'wait';
-  timer: number; active: boolean; mistakes: Set<number>; escaped: boolean;
+  timer: number; active: boolean; mistakes: Set<number>; behind: number;
 }
 export class Chase {
   riders: Rider[] = [];
   event = '';
+  private clock = 0;
+  private lastShout = -99; // side-alley lines at most every 12 s, otherwise they drown every other message
   reset(): void {
     this.riders = ['Mini-Maxi', 'Turbo-Toni', 'Gassen-Gabi', 'Brezel-Beni'].map((name, i) => ({
       name, s: -18 - i * 3, x: (i % 3 - 1) * LANE_WIDTH, lane: i % 3 - 1,
       speed: 14, maxExtra: [1.5, 3.2, 1.8, 1][i], caution: [1, .65, 1.2, 1.6][i],
-      state: 'ride', timer: 0, active: true, mistakes: new Set(), escaped: false,
+      state: 'ride', timer: 0, active: true, mistakes: new Set(), behind: 0,
     }));
     this.event = '';
+    this.clock = 0; this.lastShout = -99;
   }
   constructor() { this.reset(); }
-  distract(playerS: number): boolean {
-    const r = this.riders[3];
-    if (!r.active || r.timer > 0 || playerS - r.s > 45 || playerS < r.s) return false;
-    r.timer = 3; r.state = 'snack'; r.speed = 0;
-    this.event = 'Brezel-Beni: „Jausenpause!“';
-    return true;
+  private shout(text: string): void {
+    if (this.clock - this.lastShout < 12) return;
+    this.event = text; this.lastShout = this.clock;
+  }
+  /** A thrown pretzel stops the nearest rider within 30 m behind you; Beni can never say no and eats longest. */
+  distract(playerS: number): Rider | undefined {
+    const r = this.riders.filter(q => q.active && q.timer <= 0 && q.s <= playerS && playerS - q.s <= 30).sort((a, b) => b.s - a.s)[0];
+    if (!r) return undefined;
+    r.timer = r.name === 'Brezel-Beni' ? 4 : 2.5; r.state = 'snack'; r.speed = 0;
+    this.event = `${r.name}: „${RIDER_LINES[r.name].snack}“`;
+    return r;
+  }
+  private rejoin(r: Rider, idx: number, playerS: number, baseSpeed: number, obstacles: ActiveObstacleData[]): void {
+    const s = playerS - Math.min(22, rejoinDistance(playerS) - 4) - idx * 1.2, lane = idx % 2 ? 1 : -1, x = lane * LANE_WIDTH;
+    // Never appear inside an obstacle; try again next frame instead.
+    if (obstacles.some(o => Math.abs(playerS - o.worldZ - s) < o.halfDepth + 3 && Math.abs((o.centerX ?? o.lane * LANE_WIDTH) - x) < o.halfWidth + .5)) return;
+    Object.assign(r, { s, x, lane, speed: baseSpeed, state: 'ride', timer: 0, behind: 0 });
+    this.shout(`${r.name}: „${RIDER_LINES[r.name].back}“ – aus der Seitengasse, ${lane < 0 ? 'links' : 'rechts'} hinter dir!`);
   }
   gap(s: number): number {
     return Math.min(...this.riders.filter(r => r.active).map(r => Math.max(0, s - r.s)), 999);
   }
-  caught(s: number, x: number, y: number): Rider | undefined {
-    return this.riders.find(r => r.active && r.state === 'ride' && Math.abs(s - r.s) < 1.1 && Math.abs(x - r.x) < .8 && y < 1.8);
+  /** A courier lying on the ground is grabbed from the neighbouring lane too, even past the obstacle they fell over. */
+  caught(s: number, x: number, y: number, down = false): Rider | undefined {
+    return this.riders.find(r => r.active && (down ? r.timer <= 0 : r.state === 'ride') &&
+      Math.abs(s - r.s) < (down ? 3 : 1.1) && Math.abs(x - r.x) < (down ? LANE_WIDTH + .3 : .8) && y < 1.8);
   }
   update(dt: number, playerS: number, playerX: number, baseSpeed: number, obstacles: ActiveObstacleData[], terrain: (s: number, x: number) => { wet: boolean; narrow: boolean; stairs: boolean }): void {
     this.event = '';
+    this.clock += dt;
     for (const [idx, r] of this.riders.entries()) {
       if (!r.active) continue;
-      if (playerS - r.s > 145) { r.active = false; r.escaped = true; continue; }
-      if (playerS - r.s > 45) r.escaped = true;
+      if (playerS - r.s > rejoinDistance(playerS)) {
+        r.behind += dt;
+        if (r.behind >= 3.5) { this.rejoin(r, idx, playerS, baseSpeed, obstacles); if (r.behind === 0) continue; }
+      } else r.behind = 0;
       if (r.timer > 0) { r.timer = Math.max(0, r.timer - dt); r.speed = 0; continue; }
       const t = terrain(r.s, r.x);
       const ahead = obstacles.map(o => ({ o, s: playerS - o.worldZ }))
@@ -99,7 +130,8 @@ export class Chase {
           else { r.speed = Math.min(r.speed, limit); next = r.s + r.speed * dt; r.state = limit === 2 ? 'push' : 'brake'; }
         }
       }
-      r.s = next;
+      // Nobody passes the courier: a rider alongside has to swerve in behind, and that is what catching means.
+      r.s = Math.min(next, playerS - .6);
     }
   }
 }
