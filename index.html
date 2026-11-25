@@ -8,7 +8,7 @@
     <meta name="theme-color" content="#111113">
     <meta name="color-scheme" content="dark">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self'; style-src 'self'; script-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self'; style-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="de_DE">
     <meta property="og:title" content="xbubekir – Meine Projekte">
@@ -18,9 +18,11 @@
     <link rel="canonical" href="https://xbubekir68.github.io/">
     <link rel="icon" type="image/png" href="./xbubekir/icons/favicon-64.png">
     <link rel="apple-touch-icon" href="./xbubekir/icons/icon-180.png">
-    <link rel="stylesheet" href="./home.css?v=ueber-mich-20261125">
+    <link rel="stylesheet" href="./home.css?v=interaktiv-20261125">
+    <script src="./home.js?v=interaktiv-20261125" defer></script>
   </head>
   <body>
+    <div class="scroll-progress" aria-hidden="true"></div>
     <a class="skip-link" href="#projekte">Direkt zu den Projekten</a>
     <header class="site-header wrap">
       <a class="brand" href="./" aria-label="xbubekir – Startseite"><img src="./xbubekir/brand/xbu.webp" alt="xbu" width="624" height="376"></a>
@@ -37,18 +39,18 @@
     <main class="wrap">
       <section class="intro" aria-labelledby="intro-title">
         <p class="eyebrow">WILLKOMMEN BEI XBUBEKIR</p>
-        <h1 id="intro-title">Ein Platz für<br><em>meine Ideen.</em></h1>
+        <h1 id="intro-title" aria-label="Ein Platz für meine Ideen.">Ein Platz für<br><em class="rotator" data-words="meine Ideen.|KI &amp; Code.|neue Sprachen.|kleine Spiele." aria-hidden="true">meine Ideen.</em></h1>
         <p class="intro-copy">Aus Neugier gebaut. Zum Ausprobieren gedacht.<br class="desktop-break"> Hier findest du meine Projekte – und deinen nächsten Klick.</p>
         <span class="intro-stamp" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none"><path d="M50 9v82M9 50h82M21 21l58 58M21 79l58-58" stroke="currentColor" stroke-width="7"/></svg></span>
       </section>
 
       <section id="projekte" class="projects" aria-labelledby="projects-title" tabindex="-1">
-        <div class="section-heading">
+        <div class="section-heading" data-reveal>
           <h2 id="projects-title">Entdecke die Projekte</h2>
           <span class="project-count">3 Projekte</span>
         </div>
         <div class="project-grid">
-          <a class="project-card project-ai" href="./xbubekir/" aria-labelledby="ai-title ai-action" aria-describedby="ai-description">
+          <a class="project-card project-ai" href="./xbubekir/" aria-labelledby="ai-title ai-action" aria-describedby="ai-description" data-reveal>
             <div class="preview preview-ai" aria-hidden="true">
               <div class="preview-top"><span class="preview-label">RAUM FÜR DEINE FRAGEN</span><img class="mini-xbu" src="./xbubekir/brand/xbu.webp" alt="" width="624" height="376"></div>
               <div class="chat-preview">
@@ -65,7 +67,7 @@
             </div>
           </a>
 
-          <a class="project-card project-language" href="./mufradaat/" aria-labelledby="language-title language-action" aria-describedby="language-description">
+          <a class="project-card project-language" href="./mufradaat/" aria-labelledby="language-title language-action" aria-describedby="language-description" data-reveal="100">
             <div class="preview preview-language" aria-hidden="true">
               <div class="preview-top"><span class="preview-label">EINE NEUE SPRACHE ENTDECKEN</span><img class="mufradaat-mark" src="./mufradaat/icons/icon-192.png" alt="" width="32" height="32"></div>
               <div class="vocabulary-stack">
@@ -80,7 +82,7 @@
             </div>
           </a>
 
-          <article class="project-card project-game project-coming-soon" aria-labelledby="game-name game-status">
+          <article class="project-card project-game project-coming-soon" aria-labelledby="game-name game-status" data-reveal="200">
             <div class="project-unreleased" aria-hidden="true" inert>
             <div class="preview preview-game" aria-hidden="true">
               <div class="preview-top"><span class="preview-label">DEIN SPRINT DURCH SALZBURG</span></div>
@@ -130,44 +132,55 @@
       </section>
 
       <section id="ueber-mich" class="about" aria-labelledby="about-title" tabindex="-1">
-        <div class="section-heading">
+        <div class="section-heading" data-reveal>
           <h2 id="about-title">Über mich</h2>
           <span class="project-count">Salzburg, Österreich</span>
         </div>
         <div class="about-grid">
-          <article class="about-card about-profile" aria-labelledby="about-name">
+          <article class="about-card about-profile" aria-labelledby="about-name" data-reveal>
             <p class="project-category">PROFIL</p>
             <h3 id="about-name">Ebubekir Gedik</h3>
             <p class="about-tagline"><em>Driven by Curiosity.</em> Defined by Discipline.</p>
             <p class="about-text">Student der Wirtschaftsinformatik an der FH Salzburg, mit kaufmännischer Basis aus der Handelsakademie. Praxiserfahrung in der IT-Geräteverwaltung bei der PORR und im Handel. Nebenbei baue ich eigene Projekte – wie die auf dieser Seite.</p>
+            <dl class="about-stats">
+              <div><dt>Stationen</dt><dd data-count="6">6</dd></div>
+              <div><dt>Projekte</dt><dd data-count="3">3</dd></div>
+              <div><dt>Sprachen</dt><dd data-count="6">6</dd></div>
+            </dl>
             <div class="about-links">
               <a class="project-action" href="https://www.linkedin.com/in/ebubekir-gedik">LinkedIn-Profil</a>
-              <a class="about-mail" href="mailto:gedik.ebubekir1@gmail.com">gedik.ebubekir1@gmail.com</a>
+              <span class="mail-row">
+                <a class="about-mail" href="mailto:gedik.ebubekir1@gmail.com">gedik.ebubekir1@gmail.com</a>
+                <button class="copy-mail" type="button" data-copy="gedik.ebubekir1@gmail.com" hidden>Kopieren</button>
+                <span class="copy-status visually-hidden" role="status"></span>
+              </span>
             </div>
           </article>
 
-          <article class="about-card about-experience" aria-labelledby="experience-title">
+          <article class="about-card about-experience" aria-labelledby="experience-title" data-reveal="100">
             <p class="project-category" id="experience-title">ERFAHRUNG</p>
+            <p class="timeline-hint">Klick auf eine Station für Details.</p>
             <ol class="timeline">
-              <li><span class="timeline-date">08/2026 – heute</span><strong>Lagermitarbeiter</strong><span>MediaMarkt Österreich, Salzburg</span></li>
-              <li><span class="timeline-date">07/2026</span><strong>Produktionsmitarbeiter</strong><span>Collini Group</span></li>
-              <li><span class="timeline-date">09/2025 – 05/2026</span><strong>Zivildienst</strong><span>Arbeiter-Samariter-Bund, Salzburg</span></li>
-              <li><span class="timeline-date">08/2025</span><strong>Ferialpraktikant IT – Digital Unit</strong><span>PORR Group, Salzburg</span></li>
-              <li><span class="timeline-date">11/2023 – 05/2024</span><strong>Verkaufsmitarbeiter</strong><span>Lidl Österreich, Salzburg</span></li>
-              <li><span class="timeline-date">11/2022 – 08/2023</span><strong>Verkaufsmitarbeiter</strong><span>HOFER Österreich, Salzburg</span></li>
+              <li><details><summary><span class="timeline-date">08/2026 – heute</span><strong>Lagermitarbeiter</strong><span class="timeline-place">MediaMarkt Österreich, Salzburg</span></summary><p>Online-Bestellungen (Click &amp; Collect) und Großgeräte an Kund:innen ausgegeben, Abholdokumente im Warenwirtschaftssystem gebucht, bei Warenannahme, Kommissionierung und Lagerorganisation mitgearbeitet.</p></details></li>
+              <li><details><summary><span class="timeline-date">07/2026</span><strong>Produktionsmitarbeiter</strong><span class="timeline-place">Collini Group</span></summary><p>Wareneingang geprüft, Bauteile auf feuerverzinkungsgerechte Konstruktion kontrolliert, Endfertigung, Verpackung und Etikettierung nach Kundenvorgaben.</p></details></li>
+              <li><details><summary><span class="timeline-date">09/2025 – 05/2026</span><strong>Zivildienst</strong><span class="timeline-place">Arbeiter-Samariter-Bund, Salzburg</span></summary><p>Im Kranken- und Behindertentransport im Schichtbetrieb eingesetzt, Patient:innen betreut und begleitet.</p></details></li>
+              <li><details><summary><span class="timeline-date">08/2025</span><strong>Ferialpraktikant IT – Digital Unit</strong><span class="timeline-place">PORR Group, Salzburg</span></summary><p>Laptop-Rollout „Phönix III“ am Standort Salzburg eigenständig durchgeführt: Daten gesichert und wiederhergestellt, Geräte in Microsoft Intune verwaltet, LAPS-Zugangsdaten erstellt, Rollout dokumentiert.</p></details></li>
+              <li><details><summary><span class="timeline-date">11/2023 – 05/2024</span><strong>Verkaufsmitarbeiter</strong><span class="timeline-place">Lidl Österreich, Salzburg</span></summary><p>Kassa, Kundenbetreuung und Warenverräumung, Frischbrot aufgebacken, HACCP-Hygienekonzept mit umgesetzt.</p></details></li>
+              <li><details><summary><span class="timeline-date">11/2022 – 08/2023</span><strong>Verkaufsmitarbeiter</strong><span class="timeline-place">HOFER Österreich, Salzburg</span></summary><p>Kassa und Warenverräumung, Qualitätskontrollen durchgeführt, Backbox betreut.</p></details></li>
             </ol>
           </article>
 
-          <article class="about-card about-education" aria-labelledby="education-title">
+          <article class="about-card about-education" aria-labelledby="education-title" data-reveal="200">
             <p class="project-category" id="education-title">AUSBILDUNG</p>
+            <p class="timeline-hint">Klick auf eine Station für Details.</p>
             <ol class="timeline">
-              <li><span class="timeline-date">09/2026 – 2029</span><strong>Bachelor Wirtschaftsinformatik</strong><span>Fachhochschule Salzburg</span></li>
-              <li><span class="timeline-date">09/2020 – 06/2025</span><strong>Matura</strong><span>HAK 1 Salzburg</span></li>
-              <li><span class="timeline-date">09/2016 – 07/2020</span><strong>Unterstufe</strong><span>BRG Salzburg</span></li>
+              <li><details><summary><span class="timeline-date">09/2026 – 2029</span><strong>Bachelor Wirtschaftsinformatik</strong><span class="timeline-place">Fachhochschule Salzburg</span></summary><p>Wirtschaftsinformatik &amp; Digitale Transformation. Schwerpunkte: Digitalisierung von Geschäftsprozessen, betriebliche Standardsoftware, Betriebswirtschaft.</p></details></li>
+              <li><details><summary><span class="timeline-date">09/2020 – 06/2025</span><strong>Matura</strong><span class="timeline-place">HAK 1 Salzburg</span></summary><p>Reife- und Diplomprüfung in der Europaklasse, Abschluss mit gutem Erfolg.</p></details></li>
+              <li><details><summary><span class="timeline-date">09/2016 – 07/2020</span><strong>Unterstufe</strong><span class="timeline-place">BRG Salzburg</span></summary><p>Informatikklasse, Abschluss mit ausgezeichnetem Erfolg.</p></details></li>
             </ol>
           </article>
 
-          <article class="about-card about-skills" aria-labelledby="skills-title">
+          <article class="about-card about-skills" aria-labelledby="skills-title" data-reveal>
             <p class="project-category" id="skills-title">KENNTNISSE</p>
             <ul class="chips">
               <li>Python</li>
@@ -184,15 +197,15 @@
             </ul>
           </article>
 
-          <article class="about-card about-languages" aria-labelledby="languages-title">
+          <article class="about-card about-languages" aria-labelledby="languages-title" data-reveal="100">
             <p class="project-category" id="languages-title">SPRACHEN</p>
             <ul class="languages">
-              <li>Türkisch <span>Muttersprache</span></li>
-              <li>Deutsch <span>Verhandlungssicher</span></li>
-              <li>Englisch <span>Verhandlungssicher</span></li>
-              <li>Französisch <span>Gute Kenntnisse</span></li>
-              <li>Arabisch <span>Grundkenntnisse</span></li>
-              <li>Latein <span>Kleines Latinum</span></li>
+              <li class="lv-100">Türkisch <span>Muttersprache</span><i class="lang-bar" aria-hidden="true"></i></li>
+              <li class="lv-90">Deutsch <span>Verhandlungssicher</span><i class="lang-bar" aria-hidden="true"></i></li>
+              <li class="lv-80">Englisch <span>Verhandlungssicher</span><i class="lang-bar" aria-hidden="true"></i></li>
+              <li class="lv-55">Französisch <span>Gute Kenntnisse</span><i class="lang-bar" aria-hidden="true"></i></li>
+              <li class="lv-25">Arabisch <span>Grundkenntnisse</span><i class="lang-bar" aria-hidden="true"></i></li>
+              <li class="lv-35">Latein <span>Kleines Latinum</span><i class="lang-bar" aria-hidden="true"></i></li>
             </ul>
           </article>
         </div>
