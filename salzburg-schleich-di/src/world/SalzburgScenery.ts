@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { ROAD_WIDTH, SEGMENT_LENGTH } from '../constants';
+import { ROAD_WIDTH, SEGMENT_LENGTH, SEGMENTS_PER_BIOME } from '../constants';
 import { MaterialLibrary } from '../materials';
 import { BiomeId } from '../types';
 
@@ -88,11 +88,13 @@ export class SalzburgScenery {
       this.cliffMat
     );
     cliff.position.set(18, 11, 0);
+    cliff.name = 'festungsberg';
     vista.add(cliff);
 
     // Festung Hohensalzburg iconic white castle complex atop the cliff!
     const fortress = new THREE.Group();
     fortress.position.set(18, 23, 0);
+    fortress.name = 'festung';
 
     const mainKeep = new THREE.Mesh(
       new THREE.BoxGeometry(16, 8.5, 10),
@@ -214,6 +216,7 @@ export class SalzburgScenery {
     if (isTransition) {
       this.addBiomeTransitionGate(group, biome);
     }
+    if (segmentIndex % SEGMENTS_PER_BIOME === 5) this.addLandmark(group, biome);
 
     let waterMesh: THREE.Mesh | undefined;
     switch (biome) {
@@ -264,6 +267,76 @@ export class SalzburgScenery {
     beam.position.set(0, 5.2, -2.2);
 
     group.add(pillarL, pillarR, beam);
+  }
+
+  /** One recognisable Salzburg sight per district pass, always beside the lanes. */
+  private addLandmark(group: THREE.Group, biome: BiomeId): void {
+    const mat = (color: number) => { const m = new THREE.MeshStandardMaterial({ color, flatShading: true, roughness: .8 }); m.userData.segmentOwned = true; return m; };
+    const add = (geo: THREE.BufferGeometry, m: THREE.Material, x: number, y: number, z: number) => { const o = new THREE.Mesh(geo, m); o.position.set(x, y, z); o.castShadow = true; group.add(o); return o; };
+    const label = (text: string, x: number, y: number, z: number, w: number) => {
+      const c = document.createElement('canvas'); c.width = 512; c.height = 96;
+      const ctx = c.getContext('2d')!; ctx.fillStyle = '#2b1a10'; ctx.font = 'bold 54px serif'; ctx.textAlign = 'center'; ctx.fillText(text, 256, 68);
+      const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
+      const m = new THREE.MeshBasicMaterial({ map: tex, transparent: true }); m.userData.segmentOwned = true;
+      const p = new THREE.Mesh(new THREE.PlaneGeometry(w, w * 96 / 512), m); p.position.set(x, y, z); p.rotation.y = -Math.sign(x) * Math.PI / 2; group.add(p);
+    };
+    switch (biome) {
+      case 'getreidegasse': {
+        // The tall yellow house of Getreidegasse No. 9, slightly forward of its neighbours.
+        const x = ROAD_WIDTH / 2 + 2.15;
+        add(new THREE.BoxGeometry(4.1, 12.5, 6.2), mat(0xf0c419), x, 6.25, -9);
+        for (const wy of [3.2, 5.6, 8, 10.4]) for (const wz of [-10.8, -9, -7.2]) add(new THREE.BoxGeometry(.1, 1.05, .7), this.windowMat, ROAD_WIDTH / 2 + .08, wy, wz);
+        label('Getreidegasse 9', ROAD_WIDTH / 2 + .05, 2.1, -9, 4.4);
+        break;
+      }
+      case 'salzachufer': {
+        // Makartsteg footbridge with its colourful padlocks.
+        const x = -ROAD_WIDTH / 2 - 12;
+        add(new THREE.BoxGeometry(22, .4, 2.6), this.mats.stoneMedium, x, .3, -9);
+        for (const z of [-10.2, -7.8]) add(new THREE.BoxGeometry(22, .9, .06), this.mats.wroughtIron, x, .95, z);
+        const colors = [0xd9483b, 0xf2b938, 0x35a3c9, 0x8ac650, 0xe079b0].map(mat);
+        for (let k = 0; k < 44; k++) add(new THREE.BoxGeometry(.14, .18, .08), colors[k % 5], x - 10.5 + k * .48, .75 + (k % 3) * .12, k % 2 ? -7.76 : -10.24);
+        label('Makartsteg', -ROAD_WIDTH / 2 - .8, 1.8, -9, 3.2);
+        break;
+      }
+      case 'mirabellgarten': {
+        // Pegasus fountain: round basin, plinth and a winged horse.
+        const x = ROAD_WIDTH / 2 + 4.2, z = -14.5, stone = this.mats.stoneLight;
+        add(new THREE.CylinderGeometry(2.4, 2.2, .6, 16), stone, x, .45, z);
+        add(new THREE.CylinderGeometry(2.15, 2.15, .62, 16), this.mats.waterSalzach, x, .47, z);
+        add(new THREE.CylinderGeometry(.6, .8, 1.6, 8), stone, x, 1.5, z);
+        const bronze = mat(0x8a6a3c);
+        add(new THREE.BoxGeometry(.6, .6, 1.5), bronze, x, 2.75, z);
+        add(new THREE.BoxGeometry(.32, .9, .35), bronze, x, 3.3, z - .75).rotation.x = .5;
+        add(new THREE.BoxGeometry(.3, .32, .6), bronze, x, 3.75, z - 1.05);
+        for (const [lx, lz] of [[-.2, -.55], [.2, -.55], [-.2, .55], [.2, .55]]) add(new THREE.BoxGeometry(.14, .75, .14), bronze, x + lx, 2.2, z + lz);
+        for (const s of [-1, 1]) { const wing = add(new THREE.BoxGeometry(1.3, .06, .7), bronze, x + s * .85, 3.35, z + .1); wing.rotation.z = s * .55; }
+        break;
+      }
+      case 'festung': {
+        // Festungsbahn: a red funicular car on its inclined track outside the wall.
+        const x = -ROAD_WIDTH / 2 - 4.6;
+        const track = add(new THREE.BoxGeometry(1.4, .25, 24), this.mats.stoneMedium, x, 4, -9);
+        track.rotation.x = .42;
+        const car = add(new THREE.BoxGeometry(1.5, 1.6, 3), mat(0xc0392b), x, 6.1, -12);
+        car.rotation.x = .42;
+        add(new THREE.BoxGeometry(1.52, .5, 2.2), this.windowMat, x, 6.6, -12.2).rotation.x = .42;
+        break;
+      }
+      case 'daecher': {
+        // The cathedral's copper domes rise beside the roof path.
+        const x = ROAD_WIDTH / 2 + 7;
+        add(new THREE.CylinderGeometry(3, 3.2, 5, 12), this.mats.stoneLight, x, 1.5, -9);
+        add(new THREE.SphereGeometry(3.1, 12, 8, 0, Math.PI * 2, 0, Math.PI * .55), this.mats.copperPatina, x, 4, -9);
+        add(new THREE.CylinderGeometry(.5, .6, 1.6, 8), this.mats.stoneLight, x, 7.4, -9);
+        add(new THREE.ConeGeometry(.65, 1.4, 8), this.mats.copperPatina, x, 8.9, -9);
+        for (const z of [-2, -16]) {
+          add(new THREE.BoxGeometry(2.2, 9, 2.2), this.mats.stoneLight, x - 1.5, 2.5, z);
+          add(new THREE.ConeGeometry(1.4, 3, 4), this.mats.copperPatina, x - 1.5, 8.5, z).rotation.y = Math.PI / 4;
+        }
+        break;
+      }
+    }
   }
 
   private decorateGetreidegasse(group: THREE.Group, segIdx: number): void {
@@ -512,16 +585,15 @@ export class SalzburgScenery {
   private decorateAltstadtDaecher(group: THREE.Group, segIdx: number): void {
     // Old Town rooftop landscape: sloped terracotta & copper roofs, brick chimneys, copper domes!
     for (const side of [-1, 1]) {
-      const roofX = side * (ROAD_WIDTH / 2 + 2.8);
+      // A gable roof (triangular prism) running alongside the path; its eave stays outside the road.
       const gable = new THREE.Mesh(
-        new THREE.ConeGeometry(3.8, 3.6, 4),
+        new THREE.CylinderGeometry(2.4, 2.4, SEGMENT_LENGTH - .4, 3),
         (segIdx + (side > 0 ? 1 : 0)) % 2 === 0
           ? this.mats.roofTerracotta
           : this.mats.copperPatina
       );
-      gable.position.set(roofX, 1.5, -SEGMENT_LENGTH / 2);
-      gable.rotation.y = Math.PI / 4;
-      gable.scale.set(1.0, 1, 3.3);
+      gable.rotation.x = -Math.PI / 2;
+      gable.position.set(side * (ROAD_WIDTH / 2 + 2.35), 1.2, -SEGMENT_LENGTH / 2);
       group.add(gable);
 
       // Brick chimneys (Schornsteine)

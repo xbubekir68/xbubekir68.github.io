@@ -8,11 +8,15 @@ class Memory implements StorageBackend {
 }
 describe('Save migration and extended progression',()=>{
   it('preserves an existing v1 save while adding default preferences and challenges',()=>{
-    const backend=new Memory();backend.raw=JSON.stringify({highScore:1234,totalPretzels:400,unlockedOutfits:['kurier','regenoutfit'],selectedOutfit:'regenoutfit',muted:true,tutorialSeen:true});
+    const backend=new Memory();backend.raw=JSON.stringify({highScore:1234,totalPretzels:500,unlockedOutfits:['kurier','regenoutfit'],selectedOutfit:'regenoutfit',muted:true,tutorialSeen:true});
     const manager=new SaveManager(backend),data=manager.getData();
-    expect(data.highScore).toBe(1234);expect(data.totalPretzels).toBe(400);expect(data.selectedOutfit).toBe('regenoutfit');expect(data.voiceVolume).toBe(0);
-    manager.unlockOrSelectOutfit('gripkurier');manager.recordProgress(3,['Treppenprofi']);manager.setPreferences(.3,.2,true);
-    const reloaded=new SaveManager(backend).getData();expect(reloaded.totalPretzels).toBe(240);expect(reloaded.challenges).toEqual(['Treppenprofi']);expect(reloaded.deliveries).toBe(3);expect(reloaded.reducedMotion).toBe(true);expect(reloaded.effectsVolume).toBe(.3);
+    expect(data.highScore).toBe(1234);expect(data.totalPretzels).toBe(500);expect(data.selectedOutfit).toBe('regenoutfit');expect(data.voiceVolume).toBe(0);
+    manager.unlockOrSelectOutfit('gripkurier');
+    expect(manager.recordProgress(3,['Treppenprofi'])).toEqual(['Treppenprofi']);
+    expect(manager.recordProgress(0,['Treppenprofi'])).toEqual([]);
+    manager.setPreferences(.3,.2,true);
+    // 500 - 420 for the shoes + 50 once for the first challenge
+    const reloaded=new SaveManager(backend).getData();expect(reloaded.totalPretzels).toBe(130);expect(reloaded.challenges).toEqual(['Treppenprofi']);expect(reloaded.deliveries).toBe(3);expect(reloaded.reducedMotion).toBe(true);expect(reloaded.effectsVolume).toBe(.3);
   });
   it('still plays when storage is corrupt, unavailable or refuses writes',()=>{
     const backend=new Memory();backend.raw='not JSON';expect(new SaveManager(backend).getData().highScore).toBe(0);

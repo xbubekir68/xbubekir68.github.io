@@ -88,7 +88,7 @@ export class WorldManager {
     this.root.add(this.backdropGroup);
   }
 
-  public reset(code = 'SD2-SALZBURG'): void {
+  public reset(code = 'SD3-SALZBURG'): void {
     for (const seg of this.segments) {
       this.disposeSegment(seg);
     }
@@ -144,13 +144,13 @@ export class WorldManager {
       biomeCfg.groundColor,
       biomeCfg.curbColor
     );
-    addRouteDetails(group, segIdx, isDelivery(segIdx), isFork(segIdx));
+    addRouteDetails(group, segIdx, isDelivery(segIdx), isFork(segIdx), biome);
     group.position.z = frontZ;
 
     const liveObstacles: LiveObstacle[] = [];
     for (const spec of plan.obstacles) {
       const dims = getObstacleDimensions(spec.kind);
-      const mesh = this.props.createObstacle(spec.kind, segIdx);
+      const mesh = this.props.createObstacle(spec.kind, segIdx, biome);
       mesh.position.set(spec.lane * LANE_WIDTH, 0, spec.localZ);
       group.add(mesh);
 

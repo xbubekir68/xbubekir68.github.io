@@ -167,31 +167,6 @@ body,
   background: var(--gold);
 }
 
-.danger-pill {
-  align-self: flex-start;
-  background: var(--danger);
-  color: #fff;
-  border: 1.5px solid var(--ink);
-  border-radius: 999px;
-  padding: 0.24rem 0.75rem;
-  font-size: 0.76rem;
-  font-weight: 800;
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-}
-.danger-bar-track {
-  width: 3.4rem;
-  height: 0.4rem;
-  background: rgba(0, 0, 0, 0.35);
-  border-radius: 99px;
-  overflow: hidden;
-}
-.danger-bar-fill {
-  height: 100%;
-  background: #ffe17d;
-}
-
 .hud-right {
   display: flex;
   align-items: center;
@@ -523,3 +498,40 @@ body,
 .hero-card {max-height:76dvh;overflow-y:auto;touch-action:pan-y;}
 .reduced-motion *, .reduced-motion *::after {animation:none!important;transition:none!important;}
 @media(max-width:600px) {.game-title{font-size:2.4rem}.game-subtitle{font-size:.9rem}.run-options{font-size:.8rem}.hud-left{max-width:68%}.hud-right{gap:.4rem}.score-value{font-size:1.7rem}.chase-caption{font-size:.8rem}.hero-card{padding:1rem}.hud-left .stat-pill{font-size:.7rem}.runner-actions .btn{padding:.65rem .9rem}}
+
+/* Compact HUD: score, then delivery and gang distance side by side */
+.hud-left {max-width:22rem;}
+.hud-pills {display:flex;flex-wrap:wrap;gap:.35rem;}
+#hud-gap.danger {background:var(--danger);color:#fff;}
+.biome-tag {transition:transform .25s ease, opacity .6s ease;}
+.biome-tag.faded {opacity:0;}
+/* Messages sit at the top between the HUD columns, never over the courier or the road ahead */
+.chase-caption {top:max(.85rem,env(safe-area-inset-top));bottom:auto;max-width:calc(100vw - 48rem);font-size:.9rem;}
+/* Action buttons in the bottom corners, the gang radar between them */
+.runner-actions {justify-content:space-between;padding:0 max(14px,env(safe-area-inset-left));pointer-events:none;}
+.runner-actions .btn {pointer-events:auto;}
+.touch .key {display:none;}
+.gang-radar {position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(-50%);width:132px;height:64px;border:2px solid var(--ink);border-radius:14px;background:rgba(36,22,14,.62);pointer-events:none;}
+.radar-lane {position:absolute;top:6px;bottom:6px;width:1px;background:rgba(251,244,230,.35);left:33.3%;}
+.radar-lane + .radar-lane {left:66.6%;}
+.radar-you {position:absolute;top:2px;width:12px;height:12px;margin-left:-6px;border-radius:3px;background:var(--parchment);border:2px solid var(--ink);}
+.radar-dot {position:absolute;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;background:var(--c);border:2px solid var(--ink);font:900 10px/14px var(--font-ui);text-align:center;color:var(--ink);transition:top .15s linear,left .15s linear;}
+.radar-dot.far {opacity:.4;}
+.radar-dot.close {box-shadow:0 0 0 3px var(--danger);}
+/* Tutorial: the start button stays reachable; touch devices read the swipe help first */
+.tutorial-actions {position:sticky;bottom:-1.35rem;margin:0 -1.4rem -1.35rem;padding:.75rem 1.4rem 1rem;background:var(--parchment);}
+.touch .ctrl-keys {order:5;}
+.run-options select {width:100%;min-width:0;}
+@media (max-width:1100px) {
+  .chase-caption {top:calc(max(.85rem,env(safe-area-inset-top)) + 7.4rem);max-width:min(92vw,40rem);font-size:.82rem;}
+}
+@media (max-width:600px) {
+  .hud-left {max-width:70%;}
+  .gang-radar {bottom:calc(max(16px,env(safe-area-inset-bottom)) + 62px);}
+}
+@media (orientation:landscape) and (max-height:500px) {
+  .chase-caption {top:max(.6rem,env(safe-area-inset-top));max-width:calc(100vw - 34rem);font-size:.75rem;padding:.45rem .7rem;}
+  .hud-left .stat-pill {font-size:.7rem;padding:.25rem .6rem;}
+  .score-value {font-size:1.35rem;}
+  .gang-radar {bottom:max(10px,env(safe-area-inset-bottom));}
+}

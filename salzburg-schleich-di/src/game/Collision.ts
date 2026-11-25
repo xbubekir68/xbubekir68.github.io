@@ -72,6 +72,8 @@ export function getObstacleDimensions(kind: ObstacleKind): {
         requiresSlide: false,
         isGap: false,
       };
+    case 'high_wall':
+      return { halfWidth:.9,halfDepth:.4,minY:0,maxY:2.6,requiresSlide:false,isGap:false };
     case 'roof_gap':
       return {
         halfWidth: 0.98,

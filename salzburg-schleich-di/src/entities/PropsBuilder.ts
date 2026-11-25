@@ -1,6 +1,19 @@
 import * as THREE from 'three';
 import { MaterialLibrary } from '../materials';
-import { ObstacleKind, PowerUpKind } from '../types';
+import { BiomeId, ObstacleKind, PowerUpKind } from '../types';
+
+const flat = (color: number) => new THREE.MeshStandardMaterial({ color, roughness: .8, flatShading: true });
+/** A painted pit seen from above: dark walls around a lantern-lit alley floor. The road box cannot be cut, so the depth is drawn. */
+function alleyTexture(): THREE.CanvasTexture {
+  const c = document.createElement('canvas'); c.width = 128; c.height = 192;
+  const ctx = c.getContext('2d')!;
+  ctx.fillStyle = '#140d10'; ctx.fillRect(0, 0, 128, 192);
+  const wall = ctx.createLinearGradient(0, 0, 0, 192); wall.addColorStop(0, '#2b1c1c'); wall.addColorStop(1, '#5a3a2e');
+  ctx.fillStyle = wall; ctx.fillRect(10, 8, 108, 176);
+  ctx.fillStyle = '#e39a55'; ctx.fillRect(28, 62, 72, 112);
+  ctx.fillStyle = '#b8743f'; for (let y = 70; y < 170; y += 14) for (let x = 34 + (y % 28 ? 6 : 0); x < 96; x += 14) ctx.fillRect(x, y, 8, 6);
+  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; return tex;
+}
 
 export class PropsBuilder {
   private readonly coneMat = new THREE.MeshStandardMaterial({
@@ -24,6 +37,14 @@ export class PropsBuilder {
     roughness: 0.38,
     metalness: 0.25,
   });
+
+  private readonly hedgeMat = flat(0x2f6b3f);
+  private readonly roseMat = flat(0xd9483b);
+  private readonly skinMat = flat(0xe9b085);
+  private readonly plasterMat = flat(0xe8d9b5);
+  private readonly hatMat = flat(0x2f4a3a);
+  private readonly clothMats = [flat(0xf2b938), flat(0x35a3c9), flat(0xfff4d8)];
+  private readonly alleyMat = new THREE.MeshBasicMaterial({ map: alleyTexture() });
 
   constructor(private readonly mats: MaterialLibrary) {}
 
@@ -171,16 +192,19 @@ export class PropsBuilder {
   }
 
   private variant = 0;
-  public createObstacle(kind: ObstacleKind, variant = 0): THREE.Group {
+  public createObstacle(kind: ObstacleKind, variant = 0, biome: BiomeId = 'getreidegasse'): THREE.Group {
     this.variant = variant;
     switch (kind) {
       case 'pedestrian': {
+        // A local in a felt hat, holding his pretzel up and out of the way.
         const g=new THREE.Group();
         const coat=new THREE.Mesh(new THREE.BoxGeometry(.6,.85,.42),this.bikeFrameMat);coat.position.y=.95;g.add(coat);
-        const head=new THREE.Mesh(new THREE.IcosahedronGeometry(.26,0),this.mats.parcelCardboard);head.position.y=1.63;g.add(head);
+        const head=new THREE.Mesh(new THREE.IcosahedronGeometry(.26,0),this.skinMat);head.position.y=1.63;g.add(head);
+        const brim=new THREE.Mesh(new THREE.CylinderGeometry(.36,.36,.05,10),this.hatMat);brim.position.y=1.84;g.add(brim);
+        const crown=new THREE.Mesh(new THREE.CylinderGeometry(.2,.24,.24,10),this.hatMat);crown.position.y=1.98;g.add(crown);
         for(const x of [-.18,.18]) {const leg=new THREE.Mesh(new THREE.BoxGeometry(.18,.6,.22),this.mats.woodDark);leg.position.set(x,.3,0);g.add(leg);}
-        const pretzel=this.createPretzel();pretzel.position.set(-.48,1.7,0);pretzel.scale.setScalar(.65);g.add(pretzel);
-        const warning=new THREE.Mesh(new THREE.ConeGeometry(.18,.45,3),this.coneMat);warning.position.y=2.2;g.add(warning);
+        const arm=new THREE.Mesh(new THREE.BoxGeometry(.14,.6,.14),this.bikeFrameMat);arm.position.set(-.4,1.45,0);arm.rotation.z=-.5;g.add(arm);
+        const pretzel=this.createPretzel();pretzel.position.set(-.55,1.8,0);pretzel.scale.setScalar(.65);g.add(pretzel);
         return g;
       }
       case 'crates':
@@ -188,16 +212,67 @@ export class PropsBuilder {
       case 'market_stall':
         return this.buildMarketStall();
       case 'barrier_low':
+        if (biome === 'mirabellgarten') return this.buildLowHedge();
+        if (biome === 'festung') return this.buildBeamFence();
         return this.buildLowBarrier();
       case 'bench_bike':
         return this.buildBenchAndBike();
       case 'low_arch':
+        if (biome === 'daecher') return this.buildLaundryLine();
+        if (biome === 'mirabellgarten') return this.buildRoseArch();
         return this.buildLowSlideArch();
+      case 'high_wall':
+        return this.buildHighWall(biome);
       case 'puddle_work':
         return this.buildPuddleAndRoadwork();
       case 'roof_gap':
         return this.buildRoofGap();
     }
+  }
+
+  private box(g: THREE.Group, w: number, h: number, d: number, x: number, y: number, z: number, m: THREE.Material): THREE.Mesh {
+    const o = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); o.position.set(x, y, z); o.castShadow = true; g.add(o); return o;
+  }
+
+  /** 2.6 m wall: too high for one jump, cleared by springing off it with a second jump (pale footholds mark it). */
+  private buildHighWall(biome: BiomeId): THREE.Group {
+    const g = new THREE.Group(), stone = biome === 'festung';
+    this.box(g, 1.8, 2.46, .8, 0, 1.23, 0, stone ? this.mats.stoneLight : this.plasterMat);
+    this.box(g, 1.95, .14, .95, 0, 2.53, 0, stone ? this.mats.stoneMedium : this.mats.roofTerracotta);
+    for (const [x, y] of [[-.35, .7], [.3, 1.3]]) this.box(g, .42, .12, .1, x, y, .44, this.mats.woodWarm);
+    return g;
+  }
+
+  private buildLowHedge(): THREE.Group {
+    const g = new THREE.Group();
+    this.box(g, 1.72, .85, .6, 0, .425, 0, this.hedgeMat);
+    for (const x of [-.55, 0, .55]) { const rose = new THREE.Mesh(new THREE.IcosahedronGeometry(.12, 0), this.roseMat); rose.position.set(x, .88, .2); g.add(rose); }
+    return g;
+  }
+
+  private buildBeamFence(): THREE.Group {
+    const g = new THREE.Group();
+    for (const x of [-.65, .65]) this.box(g, .36, .6, .5, x, .3, 0, this.mats.stoneMedium);
+    this.box(g, 1.76, .22, .3, 0, .74, 0, this.mats.woodDark);
+    return g;
+  }
+
+  /** Rooftop washing line: the laundry hangs down to 1.1 m, so you slide underneath. */
+  private buildLaundryLine(): THREE.Group {
+    const g = new THREE.Group();
+    for (const x of [-.95, .95]) this.box(g, .08, 2.6, .08, x, 1.3, 0, this.mats.woodDark);
+    this.box(g, 1.95, .03, .03, 0, 2.25, 0, this.mats.wroughtIron);
+    [-.55, 0, .55].forEach((x, k) => this.box(g, .46, 1.05, .04, x, 1.68, 0, this.clothMats[k]));
+    return g;
+  }
+
+  private buildRoseArch(): THREE.Group {
+    const g = new THREE.Group();
+    for (const x of [-.92, .92]) this.box(g, .28, 2.75, .7, x, 1.375, 0, this.hedgeMat);
+    this.box(g, 2.12, 1.55, .7, 0, 1.98, 0, this.hedgeMat);
+    this.box(g, 1.62, .16, .74, 0, 1.17, 0, this.plasterMat);
+    for (const x of [-.7, -.2, .3, .8]) { const rose = new THREE.Mesh(new THREE.IcosahedronGeometry(.14, 0), this.roseMat); rose.position.set(x, 2.3 + (x > 0 ? .2 : 0), .38); g.add(rose); }
+    return g;
   }
 
   private buildCratesAndParcels(): THREE.Group {
@@ -433,21 +508,13 @@ export class PropsBuilder {
   private buildRoofGap(): THREE.Group {
     const g = new THREE.Group();
 
-    // Deep dark alley void cutting across the rooftop lane!
-    const voidMesh = new THREE.Mesh(
-      new THREE.BoxGeometry(2.05, 0.06, 3.0),
-      new THREE.MeshBasicMaterial({ color: 0x161218 })
-    );
-    voidMesh.position.y = 0.02;
-    g.add(voidMesh);
-
-    // Recessed dark pit walls
-    const innerDrop = new THREE.Mesh(
-      new THREE.BoxGeometry(2.05, 1.4, 3.0),
-      new THREE.MeshBasicMaterial({ color: 0x1c171f, side: THREE.BackSide })
-    );
-    innerDrop.position.y = -0.68;
-    g.add(innerDrop);
+    // The lit alley below shows through the gap, so it reads as a hole and not as a dark tile.
+    const pit = new THREE.Mesh(new THREE.PlaneGeometry(2.05, 3.0), this.alleyMat);
+    pit.rotation.x = -Math.PI / 2;
+    pit.position.y = 0.025;
+    g.add(pit);
+    // Warning strips on the roof ahead of the gap.
+    for (const z of [4.6, 7.6]) this.box(g, 1.9, .03, .35, 0, .02, z, this.mats.hazardStripe);
 
     // Distinct bright wooden/striped edge curbs at front and back of the roof gap so it's unmistakable from afar!
     const frontLip = new THREE.Mesh(
@@ -458,7 +525,7 @@ export class PropsBuilder {
 
     const backLip = new THREE.Mesh(
       new THREE.BoxGeometry(2.1, 0.16, 0.22),
-      this.mats.woodWarm
+      this.mats.hazardStripe
     );
     backLip.position.set(0, 0.08, -1.55);
 
