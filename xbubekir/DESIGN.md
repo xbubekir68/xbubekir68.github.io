@@ -292,6 +292,9 @@ Das eine hervorgehobene Objekt: `raise`, Rand `line2`, 20px Rundung, Kartenschat
 - **Chatzeile:** 14px, `soft`, 8px Rundung; Hover `hov`, aktuelle Zeile `sel`, beide in `ink`. Löschen erscheint erst bei Hover oder Auswahl (bei Touch immer, 44px).
 - **Gehirn-Blatt:** Zeilen mit Name und Unterzeile; die gewählte Zeile auf `sel` mit gefülltem violettem Kreis und Häkchen.
 
+### Willkommensseite
+Nur beim allerersten Öffnen, vor der Anmeldung. Ohne Seitenleiste, am PC Text links und Beispiel-Chat rechts (höchstens 1100px), am Handy eine Spalte mit „Anmelden“ unten fest (Leiste in `bg` mit Haarlinie). Überschrift zweistufig statt Verlauf: „Eine KI.“ in `ink`, „Viele Gehirne.“ in `mute` (500, 38 bis 56px, am Handy 32 bis 40px). Der Beispiel-Chat liegt auf einer Fläche in `side` mit Haarlinie und 22px Rundung, darin der Segment-Schalter „Wer denkt für xbubekir?“, Blase und Lesetext wie im Chat und die Eingabe-Karte als einziges Objekt mit Schatten; Senden wird `acc`, sobald getippt wird, der Tipp-Strich ist `acc2`. „Was xbubekir kann“: vier Zeilen mit Symbol in 38px-Feld (`raise`, Haarlinie, `soft`), keine Karten. Violett nur auf „Anmelden“, Senden und dem Tipp-Strich.
+
 ### Motion
 Fenster erscheinen mit 0,18s (`cubic-bezier(.2,.8,.3,1)`, 6px Anhebung), die Schublade gleitet in 0,22s, das Handy-Blatt steigt in 0,24s. Wartezustände pulsieren sanft. Bei `prefers-reduced-motion: reduce` entfallen Pulsieren und Ladeanimation, Fenster-Animationen laufen nur ohne diese Einstellung.
 
