@@ -1,5 +1,5 @@
 // xbubekir Service Worker: App-Hülle offline, Anfragen an Server und Google nie aus dem Cache.
-const V="xb-v37",SHELL=["./","index.html","app.js","manifest.webmanifest","voice-worklet.js","vendor/genai.js","vendor/supabase.js","vendor/temml.js","icons/icon-192.png","icons/icon-512.png","icons/favicon-64.png","icons/icon-180.png","brand/wortmarke.webp","brand/xbu.webp"];
+const V="xb-v38",SHELL=["./","index.html","app.js","manifest.webmanifest","voice-worklet.js","vendor/genai.js","vendor/supabase.js","vendor/temml.js","icons/icon-192.png","icons/icon-512.png","icons/favicon-64.png","icons/icon-180.png","brand/wortmarke.webp","brand/xbu.webp"];
 self.addEventListener("install",e=>{
   e.waitUntil(caches.open(V).then(c=>Promise.all(SHELL.map(u=>c.add(u).catch(()=>{})))).then(()=>self.skipWaiting()));
 });

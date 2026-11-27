@@ -239,73 +239,42 @@ select.f{-webkit-appearance:none;appearance:none;padding-right:40px;background:v
 .linkbtn{border:0;background:none;padding:0;color:var(--acc2);text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px;font-size:inherit}
 .status{min-height:1.4em;font-size:14px;margin:12px 0 0}
 .status.bad{color:var(--bad)}
-/* Willkommen: beim allerersten Öffnen statt gleich der Anmeldung (app.js, welcomeHTML). Am PC Text links, Beispiel-Chat rechts. */
+/* Willkommen: beim allerersten Öffnen statt gleich der Anmeldung (app.js, welcomeHTML). Schlank und mittig: Marke, ein Satz, die Eingabe-Karte. */
 body.welcome{grid-template-columns:minmax(0,1fr)}
 body.welcome .side{display:none}
-body.welcome #log{padding-bottom:0}
-#log>.wel{max-width:1100px}
-.wel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"top top" "copy demo" "cta demo" "feat feat" "foot foot";column-gap:clamp(40px,6vw,88px)}
-.wel-top{grid-area:top;margin:-8px 0 clamp(28px,7vh,72px)}
-.wel-top img{display:block;width:104px;height:auto}
-.wel-copy{grid-area:copy;align-self:end}
-.wel-h{margin:0;font-size:clamp(38px,4.6vw,56px);font-weight:500;line-height:1.06;letter-spacing:-.032em}
-.wel-h span{display:block;color:var(--mute)}
-.wel-lead{max-width:28em;margin:22px 0 0;font-size:17.5px;line-height:1.6;color:var(--soft);text-wrap:pretty}
-.wel-cta{grid-area:cta;align-self:start;display:flex;flex-wrap:wrap;align-items:center;gap:6px 22px;margin-top:32px}
-.wel-cta .btn{min-height:48px;padding:12px 30px;font-size:16px}
-.wel-alt{min-height:44px;padding:0;border:0;background:none;color:var(--soft);font-size:14.5px;text-align:left;text-decoration:underline;text-decoration-color:var(--line3);text-decoration-thickness:1px;text-underline-offset:3px;transition:color .15s,text-decoration-color .15s}
-.wel-alt:hover{color:var(--ink);text-decoration-color:currentColor}
-.wel-foot .wel-alt{display:none}
-/* Beispiel-Chat: dunkle Fläche wie die Seitenleiste, darin Verlauf und Eingabe-Karte wie in der App */
-.wel-demo{grid-area:demo;min-width:0}
-.wd{display:flex;flex-direction:column;height:452px;padding:14px 12px 12px;border:1px solid var(--line);border-radius:22px;background:var(--side)}
-.wd-l{margin:0 6px 8px;font-size:12.5px;font-weight:500;color:var(--mute)}
-.wd .seg{margin:0}
-.wd-log{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;gap:16px;overflow:hidden;padding:14px 6px 16px;transition:opacity .22s ease-out}
-.wd-log.out{opacity:0}
-.wd-u{display:flex;justify-content:flex-end}
-.wd-bub{max-width:86%;padding:8px 14px;border-radius:18px;background:var(--raise);font-size:15.5px;line-height:1.5}
-.wd-a{min-height:1.65em;font-size:15.5px;line-height:1.65}
-.wd-a b{font-weight:600;color:#fff}
-.wd-a i{color:var(--soft)}
-.wd-a [lang=ar]{font-size:1.18em;line-height:1.4}
-.wd-wait{display:inline-flex;align-items:center;gap:5px;height:1.65em}
-.wd-wait i{width:6px;height:6px;border-radius:50%;background:var(--mute);opacity:.35}
-.wd-comp{flex:none;padding:10px 8px 6px;border:1px solid var(--line2);border-radius:18px;background:var(--raise);box-shadow:0 1px 3px rgba(0,0,0,.18),0 10px 30px rgba(0,0,0,.22)}
-.wd-in{min-height:1.5em;padding:0 6px;font-size:15.5px;line-height:1.5}
-.wd-in:empty::before{content:"Stelle deine Frage …";color:var(--mute)}
-.wd-in.typing:not(:empty)::after{content:"";display:inline-block;width:1.5px;height:1.15em;margin-left:1px;vertical-align:-.2em;background:var(--acc2)}
-.wd-tools{display:flex;align-items:center;gap:2px;margin-top:8px}
-.wd-ic{display:grid;place-items:center;width:32px;height:32px;color:var(--soft)}
-.wd-ic svg{width:18px;height:18px}
-.wd-brain{display:inline-flex;align-items:center;gap:5px;min-width:0;margin-left:auto;padding:0 6px;font-size:13px;color:var(--soft);white-space:nowrap}
-.wd-brain svg{width:14px;height:14px;flex:none}
-.wd-send{display:grid;place-items:center;width:32px;height:32px;flex:none;border-radius:9px;background:var(--raise2);color:var(--mute);transition:background-color .15s,color .15s}
-.wd-send.on{background:var(--acc);color:var(--on)}
-.wd-send svg{width:16px;height:16px}
-.wd-cap{margin:10px 6px 0;font-size:13px;color:var(--mute)}
+body.welcome #log{display:flex;flex-direction:column;padding-bottom:0}
+#log>.wel{max-width:540px;width:100%}
+.wel{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 0 9vh;text-align:center}
+.wel-mid{display:flex;flex-direction:column;align-items:center}
+.wel-mark{display:block;width:72px;height:auto}
+.wel-h{margin:14px 0 0;font-size:40px;font-weight:500;line-height:1.1;letter-spacing:-.03em;text-wrap:balance}
+.wel-h span{color:var(--mute)}
+.wel-sub{max-width:26em;margin:12px 0 0;font-size:16px;line-height:1.55;color:var(--mute);text-wrap:balance}
+.wel-ask{width:100%;margin-top:34px;padding:14px 10px 10px 18px;border:1px solid var(--line2);border-radius:22px;background:var(--raise);box-shadow:0 1px 3px rgba(0,0,0,.18),0 10px 30px rgba(0,0,0,.22);text-align:left;cursor:text}
+.wa-q{min-height:1.5em;margin:0;padding-right:8px;font-size:16.5px;line-height:1.5;color:var(--ink)}
+.wa-q span:empty::after{content:"Stelle deine Frage …";color:var(--mute)}
+.wa-caret,.wa-q span:empty::before{content:"";display:inline-block;width:1.5px;height:1.15em;margin:0 1px;vertical-align:-.2em;background:var(--acc2)}
+.wa-q span:empty+.wa-caret{display:none} /* leer: Strich vor dem Platzhalter statt dahinter */
+.wa-bar{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:12px}
+.wa-b{font-size:13px;color:var(--mute);white-space:nowrap}
+.wa-s{display:grid;place-items:center;width:34px;height:34px;flex:none;border-radius:11px;background:var(--raise2);color:var(--mute);transition:background-color .2s,color .2s}
+.wa-s.on{background:var(--acc);color:var(--on)}
+.wa-s svg{width:17px;height:17px}
+.wel-tags{margin:18px 0 0;font-size:13px;line-height:1.7;color:var(--mute);text-wrap:balance}
+.wel-tags span{white-space:nowrap}
+.wel-tags i{margin:0 4px;font-style:normal;opacity:.55}
+.wel-cta{display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:30px}
+.wel-cta .btn{min-height:46px;padding:12px 34px;border-radius:12px;font-size:15.5px}
+.wel-alt{min-height:44px;padding:0 8px;border:0;background:none;color:var(--mute);font-size:14px;transition:color .15s}
+.wel-alt:hover{color:var(--ink)}
 @media (prefers-reduced-motion:no-preference){
-  .wd-bub{animation:wdIn .3s cubic-bezier(.2,.8,.3,1)}
-  .wd-wait i{animation:wdDot 1.1s ease-in-out infinite}
-  .wd-wait i:nth-child(2){animation-delay:.15s}.wd-wait i:nth-child(3){animation-delay:.3s}
-  .wd-in.typing:not(:empty)::after{animation:wdCaret 1s steps(1) infinite}
-  .wd-brain #wdBrain{animation:fade .3s ease-out}
+  .wel-mid>*,.wel-cta{animation:welUp .7s cubic-bezier(.2,.8,.2,1) both}
+  .wel-mid>:nth-child(2){animation-delay:.06s}.wel-mid>:nth-child(3){animation-delay:.12s}.wel-mid>:nth-child(4){animation-delay:.2s}.wel-mid>:nth-child(5){animation-delay:.28s}.wel-cta{animation-delay:.34s}
+  .wa-caret,.wa-q span:empty::before{animation:welCaret 1.05s steps(1) infinite}
+  .wa-b{animation:fade .35s ease-out}
 }
-@keyframes wdIn{from{opacity:0;transform:translateY(8px)}}
-@keyframes wdDot{40%{opacity:1}}
-@keyframes wdCaret{50%{opacity:0}}
-/* Was xbubekir kann: vier stille Zeilen, keine Kacheln */
-.wel-feat{grid-area:feat;margin-top:clamp(56px,10vh,104px);padding-top:26px;border-top:1px solid var(--line)}
-.wel-feat h3{margin:0 0 20px;font-size:13px;font-weight:500;color:var(--mute)}
-.wel-feat ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px 36px}
-.wel-feat li{display:flex;flex-direction:column;gap:12px}
-.wf-ic{display:grid;place-items:center;width:38px;height:38px;flex:none;border:1px solid var(--line);border-radius:10px;background:var(--raise);color:var(--soft)}
-.wf-ic svg{width:19px;height:19px}
-.wel-feat b{display:block;font-size:15.5px;font-weight:600;letter-spacing:-.005em}
-.wel-feat p{margin:4px 0 0;font-size:14.5px;line-height:1.55;color:var(--soft)}
-.wel-foot{grid-area:foot;margin:44px 0 0;padding:0 0 48px;font-size:13px;line-height:1.5;color:var(--mute)}
-.wel-foot p{max-width:46em;margin:0 0 4px}
-@media (max-width:1099px){.wel-feat ul{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@keyframes welUp{from{opacity:0;transform:translateY(10px)}}
+@keyframes welCaret{50%{opacity:0}}
 /* Fenster */
 dialog{border:1px solid var(--line2);border-radius:16px;padding:0;background:var(--raise);color:var(--ink);width:min(560px,calc(100% - 24px));max-height:calc(100dvh - 24px);box-shadow:0 24px 64px rgba(0,0,0,.5)}
 dialog::backdrop{background:rgb(0 0 0/.55)}
@@ -476,29 +445,22 @@ dialog.snap::backdrop{transition:opacity .24s ease-out}
   .dock,body.start .dock{padding-bottom:calc(6px + env(safe-area-inset-bottom))}
   .composer textarea{height:40px;min-height:38px}
 }
-/* Willkommen am Handy: eine Spalte, „Anmelden“ bleibt unten stehen */
+/* Willkommen am Handy: Inhalt in der Mitte, „Anmelden“ unten */
 @media (max-width:899px),(max-height:540px) and (pointer:coarse){
-  body.welcome .top .ib{visibility:hidden}
-  .wel{grid-template-columns:minmax(0,1fr);grid-template-areas:"copy" "demo" "feat" "foot" "cta"}
-  .wel-top{display:none}
-  .wel-copy{padding:6px 2px 0}
-  .wel-h{font-size:clamp(32px,9vw,40px)}
-  .wel-lead{margin-top:12px;font-size:16px;line-height:1.55}
-  .wel-demo{margin-top:18px}
-  .wd{height:340px;padding:12px 10px 10px;border-radius:20px}
-  .wd-l{margin-bottom:6px}
-  .wd-log{gap:14px;padding:12px 4px 14px}
-  .wd-bub,.wd-a,.wd-in{font-size:15px}
-  .wel-feat{margin-top:44px;padding-top:22px}
-  .wel-feat ul{grid-template-columns:minmax(0,1fr);gap:22px}
-  .wel-feat li{flex-direction:row;gap:14px}
-  .wel-foot{margin-top:36px;padding-bottom:24px}
-  .wel-foot .wel-alt{display:block;margin:-10px 0 8px}
-  .wel-cta{position:sticky;bottom:0;z-index:2;margin:0 calc(-1*var(--pad));padding:10px var(--pad) calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--bg)}
-  .wel-cta .btn{flex:1;min-height:46px}
-  .wel-cta .wel-alt{display:none}
+  body.welcome .top>*{visibility:hidden}
+  .wel{padding:0}
+  .wel-mid{flex:1;justify-content:center;padding:8px 0 12px}
+  .wel-mark{width:60px}
+  .wel-h{margin-top:12px;font-size:31px}
+  .wel-h span{display:block}
+  .wel-sub{font-size:15px}
+  .wel-ask{margin-top:28px;padding:12px 8px 8px 16px;border-radius:20px}
+  .wa-q{font-size:16px}
+  .wel-tags{margin-top:16px;font-size:12.5px}
+  .wel-cta{align-items:stretch;margin:0;padding:8px 0 calc(8px + env(safe-area-inset-bottom))}
+  .wel-cta .btn{min-height:50px;border-radius:14px;font-size:16px}
 }
-@media (max-width:360px){.wd-ic:nth-of-type(3){display:none}}
+@media (max-width:899px) and (max-height:600px),(max-height:540px) and (pointer:coarse){.wel-tags{display:none}.wel-mark{width:52px}.wel-h{font-size:27px}.wel-ask{margin-top:20px}}
 </style>
 <script type="module" src="app.js"></script>
 </head>

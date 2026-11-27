@@ -721,79 +721,41 @@ function helloHTML(){ // für genau eine Person: Begrüßung mit Namen, am Handy
 const WK="xb.welcome";
 let welDone=(()=>{try{return!!(localStorage.getItem(WK)||localStorage.getItem(SK))}catch{return false}})(),welForce=false;
 const welWant=()=>welForce||!welDone&&!linkErr&&!chats.length&&!location.hash.includes("access_token");
-// Beispiel-Chat: [Art, Text]; Art t = Text, i = Umschrift, b = fett, ar = Arabisch (fett, mit Harakat), br = neue Zeile
+// Beispielfragen, die sich in die Eingabe-Karte tippen; das Gehirn wechselt mit
 const WEL=[
-  {k:"Gemini",b:"Gemini 3.8 Flash",q:"Erklär mir Rekursion in zwei Sätzen.",
-    a:[["t","Eine Funktion, die sich selbst aufruft, jedes Mal mit einer etwas kleineren Aufgabe. Ist die Aufgabe klein genug, hört sie auf und setzt das Ergebnis Schritt für Schritt zusammen."]]},
-  {k:"xbu",b:"xbu",q:"Wie sagt man „Danke“ auf Arabisch?",
-    a:[["ar","شُكْرًا"],["t"," ("],["i","šukran"],["t",") = Danke. Noch herzlicher: "],["ar","شُكْرًا جَزِيلًا"],["t"," ("],["i","šukran ǧazīlan"],["t",") = vielen Dank."]]},
-  {k:"xbu.plus",b:"xbu.plus · Gründlich",q:"Plan mir eine Lernwoche für die Prüfung.",
-    a:[["b","Mo–Di:"],["t"," Stoff in kleine Häppchen teilen, je 45 Minuten."],["br"],["b","Mi:"],["t"," Eine alte Prüfung mit Stoppuhr lösen."],["br"],["b","Do:"],["t"," Die Fehler von Mittwoch gezielt üben."],["br"],["b","Fr:"],["t"," Kurz wiederholen, früh schlafen."]]},
+  ["Gemini 3.8 Flash","Erklär mir Rekursion in zwei Sätzen"],
+  ["xbu","Wie sagt man „Danke“ auf Arabisch?"],
+  ["xbu.plus · Gründlich","Plan mir eine Lernwoche für die Prüfung"],
+  ["Gemini 3.5 Flash-Lite","Fass mir den Text kurz zusammen"],
+  ["xbu","Was koche ich heute mit Linsen?"],
 ];
-const welLen=a=>a.reduce((n,[t,s=""])=>n+(t==="br"?1:[...s].length),0);
-function welAns(a,n){ // die ersten n Zeichen der Beispielantwort
-  let h="";
-  for(const[t,s=""]of a){
-    if(n<=0)break;
-    if(t==="br"){h+="<br>";n--;continue}
-    const cs=[...s],p=esc(cs.slice(0,n).join(""));n-=cs.length;
-    h+=t==="ar"?`<b lang="ar" dir="rtl">${p}</b>`:t==="i"?`<i>${p}</i>`:t==="b"?`<b>${p}</b>`:p;
-  }
-  return h;
-}
-const WIC={
-  pic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="m4.5 17 4.8-4.6a1.5 1.5 0 0 1 2.1 0l2.1 2 1.6-1.5a1.5 1.5 0 0 1 2.1 0l2.3 2.3"/></svg>',
-  swap:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h13M13.5 4.5 17 8l-3.5 3.5M20 16H7M10.5 12.5 7 16l3.5 3.5"/></svg>',
-  mem:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3.5h10a1 1 0 0 1 1 1V20l-6-4-6 4V4.5a1 1 0 0 1 1-1Z"/></svg>',
-  dev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="11.5" height="8.5" rx="1.5"/><path d="M1.5 17h14"/><rect x="16.5" y="8" width="5.5" height="11.5" rx="1.3"/></svg>',
-};
 function welcomeHTML(){
-  const ua=navigator.userAgent,solo=matchMedia("(display-mode: standalone)").matches||navigator.standalone,
-    ios=/iP(hone|ad|od)/.test(ua)||navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1,
-    tip=solo?"":ios?"Tipp: Über Teilen → „Zum Home-Bildschirm“ startet xbubekir wie eine App.":/Android/.test(ua)?"Tipp: Im Browsermenü „Zum Startbildschirm hinzufügen“ wählen, dann startet xbubekir wie eine App.":"",
-    alt='<button class="wel-alt" type="button" data-wkey>Kein Konto? Mit eigenem Gemini-Schlüssel starten</button>',
-    feat=[[WIC.swap,"Du wählst, wer denkt","Gemini von Google kostenlos, xbu und xbu.plus für Bruchteile eines Cents pro Nachricht. Wechseln geht mit einem Tipp."],
-      [IC.wave,"Sprechen statt tippen","Im Sprachmodus redest du einfach los. xbubekir hört zu und antwortet mit Stimme."],
-      [WIC.mem,"Merkt sich, was zählt","Schaltest du das Gedächtnis ein, kennt dich xbubekir im nächsten Chat schon. Alles lässt sich ansehen und löschen."],
-      [WIC.dev,"Auf jedem Gerät","Mit Konto sind deine Chats am Handy und am PC dieselben. Auf dem Home-Bildschirm ist xbubekir mit einem Tipp da."]];
   return`<section class="wel" aria-labelledby="welH">
-<div class="wel-top"><img src="brand/wortmarke.webp" alt="xbubekir" width="900" height="259"></div>
-<div class="wel-copy"><h2 class="wel-h" id="welH">Eine KI.<span>Viele Gehirne.</span></h2>
-<p class="wel-lead">Deine persönliche KI für Fragen, Lernen, Schreiben und Planen. Du entscheidest, wer gerade dahinter denkt.</p></div>
-<div class="wel-demo" id="wDemo"><div class="wd">
-<p class="wd-l" id="wdL">Wer denkt für xbubekir?</p>
-<div class="seg" role="group" aria-labelledby="wdL">${WEL.map((s,i)=>`<button type="button" data-wb="${i}" aria-pressed="${!i}">${esc(s.k)}</button>`).join("")}</div>
-<div class="wd-log" id="wdLog" aria-hidden="true"></div>
-<div class="wd-comp" aria-hidden="true"><div class="wd-in" id="wdIn"></div><div class="wd-tools"><span class="wd-ic">${WIC.pic}</span><span class="wd-brain"><span id="wdBrain"></span>${IC.chev}</span><span class="wd-ic">${IC.wave}</span><span class="wd-send" id="wdSend">${IC.send}</span></div></div>
-</div><p class="wd-cap">Beispiele. Gleiche Oberfläche, gleiche Stimme, nur das Gehirn wechselt.</p></div>
-<section class="wel-feat" aria-labelledby="wfH"><h3 id="wfH">Was xbubekir kann</h3><ul>${feat.map(([ic,t,p])=>`<li><span class="wf-ic">${ic}</span><div><b>${t}</b><p>${p}</p></div></li>`).join("")}</ul></section>
-<footer class="wel-foot">${alt}<p>xbubekir ist für eine Person gebaut. Ein neues Konto funktioniert erst, wenn es auf dem Server freigeschaltet ist.</p>${tip?`<p>${tip}</p>`:""}</footer>
-<div class="wel-cta"><button class="btn" type="button" id="welIn">Anmelden</button>${alt}</div>
+<div class="wel-mid">
+<img class="wel-mark" src="brand/xbu.webp" alt="" width="640" height="376">
+<h2 class="wel-h" id="welH">Eine KI. <span>Viele Gehirne.</span></h2>
+<p class="wel-sub">Deine persönliche KI für Fragen, Lernen und Planen. Du entscheidest, wer gerade dahinter denkt.</p>
+<div class="wel-ask" id="wAsk" aria-hidden="true"><p class="wa-q"><span id="waQ"></span><i class="wa-caret"></i></p><div class="wa-bar"><span class="wa-b" id="waB"></span><span class="wa-s" id="waS">${IC.send}</span></div></div>
+<p class="wel-tags">${["Sprachmodus","Gedächtnis","Arabisch mit Harakat","auf allen Geräten"].map(t=>`<span>${t}</span>`).join("&nbsp;<i>·</i> ")}</p>
+</div>
+<div class="wel-cta"><button class="btn" type="button" id="welIn">Anmelden</button><button class="wel-alt" type="button" data-wkey>Mit eigenem Gemini-Schlüssel starten</button></div>
 </section>`;
 }
 let welRun=0;
 const nap=ms=>new Promise(r=>setTimeout(r,ms));
-function welPlay(i){ // eine Runde: Frage tippen, senden, Antwort tippen, kurz stehen lassen, dann das nächste Gehirn
-  const run=++welRun,box=$("#wDemo");if(!box)return;
-  const s=WEL[i],q=$("#wdIn"),send=$("#wdSend"),lg=$("#wdLog"),live=()=>run===welRun&&box.isConnected;
-  box.querySelectorAll("[data-wb]").forEach((b,j)=>b.setAttribute("aria-pressed",j===i));
-  $("#wdBrain").replaceWith(Object.assign(document.createElement("span"),{id:"wdBrain",textContent:s.b})); // neu, damit es sanft einblendet
-  const bub=`<div class="wd-u"><div class="wd-bub">${esc(s.q)}</div></div>`;
-  q.classList.remove("typing");q.textContent="";send.classList.remove("on");
-  if(still.matches){lg.classList.remove("out");lg.innerHTML=bub+`<div class="wd-a">${welAns(s.a,Infinity)}</div>`;return} // weniger Bewegung: gleich ganz, kein Weiterschalten
-  (async()=>{
-    if(lg.innerHTML){lg.classList.add("out");await nap(220);if(!live())return}
-    lg.innerHTML="";lg.classList.remove("out");q.classList.add("typing");
-    await nap(500);if(!live())return;
-    for(let n=1;n<=s.q.length;n++){q.textContent=s.q.slice(0,n);send.classList.add("on");await nap(28+Math.random()*42);if(!live())return}
-    await nap(450);if(!live())return;
-    q.classList.remove("typing");q.textContent="";send.classList.remove("on");
-    lg.innerHTML=bub+'<div class="wd-a"><span class="wd-wait"><i></i><i></i><i></i></span></div>';
-    await nap(850);if(!live())return;
-    const a=lg.querySelector(".wd-a"),all=welLen(s.a),t0=performance.now();
-    await new Promise(res=>{const step=now=>{if(!live())return res();const n=Math.min(all,Math.floor((now-t0)*.085));a.innerHTML=welAns(s.a,n);if(n<all)requestAnimationFrame(step);else res()};requestAnimationFrame(step)});
-    await nap(4500);if(live())welPlay((i+1)%WEL.length);
-  })();
+function welBrain(t){$("#waB").replaceWith(Object.assign(document.createElement("span"),{className:"wa-b",id:"waB",textContent:t}))} // neu, damit es sanft einblendet
+async function welPlay(){ // Frage tippen, kurz stehen lassen, löschen, nächstes Gehirn
+  const run=++welRun,box=$("#wAsk");if(!box)return;
+  const q=$("#waQ"),send=$("#waS"),live=()=>run===welRun&&box.isConnected;
+  if(still.matches){welBrain(WEL[0][0]);q.textContent=WEL[0][1];send.classList.add("on");return} // weniger Bewegung: eine Frage, still
+  for(let i=0;;i=(i+1)%WEL.length){
+    const[b,t]=WEL[i];welBrain(b);
+    await nap(i||q.textContent?380:900);if(!live())return;
+    for(let n=1;n<=t.length;n++){q.textContent=t.slice(0,n);send.classList.add("on");await nap(34+Math.random()*46);if(!live())return}
+    await nap(2000);if(!live())return;
+    for(let n=t.length;n>=0;n--){q.textContent=t.slice(0,n);await nap(14);if(!live())return}
+    send.classList.remove("on");
+  }
 }
 function loginHTML(){
   return`<form class="setup" id="suForm" novalidate aria-labelledby="suH"><h2 id="suH">Willkommen bei xbubekir</h2>
@@ -901,8 +863,8 @@ function render(){
     };
     $("#welIn").onclick=()=>go(false);
     for(const b of log.querySelectorAll("[data-wkey]"))b.onclick=()=>go(true);
-    for(const b of log.querySelectorAll("[data-wb]"))b.onclick=()=>welPlay(+b.dataset.wb);
-    welPlay(0);
+    $("#wAsk").onclick=()=>go(false); // wer in die Karte tippt, will fragen: also zuerst anmelden
+    welPlay();
     return;
   }
   if(!ready){
