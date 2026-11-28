@@ -716,11 +716,11 @@ function helloHTML(){ // für genau eine Person: Begrüßung mit Namen, am Handy
     +(rec.length?`<section class="recent" aria-labelledby="rcH"><h3 id="rcH">Weiter, wo du warst</h3><ul>${rec.map(c=>itemHTML(c,false)).join("")}</ul>${chats.length>rec.length?'<button class="linkbtn" type="button" data-all>Alle Chats</button>':""}</section>`:"");
 }
 // ---------- Willkommen: beim allerersten Öffnen statt gleich der Anmeldung ----------
-// Erscheint, solange hier noch nie jemand auf „Anmelden“ getippt hat (xb.welcome), keine Einstellungen gespeichert sind und keine Chats
-// da sind. Danach geht es direkt zur Anmeldung; „Was ist xbubekir?“ unter „Andere Wege“ holt die Seite zurück.
+// Erscheint ohne Anmeldung, solange auf diesem Gerät noch nie jemand auf „Anmelden“ getippt hat (xb.welcome), auch wenn schon
+// Einstellungen oder Chats da sind. Danach geht es direkt zur Anmeldung; „Was ist xbubekir?“ unter „Andere Wege“ holt die Seite zurück.
 const WK="xb.welcome";
-let welDone=(()=>{try{return!!(localStorage.getItem(WK)||localStorage.getItem(SK))}catch{return false}})(),welForce=false;
-const welWant=()=>welForce||!welDone&&!linkErr&&!chats.length&&!location.hash.includes("access_token");
+let welDone=(()=>{try{return!!localStorage.getItem(WK)}catch{return false}})(),welForce=false;
+const welWant=()=>welForce||!welDone&&!linkErr&&!location.hash.includes("access_token");
 // Beispielfragen, die sich in die Eingabe-Karte tippen; das Gehirn wechselt mit
 const WEL=[
   ["Gemini 3.8 Flash","Erklär mir Rekursion in zwei Sätzen"],
